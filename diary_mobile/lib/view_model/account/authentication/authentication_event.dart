@@ -1,5 +1,4 @@
-
-import '../../../app_main.dart';
+import '../../../data/repository.dart';
 import '../../bloc_event.dart';
 
 class AuthenticationEvent extends BlocEvent {

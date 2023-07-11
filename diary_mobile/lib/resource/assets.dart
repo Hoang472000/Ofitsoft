@@ -124,4 +124,5 @@ class ImageAsset {
   static const String imageTree = "${iMages}tree.png";
   static const String imageOfitsoft = "${iMages}ofitsoft.png";
   static const String imageOfitsoftText = "${iMages}ofitsoft_text.png";
+  static const String imagePersonProfile = "${iMages}person_profile.png";
 }

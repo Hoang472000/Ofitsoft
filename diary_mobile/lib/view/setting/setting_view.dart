@@ -9,6 +9,7 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
+import 'account/account_information_page.dart';
 import 'change_password/change_password_page.dart';
 import 'contact/contact_page.dart';
 
@@ -45,7 +46,7 @@ class _SettingViewState extends State<SettingView> {
               S.of(context).setting,
               style: StyleBkav.textStyleFW700(Colors.white, 20),
             ),
-            hasBottom: true,
+           // hasBottom: true,
           ),
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -95,7 +96,7 @@ class _SettingViewState extends State<SettingView> {
                   padding: const EdgeInsets.only(top: 14),
                   child: itemAccount(context, text: "Thông tin tài khoản",
                       voidCallback: () {
-                    /*                Navigator.push(context, HistoryActivityPage.route());*/
+                        Navigator.push(context, AccountInformationPage.route());
                   }, icon: IconAsset.icPersonSetting),
                 ),
                 Container(

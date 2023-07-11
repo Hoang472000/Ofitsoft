@@ -26,6 +26,7 @@ class BkavButton extends StatelessWidget {
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.zero,
             primary: isEnterMore != null ? Colors.white : color,
           shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(32),
@@ -41,9 +42,24 @@ class BkavButton extends StatelessWidget {
         ),
         onPressed: onPressed,
         onLongPress: onLongPressed,
-        child: Text(
-          text,
-          style: StyleBkav.textStyleFW700(isEnterMore != null ?  AppColor.main: null, 16),
+        child: Ink(
+          decoration: BoxDecoration(
+            gradient: isEnterMore != null
+                ? null
+                : const LinearGradient(
+              colors: [AppColor.main, AppColor.green99],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(32),
+          ),
+          child: Container(
+            alignment: Alignment.center,
+            child: Text(
+              text,
+              style: StyleBkav.textStyleFW700(isEnterMore != null ?  AppColor.main: null, 16),
+            ),
+          ),
         ),
       ),
     );

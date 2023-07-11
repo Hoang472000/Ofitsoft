@@ -1,9 +1,13 @@
+import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
+import 'package:diary_mobile/utils/constants/config_build.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'data/repository.dart';
+import 'data/repository_impl.dart';
 import 'generated/l10n.dart';
 import 'resource/color.dart';
 import 'utils/constants/shared_preferences_key.dart';
@@ -105,19 +109,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late Repository repository;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    //repository = ConfigBuild.isFakeUserRepo ? FakeDataSource() : RepositoryImpl(context: context);
+    repository = ConfigBuild.isFakeUserRepo ? FakeRepositoryImpl() : RepositoryImpl(context: context);
     // Tạm thời tắt chế độ xoay ngang màn hình
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return BlocProvider<AuthenticationBloc>(
+    return RepositoryProvider.value(
+      value: repository,
+      child: BlocProvider(
+        create: (_) => AuthenticationBloc(repository: repository),
+        child: _AIBookView(),
+      ),
+    );/*BlocProvider<AuthenticationBloc>(
         create: (context) => AuthenticationBloc(),
-    child: _AIBookView());/*RepositoryProvider(
+    child: _AIBookView());*//*RepositoryProvider(
       create: (_)=>  BlocProvider(
         create: (_) => AuthenticationBloc(),
         child: _AIBookView(),
@@ -133,7 +144,6 @@ class _AIBookView extends StatefulWidget {
 
 class _AIBookState extends State<_AIBookView> {
   final _navigatorKey = NavigationService.navigatorKey;
-
   NavigatorState get _navigator => _navigatorKey.currentState!;
 
   @override
@@ -190,5 +200,3 @@ class _AIBookState extends State<_AIBookView> {
     );
   }
 }
-
-enum AuthenticationStatus { unknown, authenticated, unauthenticated }

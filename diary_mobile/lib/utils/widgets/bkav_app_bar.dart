@@ -66,11 +66,25 @@ class BkavAppBar extends AppBar {
       automaticallyImplyLeading: automaticallyImplyLeading,
       title: title,
       actions: actions,
-      flexibleSpace: flexibleSpace,
+      flexibleSpace: flexibleSpace ?? Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [AppColor.main, AppColor.green99], // Đặt 2 màu ở đây
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+      ),
       bottom:hasBottom? bottom: PreferredSize(
           preferredSize: const Size.fromHeight(3),
           child: Container(
-            color: AppColor.main,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [AppColor.main, AppColor.green99], // Đặt 2 màu ở đây
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
             height: 1,
           )),
       elevation: elevation,

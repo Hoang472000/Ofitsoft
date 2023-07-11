@@ -87,7 +87,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
           padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(8)),
-            color: Colors.grey.withOpacity(0.5),
+            color: AppColor.gray1.withOpacity(0.4),
           ),
           child: Text(
             value,
@@ -121,7 +121,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                 padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(8)),
-                  color: Colors.grey.withOpacity(0.5),
+                  color: AppColor.gray1.withOpacity(0.4),
                 ),
                 child: Text(
                   value1,
@@ -149,7 +149,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                   padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
-                    color: Colors.grey.withOpacity(0.5),
+                    color: AppColor.gray1.withOpacity(0.4),
                   ),
                   child: Text(
                     value2,

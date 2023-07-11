@@ -91,7 +91,7 @@ class HomeView extends StatelessWidget {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Image(image: AssetImage(ImageAsset.imageTree),height: 60,),
+                                Image(image: AssetImage(ImageAsset.imageTree), opacity: const AlwaysStoppedAnimation(.8),height: 60,),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
@@ -124,7 +124,7 @@ class HomeView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               /*Image(image: AssetImage(ImageAsset.imageVisimex),height: 60, width: 150,),*/
-                              Image(image: AssetImage(ImageAsset.imageOfitsoft),height: 60,),
+                              Image(image: AssetImage(ImageAsset.imageOfitsoft), opacity: const AlwaysStoppedAnimation(.8), height: 60,),
                           /*    Padding(
                                 padding: const EdgeInsets.all(12.0),
                                 child: Text(

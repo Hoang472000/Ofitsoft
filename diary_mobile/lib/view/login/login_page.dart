@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/repository.dart';
 import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
@@ -137,7 +138,8 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                               context,
                               widget.isFaceId,
                               widget.isFingerprint,
-                              _inputUsernameController.text)),
+                              _inputUsernameController.text,
+                              context.read<Repository>())),
                     ],
                     child: _loginForm(context),
                     //),
@@ -434,64 +436,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   }
 
   Widget _rowButton() {
-    return _loginButton(); /*BlocBuilder<SettingBloc, SettingState>(builder: (context, state) {
-      Logger.loggerDebug(
-          " van tay = ${state.isFingerprintLogin}");
-      return Container(
-          height: 48,
-          margin: const EdgeInsets.only(top: 56),
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: _loginButton()),
-                Container(
-                  alignment: Alignment.centerRight, //Bkav Nhungltk
-                  child: FutureBuilder(
-                      future: Utils.isBiometricSupport(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<BiometricType> snapshot) {
-                        if (snapshot.data == BiometricType.face && state.isFaceIDLogin) {
-                          //Bkav Nhungltk: fix loi icon khong can sat le phai do ImageButton luon co vung dem mac dinh
-                          return GestureDetector(
-                            child: Padding(
-                              //Bkav Nhungltk: diem diem giao dien
-                                padding: const EdgeInsets.only(left: 9),
-                                child: SvgPicture.asset(
-                                  IconAsset.faceId,
-                                  width: 30,
-                                  height: 30,
-                                )),
-                            onTap: () async {
-                              context.read<LoginBloc>().add(LoginBiometric(
-                                  _inputUsernameController.text,
-                                  BiometricType.face,
-                                  context));
-                            },
-                          );
-                        } else if (snapshot.data == BiometricType.fingerprint && state.isFingerprintLogin) {
-                          return GestureDetector(
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 9),
-                              child: SvgPicture.asset(
-                                IconAsset.touchIc,
-                                width: 30,
-                                height: 30,
-                              ),
-                            ),
-                            onTap: () async {
-                              context.read<LoginBloc>().add(LoginBiometric(
-                                  _inputUsernameController.text,
-                                  BiometricType.fingerprint,
-                                  context));
-                            },
-                          );
-                        } else {
-                          return Container();
-                        }
-                      }),
-                )
-              ]));
-    });*/
+    return _loginButton();
   }
 
   Widget _rowRememberPass() {
@@ -502,38 +447,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           mainAxisAlignment: MainAxisAlignment.end,
           // crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // bo nut duy tri dang nhap, mac dinh la duy tri dang nhap
-            /*     Row(
-              //crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 7,left: 2),
-                  height: 16,
-                  width: 16,
-                  child: Checkbox(
-                    activeColor: AppColor.main,
-                    checkColor: AppColor.whiteF5,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3)),
-                      side: const BorderSide(width: 1, color: AppColor.gray1),
-                      value: isRemember,
-                      onChanged: (bool? value) async {
-                        debugPrint(
-                            " onchange isRemember ${widget.isRemember} value $value");
-                        setState(() {
-                          isRemember = value ?? false;
-                        });
-                        final prefs = await SharedPreferences.getInstance();
-                        prefs.setBool(
-                            SharedPreferencesKey.isRemember, value ?? false);
-                      }),
-                ),
-                Center(
-                  child: Text(S.of(context).remember_pass,
-                      style: StyleBkav.textStyleFW400(AppColor.black22, 14)),
-                ),
-              ],
-            ),*/
             Flexible(
               flex: 1,
               child: TextButton(
@@ -557,72 +470,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
         ));
   }
 
-  Widget _loginWithGoogle() {
-    return BlocBuilder<LoginBloc, LoginState>(
-      builder: (context, state) {
-        return Container(
-            // height: 24,
-            margin: const EdgeInsets.only(top: 32),
-            child: Column(children: [
-              Row(
-                children: [
-                  Expanded(child: containerLine(isMargin: true)),
-                  Center(
-                    child: Text(S.of(context).login_with,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14)),
-                  ),
-                  Expanded(child: containerLine(isMargin: true)),
-                ],
-              ),
-              // SvgPicture.asset(
-              //   IconAsset.icLogoGoogle,
-              //   width: 32,
-              //   height: 32,
-              // ),
-              Padding(
-                padding: const EdgeInsets.only(top: 21, bottom: 10),
-                child: Container(
-                  alignment: const Alignment(0, -0.5),
-                  child: TextButton(
-                    //Bkav Nhungltk: diem diem giao dien
-                    style: TextButton.styleFrom(
-                      primary: AppColor.blueE8,
-                      padding: EdgeInsets.zero,
-                    ),
-                    onPressed: () async {
-                      final prefs = await SharedPreferences.getInstance();
-                    },
-                    child: const Image(
-                      image: AssetImage(ImageAsset.imageGoogle),
-                      width: 32,
-                      height: 32,
-                    ),
-                  ),
-                ),
-              ),
-              /*Container( padding: const EdgeInsets.only(top: 80,bottom: 10),
-                  alignment: Alignment.center,
-                  child: RichText(
-                      text: TextSpan(
-                        text: S.of(context).no_account,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
-                        children:  <TextSpan>[
-                          TextSpan(
-                            text: S.of(context).create_account,
-                            recognizer:  TapGestureRecognizer()..onTap = (){
-                              _showModalBottomSheetCreateAccount(context);
-                              // Navigator.of(context).push<void>(
-                              //     CreateAccountPage.route("","","","",""));
-                            },
-                            style:  StyleBkav.textStyleFW400(AppColor.main, 14),
-                          )
-                        ],
-                      ))
-              ),*/
-            ]));
-      },
-    );
-  }
 
   Widget containerLine({bool? isMargin}) {
     return Container(

@@ -2,7 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
+import 'package:intl/intl.dart';
 
+import '../utils.dart';
 import 'input_register_model.dart';
 
 class ServiceInfoExtension {
@@ -39,6 +41,7 @@ class ServiceInfoExtension {
           fontWeight: FontWeight.bold),
       onConfirm: (Picker picker, List value) {
         modelInput.valueSelected = DateTime.parse(picker.adapter.text);
+        modelInput.valueDefault = Utils.formatDateTimeToString(DateTime.parse(picker.adapter.text));
         modelInput.error = null;
         onNotification();
       },
@@ -79,6 +82,7 @@ class ServiceInfoExtension {
           fontWeight: FontWeight.bold),
       onConfirm: (Picker picker, List value) {
         modelInput.valueSelected = DateTime.parse(picker.adapter.text);
+        modelInput.valueDefault = Utils.formatDateTimeToString(DateTime.parse(picker.adapter.text));
         modelInput.error = null;
         onNotification();
       },

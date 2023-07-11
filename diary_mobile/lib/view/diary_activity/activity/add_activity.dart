@@ -53,8 +53,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
     "Găng tay",
   ];
 
-  List<String> listVatTuAdd = [];
-  List<String> listCongCuAdd = [];
+  List<VatTu> listVatTuAdd = [];
+  List<VatTu> listCongCuAdd = [];
   List<String> listCongCu = [
     "Cuốc",
     "xẻng",
@@ -63,19 +63,26 @@ class _AddActivityPageState extends State<AddActivityPage> {
     "Kéo",
   ];
 
-  String loaiThanhToan = 'Account', soThe = '', tenTinh = '', dbhc_tinh = '';
-  bool isAddNgayPhatHanh = true;
+  List<CardType> listMutiChoice = [
+    CardType(cardName: "Tỉa cành", description: "Tỉa lá xâu, cành xâu",isSelected: false, cardCode: "1", status: "1"),
+    CardType(cardName: "Tỉa cành", description: "Tỉa cành to, cành nhỏ",isSelected: false, cardCode: "1", status: "1"),
+    CardType(cardName: "Tỉa cành", description: "Loại bỏ cành khô",isSelected: false, cardCode: "1", status: "1"),
+    CardType(cardName: "Tỉa cành", description: "Vệ sinh khu vực tỉa cành",isSelected: false, cardCode: "1", status: "1"),
+  ];
+
   TextEditingController nameController = TextEditingController();
   TextEditingController soCayController = TextEditingController();
   TextEditingController soLuongController = TextEditingController();
   TextEditingController moTaController = TextEditingController();
+  TextEditingController donViController = TextEditingController();
+  TextEditingController peopleController = TextEditingController();
 
   bool isSecretCode = true;
   bool isMstKinhDoanh = false;
 
   void _initView() {
     _listWidget.add(InputRegisterModel<String, String>(
-        title: "Tên công việc ",
+        title: "Tên công việc",
         isCompulsory: true,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
@@ -112,7 +119,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       maxLengthTextInput: 200,
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
-      controller: soLuongController,
+      controller: peopleController,
     ));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
@@ -183,7 +190,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                               onClick: () {
                                 setState(() {});
                                 onSelectValue(_listWidget[index], context);
-                              }),
+                              }, onMutiChoice: (id){
+                            setState(() {
+                              _listWidget[index].listMutiChoice![id].isSelected = !_listWidget[index].listMutiChoice![id].isSelected;
+                            });
+                          }),
                         ),
                         Row(
                           children: [
@@ -208,11 +219,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         Row(
                           children: [
                             Expanded(
-                                child: inputText("Số lượng")
+                                flex: 4,
+                                child: inputText("Số lượng", soLuongController)),
+                            SizedBox(
+                              width: 8,
                             ),
                             Expanded(
-                              child: inputText("Đơn vị")
-                            ),
+                                flex: 6,
+                                child: inputText("Đơn vị", donViController)),
                           ],
                         ),
                         TextButton(
@@ -224,10 +238,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           onPressed: () {
                             setState(() {
                               if (_listWidgetVT[0].valueSelected != null)
-                                listVatTuAdd
-                                    .add(_listWidgetVT[0].valueSelected);
+                                listVatTuAdd.add(VatTu(
+                                    _listWidgetVT[0].valueSelected,
+                                    int.parse(
+                                        soLuongController.text.toString()),
+                                    donViController.text.toString()));
                               _listWidgetVT[0].valueSelected = null;
                               _listWidgetVT[0].positionSelected = -1;
+                              soLuongController.text = "";
+                              donViController.text = "";
                             });
                           },
                           child: Row(
@@ -269,10 +288,37 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        listVatTuAdd[index],
-                                        style: StyleBkav.textStyleFW500(
-                                            AppColor.gray57, 14),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Text(
+                                                  listVatTuAdd[index].name,
+                                                  style: StyleBkav.textStyleFW500(
+                                                      AppColor.gray57, 14),
+                                                ),
+                                                SizedBox(width: 20,),
+                                                Text(
+                                                  "SL: ${listVatTuAdd[index].amount}",
+                                                  style: StyleBkav.textStyleFW500(
+                                                      AppColor.gray57, 14),
+                                                ),
+                                              ],
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 4.0),
+                                              child: Text(
+                                                "Đơn vị: ${listVatTuAdd[index].donVi}",
+                                                style: StyleBkav.textStyleFW500(
+                                                    AppColor.gray57, 14),
+                                                maxLines: 5,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       IconButton(
                                         onPressed: () {
@@ -280,7 +326,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                             listVatTuAdd.removeAt(index);
                                           });
                                         },
-                                        icon: Icon(
+                                        icon: const Icon(
                                           Icons.delete_forever,
                                           color: AppColor.red11,
                                         ),
@@ -310,6 +356,19 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                   setState(() {});
                                   onSelectValue(_listWidgetCC[index], context);
                                 })),
+                        Row(
+                          children: [
+                            Expanded(
+                                flex: 4,
+                                child: inputText("Số lượng", soLuongController)),
+                            SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                                flex: 6,
+                                child: inputText("Đơn vị", donViController)),
+                          ],
+                        ),
                         TextButton(
                           style: TextButton.styleFrom(
                             minimumSize: Size.zero,
@@ -319,10 +378,15 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           onPressed: () {
                             setState(() {
                               if (_listWidgetCC[0].valueSelected != null)
-                                listCongCuAdd
-                                    .add(_listWidgetCC[0].valueSelected);
+                                listCongCuAdd.add(VatTu(
+                                    _listWidgetCC[0].valueSelected,
+                                    int.parse(
+                                        soLuongController.text.toString()),
+                                    donViController.text.toString()));
                               _listWidgetCC[0].valueSelected = null;
                               _listWidgetCC[0].positionSelected = -1;
+                              soLuongController.text = "";
+                              donViController.text = "";
                             });
                           },
                           child: Row(
@@ -350,36 +414,74 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             shrinkWrap: true,
                             itemCount: listCongCuAdd.length,
                             itemBuilder: (_, index) => Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Color(0xFFB2B8BB),
-                                        width: 1.5,
-                                      ),
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5)),
-                                      color: Colors.white),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        listCongCuAdd[index],
-                                        style: StyleBkav.textStyleFW500(
-                                            AppColor.gray57, 14),
-                                      ),
-                                      IconButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              listCongCuAdd.removeAt(index);
-                                            });
-                                          },
-                                          icon: Icon(
-                                            Icons.delete_forever,
-                                            color: AppColor.red11,
-                                          ))
-                                    ],
+                              margin: EdgeInsets.symmetric(vertical: 8),
+                              padding: EdgeInsets.only(left: 6),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Color(0xFFB2B8BB),
+                                    width: 1.5,
                                   ),
-                                )),
+                                  borderRadius:
+                                  BorderRadius.all(Radius.circular(5)),
+                                  color: Colors.white),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                listCongCuAdd[index].name,
+                                                style: StyleBkav.textStyleFW500(
+                                                    AppColor.gray57, 14),
+                                              ),
+                                            ),
+                                            SizedBox(width: 20,),
+                                            Padding(
+                                              padding: const EdgeInsets.all(4.0),
+                                              child: Text(
+                                                "SL: ${listCongCuAdd[index].amount}",
+                                                style: StyleBkav.textStyleFW500(
+                                                    AppColor.gray57, 14),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 4.0, right: 4, bottom: 4),
+                                          child: Text(
+                                            "Đơn vị: ${listCongCuAdd[index].donVi}",
+                                            style: StyleBkav.textStyleFW500(
+                                                AppColor.gray57, 14),
+                                            maxLines: 5,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        listCongCuAdd.removeAt(index);
+                                      });
+                                    },
+                                    icon: const Icon(
+                                      Icons.delete_forever,
+                                      color: AppColor.red11,
+                                    ),
+                                    padding: EdgeInsets.all(9),
+                                    constraints: BoxConstraints(),
+                                  )
+                                ],
+                              ),
+                            )),
                         TextButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -625,7 +727,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 20),
+                              horizontal: 16, vertical: 8),
                           child: BkavButton(
                             text: "Hoàn thành",
                             onPressed: () async {},
@@ -640,9 +742,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
-  Widget inputText(String text) {
+  Widget inputText(String text, TextEditingController controller) {
     return Container(
-      margin: EdgeInsets.only(top: 16),
+      margin: EdgeInsets.only(top: 0),
       decoration: BoxDecoration(
           border: Border.all(
             color: Color(0xFFB2B8BB),
@@ -676,7 +778,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   .merge(titleStyle)*/
                     ,
                   ),
-
             SizedBox(
               width: 16,
             ),
@@ -684,7 +785,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
               flex: 3,
               child: Row(
                 children: [
-                  Expanded(child: _rightWidget(context)),
+                  Expanded(child: _rightWidget(context, controller)),
                 ],
               ),
             ),
@@ -694,7 +795,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
     );
   }
 
-  Widget _rightWidget(context) {
+  Widget _rightWidget(context, TextEditingController controller) {
     return Row(
       children: [
         Expanded(
@@ -705,22 +806,18 @@ class _AddActivityPageState extends State<AddActivityPage> {
             // inputFormatters: TypeInputRegister.TextField,
             focusNode: FocusNode(),
             keyboardType: TextInputType.text,
-            controller: moTaController,
+            controller: controller,
             /*textCapitalization:
                         inputRegisterModel.textCapitalization == null
                             ? TextCapitalization.none
                             : inputRegisterModel.textCapitalization!,*/
             textAlign: TextAlign.right,
-            autofocus: true,
+            //autofocus: true,
             onChanged: (newText) {},
             //onSubmitted: ,
             maxLength: 1000,
             style: TextStyle(
-                color: /*inputRegisterModel.unit == null
-                                ? Colors.black
-                                : */
-                    Color(0xFFA3A3A3),
-                fontSize: 14),
+                color: Colors.black /*Color(0xFFA3A3A3)*/, fontSize: 14),
             decoration: InputDecoration(
                 contentPadding:
                     EdgeInsets.symmetric(vertical: 6, horizontal: 0),
@@ -769,39 +866,22 @@ class _AddActivityPageState extends State<AddActivityPage> {
               inputRegisterModel.listValue[result];
           inputRegisterModel.error = null;
         });
+        if(inputRegisterModel.title.compareTo("Tên công việc")== 0){
+          _listWidget.insert(2, InputRegisterModel<String, String>(
+              title: "Các công việc liên quan:",
+              isCompulsory: false,
+              type: TypeInputRegister.MultiSelection,
+              listMutiChoice: listMutiChoice));
+        }
       }
     }
   }
+}
 
-  Widget textField(String label, TextEditingController textEditingController){
-    return Padding(
-      padding: EdgeInsets.all(6),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          label.length > 25 ?
-          Expanded(
-            flex: 5,
-            child: Text(
-              label,
-              style: TextStyle(
-                  color: Color(0xFFB2B8BB),
-                  fontSize: 14),
-            ),
-          ) : Text(label,
-            style: TextStyle(
-                color: Color(0xFFB2B8BB),
-                fontSize: 14)
-          ),
-          SizedBox(
-            width: 16,
-          ),
-          Expanded(
-            flex: 3,
-            child: Expanded(child: _rightWidget(context)),
-          ),
-        ],
-      ),
-    );
-  }
+class VatTu {
+  final String name;
+  final int amount;
+  final String donVi;
+
+  VatTu(this.name, this.amount, this.donVi);
 }

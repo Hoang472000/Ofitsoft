@@ -296,7 +296,7 @@ class ContainerInputWidget extends StatelessWidget {
                         ? TextCapitalization.none
                         : inputRegisterModel.textCapitalization!,
                 textAlign: TextAlign.right,
-                autofocus: true,
+                //autofocus: true,
                 // onTap: () {
                 //   inputRegisterModel.controller.selection =
                 //       new TextSelection.fromPosition(new TextPosition(

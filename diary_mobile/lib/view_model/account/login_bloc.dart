@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/remote_data/object_model/object_result.dart';
+import '../../data/repository.dart';
 import '../../generated/l10n.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/form_submission_status.dart';
@@ -15,12 +16,12 @@ import '../bloc_event.dart';
 import '../bloc_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
- // final Repository repository;
+  final Repository repository;
   final BuildContext context;
   final bool isFaceId;
   final bool isFingerprint;
   final String lastUserName;
-  LoginBloc(this.context, this.isFaceId, this.isFingerprint, this.lastUserName) : super(LoginState()) {
+  LoginBloc(this.context, this.isFaceId, this.isFingerprint, this.lastUserName, this.repository) : super(LoginState()) {
     on<LoginSubmitted>(_loginSubmitted);
     //on<LoginBiometric>(_loginBiometric);
     on<EventFocusTextField>(_eventFocusTextField);
@@ -54,8 +55,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     emitter(state.copyWith(formStatus: FormSubmitting()));
 
       // (event.username,  password??event.password, state.isRememberLogin, context);
-/*      final reponse = await repository.loginWithPassword(event.username, event.password);*/
-    final reponse = ObjectResult(1, '', '', true, false);
+      final reponse = await repository.login(event.username, event.password);
+/*     reponse = ObjectResult(1, '', '', true, false);*/
        Logger.loggerDebug(
           " _loginSubmitted   === reponse = ${reponse.toString()}");
       if (reponse.isOK) {

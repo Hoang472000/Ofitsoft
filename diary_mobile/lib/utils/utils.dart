@@ -471,6 +471,26 @@ class Utils {
     return f.format(time).toString();
   }
 
+  static DateTime formatMillisecondsToDateTime(int time) {
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    String date = formatter.format(dateTime);
+    return DateFormat('dd/MM/yyyy').parse(date);
+  }
+
+  static DateTime formatStringToDateTime(String time) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    DateTime dateTime = formatter.parse(time);
+    DateTime dateTime1 = DateTime.parse(dateTime.toString());
+    return dateTime1;
+  }
+  static String formatDateTimeToString(DateTime dateTime) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    String formattedString = formatter.format(dateTime);
+    return formattedString;
+  }
+
+
   static String timeToText(DateTime dateTime) {
     String date = dateTime.day.toString().padLeft(2, '0');
     String month = dateTime.month.toString().padLeft(2, '0');
@@ -695,11 +715,11 @@ class Utils {
     return pathImageSelect;
   }
 
-  static Future<List<ImageEntity>> getImagePicker(ImageSource imageSource) async {
+  static Future<List<ImageEntity>> getImagePicker(ImageSource imageSource, {bool multiSelect = true}) async {
     List<XFile> selectedImages = [];
     List<ImageEntity> listItemImage = [];
     final ImagePicker imagePicker = ImagePicker();
-    if (imageSource == ImageSource.gallery) {
+    if (imageSource == ImageSource.gallery && multiSelect) {
       selectedImages =
       await imagePicker.pickMultiImage(maxWidth: 512, maxHeight: 512);
     } else {
