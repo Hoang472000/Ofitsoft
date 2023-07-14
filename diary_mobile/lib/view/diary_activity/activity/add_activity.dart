@@ -1,9 +1,11 @@
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/extenstion/extenstions.dart';
@@ -15,6 +17,7 @@ import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/list_diary/list_diary_bloc.dart';
+import 'add_activity_sub/add_activity_sub.dart';
 
 class AddActivityPage extends StatefulWidget {
   const AddActivityPage({super.key});
@@ -32,11 +35,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   List<InputRegisterModel> _listWidgetVT = [];
   List<InputRegisterModel> _listWidgetCC = [];
   List<ImageEntity> listImage = [];
-  List<String> _listDanhMuc = [
-    "Tất cả",
-    // "Nghĩa vụ tài chính về đất đai",
-    "LPTB phương tiện"
-  ];
+
   List<String> listActivity = [
     "Tỉa cành",
     "Gieo hạt",
@@ -87,7 +86,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
-        listValue: listActivity));
+        listValue: listActivity,
+        image: ImageAsset.imageActivityFarm
+    ));
     _listWidget.add(InputRegisterModel(
       title: "Chi tiết công việc",
       isCompulsory: true,
@@ -95,6 +96,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
       controller: moTaController,
+        image: ImageAsset.imageFile
     ));
     _listWidgetVT.add(InputRegisterModel(
         title: "Vật tư liên quan",
@@ -103,7 +105,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
         //listMutiChoice: listVatTu,
-        listValue: listVatTu));
+        listValue: listVatTu,
+      image: ImageAsset.imageGardening
+    ));
 
     _listWidgetCC.add(InputRegisterModel(
         title: "Công cụ sử dụng",
@@ -111,7 +115,9 @@ class _AddActivityPageState extends State<AddActivityPage> {
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
-        listValue: listCongCu));
+        listValue: listCongCu,
+      image: ImageAsset.imageTools,
+    ));
 
     _listWidget.add(InputRegisterModel(
       title: "Người liên quan",
@@ -120,6 +126,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
       controller: peopleController,
+      image: ImageAsset.imageMan,
     ));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
@@ -128,6 +135,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
         // valueSelected: DateTime.now(),
+        image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
@@ -136,6 +144,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
         // valueSelected: DateTime.now(),
+        image: ImageAsset.imageCalendarEnd,
         icon: Icons.calendar_today));
 /*    _listWidget.add(InputRegisterModel<String, DateTime>(
         title: "Hình ảnh",
@@ -158,7 +167,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,
@@ -196,86 +205,28 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             });
                           }),
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              "Danh sách vật tư",
-                              style:
-                                  StyleBkav.textStyleFW500(AppColor.gray57, 16),
-                            ),
-                          ],
-                        ),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _listWidgetVT.length,
-                            itemBuilder: (_, index) => ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: _listWidgetVT[index],
-                                onClick: () {
-                                  setState(() {});
-                                  onSelectValue(_listWidgetVT[index], context);
-                                })),
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 4,
-                                child: inputText("Số lượng", soLuongController)),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                                flex: 6,
-                                child: inputText("Đơn vị", donViController)),
-                          ],
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              if (_listWidgetVT[0].valueSelected != null)
-                                listVatTuAdd.add(VatTu(
-                                    _listWidgetVT[0].valueSelected,
-                                    int.parse(
-                                        soLuongController.text.toString()),
-                                    donViController.text.toString()));
-                              _listWidgetVT[0].valueSelected = null;
-                              _listWidgetVT[0].positionSelected = -1;
-                              soLuongController.text = "";
-                              donViController.text = "";
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(top: 0, right: 6),
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: AppColor.main,
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(top: 0),
-                                child: Text(
-                                  "Thêm vật tư",
-                                  style: StyleBkav.textStyleUnderline500(
-                                      AppColor.main, 16),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        ListView.builder(
+                        itemAccount(context,
+                            text: "Danh sách vật tư, công cụ",
+                            image: ImageAsset.imageGardening,
+                            voidCallback: () async {
+                              var result = await Navigator.of(context).push(AddActivitySubPage.route(listVatTuAdd, listCongCuAdd));
+                    /*          if(result != null && result[0].length > 0 ){
+                                setState(() {
+                                  listVatTuAdd.addAll(result[0] as List<VatTu>);
+                                  if(result[1].length > 0) {
+                                    listCongCuAdd.addAll(
+                                        result[1] as List<VatTu>);
+                                  }
+                                });
+                              }*/
+                            }),
+                  /*      ListView.builder(
                             physics: NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: listVatTuAdd.length,
                             itemBuilder: (_, index) => Container(
                                   margin: EdgeInsets.symmetric(vertical: 8),
-                                  padding: EdgeInsets.only(left: 6),
+                                  padding: EdgeInsets.only(left: 8),
                                   decoration: BoxDecoration(
                                       border: Border.all(
                                         color: Color(0xFFB2B8BB),
@@ -296,7 +247,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                               //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Text(
-                                                  listVatTuAdd[index].name,
+                                                  (listVatTuAdd[index].type == 1 ? "Vật tư: " : "Công cụ: ")+ listVatTuAdd[index].name,
                                                   style: StyleBkav.textStyleFW500(
                                                       AppColor.gray57, 14),
                                                 ),
@@ -335,153 +286,70 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                       )
                                     ],
                                   ),
-                                )),
-                        Row(
-                          children: [
-                            Text(
-                              "Danh sách công cụ",
-                              style:
-                                  StyleBkav.textStyleFW500(AppColor.gray57, 16),
-                            ),
-                          ],
-                        ),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _listWidgetCC.length,
-                            itemBuilder: (_, index) => ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: _listWidgetCC[index],
-                                onClick: () {
-                                  setState(() {});
-                                  onSelectValue(_listWidgetCC[index], context);
-                                })),
-                        Row(
-                          children: [
-                            Expanded(
-                                flex: 4,
-                                child: inputText("Số lượng", soLuongController)),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                                flex: 6,
-                                child: inputText("Đơn vị", donViController)),
-                          ],
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            minimumSize: Size.zero,
-                            padding: EdgeInsets.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              if (_listWidgetCC[0].valueSelected != null)
-                                listCongCuAdd.add(VatTu(
-                                    _listWidgetCC[0].valueSelected,
-                                    int.parse(
-                                        soLuongController.text.toString()),
-                                    donViController.text.toString()));
-                              _listWidgetCC[0].valueSelected = null;
-                              _listWidgetCC[0].positionSelected = -1;
-                              soLuongController.text = "";
-                              donViController.text = "";
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Padding(
-                                  padding: EdgeInsets.only(top: 0, right: 6),
-                                  child: Icon(
-                                    Icons.add_circle_outline,
-                                    color: AppColor.main,
-                                  )),
-                              Padding(
-                                padding: EdgeInsets.only(top: 0),
-                                child: Text(
-                                  "Thêm công cụ",
-                                  style: StyleBkav.textStyleUnderline500(
-                                      AppColor.main, 16),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: listCongCuAdd.length,
-                            itemBuilder: (_, index) => Container(
-                              margin: EdgeInsets.symmetric(vertical: 8),
-                              padding: EdgeInsets.only(left: 6),
-                              decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Color(0xFFB2B8BB),
-                                    width: 1.5,
-                                  ),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
-                                  color: Colors.white),
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                )),*/
+ /*                       itemAccount(context,
+                            text: "Danh sách công cụ",
+                            icon: IconAsset.icPersonSetting,
+                            voidCallback: () {
+                              Navigator.of(context).push(AddActivitySubPage.route());
+                            }),*/
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            height: listImage.length > 0 ? 120 : 0,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: listImage.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Stack(
+                                      alignment: Alignment.center,
                                       children: [
-                                        Row(
-                                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                listCongCuAdd[index].name,
-                                                style: StyleBkav.textStyleFW500(
-                                                    AppColor.gray57, 14),
-                                              ),
-                                            ),
-                                            SizedBox(width: 20,),
-                                            Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                "SL: ${listCongCuAdd[index].amount}",
-                                                style: StyleBkav.textStyleFW500(
-                                                    AppColor.gray57, 14),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: 4.0, right: 4, bottom: 4),
-                                          child: Text(
-                                            "Đơn vị: ${listCongCuAdd[index].donVi}",
-                                            style: StyleBkav.textStyleFW500(
-                                                AppColor.gray57, 14),
-                                            maxLines: 5,
-                                          ),
+                                        Container(
+                                            child: Image.file(
+                                              listImage[index].fileImage!,
+                                              height: 120,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            )),
+                                        Positioned(
+                                          top: -5,
+                                          right: -10,
+                                          child: IconButton(
+                                              onPressed: () async {
+                                                DiaLogManager.displayDialog(
+                                                    context,
+                                                    "",
+                                                    S
+                                                        .of(context)
+                                                        .you_sure_want_delete_image,
+                                                        () async {
+                                                      Get.back();
+                                                      setState(() {
+                                                        listImage.removeAt(index);
+                                                      });
+                                                    }, () {
+                                                  Get.back();
+                                                }, S.of(context).cancel,
+                                                    S.of(context).agree);
+                                              },
+                                              icon: const SizedBox(
+                                                height: 25,
+                                                child: Image(
+                                                  image: AssetImage(ImageAsset.imageBin),
+                                                  //width: 40,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        listCongCuAdd.removeAt(index);
-                                      });
-                                    },
-                                    icon: const Icon(
-                                      Icons.delete_forever,
-                                      color: AppColor.red11,
-                                    ),
-                                    padding: EdgeInsets.all(9),
-                                    constraints: BoxConstraints(),
-                                  )
-                                ],
-                              ),
-                            )),
+                                  );
+                                }),
+                          ),
+                        ),
                         TextButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -557,11 +425,11 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                 GestureDetector(
                                                   child: Column(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.camera_alt,
-                                                        size: 40,
-                                                        color: AppColor.gray57,
-                                                      ),
+                                                       const Image(
+                                                        image: AssetImage(ImageAsset.imageCamera),
+                                                        width: 40,
+                                                        fit: BoxFit.contain,
+                                                       ),
                                                       const SizedBox(
                                                         height: 2,
                                                       ),
@@ -595,10 +463,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                 GestureDetector(
                                                   child: Column(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.photo_library,
-                                                        size: 40,
-                                                        color: AppColor.gray57,
+                                                      const Image(
+                                                        image: AssetImage(ImageAsset.imageGallery),
+                                                        width: 40,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                       const SizedBox(
                                                         height: 2,
@@ -654,12 +522,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 13),
-                                  child: Icon(
-                                    Icons.camera_alt_rounded,
-                                    color: AppColor.gray57,
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 5),
+                                  child:   Image(
+                                    image: AssetImage(ImageAsset.imageCamera),
+                                    width: 40,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                                 Text(
@@ -669,60 +538,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                 )
                               ],
                             ),
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            height: listImage.length > 0 ? 120 : 0,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: listImage.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                            child: Image.file(
-                                          listImage[index].fileImage!,
-                                          height: 120,
-                                          width: 100,
-                                          fit: BoxFit.cover,
-                                        )),
-                                        Positioned(
-                                          top: -2,
-                                          right: -16,
-                                          child: IconButton(
-                                              onPressed: () async {
-                                                DiaLogManager.displayDialog(
-                                                    context,
-                                                    "",
-                                                    S
-                                                        .of(context)
-                                                        .you_sure_want_delete_image,
-                                                    () async {
-                                                  Get.back();
-                                                  setState(() {
-                                                    listImage.removeAt(index);
-                                                  });
-                                                }, () {
-                                                  Get.back();
-                                                }, S.of(context).cancel,
-                                                    S.of(context).agree);
-                                              },
-                                              icon: Icon(
-                                                Icons.delete,
-                                                color: Colors.white,
-                                                size: 20,
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
                           ),
                         ),
                         Padding(
@@ -753,7 +568,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           borderRadius: BorderRadius.all(Radius.circular(5)),
           color: Colors.white),
       child: Padding(
-        padding: EdgeInsets.all(6),
+        padding: EdgeInsets.all(8),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -867,21 +682,74 @@ class _AddActivityPageState extends State<AddActivityPage> {
           inputRegisterModel.error = null;
         });
         if(inputRegisterModel.title.compareTo("Tên công việc")== 0){
-          _listWidget.insert(2, InputRegisterModel<String, String>(
+/*          _listWidget.insert(2, InputRegisterModel<String, String>(
               title: "Các công việc liên quan:",
               isCompulsory: false,
               type: TypeInputRegister.MultiSelection,
-              listMutiChoice: listMutiChoice));
+              listMutiChoice: listMutiChoice));*/
         }
       }
     }
   }
+  Widget itemAccount(BuildContext context,
+      {required String image,
+        required String text,
+        required VoidCallback voidCallback,
+        String? iconRight}) {
+    return InkWell(
+      onTap: () {
+        voidCallback();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8),
+              padding: const EdgeInsets.only(left: 6, right: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFFB2B8BB),
+                    width: 1.5,
+                  ),
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(5)),
+                  color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      child: Text(
+                        text,
+                        style:
+                        StyleBkav.textStyleFW400(AppColor.black22, 16),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      voidCallback();
+                    },
+                    icon: SvgPicture.asset(iconRight ?? IconAsset.icArrowRight, color: AppColor.main,),
+                    padding:
+                    const EdgeInsets.only(left: 8, right: 0, top: 10, bottom: 10),
+                    constraints: const BoxConstraints(),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class VatTu {
-  final String name;
-  final int amount;
-  final String donVi;
-
-  VatTu(this.name, this.amount, this.donVi);
-}

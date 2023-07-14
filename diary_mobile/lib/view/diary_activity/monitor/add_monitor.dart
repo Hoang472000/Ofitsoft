@@ -2,10 +2,12 @@ import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../data/entity/image/image_entity.dart';
 import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/extenstion/extenstions.dart';
@@ -17,6 +19,7 @@ import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/list_diary/list_diary_bloc.dart';
+import 'add_monitor_sub/add_monitor_sub.dart';
 
 class AddMonitorPage extends StatefulWidget {
   const AddMonitorPage({super.key});
@@ -31,6 +34,7 @@ class AddMonitorPage extends StatefulWidget {
 
 class _AddMonitorPageState extends State<AddMonitorPage> {
   List<InputRegisterModel> _listWidget = [];
+  List<InputRegisterModel> _listWidget1 = [];
   List<String> _listDanhMuc = [
     "Tất cả",
     // "Nghĩa vụ tài chính về đất đai",
@@ -83,18 +87,16 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
-        listValue: listActivity));
-    _listWidget.add(InputRegisterModel<String, CardType>(
-        title: "Các hoạt động đã thực hiện: ",
-        isCompulsory: false,
-        type: TypeInputRegister.MultiSelection,
-        listMutiChoice: listMutiChoice));
+        listValue: listActivity,
+        image: ImageAsset.imageActivityFarm
+    ));
     _listWidget.add(InputRegisterModel<String, DateTime>(
         title: "Thời gian",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
         // valueSelected: DateTime.now(),
+        image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
     _listWidget.add(InputRegisterModel(
         title: "Nội dung cần chú ý",
@@ -102,31 +104,35 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
       maxLengthTextInput: 2000,
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
+      image: ImageAsset.imageFile,
       controller: noiDungCYController,
     ));
 
-    _listWidget.add(InputRegisterModel(
+    _listWidget1.add(InputRegisterModel(
         title: "Biện pháp khắc phục",
         isCompulsory: true,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
+        image: ImageAsset.imageTherapy,
         listValue: listActivity
     ));
-    _listWidget.add(InputRegisterModel<String, DateTime>(
+    _listWidget1.add(InputRegisterModel<String, DateTime>(
         title: "Thời gian khắc phục",
         isCompulsory: true,
       maxLengthTextInput: 50,
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
+      image: ImageAsset.imageCalendarPick,
       controller: ngayKPController,));
-    _listWidget.add(InputRegisterModel(
+    _listWidget1.add(InputRegisterModel(
       title: "Mô tả",
       isCompulsory: true,
       maxLengthTextInput: 2000,
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
       controller: moTaController,
+      image: ImageAsset.imageFile,
     ));
   }
 
@@ -143,7 +149,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,
@@ -180,6 +186,78 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                     _listWidget[index].listMutiChoice![id].isSelected = !_listWidget[index].listMutiChoice![id].isSelected;
                                   });
                             },)),
+                        itemAccount(context,
+                            text: "Biện pháp khắc phục",
+                            image: ImageAsset.imageTherapy,
+                            voidCallback: () async {
+                              var result = await Navigator.of(context).push(AddMonitorSubPage.route(_listWidget1));
+                              /*          if(result != null && result[0].length > 0 ){
+                                setState(() {
+                                  listVatTuAdd.addAll(result[0] as List<VatTu>);
+                                  if(result[1].length > 0) {
+                                    listCongCuAdd.addAll(
+                                        result[1] as List<VatTu>);
+                                  }
+                                });
+                              }*/
+                            }),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: SizedBox(
+                            height: listImage.length > 0 ? 120 : 0,
+                            child: ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: listImage.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8.0),
+                                    child: Stack(
+                                      alignment: Alignment.center,
+                                      children: [
+                                        Container(
+                                            child: Image.file(
+                                              listImage[index].fileImage!,
+                                              height: 120,
+                                              width: 100,
+                                              fit: BoxFit.cover,
+                                            )),
+                                        Positioned(
+                                          top: -2,
+                                          right: -16,
+                                          child: IconButton(
+                                              onPressed: () async {
+                                                DiaLogManager.displayDialog(
+                                                    context,
+                                                    "",
+                                                    S
+                                                        .of(context)
+                                                        .you_sure_want_delete_image,
+                                                        () async {
+                                                      Get.back();
+                                                      setState(() {
+                                                        listImage.removeAt(index);
+                                                      });
+                                                    }, () {
+                                                  Get.back();
+                                                }, S.of(context).cancel,
+                                                    S.of(context).agree);
+                                              },
+                                              icon:const SizedBox(
+                                                height: 25,
+                                                child: Image(
+                                                  image: AssetImage(ImageAsset.imageBin),
+                                                  //width: 40,
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }),
+                          ),
+                        ),
                         TextButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -255,10 +333,10 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                                 GestureDetector(
                                                   child: Column(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.camera_alt,
-                                                        size: 40,
-                                                        color: AppColor.gray57,
+                                                      const Image(
+                                                        image: AssetImage(ImageAsset.imageCamera),
+                                                        width: 40,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                       const SizedBox(
                                                         height: 2,
@@ -293,10 +371,10 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                                 GestureDetector(
                                                   child: Column(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.photo_library,
-                                                        size: 40,
-                                                        color: AppColor.gray57,
+                                                      const Image(
+                                                        image: AssetImage(ImageAsset.imageGallery),
+                                                        width: 40,
+                                                        fit: BoxFit.contain,
                                                       ),
                                                       const SizedBox(
                                                         height: 2,
@@ -352,12 +430,13 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 13),
-                                  child: Icon(
-                                    Icons.camera_alt_rounded,
-                                    color: AppColor.gray57,
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 6, vertical: 5),
+                                  child:   Image(
+                                    image: AssetImage(ImageAsset.imageCamera),
+                                    width: 40,
+                                    fit: BoxFit.contain,
                                   ),
                                 ),
                                 Text(
@@ -367,60 +446,6 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                 )
                               ],
                             ),
-                          ),
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            height: listImage.length > 0 ? 120 : 0,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: listImage.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                            child: Image.file(
-                                              listImage[index].fileImage!,
-                                              height: 120,
-                                              width: 100,
-                                              fit: BoxFit.cover,
-                                            )),
-                                        Positioned(
-                                          top: -2,
-                                          right: -16,
-                                          child: IconButton(
-                                              onPressed: () async {
-                                                DiaLogManager.displayDialog(
-                                                    context,
-                                                    "",
-                                                    S
-                                                        .of(context)
-                                                        .you_sure_want_delete_image,
-                                                        () async {
-                                                      Get.back();
-                                                      setState(() {
-                                                        listImage.removeAt(index);
-                                                      });
-                                                    }, () {
-                                                  Get.back();
-                                                }, S.of(context).cancel,
-                                                    S.of(context).agree);
-                                              },
-                                              icon: Icon(
-                                                Icons.delete,
-                                                color: Colors.white,
-                                                size: 20,
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
                           ),
                         ),
                         Padding(
@@ -474,7 +499,75 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
           inputRegisterModel.listValue[result];
           inputRegisterModel.error = null;
         });
+        if(inputRegisterModel.title.compareTo("Các hoạt động")== 0){
+          _listWidget.insert(1, InputRegisterModel<String, CardType>(
+              title: "Các hoạt động đã thực hiện: ",
+              isCompulsory: false,
+              type: TypeInputRegister.MultiSelection,
+              listMutiChoice: listMutiChoice));
+        }
       }
     }
+  }
+
+  Widget itemAccount(BuildContext context,
+      {required String image,
+        required String text,
+        required VoidCallback voidCallback,
+        String? iconRight}) {
+    return InkWell(
+      onTap: () {
+        voidCallback();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8),
+              padding: const EdgeInsets.only(left: 6, right: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFFB2B8BB),
+                    width: 1.5,
+                  ),
+                  borderRadius:
+                  BorderRadius.all(Radius.circular(5)),
+                  color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      child: Text(
+                        text,
+                        style:
+                        StyleBkav.textStyleFW400(AppColor.black22, 16),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      voidCallback();
+                    },
+                    icon: SvgPicture.asset(iconRight ?? IconAsset.icArrowRight, color: AppColor.main,),
+                    padding:
+                    const EdgeInsets.only(left: 8, right: 0, top: 10, bottom: 10),
+                    constraints: const BoxConstraints(),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -28,17 +28,11 @@ class AccountInformationPage extends StatefulWidget {
 
 class _AccountInformationPageState extends State<AccountInformationPage> {
   List<InputRegisterModel> _listWidget = [];
-  List<String> _listDanhMuc = [
-    "Tất cả",
-    // "Nghĩa vụ tài chính về đất đai",
-    "LPTB phương tiện"
-  ];
+
   List<String> listSex = [
     "Nam",
     "Nữ"
   ];
-  String loaiThanhToan = 'Account', soThe = '', tenTinh = '', dbhc_tinh = '';
-  bool isAddNgayPhatHanh = true;
   TextEditingController nameController = TextEditingController(text: "Cao Văn Hoàng");
   TextEditingController sexController = TextEditingController(text: "Nam");
   TextEditingController addressController = TextEditingController(text: "421 hoàng quốc việt, hà nội, 421 hoàng quốc việt, cầu giấy, hà nội");
@@ -122,10 +116,10 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   child: GestureDetector(
                                     child: Column(
                                       children: [
-                                        const Icon(
-                                          Icons.camera_alt,
-                                          size: 40,
-                                          color: AppColor.gray57,
+                                        const Image(
+                                          image: AssetImage(ImageAsset.imageCamera),
+                                          width: 40,
+                                          fit: BoxFit.contain,
                                         ),
                                         /*const SizedBox(
                                           height: 2,
@@ -164,10 +158,10 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   child: GestureDetector(
                                     child: Column(
                                       children: [
-                                        const Icon(
-                                          Icons.photo_library,
-                                          size: 40,
-                                          color: AppColor.gray57,
+                                        const Image(
+                                          image: AssetImage(ImageAsset.imageGallery),
+                                          width: 40,
+                                          fit: BoxFit.contain,
                                         ),
                                       /*  const SizedBox(
                                           height: 2,
@@ -388,7 +382,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: nameController,));
+      controller: nameController,
+      image: ImageAsset.imageFarmerProfile
+    ));
     _listWidget.add(InputRegisterModel(
       title: "Giới tính:",
       isCompulsory: false,
@@ -396,6 +392,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
       controller: sexController,
+        image: ImageAsset.imageSex
     ));
     _listWidget.add(InputRegisterModel(
       title: "Ngày sinh:",
@@ -403,7 +400,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
         controller: dateController,
-        icon: Icons.calendar_today
+        icon: Icons.calendar_today,
+        image: ImageAsset.imageCalendarPick
     ));
     _listWidget.add(InputRegisterModel(
       title: "Địa chỉ:",
@@ -412,6 +410,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
       controller: addressController,
+        image: ImageAsset.imageLocation
     ));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
@@ -420,7 +419,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: statusController,));
+      controller: statusController,
+        image: ImageAsset.imageStatus));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
         title: "Vai trò:",
@@ -428,7 +428,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: mainController,));
+      controller: mainController,
+        image: ImageAsset.imageCollaboration));
   }
 
   void _resetView() {
@@ -438,7 +439,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: nameController,));
+      controller: nameController,
+        image: ImageAsset.imageFarmerProfile));
     _listWidget.add(InputRegisterModel(
       title: "Giới tính:",
       isCompulsory: false,
@@ -448,6 +450,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       valueDefault: listSex.singleWhere((element) => element.compareTo(sexController.text.toString()) == 0),
       listValue: listSex,
       icon: Icons.arrow_drop_down,
+        image: ImageAsset.imageSex
     ));
     _listWidget.add(InputRegisterModel(
         title: "Ngày sinh:",
@@ -457,7 +460,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
         valueSelected: Utils.formatStringToDateTime(dateController.text.toString()),
         valueDefault: dateController.text.toString(),
         //controller: dateController,
-        icon: Icons.calendar_today
+        icon: Icons.calendar_today,
+        image: ImageAsset.imageCalendarPick
     ));
     _listWidget.add(InputRegisterModel(
       title: "Địa chỉ:",
@@ -466,6 +470,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
       controller: addressController,
+        image: ImageAsset.imageLocation
     ));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
@@ -474,7 +479,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: statusController,));
+      controller: statusController,
+        image: ImageAsset.imageStatus));
 
     _listWidget.add(InputRegisterModel<String, DateTime>(
       title: "Vai trò:",
@@ -482,7 +488,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       maxLengthTextInput: 200,
-      controller: mainController,));
+      controller: mainController,
+        image: ImageAsset.imageCollaboration));
   }
 
   @override

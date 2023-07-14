@@ -1,19 +1,20 @@
-class ObjectCommandData{
-  final String accessToken;
-  final String orgGUID;
+class ObjectData{
+  String token;
+  //final String orgGUID;
   //final int commandType;
-  final dynamic commandObject;
+  final dynamic object;
 
-  ObjectCommandData(
-      {this.accessToken="",
-        required this.commandObject,
+  ObjectData(
+      {this.token = "",
+        this.object = const {},
         //required this.commandType,
-        this.orgGUID= ""});
+        //this.orgGUID= ""
+      });
 
   Map<String, dynamic> toJson() => {
-    "AccessToken": accessToken,
-    "OrgGUID": orgGUID,
+    "token": token,
+    //"OrgGUID": orgGUID,
    /* "CommandType": commandType,*/
-    "CommandObject": commandObject,
+    "object": object,
   };
 }

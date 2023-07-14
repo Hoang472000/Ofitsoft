@@ -117,7 +117,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     return GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColor.background,
           resizeToAvoidBottomInset: false,
           body: Utils.bkavCheckOrientation(
             context,

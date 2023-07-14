@@ -29,6 +29,7 @@ class _ContactPageState extends State<ContactPage> {
         return false;
       },
       child: Scaffold(
+          backgroundColor: AppColor.background,
           appBar: BkavAppBar(
             context,
             showDefaultBackButton: true,

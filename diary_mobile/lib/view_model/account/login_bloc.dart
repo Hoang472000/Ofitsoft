@@ -65,14 +65,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         //HoangLD fix bug sau khi đăng nhập vẫn hiển thị snackbar đăng xuất
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
       } else {
-        emitter(state.copyWith(formStatus: SubmissionFailed(reponse.object)));
+        emitter(state.copyWith(formStatus: SubmissionFailed(reponse.response)));
       }
   }
   void _loginGoogle(LoginWithGoogle event,Emitter<LoginState> emitter)async{
     emitter(state.copyWith(formStatus: FormSubmitting()));
 
     // (event.username,  password??event.password, state.isRememberLogin, context);
-    final reponse = ObjectResult(1, '', '', true, false);
+    final reponse = ObjectResult(1, '', '', "", true, false);
     Logger.loggerDebug(
         " _loginGoogle_respon = ${reponse.toString()}");
     if (reponse.isOK) {
@@ -81,7 +81,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       //HoangLD fix bug sau khi đăng nhập vẫn hiển thị snackbar đăng xuất
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
     } else {
-      emitter(state.copyWith(formStatus: SubmissionFailed(reponse.object)));
+      emitter(state.copyWith(formStatus: SubmissionFailed(reponse.response)));
     }
   }
 /*FutureOr<void> _rememberPassChange(RememberLoginChanged event, Emitter<LoginState> emit) async{

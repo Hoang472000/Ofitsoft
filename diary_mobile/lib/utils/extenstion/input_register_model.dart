@@ -25,6 +25,7 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
   TypeInputRegister type;
   int positionSelected;
   IconData? icon;
+  String image;
   TextInputType typeInput;
   TextCapitalization? textCapitalization;
   bool isEmail;
@@ -77,7 +78,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
     this.rotateIcon = false,
     this.hintText = '',
     this.textCapitalization,
-    this.isAlwaysCap=false
+    this.isAlwaysCap=false,
+    this.image=''
   });
 
   InputRegisterModel copyWith({
@@ -100,9 +102,10 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
     bool? rotateIcon,
     String? hintText,
     TextCapitalization? textCapitalization,
-    bool? isAlwaysCap
+    bool? isAlwaysCap,
+    String? image
   }) {
-    return new InputRegisterModel(
+    return InputRegisterModel(
       title: title ?? this.title,
       isCompulsory: isCompulsory ?? this.isCompulsory,
       controller: controller ?? this.controller,
@@ -122,7 +125,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
       rotateIcon: rotateIcon ?? this.rotateIcon,
       hintText: hintText ?? this.hintText,
       textCapitalization: textCapitalization ?? this.textCapitalization,
-      isAlwaysCap: isAlwaysCap ?? this.isAlwaysCap
+      isAlwaysCap: isAlwaysCap ?? this.isAlwaysCap,
+      image: image ?? this.image,
     );
   }
 
@@ -155,7 +159,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
           hintText == other.hintText &&
           textCapitalization == other.textCapitalization &&
           isDecimalCurrency == other.isDecimalCurrency&&
-          isAlwaysCap == other.isAlwaysCap);
+          isAlwaysCap == other.isAlwaysCap&&
+          image == other.image);
 
   @override
   int get hashCode =>
@@ -178,8 +183,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
       hintText.hashCode ^
       textCapitalization.hashCode ^
       isAlwaysCap.hashCode ^
-      isDecimalCurrency.hashCode;
-
+      isDecimalCurrency.hashCode ^
+      image.hashCode;
 
   Map<String, dynamic> toMap() {
     // ignore: unnecessary_cast
@@ -203,7 +208,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
       'hintText': this.hintText,
       'textCapitalization': this.textCapitalization,
       'isAlwaysCap': this.isAlwaysCap,
-      'rotateIcon': this.rotateIcon
+      'rotateIcon': this.rotateIcon,
+      'image': this.image
     } as Map<String, dynamic>;
   }
 

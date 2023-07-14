@@ -27,7 +27,7 @@ class _NotifyViewState extends State<NotifyView> {
     return BlocProvider(
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,

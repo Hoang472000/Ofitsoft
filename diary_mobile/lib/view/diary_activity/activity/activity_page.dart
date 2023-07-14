@@ -117,7 +117,7 @@ class _ActivityPageState extends State<ActivityPage> {
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
         //resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColor.green99,
           child: Icon(Icons.add),
@@ -216,13 +216,13 @@ class _ActivityPageState extends State<ActivityPage> {
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 30,
                                 width: 30,
-                                child: IconButton(
-                                  padding: EdgeInsets.zero,
-                                  icon: Icon(Icons.delete, color: Colors.red,),
-                                  onPressed: () async {},
+                                child: Image(
+                                  image: AssetImage(ImageAsset.imageBin),
+                                  //width: 40,
+                                  fit: BoxFit.contain,
                                 ),
                               )
                             ],

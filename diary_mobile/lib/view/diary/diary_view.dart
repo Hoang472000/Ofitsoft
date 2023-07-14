@@ -50,7 +50,7 @@ class _DiaryViewState extends State<DiaryView> {
     return BlocProvider(
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,
@@ -59,7 +59,7 @@ class _DiaryViewState extends State<DiaryView> {
             "Danh sách nhật ký",
             style: StyleBkav.textStyleFW700(Colors.white, 20),
           ),
-          backgroundColor: AppColor.main,
+          backgroundColor: AppColor.background,
           actions: [
        /*     TextButton(
               onPressed: () {
@@ -112,10 +112,23 @@ class _DiaryViewState extends State<DiaryView> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                monthAndYear,
-                                style: StyleBkav.textStyleFW500(AppColor.gray57, 20),
+                              padding: const EdgeInsets.all(2.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                               /*   Image(
+                                    image: AssetImage(ImageAsset.imageCalendarPick),
+                                    width: 40,
+                                    fit: BoxFit.contain,
+                                  ),*/
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      monthAndYear,
+                                      style: StyleBkav.textStyleFW500(AppColor.gray57, 20),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                             ListView.builder(

@@ -1,7 +1,7 @@
 class ObjectResult{
   final int status;
   final dynamic response;
-  final String? message;
+  final String message;
   final String? code;
   final bool isOK;
   final bool isError;
@@ -10,10 +10,10 @@ class ObjectResult{
 
   ObjectResult.fromJson(Map<String, dynamic> json)
       : status = json["Status"],
-        response = json["Object"],
+        response = json["response"],
         message = json["message"]?? "",
         code = json["Code"]?? "",
-        isOK = json["isOk"] ?? true,
+        isOK = json["isOk"] ?? false,
         isError = json["isError"] ?? false;
 
   @override

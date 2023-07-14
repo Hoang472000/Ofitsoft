@@ -138,7 +138,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
               color: Colors.white,
               padding: EdgeInsets.zero,
             ),
-            backgroundColor: AppColor.main,
+            backgroundColor: AppColor.background,
             title: Text(
               S.of(context).forgot_password,
               style: StyleBkav.textStyleFW700(Colors.white, 20),
@@ -151,7 +151,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  color: Colors.white,
+                  //color: Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 24, vertical: 50),

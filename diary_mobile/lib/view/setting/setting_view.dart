@@ -48,7 +48,7 @@ class _SettingViewState extends State<SettingView> {
             ),
            // hasBottom: true,
           ),
-          backgroundColor: Colors.white,
+          backgroundColor: AppColor.background,
           body: SingleChildScrollView(
             child: Column(
               children: [

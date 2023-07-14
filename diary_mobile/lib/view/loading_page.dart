@@ -1,3 +1,4 @@
+import 'package:diary_mobile/resource/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -31,6 +32,7 @@ class _LoadingPageState extends State<LoadingPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Theme(data: ThemeData(), child: Scaffold(
+      backgroundColor: AppColor.background,
       body: Utils.bkavCheckOrientation(
         context, SizedBox(
         width: double.infinity,

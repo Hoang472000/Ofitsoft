@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
+import 'entity/item_default/item_default.dart';
+
+
+
 /// Bkav DucLQ cac trang thai xac thuc cua tai khoan
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
@@ -15,8 +19,8 @@ abstract class Repository {
 
 
   Stream<AuthenticationStatus> get status async* {
-    await Future.delayed(const Duration(seconds: 2));
-    bool isExpToken = await checkExpToken();
+    //await Future.delayed(const Duration(seconds: 2));
+    bool isExpToken = await getListActivities();
     yield !isExpToken
         ? AuthenticationStatus.unauthenticated
         : AuthenticationStatus.authenticated;
@@ -33,5 +37,11 @@ abstract class Repository {
 
   Future<ObjectResult> login(String userName, String pass);
 
+  Future<bool> getListUnits();
 
+  Future<bool> getListTools();
+
+  Future<bool> getListMaterials();
+
+  Future<bool> getListActivities();
 }

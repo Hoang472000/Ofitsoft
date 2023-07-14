@@ -65,8 +65,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: currentScreen,
           ),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: AppColor.green99,
-            child: SvgPicture.asset(IconAsset.icBarCode,height: 30,width: 30,),
+
+            //backgroundColor: AppColor.green99,
+            elevation: 0,
+            child: Container(
+                height: 70,
+                width: 70,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [AppColor.main, AppColor.green99], // Đặt 2 màu ở đây
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.redAccent.withOpacity(0.2),
+                      spreadRadius: 3,
+                      blurRadius: 3,
+                      offset: Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: SizedBox(
+                      height: 30,width: 30,
+                      child: SvgPicture.asset(IconAsset.icBarCode, fit: BoxFit.contain,)),
+                )),
             onPressed: () {
               setState(() {
                 Navigator.of(context).push(QRCodeView.route());
@@ -132,7 +157,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(IconAsset.icSelll),
+                          SvgPicture.asset(IconAsset.icNotebook),
                           const SizedBox(
                             height: 3,
                           ),

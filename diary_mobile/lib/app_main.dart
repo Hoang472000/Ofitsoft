@@ -175,12 +175,13 @@ class _AIBookState extends State<_AIBookView> {
               listener: (context, state) async {
                 SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
                 String token = sharedPreferences.getString(SharedPreferencesKey.accessToken) ?? "";
-                bool isKeepLogin= sharedPreferences.getBool(SharedPreferencesKey.isRemember)?? true;
+                bool isKeepLogin= sharedPreferences.getBool(SharedPreferencesKey.isRemember) ?? true;
                 switch (state.status) {
                   case AuthenticationStatus.authenticated:
                     _navigator.pushAndRemoveUntil<void>(
-                        await LoginPage.route(), (route) => false);
+                        await HomePage.route(), (route) => false);
                     break;
+                    //case mất mạng
                   case AuthenticationStatus.unauthenticated:
                     if(token.isNotEmpty && isKeepLogin && await Utils.checkInternetConnection()== false){
                       _navigator.pushAndRemoveUntil<void>(

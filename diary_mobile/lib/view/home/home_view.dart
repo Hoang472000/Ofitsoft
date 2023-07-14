@@ -17,7 +17,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,

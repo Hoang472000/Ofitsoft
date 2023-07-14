@@ -126,7 +126,7 @@ class _AddDiaryViewState extends State<AddDiaryView> {
       create: (context) => ListDiaryBloc(),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.background,
         appBar: BkavAppBar(
           context,
           centerTitle: true,
@@ -135,7 +135,7 @@ class _AddDiaryViewState extends State<AddDiaryView> {
             "Thêm mới nhật ký",
             style: StyleBkav.textStyleFW700(Colors.white, 20),
           ),
-          backgroundColor: AppColor.main,
+          backgroundColor: AppColor.background,
           leading: TextButton(
             onPressed: () {
               Navigator.of(context).push(DiaryView.route());

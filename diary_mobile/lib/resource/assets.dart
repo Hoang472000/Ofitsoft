@@ -1,5 +1,6 @@
 class IconAsset {
   static const String iCons = "assets/icons/";
+  static const String iConsDiary = "assets/icons/icons_diary/";
   static const String eyeOff = "${iCons}eye_off.svg";
   static const String eyeOn = "${iCons}eye_on.svg";
   static const String faceId = "${iCons}ic_face.svg";
@@ -51,8 +52,6 @@ class IconAsset {
   static const String icTotalDamage = "${iCons}ic_total_damage.svg";
   static const String icClose = "${iCons}ic_close.svg";
   static const String icArrowLeft = "${iCons}ic_arrow_left.svg";
-  static const String icLogoBkav = "${iCons}ic_logo_bkav.svg";
-  static const String icLogoAIBook = "${iCons}ic_logo_aibook.svg";
   static const String icLogoGoogle = "${iCons}icon_google.svg";
   static const String icBackgroundAIBook = "${iCons}ic_background_ai_book.svg";
   static const String icbankground = "${iCons}background.svg";
@@ -76,7 +75,6 @@ class IconAsset {
   static const String icTT1P= "${iCons}ic_tt1p.svg";
   static const String icWarehouse= "${iCons}ic_warehouse.svg";
   static const String icSaveFileOption= "${iCons}ic_save_file_option.svg";
-  static const String icEllipseRed= "${iCons}ic_ellipse_red.png";
   static const String icCollSpan= "${iCons}ic_collspan.svg";
   static const String icExspan= "${iCons}ic_exspan.svg";
   static const String icAddNew= "${iCons}add_new.svg";
@@ -103,6 +101,29 @@ class IconAsset {
   static const String icArrowRight = "${iCons}ic_arrow_right.svg";
   static const String icHistoryActivity = "${iCons}ic_history_activity.svg";
   static const String icPersonSetting = "${iCons}ic_person_setting.svg";
+  //icon diary
+  static const String icAlmond = "${iConsDiary}almond.svg";
+  static const String icCash = "${iConsDiary}cash.svg";
+  static const String icCashew = "${iConsDiary}cashew.svg";
+  static const String icCoffee = "${iConsDiary}coffee.svg";
+  static const String icEstimate = "${iConsDiary}estimate.svg";
+  static const String icFarmingLand = "${iConsDiary}farming_land.svg";
+  static const String icFertilizer = "${iConsDiary}fertilizer.svg";
+  static const String icFishing = "${iConsDiary}fishing.svg";
+  static const String icGrainWheat = "${iConsDiary}grain_wheat.svg";
+  static const String icHarvesting = "${iConsDiary}harvesting.svg";
+  static const String icInvestmentVN = "${iConsDiary}investment_vn.svg";
+  static const String icLocationDiary = "${iConsDiary}location.svg";
+  static const String icMoneyDiary = "${iConsDiary}money.svg";
+  static const String icNotebook = "${iConsDiary}notebook.svg";
+  static const String icPlanting = "${iConsDiary}planting.svg";
+  static const String icSeeds = "${iConsDiary}seeds.svg";
+  static const String icSickle = "${iConsDiary}sickle.svg";
+  static const String icTractor = "${iConsDiary}tractor.svg";
+  static const String icTree = "${iConsDiary}tree.svg";
+  static const String icWater = "${iConsDiary}water.svg";
+  static const String icWatering = "${iConsDiary}watering.svg";
+  static const String icSeedling = "${iConsDiary}seedling.svg";
 }
 
 class ImageAsset {
@@ -125,4 +146,35 @@ class ImageAsset {
   static const String imageOfitsoft = "${iMages}ofitsoft.png";
   static const String imageOfitsoftText = "${iMages}ofitsoft_text.png";
   static const String imagePersonProfile = "${iMages}person_profile.png";
+  static const String imageActivityFarm = "${iMages}activity_farm.png";
+  static const String imageAddress = "${iMages}address.png";
+  static const String imageCalendarBegin = "${iMages}calendar_begin.png";
+  static const String imageCalendarEnd = "${iMages}calendar_end.png";
+  static const String imageCamera = "${iMages}camera.png";
+  static const String imageGallery = "${iMages}gallery.png";
+  static const String imageGardening = "${iMages}gardening.png";
+  static const String imageInfo = "${iMages}info.png";
+  static const String imageMan = "${iMages}man.png";
+  static const String imageMeasuring = "${iMages}measuring.png";
+  static const String imagePhone = "${iMages}phone.png";
+  static const String imagePlanting = "${iMages}planting.png";
+  static const String imageSpyware = "${iMages}spyware.png";
+  static const String imageTherapy = "${iMages}therapy.png";
+  static const String imageTool = "${iMages}tool.png";
+  static const String imageTools = "${iMages}tools.png";
+  static const String imageUnread = "${iMages}unread.png";
+  static const String imageWater = "${iMages}water.png";
+  static const String imageBudget = "${iMages}budget.png";
+  static const String imageBin = "${iMages}bin.png";
+  static const String imageFile = "${iMages}file.png";
+  static const String imageCalendarPick = "${iMages}calendar_pick.png";
+  static const String imageDiary = "${iMages}diary.png";
+  static const String imageManagement = "${iMages}management.png";
+  static const String imagePlantCrop = "${iMages}plant_crop.png";
+  static const String imageDisaster = "${iMages}disaster.png";
+  static const String imageStatus = "${iMages}status.png";
+  static const String imageLocation = "${iMages}location.png";
+  static const String imageFarmerProfile = "${iMages}farmer.png";
+  static const String imageSex = "${iMages}sex.png";
+  static const String imageCollaboration = "${iMages}collaboration.png";
 }

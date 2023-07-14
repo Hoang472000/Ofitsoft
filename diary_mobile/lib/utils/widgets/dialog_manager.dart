@@ -40,7 +40,7 @@ class DiaLogManager {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            isHaveIcon
+/*            isHaveIcon
                 ? Padding(
               padding: const EdgeInsets.only(top: 24, bottom: 24),
               child: dialogComplete
@@ -55,7 +55,7 @@ class DiaLogManager {
                 height: 48,
               ),
             )
-                : Container(),
+                : Container(),*/
             title == ""
                 ? const SizedBox(
               height: 16,

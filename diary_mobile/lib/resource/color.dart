@@ -12,7 +12,7 @@ class AppColor {
   static const Color redE5 = Color(0xFFE50500);
   static const Color redDD = Color(0xFFDD0808);
   static const Color redE1 = Color(0xFFE12727);
-  static const Color main = Color(0xFF34A853);
+  static const Color main = Color(0xFF35A854);
   static const Color cyan = Color(0xFF08B7DD);
   static const Color cyan100= Color(0xFFB2E9F8);
   static const Color grayB8 = Color(0xFFB8C1C9);
@@ -23,7 +23,7 @@ class AppColor {
   static const Color cyanDisible = Color(0x3308B7DD);
   static const Color gray200= Color(0xFFF4F4F4);
   // static const Color main = Color(0xFFF15B25);
-  static const Color background = Color(0xFFF5F5F5);
+  static const Color background = Color(0xfff2f1f6);
   static const Color badgeBackground = Color(0xFFFF754C);
   static const Color gray69 = Color(0xFF696969);
   static const Color labelInputText = Color(0xFF9F9F9F);

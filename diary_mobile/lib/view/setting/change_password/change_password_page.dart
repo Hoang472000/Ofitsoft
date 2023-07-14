@@ -70,6 +70,7 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
               return false;
             },
             child: Scaffold(
+              backgroundColor: AppColor.background,
                 appBar: BkavAppBar(
                   context,
                   centerTitle: true,
@@ -94,7 +95,7 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                           FocusScope.of(context).unfocus();
                         },
                         child: Container(
-                          color: Colors.white,
+                          //color: Colors.white,
                           height: double.infinity,
                           width: double.infinity,
                           child: Form(

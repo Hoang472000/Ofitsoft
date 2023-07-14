@@ -5,6 +5,7 @@ import 'package:diary_mobile/utils/extenstion/service_info_extension.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 
 import '../../../resource/assets.dart';
 import '../../extenstion/extenstions.dart';
@@ -42,7 +43,7 @@ class ContainerInputWidget extends StatelessWidget {
     this.checkFocus,
     this.titleStyle,
     this.onChangeToggle,
-    this.color
+    this.color,
   }) : super(key: key);
 
   @override
@@ -97,87 +98,109 @@ class ContainerInputWidget extends StatelessWidget {
                   break;
               }
             },
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    color: inputRegisterModel.error != null
-                        ? Colors.red
-                        // chỗ này kiểm tra xem nó là dạng togle thì không show viền boder
-                        : inputRegisterModel.type == TypeInputRegister.Tolge
-                            ? Colors.transparent
-                            : Color(0xFFB2B8BB),
-                    width: 1.5,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(5)),
-                  color: color == null ? Colors.white : color),
-              child: Container(
-                child: ListView(
-                  shrinkWrap: true,
-                  primary: false,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(6),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+            child: Row(
+              children: [
+                 SizedBox(
+//imageActivityFarm
+                   child: inputRegisterModel.image != "" ?
+                   Padding(
+                     padding: EdgeInsets.only(right: 4),
+                     child: Image(
+                       image: AssetImage(inputRegisterModel.image),
+                       width: 40,
+                       fit: BoxFit.contain,
+                     ),
+                   ): Container(),
+                   /*SvgPicture.asset(
+                       IconAsset.icAlmond,
+                       width: 30),*/
+                 ),
+                Expanded(
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: inputRegisterModel.error != null
+                              ? Colors.red
+                              // chỗ này kiểm tra xem nó là dạng togle thì không show viền boder
+                              : inputRegisterModel.type == TypeInputRegister.Tolge
+                                  ? Colors.transparent
+                                  : Color(0xFFB2B8BB),
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                        color: color == null ? Colors.white : color),
+                    child: Container(
+                      child: ListView(
+                        shrinkWrap: true,
+                        primary: false,
                         children: [
-                          inputRegisterModel.title.length > 25 ?
-                          Expanded(
-                            flex: 5,
-                            child: Text(
-                              '${inputRegisterModel.title}',
-                              style: TextStyle(
+                          Padding(
+                            padding: EdgeInsets.all(6),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                inputRegisterModel.title.length > 25 ?
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    '${inputRegisterModel.title}',
+                                    style: TextStyle(
+                                            color: Color(0xFFB2B8BB),
+                                            fontSize: 14)
+                                        .merge(titleStyle),
+                                  ),
+                                ) : Text(
+                                  '${inputRegisterModel.title}',
+                                  style: TextStyle(
                                       color: Color(0xFFB2B8BB),
                                       fontSize: 14)
-                                  .merge(titleStyle),
-                            ),
-                          ) : Text(
-                            '${inputRegisterModel.title}',
-                            style: TextStyle(
-                                color: Color(0xFFB2B8BB),
-                                fontSize: 14)
-                                .merge(titleStyle),
-                          ),
-                          (inputRegisterModel.isCompulsory &&
-                                  inputRegisterModel.title.isNotEmpty)
-                              ? Text(
-                                  " *",
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 14),
-                                )
-                              : Container(),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Expanded(
-                            flex: 3,
-                            child: Row(
-                              children: [
-                                Expanded(child: _rightWidget(context)),
-                                inputRegisterModel.unit == null
-                                    ? Container()
-                                    : Expanded(
-                                        child: Text(
-                                        inputRegisterModel.unit ?? "",
+                                      .merge(titleStyle),
+                                ),
+                                (inputRegisterModel.isCompulsory &&
+                                        inputRegisterModel.title.isNotEmpty)
+                                    ? Text(
+                                        " *",
+                                        textAlign: TextAlign.left,
                                         style: TextStyle(
-                                            color: Colors.black,
+                                            color: Colors.red,
                                             fontSize: 14),
-                                        textAlign: TextAlign.end,
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                Expanded(
+                                  flex: 3,
+                                  child: Row(
+                                    children: [
+                                      Expanded(child: _rightWidget(context)),
+                                      inputRegisterModel.unit == null
+                                          ? Container()
+                                          : Expanded(
+                                              child: Text(
+                                              inputRegisterModel.unit ?? "",
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                              textAlign: TextAlign.end,
 
-                                      )),
+                                            )),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
+                          inputRegisterModel.type == TypeInputRegister.MultiSelection
+                              ? bottomWidget()
+                              : Container()
                         ],
                       ),
                     ),
-                    inputRegisterModel.type == TypeInputRegister.MultiSelection
-                        ? bottomWidget()
-                        : Container()
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
