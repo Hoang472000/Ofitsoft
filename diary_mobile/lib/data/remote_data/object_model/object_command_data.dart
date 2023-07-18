@@ -1,6 +1,8 @@
+import 'package:get/get.dart';
+
 class ObjectData{
   String token;
-  //final String orgGUID;
+  final bool isLogin;
   //final int commandType;
   final dynamic object;
 
@@ -8,7 +10,7 @@ class ObjectData{
       {this.token = "",
         this.object = const {},
         //required this.commandType,
-        //this.orgGUID= ""
+        this.isLogin= false,
       });
 
   Map<String, dynamic> toJson() => {

@@ -58,7 +58,7 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
           hasBottom: true,
           showDefaultBackButton: true,
           title: Text(
-            "Thêm mới nhật ký",
+            "Thông tin nhật ký",
             style: StyleBkav.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,

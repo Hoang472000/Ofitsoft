@@ -1,4 +1,8 @@
-class Item {
+import 'package:diary_mobile/data/local_data/diary_db.dart';
+import 'package:diary_mobile/data/local_data/table/item_default/tool_table.dart';
+import 'package:drift/drift.dart';
+
+class Tool implements Insertable<Tool> {
   int? id;
   int? categoryId;
   String? name;
@@ -13,7 +17,7 @@ class Item {
   String? unitId;
   String? mediaContent;
 
-  Item(
+  Tool(
       {this.id,
       this.name,
       this.description,
@@ -28,8 +32,8 @@ class Item {
       this.unitId,
       this.mediaContent});
 
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
+  factory Tool.fromJson(Map<String, dynamic> json) {
+    return Tool(
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
       description: json['description'] ?? '',
@@ -39,9 +43,9 @@ class Item {
       image: json['image'] ?? false,
       isActive: json['is_active'] ?? false,
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
-      toolId: json['tool_id'] ?? '',
+      toolId: json['tool_id'] ?? -1,
       quantity: json['quantity'] ?? '',
-      unitId: json['unit_id'] ?? -1,
+      unitId: json['unit_id'] ?? '',
       mediaContent: json['media_content'] ?? '',
     );
   }
@@ -62,5 +66,24 @@ class Item {
     data['unit_id'] = unitId;
     data['media_content'] = mediaContent;
     return data;
+  }
+
+  @override
+  Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
+    return ToolTableCompanion(
+            id: Value(id),
+            name: Value(name),
+            categoryId: Value(categoryId),
+            isOrganic: Value(isOrganic),
+            notation: Value(notation),
+            description: Value(description),
+            image: Value(image),
+            isActive: Value(isActive),
+            diaryFarmerId: Value(diaryFarmerId),
+            toolId: Value(toolId),
+            quantity: Value(quantity),
+            mediaContent: Value(mediaContent),
+            unitId: Value(unitId))
+        .toColumns(nullToAbsent);
   }
 }

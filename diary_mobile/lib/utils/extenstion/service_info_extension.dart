@@ -41,7 +41,7 @@ class ServiceInfoExtension {
           fontWeight: FontWeight.bold),
       onConfirm: (Picker picker, List value) {
         modelInput.valueSelected = DateTime.parse(picker.adapter.text);
-        modelInput.valueDefault = Utils.formatDateTimeToString(DateTime.parse(picker.adapter.text));
+        //modelInput.valueDefault = /*Utils.formatDateTimeToString(*/DateTime.parse(picker.adapter.text).isUtc;
         modelInput.error = null;
         onNotification();
       },
@@ -193,106 +193,21 @@ class ServiceInfoExtension {
 }
 
 enum TypeInputEnum {
+  dmucItem,
   name, //Họ tên
   sex, // Giới tính
   birthday, //Ngày sinh
   country, // Quốc tịch
-  identification, //Giấy tờ tùy thân
-  passportNumber, //Số CMND/Passport
-  passportDate, // Ngày cấp
-  passportPlace, // Nơi cấp
-  residentStatus, // Tình trạng cư trú
-  residentAddressText, //Địa chỉ thường trú nhập tay
-  residentContact, // Địa chỉ liên hệ nhập tay
-  phoneNumber, // SỐ điện thoại
-  email, //Email
-  accountNumber, // Số tài khoản
-  accountName, // Tên tài khoản
-  typeCards, // Loại thẻ phát hành, đăng kí dịch vụ
-  issuedPlace, // Chi nhánh liên hệ
-  currentProvinceAddress, //Địa chỉ thường trú / Tỉnh/TP(Nơi ở hiện tại)
-  residentProvinceAddress, // Tỉnh/TP địa chỉ thường trú
-  residentCountry, // Quốc gia thường trú
-  loanAmount, // Số tiền vay
-  loanType, // Loại tiền vay
-  loanDate, // Thời gian vay
-  loanPurpose, // Mục đích vay
-  totalIncome, // Tổng thu nhập tháng
-  incomeSource, // Nguồn thu nhập chính
-  guaranteedAsset, // Tài sản đảm bảo
-  residentContactSelect, // Địa chỉ liên hệ lựa chọn
-  contactInformation, // Thông tin liên hệ
-  contactAddressProvince, // Chọn tỉnh địa chỉ liên hệ
-  contactAddressCountry, // Chọn quốc gia địa chỉ liên hệ
-  marriage, // Hôn nhân
-  education, // Học vấn
-  job, // Nghề nghiệp
-  openAccount, // Tài khoản mở
-  moneyType, // Loại tiền
-  securityDevice, // Thiết bị bảo mật
-  paymentAccount, // Tài khoản thanh toán
-  living, // Đang sống tại
-  balance,
-  benificalAccount, // tài khoản thụ hưởng
-  feeype, //  ai chuyển phí giao dịch
-  remark, // nội dung của mỗi giao dịch
-  sourceAccount, // tài khoản nguồn,
-  typeDeterminative, // loại kì hạn
-  determinative, //kì hạn
-  depositProducts, // sản phẩm
-  interest_rate, // lãi suất
-  deposits, // số tiền gửi
-  isRolloutRate, // hình thức trả lãi
-  interest_account, // tài khoản nhận tiền
-  isRolloutInterest, // hình thức đáo hạn
-  togle, // có lưu hay không togle chuyển đ
-  date_open, // ngày mở
-  date_close, // ngày đáo hạn
-  date_make, // ngày tất toán
-  beneficiary_account, // tài khoản nhận tiền
-  service, // Dịch vụ
-  provide_house, // Nhà cung cấp
-  id_customer, // Mã khách hàng
-  otp, // nhập mã otp
-  date_pay, // Ngày thanh toán
-  fee_type, // Loại phí
   password, // Mật khẩu
   new_password, // Mật khẩu mới
   re_new_password, // Nhập lại mật khẩu mới
-  beneficiary_bank, // ngân hàng thụ hưởng
-  beneficiary_branch, // chi nhánh nhận
-  benificalCombobox, //tài khoản nhận dạng combobox
-  cmt, // chứng minh thư
-  benificalInput, //tài khoản nhận dạng inupt
   text,
   date,
-  dmuctbao,
-  dmuctkhai,
-  dmucCqt,
-  dmucChiCucCqt,
-  money,
-  dmucLoaiPT,
-  dmucNhanHieu,
-  dmucTTMai,
-  dmucQuocGia,
-  congcutinhthue,
-  dmucTinh,
-  dmucHuyen,
-  dmucXa,
-  dmucNganHang,
-  dmucHoSo,
-  dmucMaMuc,
-  dmucTieuMuc,
-  dmucLoaiTien,
-  thongTinMST,
-  kyThue,
-  dmucChon,
 }
 
 enum SexEnum {
   M, // Nam
   F, // Nữ
-
 }
 
 // enum DatetimeMY {

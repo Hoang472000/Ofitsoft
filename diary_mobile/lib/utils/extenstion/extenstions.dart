@@ -1,3 +1,8 @@
+import 'package:diary_mobile/data/entity/item_default/activity.dart';
+import 'package:diary_mobile/data/entity/item_default/item_default.dart';
+import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
+import 'package:diary_mobile/data/entity/item_default/tool.dart';
+import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/utils/widgets/bottom_sheet/bottom_sheet_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
@@ -33,12 +38,13 @@ class Extension {
         posSelected: posSelected,
       ),
     );
-    return (result == -1 || result == null) ? -1 : result;
+    return (result == null || result == -1) ? -1 : result;
   }
 
   String getValueDisplay(
     dynamic model,
   ) {
+/*    print("HoangCV: model: ${model.runtimeType} : ${model.name}");*/
     switch (model.runtimeType) {
       case SexEnum:
         {
@@ -55,126 +61,13 @@ class Extension {
       case PickerItem:
         return model.value;
         break;
-     /* case JobEnum:
-        {
-          switch (model as JobEnum) {
-            case JobEnum.learning:
-              return "Đang đi học";
-              break;
-            case JobEnum.no_work:
-              return "Không đi làm";
-              break;
-            case JobEnum.working:
-              return "Đang đi làm";
-              break;
-            case JobEnum.self_employed:
-              return "HoangCV";
-              break;
-            case JobEnum.retirement:
-              return "Nghỉ hưu";
-              break;
-          }
-          break;
-        }
-      case EducationEnum:
-        {
-          switch (model as EducationEnum) {
-            case EducationEnum.after_university:
-              return Public().languageCustom(
-                "loan.after_university",
-              );
-              break;
-            case EducationEnum.university:
-              return Public().languageCustom(
-                "loan.university",
-              );
-              break;
-            case EducationEnum.poly:
-              return Public().languageCustom(
-                "loan.poly",
-              );
-              break;
-            case EducationEnum.high_school:
-              return Public().languageCustom(
-                "loan.high_school",
-              );
-              break;
-            case EducationEnum.below_high_school:
-              return Public().languageCustom(
-                "loan.below_high_school",
-              );
-              break;
-          }
-          break;
-        }
+      case Activity:
+      case MaterialEntity:
+      case Tool:
+      case Unit:
+      case Item:
+        return model.name;
 
-      case MarriageEnum:
-        {
-          switch (model as MarriageEnum) {
-            case MarriageEnum.single:
-              return Public().languageCustom(
-                "payAccount.fa",
-              );
-              break;
-            case MarriageEnum.married:
-              return Public().languageCustom(
-                "payAccount.Married",
-              );
-              break;
-            case MarriageEnum.other:
-              return Public().languageCustom(
-                "card.other",
-              );
-              break;
-          }
-          break;
-        }
-      case ContactAddressEnum:
-        {
-          switch (model as ContactAddressEnum) {
-            case ContactAddressEnum.vn:
-              return Public().languageCustom(
-                "card.similar_add",
-              );
-              break;
-            case ContactAddressEnum.other:
-              return Public().languageCustom(
-                "card.other",
-              );
-              break;
-          }
-
-          break;
-        }
-
-      case IdentificationEnum:
-        switch (model as IdentificationEnum) {
-          case IdentificationEnum.cardId:
-            return Public().languageCustom(
-              "internet_banking.id",
-            );
-            break;
-          case IdentificationEnum.passport:
-            return Public().languageCustom(
-              "internet_banking.passport",
-            );
-            break;
-        }
-        break;
-      case ResidentEnum:
-        switch (model as ResidentEnum) {
-          case ResidentEnum.resident:
-            return Public().languageCustom(
-              "card.Resident",
-            );
-            break;
-          case ResidentEnum.nonResident:
-            return Public().languageCustom(
-              "card.not_resident",
-            );
-            break;
-        }
-        break;*/
       case DateTime:
         return DateFormat('dd/MM/yyyy').format(model);
       case String:
@@ -200,34 +93,7 @@ class Extension {
       //   return model.acctNo;
       //   break;
 
-/*
-      case BranchModel:
-        return model.shortName;
-        break;
-      case TypeCardEnum:
-        switch (model as TypeCardEnum) {
-          case TypeCardEnum.DC:
-            return Public().languageCustom(
-              "card.debitCard",
-            );
-            break;
-          case TypeCardEnum.CO:
-            return Public().languageCustom(
-              "card.credit",
-            );
-            break;
-          case TypeCardEnum.TM:
-            return Public().languageCustom(
-              "card.card_th",
-            );
-            break;
-          case TypeCardEnum.OC:
-            return Public().languageCustom(
-              "card.otherCard",
-            );
-            break;
-        }
-        break;*/
+
       case MoneyTypeEnum:
         return model.toString().split('.').last;
         break;
@@ -278,7 +144,8 @@ class Extension {
         return model.shortName;
         break;*/
       // danh muc NH
-   /*   case DmucNganHang:
+/*
+      case DmucNganHang:
         return model.maNganHang + " - " + model.tenNganHang;
 
       case TkNganHangModel:
@@ -403,18 +270,18 @@ class Extension {
           } else {
             inputModel.error = null;
           }
-          if (inputModel.typeInputEnum == TypeInputEnum.deposits) {
+         /* if (inputModel.typeInputEnum == TypeInputEnum.deposits) {
             if (double.parse(inputModel.controller!.text.replaceAll(',', '')) <
                 50000) {
               inputModel.error = "Số tiền giao dịch phải lớn hơn 50.000";
             } else {
               inputModel.error = null;
             }
-          }
+          }*/
           break;
         case TypeInputRegister.Select:
           if (inputModel.valueDefault != null ||
-              (inputModel.typeInputEnum == TypeInputEnum.determinative &&
+              (/*inputModel.typeInputEnum == TypeInputEnum.determinative &&*/
                   inputModel.valueSelected.value == '')) {
             inputModel.error = "Vui lòng nhập ${inputModel.title.toLowerCase()}";
             return;
@@ -475,8 +342,8 @@ class Extension {
           break;
       }
     }else{
-      if (inputModel.typeInputEnum == TypeInputEnum.birthday||
-          inputModel.typeInputEnum == TypeInputEnum.passportDate
+      if (inputModel.typeInputEnum == TypeInputEnum.birthday/*||
+          inputModel.typeInputEnum == TypeInputEnum.passportDate*/
       ) {
         DateTime dt= inputModel.valueSelected as DateTime;
         if(dt.isBefore(DateTime.now())){

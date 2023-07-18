@@ -11,7 +11,7 @@ import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
-import '../../view_model/list_diary/list_diary_bloc.dart';
+import '../../view_model/diary/list_diary_bloc.dart';
 import 'add_diary/add_diary_page.dart';
 import 'detail_diary/detail_diary_page.dart';
 

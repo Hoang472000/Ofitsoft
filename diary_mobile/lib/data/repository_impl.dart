@@ -2,6 +2,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
+import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_executor.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
@@ -12,7 +14,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants/shared_preferences_key.dart';
 import '../utils/widgets/dialog_manager.dart';
+import 'entity/diary/diary.dart';
 import 'entity/item_default/item_default.dart';
+import 'entity/item_default/material_entity.dart';
+import 'entity/item_default/tool.dart';
+import 'entity/item_default/unit.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'remote_data/api_model/api_base_generator.dart';
 import 'remote_data/object_model/object_command_data.dart';
@@ -57,19 +63,19 @@ class RepositoryImpl extends Repository {
     // final Dio _dio = Dio();
     // final response = await _dio.fetch(RequestOptions(path: 'https://10.0.2.2:8015/api/login', data: object1,headers: _headers));
     // print("HoangCV: login response: ${response.data}");
-    ObjectResult objectResult = await networkExecutor.request(
+/*    ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: "/api/login",
             method: HttpMethod.POST,
             body: object1,
             header: headers),
-        isLogin: true);
+        isLogin: true);*/
     //
 
-    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    ObjectResult objectResult =  ObjectResult(1, "object", "1", "", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.isOK) {
-      sharedPreferences.setString(SharedPreferencesKey.accessToken,objectResult.response["access_token"]);
+      //sharedPreferences.setString(SharedPreferencesKey.accessToken,objectResult.response["access_token"]);
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
     }
@@ -119,20 +125,20 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<bool> getListActivities() async{
+  Future<List<Activity>> getListActivities() async{
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
           path: ApiConst.getListActivities,
             method: HttpMethod.GET,
-            body: ObjectData()));
+            body: {"token": "token"}));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListActivities response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.isOK) {
-      List<Item> list = List.from(objectResult.response)
-          .map((json) => Item.fromJson(json))
+      List<Activity> list = List.from(objectResult.response)
+          .map((json) => Activity.fromJson(json))
           .toList();
-      return await getListMaterials();
+      return list;
     }
     else {
 /*      DiaLogManager.showDialogHTTPError(
@@ -141,86 +147,135 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );*/
     }
-    return false;
+    return FakeRepositoryImpl().getListActivities();
   }
 
   @override
-  Future<bool> getListMaterials() async{
+  Future<List<MaterialEntity>> getListMaterials() async{
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getListMaterials,
             method: HttpMethod.GET,
-            body: ObjectData()));
+            body: {"token": "token"}));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListMaterials response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    List<Item> list = List.from(objectResult.response)
-        .map((json) => Item.fromJson(json))
+    List<MaterialEntity> list = List.from(objectResult.response)
+        .map((json) => MaterialEntity.fromJson(json))
         .toList();
     if (objectResult.isOK) {
-      return await getListTools();
+      return list;
     }
     else {
-      DiaLogManager.showDialogHTTPError(
+/*      DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
-      );
+      );*/
     }
-    return false;
+    return FakeRepositoryImpl().getListMaterials();
   }
 
   @override
-  Future<bool> getListTools() async{
+  Future<List<Tool>> getListTools() async{
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getListTools,
             method: HttpMethod.GET,
-            body: ObjectData()));
+            body: {"token": "token"}));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListTools response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.isOK) {
-      List<Item> list = List.from(objectResult.response)
-          .map((json) => Item.fromJson(json))
+      List<Tool> list = List.from(objectResult.response)
+          .map((json) => Tool.fromJson(json))
           .toList();
-      return await getListUnits();
+      return list;
     }
     else {
-      DiaLogManager.showDialogHTTPError(
+/*      DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
-      );
+      );*/
     }
-    return false;
+    return FakeRepositoryImpl().getListTools();
   }
 
   @override
-  Future<bool> getListUnits() async{
+  Future<List<Unit>> getListUnits() async{
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getListUnits,
             method: HttpMethod.GET,
-            body: ObjectData()));
+            body: {"token": "token"}));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.isOK) {
-      List<Item> list = List.from(objectResult.response)
-          .map((json) => Item.fromJson(json))
+      List<Unit> list = List.from(objectResult.response)
+          .map((json) => Unit.fromJson(json))
           .toList();
-      return true;
+      return list;
     }
     else {
-      DiaLogManager.showDialogHTTPError(
+/*      DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
-      );
+      );*/
     }
-    return false;
+    return FakeRepositoryImpl().getListUnits();
   }
 
+  @override
+  Future<List<Diary>> getListDiary() async{
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListDiary + "/1",
+            method: HttpMethod.GET,
+            body: {"token": "token"}));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListUnits response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.isOK) {
+      List<Diary> list = List.from(objectResult.response)
+          .map((json) => Diary.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    return FakeRepositoryImpl().getListDiary();
+  }
+
+  @override
+  Future<Diary> getDetailDiary(int id) async{
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListDiary + "/1",
+            method: HttpMethod.GET,
+            body: {"token": "token"}));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListUnits response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.isOK) {
+      Diary list = Diary.fromJson(objectResult.response);
+      return list;
+    }
+    else {
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    return FakeRepositoryImpl().getDetailDiary(id);
+  }
 
 }

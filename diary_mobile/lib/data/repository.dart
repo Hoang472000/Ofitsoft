@@ -1,7 +1,13 @@
 import 'dart:async';
+import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
+import 'entity/diary/diary.dart';
+import 'entity/item_default/activity.dart';
 import 'entity/item_default/item_default.dart';
+import 'entity/item_default/material_entity.dart';
+import 'entity/item_default/tool.dart';
+import 'entity/item_default/unit.dart';
 
 
 
@@ -20,7 +26,7 @@ abstract class Repository {
 
   Stream<AuthenticationStatus> get status async* {
     //await Future.delayed(const Duration(seconds: 2));
-    bool isExpToken = await getListActivities();
+    bool isExpToken = (await getListActivities()).isNotEmpty ? true : false;
     yield !isExpToken
         ? AuthenticationStatus.unauthenticated
         : AuthenticationStatus.authenticated;
@@ -37,11 +43,15 @@ abstract class Repository {
 
   Future<ObjectResult> login(String userName, String pass);
 
-  Future<bool> getListUnits();
+  Future<List<Diary>> getListDiary();
 
-  Future<bool> getListTools();
+  Future<List<Unit>> getListUnits();
 
-  Future<bool> getListMaterials();
+  Future<List<Tool>> getListTools();
 
-  Future<bool> getListActivities();
+  Future<List<MaterialEntity>> getListMaterials();
+
+  Future<List<Activity>> getListActivities();
+
+  Future<Diary> getDetailDiary(int id);
 }

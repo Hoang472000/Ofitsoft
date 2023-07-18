@@ -17,7 +17,7 @@ import '../../../../utils/widgets/bkav_app_bar.dart';
 import '../../../../utils/widgets/button_widget.dart';
 import '../../../../utils/widgets/dialog_manager.dart';
 import '../../../../utils/widgets/input/container_input_widget.dart';
-import '../../../../view_model/list_diary/list_diary_bloc.dart';
+import '../../../../view_model/diary/list_diary_bloc.dart';
 
 class AddMonitorSubPage extends StatefulWidget {
   AddMonitorSubPage({super.key, required this.listWidget});

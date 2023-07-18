@@ -2,9 +2,10 @@ class ApiConst {
 
   //static const String domainApi = "http://qlvsx.ofitsoft.com:8069";//"http://10.0.2.2:8069";//http://diary.visimex.com:8069/
   //
-  //static const String domainApi = "http://10.0.2.2:8015";
-  static const String domainApi = "http://192.168.2.79:8015";
+  static const String domainApi = "http://10.0.2.2:8015";
+  //static const String domainApi = "http://192.168.2.79:8015";
   //static const String domainApi = "http://localhost:8015";
+  //static const String domainApi = "http://hoangofit-system-product-name:8015";
   static const String get_diaries_farmer = "/get/diaries/farmer/";// /get/diaries/farmer/<int:id>
 
   //api login
@@ -15,6 +16,8 @@ class ApiConst {
   static const String getListMaterials = "/api/materials";
   static const String getListActivities = "/api/activities";
   static const String getListUnits = "/api/units";
+  //api danh sach diary
+  static const String getListDiary = "/get/seasons/farmer";
 
 
 

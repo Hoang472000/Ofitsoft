@@ -17,7 +17,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../view_model/list_diary/list_diary_bloc.dart';
+import '../../../view_model/diary/list_diary_bloc.dart';
 
 class AddDiaryView extends StatefulWidget {
   const AddDiaryView({super.key});

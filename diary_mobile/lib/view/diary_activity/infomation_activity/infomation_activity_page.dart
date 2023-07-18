@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../view_model/list_diary/list_diary_bloc.dart';
+import '../../../view_model/diary/list_diary_bloc.dart';
 
 class InfomationActivityPage extends StatefulWidget {
   const InfomationActivityPage({super.key});

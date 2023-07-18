@@ -113,6 +113,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
       child: GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
+          backgroundColor: AppColor.background,
           appBar: BkavAppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,

@@ -156,7 +156,7 @@ class Utils {
 
   static String formatDate(String time) {
     if (time.isNotEmpty) {
-      final dateTime = DateTime.parse(time);
+      DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
       final f = DateFormat('dd/MM/yyyy');
       return f.format(dateTime);
     } else {
@@ -167,7 +167,19 @@ class Utils {
   static String formatDateToString(DateTime time) {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
       return formatter.format(time);
+  }
 
+  static String formatDateToStringYMD(DateTime time) {
+    DateFormat formatter = DateFormat.yMd('dd/MM/yyyy');
+    return formatter.format(time);
+  }
+
+  static DateTime formatStringToDate(String time) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
+/*    DateTime dateTime = formatter.parse(time);
+    DateTime dateTime1 = DateTime.parse(dateTime.toString());*/
+    return dateTime.toUtc();
   }
 
   static Future<void> launchInBrowser(String url) async {

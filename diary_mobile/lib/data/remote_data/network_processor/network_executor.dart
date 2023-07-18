@@ -86,7 +86,7 @@ class NetworkExecutor{
             orgGuid= sharedPreferences.getString(SharedPreferencesKey.orgGuid)?? "";
             //route.body.token = token;
             print("HoangCV123: ${token} bug: ${route.body} bug: ${token}");
-            if(token.isNotEmpty){
+            if(token.isNotEmpty || route.body["token"].isNotEmpty){
               return ObjectResult(1, "Lần đầu đăng nhập", "", "",false , true);
             }
           }

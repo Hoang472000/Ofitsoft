@@ -12,23 +12,24 @@ import '../../../../utils/utils.dart';
 import '../../../../utils/widgets/bkav_app_bar.dart';
 import '../../../../utils/widgets/button_widget.dart';
 import '../../../../utils/widgets/input/container_input_widget.dart';
-import '../../../../view_model/list_diary/list_diary_bloc.dart';
+import '../../../../view_model/diary/list_diary_bloc.dart';
 
 class AddActivitySubPage extends StatefulWidget {
   AddActivitySubPage(
-      {super.key, required this.listVatTuAdd, required this.listCongCuAdd});
+      {super.key, required this.listVatTuAdd, required this.listCongCuAdd, required this.isEdit});
 
   List<VatTu> listVatTuAdd;
   List<VatTu> listCongCuAdd;
+  bool isEdit;
 
   @override
   _AddActivitySubPageState createState() => _AddActivitySubPageState();
 
-  static Route route(List<VatTu> listVatTuAdd, List<VatTu> listCongCuAdd) {
+  static Route route(List<VatTu> listVatTuAdd, List<VatTu> listCongCuAdd, bool isEdit) {
     return Utils.pageRouteBuilder(
         AddActivitySubPage(
           listVatTuAdd: listVatTuAdd,
-          listCongCuAdd: listCongCuAdd,
+          listCongCuAdd: listCongCuAdd, isEdit: isEdit,
         ),
         true);
   }
@@ -57,8 +58,6 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
     "Găng tay",
   ];
 
-/*  List<VatTu> listVatTuAdd = [];
-  List<VatTu> listCongCuAdd = [];*/
   List<String> listCongCu = [
     "Cuốc",
     "xẻng",
@@ -102,7 +101,62 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
   TextEditingController moTaController = TextEditingController();
   TextEditingController donVi2Controller = TextEditingController();
 
-  void _initView() {
+  void _initViewDetail() {
+    _listWidgetVT.add(InputRegisterModel(
+        title: "Vật tư liên quan",
+        isCompulsory: true,
+        type: TypeInputRegister.Non,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: listVatTu,
+        image: ImageAsset.imageGardening
+    ));
+
+    _listWidgetCC.add(InputRegisterModel(
+        title: "Công cụ sử dụng",
+        isCompulsory: true,
+        type: TypeInputRegister.Non,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: listCongCu,
+      image: ImageAsset.imageTools,
+    ));
+    _listWidget1.add(InputRegisterModel(
+      title: "Số lượng:",
+      isCompulsory: false,
+      maxLengthTextInput: 2000,
+      type: TypeInputRegister.Non,
+      typeInput: TextInputType.text,
+      controller: soLuongController,
+        image: ImageAsset.imageBudget
+    ));
+    _listWidget1.add(InputRegisterModel(
+      title: "Đơn vị:",
+      isCompulsory: false,
+      maxLengthTextInput: 2000,
+      type: TypeInputRegister.Non,
+      typeInput: TextInputType.text,
+      controller: donViController,
+    ));
+    _listWidget2.add(InputRegisterModel(
+      title: "Số lượng: ",
+      isCompulsory: false,
+      maxLengthTextInput: 2000,
+      type: TypeInputRegister.Non,
+      typeInput: TextInputType.text,
+      controller: soLuong2Controller,
+        image: ImageAsset.imageBudget
+    ));
+    _listWidget2.add(InputRegisterModel(
+      title: "Đơn vị: ",
+      isCompulsory: false,
+      maxLengthTextInput: 2000,
+      type: TypeInputRegister.Non,
+      typeInput: TextInputType.text,
+      controller: donVi2Controller,
+    ));
+  }
+  void _initViewEdit() {
     _listWidgetVT.add(InputRegisterModel(
         title: "Vật tư liên quan",
         isCompulsory: true,
@@ -114,21 +168,21 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
     ));
 
     _listWidgetCC.add(InputRegisterModel(
-        title: "Công cụ sử dụng",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listCongCu,
+      title: "Công cụ sử dụng",
+      isCompulsory: true,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: -1,
+      listValue: listCongCu,
       image: ImageAsset.imageTools,
     ));
     _listWidget1.add(InputRegisterModel(
-      title: "Số lượng:",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: soLuongController,
+        title: "Số lượng:",
+        isCompulsory: false,
+        maxLengthTextInput: 2000,
+        type: TypeInputRegister.TextField,
+        typeInput: TextInputType.text,
+        controller: soLuongController,
         image: ImageAsset.imageBudget
     ));
     _listWidget1.add(InputRegisterModel(
@@ -140,12 +194,12 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
       controller: donViController,
     ));
     _listWidget2.add(InputRegisterModel(
-      title: "Số lượng: ",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: soLuong2Controller,
+        title: "Số lượng: ",
+        isCompulsory: false,
+        maxLengthTextInput: 2000,
+        type: TypeInputRegister.TextField,
+        typeInput: TextInputType.text,
+        controller: soLuong2Controller,
         image: ImageAsset.imageBudget
     ));
     _listWidget2.add(InputRegisterModel(
@@ -162,7 +216,11 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initView();
+    if(widget.isEdit) {
+      _initViewEdit();
+    } else{
+      _initViewDetail();
+    }
   }
 
   @override
@@ -374,7 +432,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                     ],
                                                   ),
                                                 ),
-                                                IconButton(
+                                                widget.isEdit ? IconButton(
                                                   onPressed: () {
                                                     setState(() {
                                                       widget.listVatTuAdd.removeAt(index);
@@ -391,6 +449,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                   padding: EdgeInsets.all(9),
                                                   constraints: BoxConstraints(),
                                                 )
+                                                    : Container()
                                               ],
                                             ),
                                           ),
@@ -588,7 +647,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                     ],
                                                   ),
                                                 ),
-                                                IconButton(
+                                                widget.isEdit ? IconButton(
                                                   onPressed: () {
                                                     setState(() {
                                                       widget.listCongCuAdd.removeAt(index);
@@ -605,6 +664,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                   padding: EdgeInsets.all(9),
                                                   constraints: BoxConstraints(),
                                                 )
+                                                    : Container()
                                               ],
                                             ),
                                           ),

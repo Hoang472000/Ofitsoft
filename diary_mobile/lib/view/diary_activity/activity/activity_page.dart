@@ -1,9 +1,12 @@
 import 'package:diary_mobile/view/diary/diary_view.dart';
+import 'package:diary_mobile/view/diary_activity/activity/detail_activity.dart';
 import 'package:diary_mobile/view/diary_activity/monitor/add_monitor.dart';
+import 'package:diary_mobile/view_model/diary_activity/activity/activity_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../../data/repository.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -14,7 +17,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../view_model/list_diary/list_diary_bloc.dart';
+import '../../../view_model/diary/list_diary_bloc.dart';
 import 'add_activity.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -114,7 +117,7 @@ class _ActivityPageState extends State<ActivityPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListDiaryBloc(),
+      create: (context) => ActivityBloc(context.read<Repository>()),
       child: Scaffold(
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -127,15 +130,18 @@ class _ActivityPageState extends State<ActivityPage> {
             Navigator.of(context).push(AddMonitorPage.route());
           },
         ),
-        body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
+        body: BlocConsumer<ActivityBloc, ActivityState>(
             listener: (context, state) {},
             builder: (blocContext, state) {
               return ListView.builder(
-                  itemCount: 5 /*state.listDiary!.length*/,
+                  itemCount:  state.listDiaryActivity.length,
                   itemBuilder: (BuildContext context, int index) {
                     return GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: () {},
+                      onTap: () {
+                        //Truyen id de sang man ben goi api hoac DB
+                        Navigator.push(context, DetailActivityPage.route());
+                      },
                       onLongPress: () {},
                       child: Container(
                         padding: const EdgeInsets.only(top: 8),
@@ -175,7 +181,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     const EdgeInsets.only(
                                         bottom: 5),
                                     child: Text(
-                                      "Dọn vườn chuẩn bị mùa chăm sóc mới",
+                                      state.listDiaryActivity[index].name ?? "",
                                       style:
                                       StyleBkav.textStyleFW700(
                                           AppColor.gray500, 16),
@@ -188,7 +194,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                       const EdgeInsets.only(
                                           bottom: 5, top: 5),
                                       child: Text(
-                                        "Ngày: 05/07/2023",
+                                        "Ngày: ${state.listDiaryActivity[index].name}",
                                         style: StyleBkav
                                             .textStyleFW400(
                                             AppColor.gray57,
@@ -207,7 +213,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                         child: RichText(
                                           text: Utils.convertText(
                                               "Trạng thái: ",
-                                              "Mới thực hiện",
+                                              state.listDiaryActivity[index].status == 0 ? "Đang xử lý" :
+                                              state.listDiaryActivity[index].status == 1 ? "Đã hoàn thành" : "Đã hủy",
                                               AppColor.blue15),
                                           maxLines: 1,
                                           overflow: TextOverflow
@@ -236,41 +243,4 @@ class _ActivityPageState extends State<ActivityPage> {
     );
   }
 
-  Future<void> onSelectValue(
-      InputRegisterModel inputRegisterModel, BuildContext context) async {
-    int result;
-/*    if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucTinh && dMucTinhResponse.tinh == null) {
-      Toast.showLongTop("Không có danh mục tỉnh");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucHuyen && dMucHuyenResponse.dmucHuyenTPS == null) {
-      Toast.showLongTop("Không có danh mục huyện");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucXa && dMucXaResponse.dmucXaTPS == null) {
-      Toast.showLongTop("Không có danh mục xã");
-      return;
-    }*/
-    if (inputRegisterModel.valueSelected.runtimeType == DateTime || inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
-      setState(() {
-        ServiceInfoExtension().selectValue(inputRegisterModel, context, () {
-
-        });
-      });
-    }else {
-      result = await Extension().showBottomSheetSelection(
-          context,
-          inputRegisterModel.listValue,
-          inputRegisterModel.positionSelected,
-          "${inputRegisterModel.title}",
-          hasSearch: inputRegisterModel.hasSearch ?? false);
-      if (result != -1) {
-        setState(() {
-          inputRegisterModel.positionSelected = result;
-          inputRegisterModel.valueDefault = null;
-          inputRegisterModel.valueSelected =
-          inputRegisterModel.listValue[result];
-          inputRegisterModel.error = null;
-        });
-      }
-    }
-  }
 }
