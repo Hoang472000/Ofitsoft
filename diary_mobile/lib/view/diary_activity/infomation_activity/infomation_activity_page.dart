@@ -2,75 +2,86 @@ import 'package:diary_mobile/resource/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../data/entity/diary/diary.dart';
+import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../view_model/diary/list_diary_bloc.dart';
+import '../../../view_model/diary_activity/activity/detail_diary_bloc.dart';
 
-class InfomationActivityPage extends StatefulWidget {
-  const InfomationActivityPage({super.key});
+class InformationActivityPage extends StatefulWidget {
+  const InformationActivityPage({super.key, required this.id});
+  final int id;
 
   @override
-  _InfomationActivityPageState createState() => _InfomationActivityPageState();
+  _InformationActivityPageState createState() => _InformationActivityPageState();
 
-  static Route route() {
-    return Utils.pageRouteBuilder(InfomationActivityPage(), true);
+  static Route route(int id) {
+    return Utils.pageRouteBuilder(InformationActivityPage(id: id,), true);
   }
 }
 
-class _InfomationActivityPageState extends State<InfomationActivityPage> {
+class _InformationActivityPageState extends State<InformationActivityPage> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return BlocProvider(
-      create: (context) => ListDiaryBloc(),
+      create: (context) => DetailDiaryBloc(context.read<Repository>()),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
-            listener: (context, state) async {},
+        body: BlocBuilder<DetailDiaryBloc, DetailDiaryState>(
             builder: (blocContext, state) {
               return Container(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    child: Column(
+                    physics: const NeverScrollableScrollPhysics(),
+                    child: state.detailDiary !=null ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         CardTile(
                             label: "Tên nhật ký",
-                            value: "Cây trồng",
+                            value: "${state.detailDiary!.name}",
                         image: ImageAsset.imageDiary),
-                        CardTile(
+       /*                 CardTile(
                             label: "Địa chỉ",
                             value:
                                 "số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam,số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam",
-                            image: ImageAsset.imageDisaster),
+                            image: ImageAsset.imageDisaster),*/
                         CardTile(
                             label: "Loại vật nuôi/cây trồng",
-                            value: "Quế tươi",
+                            value: "${state.detailDiary!.crop}",
                             image: ImageAsset.imageTree),
                         CardTile(
                             label: "Diện tích",
-                            value: "12.000",
+                            value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnitId}",
                             image: ImageAsset.imageManagement),
                         CardTileDouble(
-                            label1: "SL ban đầu",
-                            value1: "10",
-                            value2: "VNĐ",
+                            label1: "Số lượng ban đầu",
+                            value1:  "${state.detailDiary!.amount}",
+                            value2: "${state.detailDiary!.amountUnitId}",
                             image: ImageAsset.imageBudget),
                         CardTileDouble(
-                            label1: "SL dự kiến",
-                            value1: "15",
-                            value2: "VNĐ",
+                            label1: "Sản lượng ước tính",
+                            value1: "${state.detailDiary!.yieldEstimate}",
+                            value2: "${state.detailDiary!.yieldEstimateUnitId}",
                             image: ImageAsset.imageBudget),
                         CardTile(
-                            label: "Sản lượng thu hoạch",
-                            value: "12.000",
-                            image: ImageAsset.imagePlantCrop),
+                            label: "Ngày bắt đầu",
+                            value: "${state.detailDiary!.startDate}",
+                            image: ImageAsset.imageCalendarBegin),
+                        ((state.detailDiary!.status??'').compareTo("done") == 0)?CardTile(
+                            label: "Ngày kết thúc",
+                            value: "${state.detailDiary!.startDate}",
+                            image: ImageAsset.imageCalendarEnd): Container(),
+                        CardTile(
+                            label: "Trạng thái",
+                            value: "${state.detailDiary!.status}",
+                            image: ImageAsset.imageStatus),
                       ],
-                    ),
+                    ) : Container(),
                   ));
             }),
       ),
@@ -82,7 +93,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
         required String label,
       required String value}) {
     return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Row(
         //crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -99,7 +110,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(4),
                   child: Text(
                     label,
                     style: StyleBkav.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
@@ -107,7 +118,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                 ),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(4),
                   /*padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -133,7 +144,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
         required String value2,
         required String image,}) {
     return Container(
-      padding: EdgeInsets.only(top: 8, bottom: 8),
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: Row(
         children: [
           Padding(
@@ -149,7 +160,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(4),
                   child: Text(
                     label1,
                     style: StyleBkav.textStyleFW400(AppColor.black22, 14),
@@ -157,7 +168,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                 ),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(4),
+                  padding: const EdgeInsets.all(4),
          /*         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -178,7 +189,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     child: Text(
                       "ĐVT",
                       style: StyleBkav.textStyleFW400(AppColor.black22, 14),
@@ -186,7 +197,7 @@ class _InfomationActivityPageState extends State<InfomationActivityPage> {
                   ),
                   Container(
                     width: double.infinity,
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
            /*         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(8)),

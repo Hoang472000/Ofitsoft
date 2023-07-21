@@ -1,3 +1,4 @@
+import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -145,323 +146,316 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ListDiaryBloc(),
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
-          context,
-          centerTitle: true,
-          showDefaultBackButton: true,
-          title: Text(
-            "Thêm mới giám sát",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
-          ),
-          backgroundColor: AppColor.main,
-          actions: [],
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      backgroundColor: AppColor.background,
+      appBar: BkavAppBar(
+        context,
+        centerTitle: true,
+        showDefaultBackButton: true,
+        title: Text(
+          "Thêm mới giám sát",
+          style: StyleBkav.textStyleFW700(Colors.white, 20),
         ),
-        body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
-            listener: (context, state) async {},
-            builder: (blocContext, state) {
-              return Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: SingleChildScrollView(
-                    //physics: NeverScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        ListView.builder(
-                            physics:  NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemCount: _listWidget.length,
-                            itemBuilder: (_, index) => ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: _listWidget[index],
-                                onClick: () {
-                                  setState(() {});
-                                  onSelectValue(_listWidget[index], context);
-                                }, onMutiChoice: (id){
-                                  setState(() {
-                                    _listWidget[index].listMutiChoice![id].isSelected = !_listWidget[index].listMutiChoice![id].isSelected;
-                                  });
-                            },)),
-                        itemAccount(context,
-                            text: "Biện pháp khắc phục",
-                            image: ImageAsset.imageTherapy,
-                            voidCallback: () async {
-                              var result = await Navigator.of(context).push(AddMonitorSubPage.route(_listWidget1));
-                              /*          if(result != null && result[0].length > 0 ){
-                                setState(() {
-                                  listVatTuAdd.addAll(result[0] as List<VatTu>);
-                                  if(result[1].length > 0) {
-                                    listCongCuAdd.addAll(
-                                        result[1] as List<VatTu>);
-                                  }
-                                });
-                              }*/
-                            }),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            height: listImage.length > 0 ? 120 : 0,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: listImage.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Container(
-                                            child: Image.file(
-                                              listImage[index].fileImage!,
-                                              height: 120,
-                                              width: 100,
-                                              fit: BoxFit.cover,
-                                            )),
-                                        Positioned(
-                                          top: -2,
-                                          right: -16,
-                                          child: IconButton(
-                                              onPressed: () async {
-                                                DiaLogManager.displayDialog(
-                                                    context,
-                                                    "",
-                                                    S
-                                                        .of(context)
-                                                        .you_sure_want_delete_image,
-                                                        () async {
-                                                      Get.back();
-                                                      setState(() {
-                                                        listImage.removeAt(index);
-                                                      });
-                                                    }, () {
-                                                  Get.back();
-                                                }, S.of(context).cancel,
-                                                    S.of(context).agree);
-                                              },
-                                              icon:const SizedBox(
-                                                height: 25,
-                                                child: Image(
-                                                  image: AssetImage(ImageAsset.imageBin),
-                                                  //width: 40,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              )),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              SizedBox(
-                                  height: 140,
-                                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(12),
-                                          topLeft: Radius.circular(12)),
-                                      color: Colors.white,
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                            height: 44,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(12),
-                                                    topLeft:
-                                                    Radius.circular(12)),
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 8,
-                                                      bottom: 8),
-                                                  child: Text(
-                                                      S
-                                                          .of(context)
-                                                          .pick_a_photo,
-                                                      style: StyleBkav
-                                                          .textStyleFW700(
-                                                          Colors.white,
-                                                          18)),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.clear,
-                                                    color: Colors.white,
-                                                    size: 20.0,
-                                                  ),
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.only(top: 18),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  child: Column(
-                                                    children: [
-                                                      const Image(
-                                                        image: AssetImage(ImageAsset.imageCamera),
-                                                        width: 40,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Text(
-                                                        S
-                                                            .of(context)
-                                                            .from_camera,
-                                                        style: StyleBkav
-                                                            .textStyleFW500(
-                                                            AppColor
-                                                                .black22,
-                                                            14),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  onTap: () async {
-                                                    Get.back();
-                                                    List<ImageEntity> list =
-                                                    await Utils
-                                                        .getImagePicker(
-                                                        ImageSource
-                                                            .camera);
-                                                    setState(() {
-                                                      if (list.length > 0) {
-                                                        listImage.addAll(list);
-                                                      }
-                                                    });
-                                                    //HoangCV pick camera
-                                                  },
-                                                ),
-                                                GestureDetector(
-                                                  child: Column(
-                                                    children: [
-                                                      const Image(
-                                                        image: AssetImage(ImageAsset.imageGallery),
-                                                        width: 40,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Text(
-                                                        S
-                                                            .of(context)
-                                                            .from_library,
-                                                        style: StyleBkav
-                                                            .textStyleFW500(
-                                                            AppColor
-                                                                .black22,
-                                                            14),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  onTap: () async {
-                                                    //Bkav DucLQ TODO: Tam tat tinh nang nay
-                                                    Get.back();
-
-                                                    //HoangCV: chup anh
-                                                    List<ImageEntity> list =
-                                                    await Utils
-                                                        .getImagePicker(
-                                                        ImageSource
-                                                            .gallery);
-                                                    setState(() {
-                                                      if (list.length > 0) {
-                                                        listImage.addAll(list);
-                                                      }
-                                                    });
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )),
-                              // barrierColor: Colors.transparent,
-                              isDismissible: true,
-                              enableDrag: true,
-                            );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: AppColor.gray1.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(32),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+        backgroundColor: AppColor.main,
+        actions: [],
+      ),
+      body: Container(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+          child: SingleChildScrollView(
+            //physics: NeverScrollableScrollPhysics(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                ListView.builder(
+                    physics:  NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: _listWidget.length,
+                    itemBuilder: (_, index) => ContainerInputWidget(
+                        contextParent: context,
+                        inputRegisterModel: _listWidget[index],
+                        onClick: () {
+                          setState(() {});
+                          onSelectValue(_listWidget[index], context);
+                        }, onMutiChoice: (id){
+                          setState(() {
+                            _listWidget[index].listMutiChoice![id].isSelected = !_listWidget[index].listMutiChoice![id].isSelected;
+                          });
+                    },)),
+                itemAccount(context,
+                    text: "Biện pháp khắc phục",
+                    image: ImageAsset.imageTherapy,
+                    voidCallback: () async {
+                      var result = await Navigator.of(context).push(AddMonitorSubPage.route(_listWidget1));
+                      /*          if(result != null && result[0].length > 0 ){
+                        setState(() {
+                          listVatTuAdd.addAll(result[0] as List<VatTu>);
+                          if(result[1].length > 0) {
+                            listCongCuAdd.addAll(
+                                result[1] as List<VatTu>);
+                          }
+                        });
+                      }*/
+                    }),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    height: listImage.length > 0 ? 120 : 0,
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        itemCount: listImage.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: Stack(
+                              alignment: Alignment.center,
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 5),
-                                  child:   Image(
-                                    image: AssetImage(ImageAsset.imageCamera),
-                                    width: 40,
-                                    fit: BoxFit.contain,
-                                  ),
+                                Container(
+                                    child: Image.file(
+                                      listImage[index].fileImage!,
+                                      height: 120,
+                                      width: 100,
+                                      fit: BoxFit.cover,
+                                    )),
+                                Positioned(
+                                  top: -2,
+                                  right: -16,
+                                  child: IconButton(
+                                      onPressed: () async {
+                                        DiaLogManager.displayDialog(
+                                            context,
+                                            "",
+                                            S
+                                                .of(context)
+                                                .you_sure_want_delete_image,
+                                                () async {
+                                              Get.back();
+                                              setState(() {
+                                                listImage.removeAt(index);
+                                              });
+                                            }, () {
+                                          Get.back();
+                                        }, S.of(context).cancel,
+                                            S.of(context).agree);
+                                      },
+                                      icon:const SizedBox(
+                                        height: 25,
+                                        child: Image(
+                                          image: AssetImage(ImageAsset.imageBin),
+                                          //width: 40,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      )),
                                 ),
-                                Text(
-                                  "Chụp ảnh",
-                                  style: StyleBkav.textStyleFW500(
-                                      AppColor.gray57, 16),
-                                )
                               ],
                             ),
+                          );
+                        }),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Get.bottomSheet(
+                      SizedBox(
+                          height: 140,
+                          //padding: EdgeInsets.symmetric(horizontal: 15),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(12),
+                                  topLeft: Radius.circular(12)),
+                              color: Colors.white,
+                            ),
+                            child: Center(
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topRight:
+                                            Radius.circular(12),
+                                            topLeft:
+                                            Radius.circular(12)),
+                                        color: Theme.of(context)
+                                            .primaryColor),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                      MainAxisAlignment
+                                          .spaceBetween,
+                                      children: [
+                                        Container(
+                                          alignment: Alignment.center,
+                                          padding:
+                                          const EdgeInsets.only(
+                                              left: 10,
+                                              top: 8,
+                                              bottom: 8),
+                                          child: Text(
+                                              S
+                                                  .of(context)
+                                                  .pick_a_photo,
+                                              style: StyleBkav
+                                                  .textStyleFW700(
+                                                  Colors.white,
+                                                  18)),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(
+                                            Icons.clear,
+                                            color: Colors.white,
+                                            size: 20.0,
+                                          ),
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 18),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                      children: [
+                                        GestureDetector(
+                                          child: Column(
+                                            children: [
+                                              const Image(
+                                                image: AssetImage(ImageAsset.imageCamera),
+                                                width: 40,
+                                                fit: BoxFit.contain,
+                                              ),
+                                              const SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                S
+                                                    .of(context)
+                                                    .from_camera,
+                                                style: StyleBkav
+                                                    .textStyleFW500(
+                                                    AppColor
+                                                        .black22,
+                                                    14),
+                                              )
+                                            ],
+                                          ),
+                                          onTap: () async {
+                                            Get.back();
+                                            List<ImageEntity> list =
+                                            await Utils
+                                                .getImagePicker(
+                                                ImageSource
+                                                    .camera);
+                                            setState(() {
+                                              if (list.length > 0) {
+                                                listImage.addAll(list);
+                                              }
+                                            });
+                                            //HoangCV pick camera
+                                          },
+                                        ),
+                                        GestureDetector(
+                                          child: Column(
+                                            children: [
+                                              const Image(
+                                                image: AssetImage(ImageAsset.imageGallery),
+                                                width: 40,
+                                                fit: BoxFit.contain,
+                                              ),
+                                              const SizedBox(
+                                                height: 2,
+                                              ),
+                                              Text(
+                                                S
+                                                    .of(context)
+                                                    .from_library,
+                                                style: StyleBkav
+                                                    .textStyleFW500(
+                                                    AppColor
+                                                        .black22,
+                                                    14),
+                                              )
+                                            ],
+                                          ),
+                                          onTap: () async {
+                                            //Bkav DucLQ TODO: Tam tat tinh nang nay
+                                            Get.back();
+
+                                            //HoangCV: chup anh
+                                            List<ImageEntity> list =
+                                            await Utils
+                                                .getImagePicker(
+                                                ImageSource
+                                                    .gallery);
+                                            setState(() {
+                                              if (list.length > 0) {
+                                                listImage.addAll(list);
+                                              }
+                                            });
+                                          },
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                      // barrierColor: Colors.transparent,
+                      isDismissible: true,
+                      enableDrag: true,
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColor.gray1.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(32),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 5),
+                          child:   Image(
+                            image: AssetImage(ImageAsset.imageCamera),
+                            width: 40,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                        Padding(
-                          padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: BkavButton(
-                            text: "Hoàn thành",
-                            onPressed: () async {},
-                            color: AppColor.main,
-                          ),
+                        Text(
+                          "Chụp ảnh",
+                          style: StyleBkav.textStyleFW500(
+                              AppColor.gray57, 16),
                         )
                       ],
                     ),
-                  ));
-            }),
-      ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: BkavButton(
+                    text: "Hoàn thành",
+                    onPressed: () async {},
+                    color: AppColor.main,
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 
@@ -480,7 +474,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
     }*/
     if (inputRegisterModel.valueSelected.runtimeType == DateTime || inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
       setState(() {
-        ServiceInfoExtension().selectValue(inputRegisterModel, context, () {
+        ServiceInfoExtension().selectValue(inputRegisterModel, context, (inputModel) {
 
         });
       });

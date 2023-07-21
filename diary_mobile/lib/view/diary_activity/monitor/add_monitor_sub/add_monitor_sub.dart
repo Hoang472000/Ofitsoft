@@ -1,3 +1,4 @@
+import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -68,64 +69,57 @@ class _AddMonitorSubPageState extends State<AddMonitorSubPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ListDiaryBloc(),
-      child: WillPopScope(
-        onWillPop: () async {
-          Navigator.pop(context);
-          return false;
-        },
-        child: Scaffold(
-          resizeToAvoidBottomInset: true,
-          backgroundColor: AppColor.background,
-          appBar: BkavAppBar(
-            context,
-            centerTitle: true,
-            showDefaultBackButton: true,
-            title: Text(
-              "Thêm mới giám sát",
-              style: StyleBkav.textStyleFW700(Colors.white, 20),
-            ),
-            backgroundColor: AppColor.main,
-            actions: [],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pop(context);
+        return false;
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: AppColor.background,
+        appBar: BkavAppBar(
+          context,
+          centerTitle: true,
+          showDefaultBackButton: true,
+          title: Text(
+            "Thêm mới giám sát",
+            style: StyleBkav.textStyleFW700(Colors.white, 20),
           ),
-          body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
-              listener: (context, state) async {},
-              builder: (blocContext, state) {
-                return Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: SingleChildScrollView(
-                      //physics: NeverScrollableScrollPhysics(),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          ListView.builder(
-                              physics:  NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: widget.listWidget.length,
-                              itemBuilder: (_, index) => ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: widget.listWidget[index],
-                                onClick: () {
-                                  setState(() {});
-                                  onSelectValue(widget.listWidget[index], context);
-                                },)),
-                          Padding(
-                            padding:
-                            const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            child: BkavButton(
-                              text: "Tiếp tục",
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
-                              color: AppColor.main,
-                            ),
-                          )
-                        ],
-                      ),
-                    ));
-              }),
+          backgroundColor: AppColor.main,
+          actions: [],
         ),
+        body: Container(
+            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            child: SingleChildScrollView(
+              //physics: NeverScrollableScrollPhysics(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  ListView.builder(
+                      physics:  NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: widget.listWidget.length,
+                      itemBuilder: (_, index) => ContainerInputWidget(
+                        contextParent: context,
+                        inputRegisterModel: widget.listWidget[index],
+                        onClick: () {
+                          setState(() {});
+                          onSelectValue(widget.listWidget[index], context);
+                        },)),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    child: BkavButton(
+                      text: "Tiếp tục",
+                      onPressed: () async {
+                        Navigator.pop(context);
+                      },
+                      color: AppColor.main,
+                    ),
+                  )
+                ],
+              ),
+            )),
       ),
     );
   }
@@ -145,9 +139,7 @@ class _AddMonitorSubPageState extends State<AddMonitorSubPage> {
     }*/
     if (inputRegisterModel.valueSelected.runtimeType == DateTime || inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
       setState(() {
-        ServiceInfoExtension().selectValue(inputRegisterModel, context, () {
-
-        });
+        ServiceInfoExtension().selectValue(inputRegisterModel, context, (inputModel) {});
       });
     }else {
       result = await Extension().showBottomSheetSelection(

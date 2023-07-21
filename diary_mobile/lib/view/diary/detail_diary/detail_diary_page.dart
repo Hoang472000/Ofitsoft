@@ -1,11 +1,16 @@
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/entity/diary/diary.dart';
+import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../view_model/diary_activity/activity/activity_bloc.dart';
+import '../../../view_model/diary_activity/activity/detail_diary_bloc.dart';
 import '../../diary_activity/activity/activity_page.dart';
 import '../../diary_activity/infomation_activity/infomation_activity_page.dart';
 
@@ -67,9 +72,9 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
                   borderRadius: BorderRadius.circular(50), // Creates border
                   color: Colors.white),
               labelColor: AppColor.main,*/
-              controller: _tabController,
-              tabs: const <Tab>[
-                Tab(
+                controller: _tabController,
+                tabs: const <Tab>[
+                  Tab(
                     icon: Image(
                       image: AssetImage(ImageAsset.imageActivityFarm),
                       width: 40,
@@ -100,7 +105,7 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
           ActivityPage(
             action: "monitor",
           ),
-          InfomationActivityPage()
+          InformationActivityPage(id: 1,)
         ],
       ),
     );

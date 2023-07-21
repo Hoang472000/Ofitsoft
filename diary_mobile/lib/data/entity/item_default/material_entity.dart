@@ -13,24 +13,26 @@ class MaterialEntity implements Insertable<MaterialEntity> {
   bool? image;
   int? diaryFarmerId;
   int? toolId;
-  int? quantity;
-  String? unitId;
+  double? quantity;
+  int? unitId;
+  String? unitName;
   String? mediaContent;
 
   MaterialEntity(
       {this.id,
-        this.name,
-        this.description,
-        this.categoryId,
-        this.isOrganic,
-        this.notation,
-        this.image,
-        this.isActive,
-        this.diaryFarmerId,
-        this.toolId,
-        this.quantity,
-        this.unitId,
-        this.mediaContent});
+      this.name,
+      this.description,
+      this.categoryId,
+      this.isOrganic,
+      this.notation,
+      this.image,
+      this.isActive,
+      this.diaryFarmerId,
+      this.toolId,
+      this.quantity,
+      this.unitId,
+      this.unitName,
+      this.mediaContent});
 
   factory MaterialEntity.fromJson(Map<String, dynamic> json) {
     return MaterialEntity(
@@ -44,8 +46,9 @@ class MaterialEntity implements Insertable<MaterialEntity> {
       isActive: json['is_active'] ?? false,
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
       toolId: json['tool_id'] ?? -1,
-      quantity: json['quantity'] ?? '',
-      unitId: json['unit_id'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      unitId: json['unit_id'] ?? -1,
+      unitName: json['unit_name'] ?? '',
       mediaContent: json['media_content'] ?? '',
     );
   }
@@ -64,6 +67,7 @@ class MaterialEntity implements Insertable<MaterialEntity> {
     data['tool_id'] = toolId;
     data['quantity'] = quantity;
     data['unit_id'] = unitId;
+    data['unit_name'] = unitName;
     data['media_content'] = mediaContent;
     return data;
   }
@@ -71,19 +75,20 @@ class MaterialEntity implements Insertable<MaterialEntity> {
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return MaterialTableCompanion(
-        id: Value(id),
-        name: Value(name),
-        categoryId: Value(categoryId),
-        isOrganic: Value(isOrganic),
-        notation: Value(notation),
-        description: Value(description),
-        image: Value(image),
-        isActive: Value(isActive),
-        diaryFarmerId: Value(diaryFarmerId),
-        toolId: Value(toolId),
-        quantity: Value(quantity),
-        mediaContent: Value(mediaContent),
-        unitId: Value(unitId))
+            id: Value(id),
+            name: Value(name),
+            categoryId: Value(categoryId),
+            isOrganic: Value(isOrganic),
+            notation: Value(notation),
+            description: Value(description),
+            image: Value(image),
+            isActive: Value(isActive),
+            diaryFarmerId: Value(diaryFarmerId),
+            toolId: Value(toolId),
+            quantity: Value(quantity),
+            mediaContent: Value(mediaContent),
+            unitId: Value(unitId),
+            unitName: Value(unitName))
         .toColumns(nullToAbsent);
   }
 }

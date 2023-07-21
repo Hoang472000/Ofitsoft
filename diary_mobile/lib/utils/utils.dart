@@ -179,7 +179,14 @@ class Utils {
     DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
 /*    DateTime dateTime = formatter.parse(time);
     DateTime dateTime1 = DateTime.parse(dateTime.toString());*/
-    return dateTime.toUtc();
+    return dateTime/*.toUtc()*/;
+  }
+  static DateTime stringToDate(String time) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy');
+    DateTime dateTime = formatter.parse(time);
+/*    DateTime dateTime = formatter.parse(time);
+    DateTime dateTime1 = DateTime.parse(dateTime.toString());*/
+    return dateTime;
   }
 
   static Future<void> launchInBrowser(String url) async {
@@ -510,12 +517,12 @@ class Utils {
     return '$date/$month/$year';
   }
 
-  static TextSpan convertText(String title, String value, Color color,
+  static TextSpan convertText(String title, String value, Color color, double size,
       {bool isMoney = false, BuildContext? buildContext}) {
     return TextSpan(children: [
       TextSpan(
-          text: title, style: StyleBkav.textStyleFW400(AppColor.gray57, 12)),
-      TextSpan(text: value, style: StyleBkav.textStyleFW400(color, 12)),
+          text: title, style: StyleBkav.textStyleFW400(AppColor.gray57, size)),
+      TextSpan(text: value, style: StyleBkav.textStyleFW400(color, size)),
       if (isMoney = true && buildContext != null)
         TextSpan(
             text: " ${S.of(buildContext!).vnd}",

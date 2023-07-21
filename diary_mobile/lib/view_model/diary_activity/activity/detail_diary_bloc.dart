@@ -1,9 +1,9 @@
-import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../data/entity/activity/activity_diary.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
@@ -12,52 +12,53 @@ import '../../../utils/form_submission_status.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
-class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
+class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
   final Repository repository;
 
-  ActivityBloc(this.repository) : super(ActivityState()) {
-    on<GetListActivityEvent>(_getListActivity);
-    add(GetListActivityEvent());
+  DetailDiaryBloc(this.repository) : super(DetailDiaryState()) {
+    on<GetDetailDiaryEvent>(_getDetailDiary);
+    add(GetDetailDiaryEvent());
   }
 
-  void _getListActivity(
-      GetListActivityEvent event, Emitter<ActivityState> emitter) async {
+  void _getDetailDiary(
+      GetDetailDiaryEvent event, Emitter<DetailDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final listDiaryActivity = await repository.getListActivityDiary();
-    DiaryDB.instance.getListDiary();
+    final detailDiary = await repository.getInfoDiary(1);
+    print("HoangCV: detailDiary: ${detailDiary.name}");
+    //DiaryDB.instance.getListDiary();
     emitter(state.copyWith(
-      isShowProgress: false,
-        listDiaryActivity: listDiaryActivity
+        isShowProgress: false,
+        detailDiary: detailDiary
     ));
   }
 }
 
-class ActivityEvent extends BlocEvent {
+class DetailDiaryEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class GetListActivityEvent extends ActivityEvent {
-  GetListActivityEvent();
+class GetDetailDiaryEvent extends DetailDiaryEvent {
+  GetDetailDiaryEvent();
 }
 
-class UpdateAvataEvent extends ActivityEvent {
+class UpdateAvatarEvent extends DetailDiaryEvent {
   //final ImageSource source;
-  UpdateAvataEvent();
+  UpdateAvatarEvent();
 }
 
-class ActivityState extends BlocState {
+class DetailDiaryState extends BlocState {
   @override
   List<Object?> get props => [
-    listDiaryActivity,
-        formStatus,
-        isShowProgress,
-        listMaterial,
-        listTool,
-        listUnit,
-        listActivity
-      ];
-  final List<ActivityDiary> listDiaryActivity;
+    detailDiary,
+    formStatus,
+    isShowProgress,
+    listMaterial,
+    listTool,
+    listUnit,
+    listActivity
+  ];
+  final Diary? detailDiary;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
   final List<Unit> listUnit;
@@ -65,8 +66,8 @@ class ActivityState extends BlocState {
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
 
-  ActivityState({
-    this.listDiaryActivity = const [],
+  DetailDiaryState({
+    this.detailDiary,
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
     this.listMaterial = const [],
@@ -75,8 +76,8 @@ class ActivityState extends BlocState {
     this.listActivity = const [],
   });
 
-  ActivityState copyWith({
-    List<ActivityDiary>? listDiaryActivity,
+  DetailDiaryState copyWith({
+    Diary? detailDiary,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<MaterialEntity>? listMaterial,
@@ -84,8 +85,8 @@ class ActivityState extends BlocState {
     List<Unit>? listUnit,
     List<Activity>? listActivity,
   }) {
-    return ActivityState(
-      listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
+    return DetailDiaryState(
+      detailDiary: detailDiary ?? this.detailDiary,
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,
       listMaterial: listMaterial ?? this.listMaterial,

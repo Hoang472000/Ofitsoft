@@ -17,8 +17,9 @@ class MaterialTable extends Table {
   BoolColumn get image => boolean().nullable()();
   IntColumn get diaryFarmerId => integer().nullable()();
   IntColumn get toolId => integer().nullable()();
-  IntColumn get quantity => integer().nullable()();
-  TextColumn get unitId => text().nullable()();
+  RealColumn get quantity => real().nullable()();
+  IntColumn get unitId => integer().nullable()();
+  TextColumn get unitName => text().nullable()();
   TextColumn get mediaContent => text().nullable()();
   @override
   Set<Column>? get primaryKey => {id};

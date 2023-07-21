@@ -1,12 +1,16 @@
 import 'dart:io';
 
+import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
+import 'package:diary_mobile/data/entity/setting/user_info.dart';
+import 'package:diary_mobile/data/local_data/table/activity_diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/activity_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/material_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/tool_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/unit_table.dart';
+import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -17,7 +21,7 @@ import '../entity/item_default/tool.dart';
 import '../entity/item_default/unit.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable])
+@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -38,6 +42,16 @@ class DiaryDB extends _$DiaryDB {
   }
   Future<List<Diary>> getListDiary() async {
     return await select(diaryTable).get();
+  }
+
+  ///Thêm, sửa, xóa, lấy Diary
+  Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityDiaryTable, values);
+    });
+  }
+  Future<List<ActivityDiary>> getListActivityDiary() async {
+    return await select(activityDiaryTable).get();
   }
 
   ///Thêm, sửa, xóa, lấy tool
@@ -81,6 +95,28 @@ class DiaryDB extends _$DiaryDB {
     return await select(unitTable).get();
   }
 
+  SingleSelectable<UserInfo> singleUser(int userId) {
+    return select(userInfoTable)..where((tbl) => tbl.id.equals(userId));
+  }
+
+  ///Lay thong tin user
+  Future<List<UserInfo>> getUserEntity(int userId) async {
+    return (select(userInfoTable)..where((tbl) => tbl.id.equals(userId)))
+        .get();
+  }
+
+  ///Thêm mới 1 [user] vào csdl
+  ///Nếu đã có trong csdl, thì cập nhật
+  Future<void> createOrUpdateUser(UserInfo user) {
+    return into(userInfoTable).insertOnConflictUpdate(user);
+  }
+
+/*  ///Thêm user vào DB, nếu đã có trong DB thì update
+  void insertUser(List<UserInfo> values) {
+    batch((batch) {
+      batch.insertAllOnConflictUpdate(userInfoTable, values);
+    });
+  }*/
 
 }
 

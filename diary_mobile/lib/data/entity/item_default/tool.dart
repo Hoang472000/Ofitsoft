@@ -13,9 +13,10 @@ class Tool implements Insertable<Tool> {
   bool? image;
   int? diaryFarmerId;
   int? toolId;
-  int? quantity;
-  String? unitId;
+  double? quantity;
+  int? unitId;
   String? mediaContent;
+  String? unitName;
 
   Tool(
       {this.id,
@@ -30,6 +31,7 @@ class Tool implements Insertable<Tool> {
       this.toolId,
       this.quantity,
       this.unitId,
+      this.unitName,
       this.mediaContent});
 
   factory Tool.fromJson(Map<String, dynamic> json) {
@@ -44,8 +46,9 @@ class Tool implements Insertable<Tool> {
       isActive: json['is_active'] ?? false,
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
       toolId: json['tool_id'] ?? -1,
-      quantity: json['quantity'] ?? '',
-      unitId: json['unit_id'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      unitId: json['unit_id'] ?? -1,
+      unitName: json['unit_name'] ?? '',
       mediaContent: json['media_content'] ?? '',
     );
   }
@@ -64,6 +67,7 @@ class Tool implements Insertable<Tool> {
     data['tool_id'] = toolId;
     data['quantity'] = quantity;
     data['unit_id'] = unitId;
+    data['unit_name'] = unitName;
     data['media_content'] = mediaContent;
     return data;
   }
@@ -83,7 +87,8 @@ class Tool implements Insertable<Tool> {
             toolId: Value(toolId),
             quantity: Value(quantity),
             mediaContent: Value(mediaContent),
-            unitId: Value(unitId))
+            unitId: Value(unitId),
+            unitName: Value(unitName))
         .toColumns(nullToAbsent);
   }
 }

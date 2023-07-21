@@ -14,8 +14,8 @@ class Unit implements Insertable<Unit>{
   bool? image;
   int? diaryFarmerId;
   int? toolId;
-  int? quantity;
-  String? unitId;
+  double? quantity;
+  int? unitId;
   String? mediaContent;
 
   Unit(
@@ -45,8 +45,8 @@ class Unit implements Insertable<Unit>{
       isActive: json['is_active'] ?? false,
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
       toolId: json['tool_id'] ?? -1,
-      quantity: json['quantity'] ?? '',
-      unitId: json['unit_id'] ?? '',
+      quantity: json['quantity'] ?? 0,
+      unitId: json['unit_id'] ?? -1,
       mediaContent: json['media_content'] ?? '',
     );
   }

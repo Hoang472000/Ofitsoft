@@ -1,10 +1,6 @@
-import 'package:diary_mobile/view/diary_activity/activity/activity_page.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/svg.dart';
-
 import '../../data/entity/diary/diary.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
@@ -12,13 +8,12 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../view_model/diary/list_diary_bloc.dart';
-import 'add_diary/add_diary_page.dart';
 import 'detail_diary/detail_diary_page.dart';
 
 class DiaryView extends StatefulWidget {
   const DiaryView({super.key});
   static Route route() {
-    return Utils.pageRouteBuilder(DiaryView(), true);
+    return Utils.pageRouteBuilder(const DiaryView(), true);
   }
   @override
   _DiaryViewState createState() => _DiaryViewState();
@@ -48,7 +43,7 @@ class _DiaryViewState extends State<DiaryView> {
   Widget build(BuildContext context) {
     List<String> distinctMonthsAndYears = getDistinctMonthsAndYears();
     return BlocProvider(
-      create: (context) => ListDiaryBloc(),
+      create: (context) => ListDiaryBloc(context.read<Repository>())..add(GetListDiaryEvent()),
       child: Scaffold(
         backgroundColor: AppColor.background,
         appBar: BkavAppBar(
@@ -60,18 +55,7 @@ class _DiaryViewState extends State<DiaryView> {
             style: StyleBkav.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
-          actions: [
-       /*     TextButton(
-              onPressed: () {
-                Navigator.of(context).push(AddDiaryView.route());
-              },
-              child: Icon(
-                Icons.add_circle_outline,
-                color: Colors.white,
-                size: 35,
-              ),
-            )*/
-          ],
+          actions: [],
         ),
         body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
             listener: (context, state) async {},
@@ -102,11 +86,11 @@ class _DiaryViewState extends State<DiaryView> {
                     ),
                     Expanded(
                         child: ListView.builder(
-                      itemCount: distinctMonthsAndYears.length,
+                      itemCount: state.listDate.length,
                       itemBuilder: (context, index) {
-                        String monthAndYear = distinctMonthsAndYears[index];
-                        List<Task> tasksForMonthAndYear =
-                            getTasksForMonthAndYear(monthAndYear);
+                        String monthAndYear = state.listDate[index];
+                        List<Diary> tasksForMonthAndYear =
+                            getTasksForMonthAndYear(monthAndYear, state.listDiary);
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -136,7 +120,7 @@ class _DiaryViewState extends State<DiaryView> {
                               physics: NeverScrollableScrollPhysics(),
                               itemCount: tasksForMonthAndYear.length,
                               itemBuilder: (context, index) {
-                                Task task = tasksForMonthAndYear[index];
+                                Diary diary = tasksForMonthAndYear[index];
                                 return GestureDetector(
                                   onTap: (){
                                     Navigator.push(context, DetailDiaryPage.route());
@@ -172,24 +156,31 @@ class _DiaryViewState extends State<DiaryView> {
 
                                               Padding(
                                                 padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                                                child: Text(Utils.formatDateToString(tasksForMonthAndYear[index].date),
+                                                child: Text(Utils.formatTime(tasksForMonthAndYear[index].startDate??""),
                                                 style: StyleBkav.textStyleFW400(AppColor.black22, 14),),
                                               ),
                                               Text(tasksForMonthAndYear[index].name.toString(),
-                                                style: StyleBkav.textStyleFW500(AppColor.main, 16),),
+                                                style: StyleBkav.textStyleFW500(AppColor.main, 16),maxLines: 3,overflow: TextOverflow.visible),
                                               Padding(
                                                 padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                                                child: Text(tasksForMonthAndYear[index].activity.toString(),
-                                                  style: StyleBkav.textStyleFW400(AppColor.black22, 14),maxLines: 3,overflow: TextOverflow.visible,),
+                                                child: RichText(
+                                                  text: Utils.convertText(
+                                                      "Cây trồng: ",
+                                                      "${tasksForMonthAndYear[index].crop}",
+                                                      AppColor.blue15, 14),
+                                                  maxLines: 3,
+                                                  overflow: TextOverflow
+                                                      .ellipsis,
+                                                ),
                                               ),
                                               Padding(
                                                 padding: const EdgeInsets.only(bottom: 8),
                                                 child: RichText(
                                                   text: Utils.convertText(
                                                       "Thực hiện: ",
-                                                      "Cao Văn Hoàng",
-                                                      AppColor.blue15),
-                                                  maxLines: 1,
+                                                      "${tasksForMonthAndYear[index].user}",
+                                                      AppColor.blue15, 12),
+                                                  maxLines: 3,
                                                   overflow: TextOverflow
                                                       .ellipsis,
                                                 ),
@@ -253,11 +244,14 @@ class _DiaryViewState extends State<DiaryView> {
     return distinctMonthsAndYears;
   }
 
-  List<Task> getTasksForMonthAndYear(String monthAndYear) {
-    List<Task> tasksForMonthAndYear = [];
-    tasks.sort((a, b) => b.date.compareTo(a.date));
-    for (var task in tasks) {
-      String taskMonthAndYear = '${task.date.month}/${task.date.year}';
+  List<Diary> getTasksForMonthAndYear(String monthAndYear, List<Diary> list) {
+    List<Diary> tasksForMonthAndYear = [];
+    list.sort((a, b) => (b.startDate??"").compareTo((a.startDate??"")));
+    print("HoangCV: taskMonthAndYear: ${list.length} : ${monthAndYear} ");
+    for (var task in list) {
+      DateTime dateTime = Utils.formatStringToDate(task.startDate??"");
+      String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
+      print("HoangCV: taskMonthAndYear: ${taskMonthAndYear} : ${monthAndYear} ");
       if (taskMonthAndYear == monthAndYear) {
         tasksForMonthAndYear.add(task);
       }

@@ -1,4 +1,7 @@
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
+import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
+import 'package:diary_mobile/data/entity/item_default/tool.dart';
+import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,20 +19,23 @@ import '../../../../view_model/diary/list_diary_bloc.dart';
 
 class AddActivitySubPage extends StatefulWidget {
   AddActivitySubPage(
-      {super.key, required this.listVatTuAdd, required this.listCongCuAdd, required this.isEdit});
+      {super.key, required this.listVatTuAdd, required this.listCongCuAdd, required this.listWidgetVT, required this.listWidgetCC, required this.isEdit});
 
-  List<VatTu> listVatTuAdd;
-  List<VatTu> listCongCuAdd;
+  List<MaterialEntity> listVatTuAdd;
+  List<Tool> listCongCuAdd;
+  List<InputRegisterModel> listWidgetVT;
+  List<InputRegisterModel> listWidgetCC;
   bool isEdit;
 
   @override
   _AddActivitySubPageState createState() => _AddActivitySubPageState();
 
-  static Route route(List<VatTu> listVatTuAdd, List<VatTu> listCongCuAdd, bool isEdit) {
+  static Route route(List<MaterialEntity> listVatTuAdd, List<Tool> listCongCuAdd,  List<InputRegisterModel> listWidgetVT,
+  List<InputRegisterModel> listWidgetCC, bool isEdit) {
     return Utils.pageRouteBuilder(
         AddActivitySubPage(
           listVatTuAdd: listVatTuAdd,
-          listCongCuAdd: listCongCuAdd, isEdit: isEdit,
+          listCongCuAdd: listCongCuAdd, isEdit: isEdit, listWidgetVT: listWidgetVT, listWidgetCC: listWidgetCC,
         ),
         true);
   }
@@ -38,60 +44,8 @@ class AddActivitySubPage extends StatefulWidget {
 class _AddActivitySubPageState extends State<AddActivitySubPage> {
   List<InputRegisterModel> _listWidget1 = [];
   List<InputRegisterModel> _listWidget2 = [];
-  List<InputRegisterModel> _listWidgetVT = [];
-  List<InputRegisterModel> _listWidgetCC = [];
   List<ImageEntity> listImage = [];
 
-  List<String> listActivity = [
-    "Tỉa cành",
-    "Gieo hạt",
-    "Tưới nước",
-    "Chăm sóc",
-    "Thu hoạch",
-    "Làm đất",
-  ];
-  List<String> listVatTu = [
-    "Nước",
-    "Phân bón",
-    "Đất",
-    "Hạt giống",
-    "Găng tay",
-  ];
-
-  List<String> listCongCu = [
-    "Cuốc",
-    "xẻng",
-    "Dao",
-    "Máy cày",
-    "Kéo",
-  ];
-
-  List<CardType> listMutiChoice = [
-    CardType(
-        cardName: "Tỉa cành",
-        description: "Tỉa lá xâu, cành xâu",
-        isSelected: false,
-        cardCode: "1",
-        status: "1"),
-    CardType(
-        cardName: "Tỉa cành",
-        description: "Tỉa cành to, cành nhỏ",
-        isSelected: false,
-        cardCode: "1",
-        status: "1"),
-    CardType(
-        cardName: "Tỉa cành",
-        description: "Loại bỏ cành khô",
-        isSelected: false,
-        cardCode: "1",
-        status: "1"),
-    CardType(
-        cardName: "Tỉa cành",
-        description: "Vệ sinh khu vực tỉa cành",
-        isSelected: false,
-        cardCode: "1",
-        status: "1"),
-  ];
 
   TextEditingController nameController = TextEditingController();
   TextEditingController soCayController = TextEditingController();
@@ -102,113 +56,43 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
   TextEditingController donVi2Controller = TextEditingController();
 
   void _initViewDetail() {
-    _listWidgetVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listVatTu,
-        image: ImageAsset.imageGardening
-    ));
-
-    _listWidgetCC.add(InputRegisterModel(
-        title: "Công cụ sử dụng",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listCongCu,
-      image: ImageAsset.imageTools,
-    ));
     _listWidget1.add(InputRegisterModel(
       title: "Số lượng:",
       isCompulsory: false,
-      maxLengthTextInput: 2000,
+      maxLengthTextInput: 15,
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       controller: soLuongController,
         image: ImageAsset.imageBudget
     ));
-    _listWidget1.add(InputRegisterModel(
-      title: "Đơn vị:",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: donViController,
-    ));
     _listWidget2.add(InputRegisterModel(
       title: "Số lượng: ",
       isCompulsory: false,
-      maxLengthTextInput: 2000,
+      maxLengthTextInput: 15,
       type: TypeInputRegister.Non,
       typeInput: TextInputType.text,
       controller: soLuong2Controller,
         image: ImageAsset.imageBudget
     ));
-    _listWidget2.add(InputRegisterModel(
-      title: "Đơn vị: ",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: donVi2Controller,
-    ));
   }
   void _initViewEdit() {
-    _listWidgetVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listVatTu,
-        image: ImageAsset.imageGardening
-    ));
-
-    _listWidgetCC.add(InputRegisterModel(
-      title: "Công cụ sử dụng",
-      isCompulsory: true,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: listCongCu,
-      image: ImageAsset.imageTools,
-    ));
     _listWidget1.add(InputRegisterModel(
         title: "Số lượng:",
         isCompulsory: false,
-        maxLengthTextInput: 2000,
+        maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.text,
         controller: soLuongController,
         image: ImageAsset.imageBudget
     ));
-    _listWidget1.add(InputRegisterModel(
-      title: "Đơn vị:",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: donViController,
-    ));
     _listWidget2.add(InputRegisterModel(
         title: "Số lượng: ",
         isCompulsory: false,
-        maxLengthTextInput: 2000,
+        maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.text,
         controller: soLuong2Controller,
         image: ImageAsset.imageBudget
-    ));
-    _listWidget2.add(InputRegisterModel(
-      title: "Đơn vị: ",
-      isCompulsory: false,
-      maxLengthTextInput: 2000,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: donVi2Controller,
     ));
   }
 
@@ -226,7 +110,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListDiaryBloc(),
+      create: (context) => ListDiaryBloc(context.read<Repository>()),
       child: WillPopScope(
         onWillPop: () async {
           Navigator.pop(context);
@@ -279,18 +163,14 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                     ),
                                   ],
                                 ),
-                                ListView.builder(
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: _listWidgetVT.length,
-                                    itemBuilder: (_, index) => ContainerInputWidget(
+                               ContainerInputWidget(
                                         contextParent: context,
-                                        inputRegisterModel: _listWidgetVT[index],
+                                        inputRegisterModel: widget.listWidgetVT[0],
                                         onClick: () {
                                           setState(() {});
                                           onSelectValue(
-                                              _listWidgetVT[index], context);
-                                        })),
+                                              widget.listWidgetVT[0], context);
+                                        }),
                                 Row(
                                   children: [
                                     Expanded(
@@ -311,11 +191,11 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                         flex: 5,
                                         child: ContainerInputWidget(
                                             contextParent: context,
-                                            inputRegisterModel: _listWidget1[1],
+                                            inputRegisterModel: widget.listWidgetVT[1],
                                             onClick: () {
                                               setState(() {});
                                               onSelectValue(
-                                                  _listWidget1[1], context);
+                                                  widget.listWidgetVT[1], context);
                                             })),
                                   ],
                                 ),
@@ -327,18 +207,20 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      if (_listWidgetVT[0].valueSelected != null) {
-                                        widget.listVatTuAdd.add(VatTu(
-                                            _listWidgetVT[0].valueSelected,
-                                            int.parse(
+                                      if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
+                                        widget.listVatTuAdd.add(MaterialEntity(name:
+                                        widget.listWidgetVT[0].valueSelected.name,
+                                            quantity: double.parse(
                                                 soLuongController.text != "" ? soLuongController.text : "1"),
-                                            donViController.text.toString(),
-                                            1));
+                                            unitName: widget.listWidgetVT[1].valueSelected.name,
+                                            ));
                                       }
-                                      _listWidgetVT[0].valueSelected = null;
-                                      _listWidgetVT[0].positionSelected = -1;
+                                      widget.listWidgetVT[0].valueSelected = null;
+                                      widget.listWidgetVT[0].positionSelected = -1;
+                                      widget.listWidgetVT[1].valueSelected = null;
+                                      widget.listWidgetVT[1].positionSelected = -1;
                                       soLuongController.text = "";
-                                      donViController.text = "";
+                                      //donViController.text = "";
                                     });
                                   },
                                   child: Row(
@@ -396,38 +278,45 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                     crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                     children: [
+                                                      Padding(
+                                                        padding: const EdgeInsets.all(4.0),
+                                                        child: Text(
+                                                          "Tên vật tư: ${widget.listVatTuAdd[index].name}",
+                                                          style: StyleBkav
+                                                              .textStyleFW500(
+                                                              AppColor.gray57,
+                                                              15),
+                                                        ),
+                                                      ),
                                                       Row(
-                                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                          Text(
-                                                            widget.listVatTuAdd[index].name,
-                                                            style: StyleBkav
-                                                                .textStyleFW500(
-                                                                AppColor.gray57,
-                                                                14),
+                                                          Expanded(
+                                                            flex: 4,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(4.0),
+                                                              child: Text(
+                                                                "SL: ${widget.listVatTuAdd[index].quantity}",
+                                                                style: StyleBkav
+                                                                    .textStyleFW500(
+                                                                    AppColor.gray57,
+                                                                    14),
+                                                              ),
+                                                            ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Text(
-                                                            "SL: ${widget.listVatTuAdd[index].amount}",
-                                                            style: StyleBkav
-                                                                .textStyleFW500(
-                                                                AppColor.gray57,
-                                                                14),
+                                                          Expanded(
+                                                            flex: 7,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(4.0),
+                                                              child: Text(
+                                                                "Đơn vị: ${widget.listVatTuAdd[index].unitName}",
+                                                                style:
+                                                                StyleBkav.textStyleFW500(
+                                                                    AppColor.gray57, 14),
+                                                                maxLines: 5,
+                                                              ),
+                                                            ),
                                                           ),
                                                         ],
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            top: 4.0),
-                                                        child: Text(
-                                                          "Đơn vị: ${widget.listVatTuAdd[index].donVi}",
-                                                          style:
-                                                          StyleBkav.textStyleFW500(
-                                                              AppColor.gray57, 14),
-                                                          maxLines: 5,
-                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -482,18 +371,14 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                     ),
                                   ],
                                 ),
-                                ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    shrinkWrap: true,
-                                    itemCount: _listWidgetCC.length,
-                                    itemBuilder: (_, index) => ContainerInputWidget(
+                                ContainerInputWidget(
                                         contextParent: context,
-                                        inputRegisterModel: _listWidgetCC[index],
+                                        inputRegisterModel: widget.listWidgetCC[0],
                                         onClick: () {
                                           setState(() {});
                                           onSelectValue(
-                                              _listWidgetCC[index], context);
-                                        })),
+                                              widget.listWidgetCC[0], context);
+                                        }),
                                 Row(
                                   children: [
                                     Expanded(
@@ -514,11 +399,11 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                         flex: 5,
                                         child: ContainerInputWidget(
                                             contextParent: context,
-                                            inputRegisterModel: _listWidget2[1],
+                                            inputRegisterModel: widget.listWidgetCC[1],
                                             onClick: () {
                                               setState(() {});
                                               onSelectValue(
-                                                  _listWidget2[1], context);
+                                                  widget.listWidgetCC[1], context);
                                             })),
                                   ],
                                 ),
@@ -530,18 +415,20 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      if (_listWidgetCC[0].valueSelected != null) {
-                                        widget.listCongCuAdd.add(VatTu(
-                                            _listWidgetCC[0].valueSelected,
-                                            int.parse(
+                                      if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
+                                        widget.listCongCuAdd.add(Tool(name:
+                                        widget.listWidgetCC[0].valueSelected.name,
+                                            quantity: double.parse(
                                                 soLuong2Controller.text != "" ? soLuongController.text : "1"),
-                                            donVi2Controller.text,
-                                            2));
+                                            unitName: widget.listWidgetCC[1].valueSelected.name,
+                                        ));
                                       }
-                                      _listWidgetCC[0].valueSelected = null;
-                                      _listWidgetCC[0].positionSelected = -1;
+                                      widget.listWidgetCC[0].valueSelected = null;
+                                      widget.listWidgetCC[0].positionSelected = -1;
+                                      widget.listWidgetCC[1].valueSelected = null;
+                                      widget.listWidgetCC[1].positionSelected = -1;
                                       soLuong2Controller.text = "";
-                                      donVi2Controller.text = "";
+                                      //donVi2Controller.text = "";
                                     });
                                   },
                                   child: Row(
@@ -599,50 +486,49 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                     crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                     children: [
+                                                      Padding(
+                                                        padding:
+                                                        const EdgeInsets.all(
+                                                            4.0),
+                                                        child: Text(
+                                                          "Tên công cụ: ${widget.listCongCuAdd[index].name}",
+                                                          style: StyleBkav
+                                                              .textStyleFW500(
+                                                              AppColor.gray57,
+                                                              15),
+                                                        ),
+                                                      ),
                                                       Row(
-                                                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets.all(
-                                                                4.0),
-                                                            child: Text(
-                                                              widget.listCongCuAdd[index].name,
-                                                              style: StyleBkav
-                                                                  .textStyleFW500(
-                                                                  AppColor.gray57,
-                                                                  14),
+                                                          Expanded(
+                                                            flex: 4,
+                                                            child: Padding(
+                                                              padding:
+                                                              const EdgeInsets.all(
+                                                                  4.0),
+                                                              child: Text(
+                                                                "SL: ${widget.listCongCuAdd[index].quantity}",
+                                                                style: StyleBkav
+                                                                    .textStyleFW500(
+                                                                    AppColor.gray57,
+                                                                    14),
+                                                              ),
                                                             ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 20,
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                            const EdgeInsets.all(
-                                                                4.0),
-                                                            child: Text(
-                                                              "SL: ${widget.listCongCuAdd[index].amount}",
-                                                              style: StyleBkav
-                                                                  .textStyleFW500(
-                                                                  AppColor.gray57,
-                                                                  14),
+                                                          Expanded(
+                                                            flex: 7,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets.all(4.0),
+                                                              child: Text(
+                                                                "Đơn vị: ${widget.listCongCuAdd[index].unitName}",
+                                                                style:
+                                                                StyleBkav.textStyleFW500(
+                                                                    AppColor.gray57, 14),
+                                                                maxLines: 5,
+                                                              ),
                                                             ),
                                                           ),
                                                         ],
-                                                      ),
-                                                      Padding(
-                                                        padding: const EdgeInsets.only(
-                                                            left: 4.0,
-                                                            right: 4,
-                                                            bottom: 4),
-                                                        child: Text(
-                                                          "Đơn vị: ${widget.listCongCuAdd[index].donVi}",
-                                                          style:
-                                                          StyleBkav.textStyleFW500(
-                                                              AppColor.gray57, 14),
-                                                          maxLines: 5,
-                                                        ),
                                                       ),
                                                     ],
                                                   ),
@@ -803,7 +689,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
     if (inputRegisterModel.valueSelected.runtimeType == DateTime ||
         inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
       setState(() {
-        ServiceInfoExtension().selectValue(inputRegisterModel, context, () {});
+        ServiceInfoExtension().selectValue(inputRegisterModel, context, (inputModel) {});
       });
     } else {
       result = await Extension().showBottomSheetSelection(

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
@@ -8,6 +9,7 @@ import 'entity/item_default/item_default.dart';
 import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
+import 'entity/setting/user_info.dart';
 
 
 
@@ -45,6 +47,8 @@ abstract class Repository {
 
   Future<List<Diary>> getListDiary();
 
+  Future<List<ActivityDiary>> getListActivityDiary();
+
   Future<List<Unit>> getListUnits();
 
   Future<List<Tool>> getListTools();
@@ -53,5 +57,9 @@ abstract class Repository {
 
   Future<List<Activity>> getListActivities();
 
-  Future<Diary> getDetailDiary(int id);
+  Future<ActivityDiary> getDetailDiary(int id);
+
+  Future<Diary> getInfoDiary(int id);
+
+  Future<UserInfo> getUserInfo(int id);
 }

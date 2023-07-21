@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
@@ -11,10 +13,11 @@ class ServiceInfoExtension {
 
   String type = "";
   // Hiển thị bottom để chọn lịch
-  void selectDate(BuildContext context, InputRegisterModel modelInput, String type,
-      Function onNotification) {
+  Future<int> selectDate(BuildContext context, InputRegisterModel modelInput, String type,
+      Function(InputRegisterModel) onNotification) async{
     /// Đóng bàn phím nếu đang chọn
     FocusScope.of(context).requestFocus(FocusNode());
+    final completer = Completer<int>();
     Picker(
       //looping: true,
       //changeToFirst: true,
@@ -43,13 +46,19 @@ class ServiceInfoExtension {
         modelInput.valueSelected = DateTime.parse(picker.adapter.text);
         //modelInput.valueDefault = /*Utils.formatDateTimeToString(*/DateTime.parse(picker.adapter.text).isUtc;
         modelInput.error = null;
-        onNotification();
+        //onNotification(modelInput);
+        completer.complete(1);
       },
       onSelect: (picker, index, selecteds) {
         picker.updateColumn(1, true);
-        onNotification();
+        //onNotification(modelInput);
       },
-    ).showModal(context);
+    ).showModal(context).whenComplete(() {
+      if (!completer.isCompleted) {
+        completer.complete(0); // Resolve the completer with 0 indicating no value is picked
+      }
+    });
+    return completer.future;
   }
 
   void selectDateToDay(BuildContext context, InputRegisterModel modelInput, String type,
@@ -88,16 +97,17 @@ class ServiceInfoExtension {
       },
       onSelect: (picker, index, selecteds) {
         picker.updateColumn(1, true);
-        onNotification();
+        //onNotification();
       },
     ).showModal(context);
   }
 
   // Hiển thị danh sách ngày
-  void selectDay(BuildContext context, InputRegisterModel modelInput,
-      Function onNotification) {
+  Future<int> selectDay(BuildContext context, InputRegisterModel modelInput,
+      Function(InputRegisterModel) onNotification) async{
     /// Đóng bàn phím nếu đang chọn
     FocusScope.of(context).requestFocus(FocusNode());
+    final completer = Completer<int>();
     Picker(
       adapter: PickerDataAdapter<dynamic>(
         data: modelInput.listValue as List<PickerItem<dynamic>>,
@@ -126,28 +136,34 @@ class ServiceInfoExtension {
         modelInput.valueDefault = null;
         modelInput.valueSelected = modelInput.listValue![resultInt];
         modelInput.error = null;
-        onNotification();
+       // onNotification(modelInput);
+        completer.complete(1);
       },
-    ).showModal(context);
+    ).showModal(context).whenComplete(() {
+      if (!completer.isCompleted) {
+        completer.complete(0); // Resolve the completer with 0 indicating no value is picked
+      }
+    });
+    return completer.future;
   }
 
-  void selectValue(InputRegisterModel inputRegisterModel, BuildContext context,
-      Function onNotification) {
+  Future<int> selectValue(InputRegisterModel inputRegisterModel, BuildContext context,
+      Function(InputRegisterModel) onNotification) async{
     FocusScope.of(context).requestFocus(FocusNode());
     switch (inputRegisterModel.valueSelected.runtimeType) {
       case PickerItem:
-        return selectDay(context, inputRegisterModel, () {
-          onNotification();
+        return await selectDay(context, inputRegisterModel, (modelInput) {
+          onNotification(modelInput);
         });
         break;
       case DateTime:
-        return selectDate(context, inputRegisterModel, type, () {
-          onNotification();
+        return await selectDate(context, inputRegisterModel, type, (modelInput) {
+          onNotification(modelInput);
         });
         break;
       default:
-        return selectDate(context, inputRegisterModel, type, () {
-          onNotification();
+        return await selectDate(context, inputRegisterModel, type, (modelInput) {
+          onNotification(modelInput);
         });
         break;
 
@@ -173,23 +189,23 @@ class ServiceInfoExtension {
     }
   }
 
-  void selectValueYD(InputRegisterModel inputRegisterModel, BuildContext context,
+/*  void selectValueYD(InputRegisterModel inputRegisterModel, BuildContext context,
       Function onNotification) {
     FocusScope.of(context).requestFocus(FocusNode());
     print("=======${inputRegisterModel.valueSelected.runtimeType}");
     switch (inputRegisterModel.valueSelected.runtimeType) {
       case PickerItem:
-        return selectDay(context, inputRegisterModel, () {
-          onNotification();
+        return selectDay(context, inputRegisterModel, (modelInput) {
+          onNotification(modelInput);
         });
         break;
       case DateTime:
-        return selectDate(context, inputRegisterModel, "kYM", () {
-          onNotification();
+        return selectDate(context, inputRegisterModel, "kYM", (modelInput) {
+          onNotification(modelInput);
         });
         break;
     }
-  }
+  }*/
 }
 
 enum TypeInputEnum {

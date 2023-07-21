@@ -1,3 +1,4 @@
+import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +124,7 @@ class _AddDiaryViewState extends State<AddDiaryView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListDiaryBloc(),
+      create: (context) => ListDiaryBloc(context.read<Repository>()),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -201,9 +202,7 @@ class _AddDiaryViewState extends State<AddDiaryView> {
     }*/
     if (inputRegisterModel.valueSelected.runtimeType == DateTime || inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
       setState(() {
-      ServiceInfoExtension().selectValue(inputRegisterModel, context, () {
-
-      });
+      ServiceInfoExtension().selectValue(inputRegisterModel, context, (inputModel) {});
       });
     }else {
       result = await Extension().showBottomSheetSelection(

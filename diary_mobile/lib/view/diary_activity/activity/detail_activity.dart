@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
@@ -33,258 +36,6 @@ class DetailActivityPage extends StatefulWidget {
 }
 
 class _DetailActivityPageState extends State<DetailActivityPage> {
-/*  List<InputRegisterModel> _listWidget = [];
-  List<InputRegisterModel> _listWidgetVT = [];
-  List<InputRegisterModel> _listWidgetCC = [];
-  List<ImageEntity> listImage = [];
-
-  List<String> listActivity = [
-    "Tỉa cành",
-    "Gieo hạt",
-    "Tưới nước",
-    "Chăm sóc",
-    "Thu hoạch",
-    "Làm đất",
-  ];
-  List<String> listVatTu = [
-    "Nước",
-    "Phân bón",
-    "Đất",
-    "Hạt giống",
-    "Găng tay",
-  ];
-
-  List<VatTu> listVatTuAdd = [];
-  List<VatTu> listCongCuAdd = [];
-  List<String> listCongCu = [
-    "Cuốc",
-    "xẻng",
-    "Dao",
-    "Máy cày",
-    "Kéo",
-  ];
-
-  List<CardType> listMutiChoice = [
-    CardType(cardName: "Tỉa cành", description: "Tỉa lá xâu, cành xâu",isSelected: false, cardCode: "1", status: "1"),
-    CardType(cardName: "Tỉa cành", description: "Tỉa cành to, cành nhỏ",isSelected: false, cardCode: "1", status: "1"),
-    CardType(cardName: "Tỉa cành", description: "Loại bỏ cành khô",isSelected: false, cardCode: "1", status: "1"),
-    CardType(cardName: "Tỉa cành", description: "Vệ sinh khu vực tỉa cành",isSelected: false, cardCode: "1", status: "1"),
-  ];
-
-  TextEditingController nameController = TextEditingController();
-  TextEditingController soCayController = TextEditingController();
-  TextEditingController soLuongController = TextEditingController();
-  TextEditingController moTaController = TextEditingController();
-  TextEditingController donViController = TextEditingController();
-  TextEditingController peopleController = TextEditingController();
-
-  bool edit = false;
-
-  void _initView() {
-    _listWidget.add(InputRegisterModel<String, String>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listActivity,
-        image: ImageAsset.imageActivityFarm
-    ));
-    _listWidget.add(InputRegisterModel(
-        title: "Chi tiết công việc",
-        isCompulsory: true,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.Non,
-        typeInput: TextInputType.text,
-        controller: moTaController,
-        image: ImageAsset.imageFile
-    ));
-    _listWidgetVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        //listMutiChoice: listVatTu,
-        listValue: listVatTu,
-        image: ImageAsset.imageGardening
-    ));
-
-    _listWidgetCC.add(InputRegisterModel(
-      title: "Công cụ sử dụng",
-      isCompulsory: true,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: listCongCu,
-      image: ImageAsset.imageTools,
-    ));
-
-    _listWidget.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: true,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: peopleController,
-      image: ImageAsset.imageMan,
-    ));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarBegin,
-        icon: Icons.calendar_today));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
-  }
-  void _initViewDetail() {
-    _listWidget.add(InputRegisterModel<String, String>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listActivity,
-        image: ImageAsset.imageActivityFarm
-    ));
-    _listWidget.add(InputRegisterModel(
-        title: "Chi tiết công việc",
-        isCompulsory: true,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.Non,
-        typeInput: TextInputType.text,
-        controller: moTaController,
-        image: ImageAsset.imageFile
-    ));
-    _listWidgetVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        //listMutiChoice: listVatTu,
-        listValue: listVatTu,
-        image: ImageAsset.imageGardening
-    ));
-
-    _listWidgetCC.add(InputRegisterModel(
-      title: "Công cụ sử dụng",
-      isCompulsory: true,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: listCongCu,
-      image: ImageAsset.imageTools,
-    ));
-
-    _listWidget.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: true,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: peopleController,
-      image: ImageAsset.imageMan,
-    ));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarBegin,
-        icon: Icons.calendar_today));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
-  }
-  void _initViewEdit() {
-    _listWidget.add(InputRegisterModel<String, String>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listActivity,
-        image: ImageAsset.imageActivityFarm
-    ));
-    _listWidget.add(InputRegisterModel(
-        title: "Chi tiết công việc",
-        isCompulsory: true,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.TextField,
-        typeInput: TextInputType.text,
-        controller: moTaController,
-        image: ImageAsset.imageFile
-    ));
-    _listWidgetVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        //listMutiChoice: listVatTu,
-        listValue: listVatTu,
-        image: ImageAsset.imageGardening
-    ));
-
-    _listWidgetCC.add(InputRegisterModel(
-      title: "Công cụ sử dụng",
-      isCompulsory: true,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: listCongCu,
-      image: ImageAsset.imageTools,
-    ));
-
-    _listWidget.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: true,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: peopleController,
-      image: ImageAsset.imageMan,
-    ));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarBegin,
-        icon: Icons.calendar_today));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
-  }*/
-
   bool edit = false;
   @override
   void initState() {
@@ -330,18 +81,23 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                               inputRegisterModel: state.listWidget[index],
                               onClick: () {
                                 setState(() {});
-                                onSelectValue(state.listWidget[index], context);
+                                blocContext.read<DetailActivityBloc>().add(OnSelectValueEvent(state.listWidget, index, context));
+                                //onSelectValue(state.listWidget[index], context);
                               }, onMutiChoice: (id){
                             setState(() {
                               state.listWidget[index].listMutiChoice![id].isSelected = !state.listWidget[index].listMutiChoice![id].isSelected;
                             });
-                          }),
+                          }, onChangeText: (text){
+
+                          },),
                         ),
                         itemAccount(context,
                             text: "Danh sách vật tư, công cụ",
                             image: ImageAsset.imageGardening,
                             voidCallback: () async {
-                              var result = await Navigator.of(context).push(AddActivitySubPage.route(state.listVatTuAdd, state.listCongCuAdd, edit));
+
+                          print("HoangCV: state.listWidgetVT: ${state.listWidgetVT[0].listValue.length}");
+                              var result = await Navigator.of(context).push(AddActivitySubPage.route(state.listVatTuAdd, state.listCongCuAdd, state.listWidgetVT, state.listWidgetCC, edit));
                               /*          if(result != null && result[0].length > 0 ){
                                 setState(() {
                                   listVatTuAdd.addAll(result[0] as List<VatTu>);
@@ -352,27 +108,34 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                 });
                               }*/
                             }),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: SizedBox(
-                            height: state.listImage.isNotEmpty ? 120 : 0,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: state.listImage.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8.0),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Image.file(
-                                          state.listImage[index].fileImage!,
-                                          height: 120,
-                                          width: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                        Positioned(
+                        SizedBox(
+                          height: state.listImage.isNotEmpty ? state.imageHeight : 0,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: state.listImage.length,
+                              itemBuilder: (context, index) {
+                          /*      double imageWidth =
+                                    130; // Kích thước mặc định nếu có >= 3 ảnh
+                                double imageHeight =
+                                100;*/
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      state.listImage[index].fileImage != null ?
+                                      Image.file(
+                                        state.listImage[index].fileImage!,
+                                        height: state.imageHeight,
+                                        //width: 100,
+                                        width: state.imageWidth,
+                                        fit: BoxFit.cover,
+                                      ) : Image.memory(base64Decode( state.listImage[index].fileContent ?? ""),
+                                      height: state.imageHeight, width: state.imageWidth,fit: BoxFit.cover,),
+                                      Visibility(
+                                        visible: edit,
+                                        child: Positioned(
                                           top: -5,
                                           right: -10,
                                           child: IconButton(
@@ -386,7 +149,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                         () async {
                                                       Get.back();
                                                       setState(() {
-                                                        state.listImage.removeAt(index);
+                                                        blocContext.read<DetailActivityBloc>().add(AddOrDeleteImageEvent(state.listImage, index, context));
                                                       });
                                                     }, () {
                                                   Get.back();
@@ -402,199 +165,202 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                 ),
                                               )),
                                         ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              SizedBox(
-                                  height: 140,
-                                  //padding: EdgeInsets.symmetric(horizontal: 15),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          topRight: Radius.circular(12),
-                                          topLeft: Radius.circular(12)),
-                                      color: Colors.white,
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Container(
-                                            height: 44,
-                                            decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                    Radius.circular(12),
-                                                    topLeft:
-                                                    Radius.circular(12)),
-                                                color: Theme.of(context)
-                                                    .primaryColor),
-                                            child: Row(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                              MainAxisAlignment
-                                                  .spaceBetween,
-                                              children: [
-                                                Container(
-                                                  alignment: Alignment.center,
-                                                  padding:
-                                                  const EdgeInsets.only(
-                                                      left: 10,
-                                                      top: 8,
-                                                      bottom: 8),
-                                                  child: Text(
-                                                      S
-                                                          .of(context)
-                                                          .pick_a_photo,
-                                                      style: StyleBkav
-                                                          .textStyleFW700(
-                                                          Colors.white,
-                                                          18)),
-                                                ),
-                                                IconButton(
-                                                  icon: Icon(
-                                                    Icons.clear,
-                                                    color: Colors.white,
-                                                    size: 20.0,
-                                                  ),
-                                                  onPressed: () {
-                                                    Get.back();
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                          Container(
-                                            padding:
-                                            const EdgeInsets.only(top: 18),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                              children: [
-                                                GestureDetector(
-                                                  child: Column(
-                                                    children: [
-                                                      const Image(
-                                                        image: AssetImage(ImageAsset.imageCamera),
-                                                        width: 40,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Text(
-                                                        S
-                                                            .of(context)
-                                                            .from_camera,
-                                                        style: StyleBkav
-                                                            .textStyleFW500(
-                                                            AppColor
-                                                                .black22,
-                                                            14),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  onTap: () async {
-                                                    Get.back();
-                                                    List<ImageEntity> list =
-                                                    await Utils
-                                                        .getImagePicker(
-                                                        ImageSource
-                                                            .camera);
-                                                    setState(() {
-                                                      if (list.length > 0) {
-                                                        state.listImage.addAll(list);
-                                                      }
-                                                    });
-                                                    //HoangCV pick camera
-                                                  },
-                                                ),
-                                                GestureDetector(
-                                                  child: Column(
-                                                    children: [
-                                                      const Image(
-                                                        image: AssetImage(ImageAsset.imageGallery),
-                                                        width: 40,
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                      const SizedBox(
-                                                        height: 2,
-                                                      ),
-                                                      Text(
-                                                        S
-                                                            .of(context)
-                                                            .from_library,
-                                                        style: StyleBkav
-                                                            .textStyleFW500(
-                                                            AppColor
-                                                                .black22,
-                                                            14),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  onTap: () async {
-                                                    //Bkav DucLQ TODO: Tam tat tinh nang nay
-                                                    Get.back();
-
-                                                    //HoangCV: chup anh
-                                                    List<ImageEntity> list =
-                                                    await Utils
-                                                        .getImagePicker(
-                                                        ImageSource
-                                                            .gallery);
-                                                    setState(() {
-                                                      if (list.length > 0) {
-                                                        state.listImage.addAll(list);
-                                                      }
-                                                    });
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
                                       ),
-                                    ),
-                                  )),
-                              // barrierColor: Colors.transparent,
-                              isDismissible: true,
-                              enableDrag: true,
-                            );
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 5),
-                            decoration: BoxDecoration(
-                              color: AppColor.gray1.withOpacity(0.9),
-                              borderRadius: BorderRadius.circular(32),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 6, vertical: 5),
-                                  child:   Image(
-                                    image: AssetImage(ImageAsset.imageCamera),
-                                    width: 40,
-                                    fit: BoxFit.contain,
+                                    ],
                                   ),
-                                ),
-                                Text(
-                                  "Chụp ảnh",
-                                  style: StyleBkav.textStyleFW500(
-                                      AppColor.gray57, 16),
-                                )
-                              ],
+                                );
+                              }),
+                        ),
+                        Visibility(
+                          visible: edit,
+                          child: TextButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                SizedBox(
+                                    height: 140,
+                                    //padding: EdgeInsets.symmetric(horizontal: 15),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(12),
+                                            topLeft: Radius.circular(12)),
+                                        color: Colors.white,
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Container(
+                                              height: 44,
+                                              decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.only(
+                                                      topRight:
+                                                      Radius.circular(12),
+                                                      topLeft:
+                                                      Radius.circular(12)),
+                                                  color: Theme.of(context)
+                                                      .primaryColor),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                MainAxisAlignment
+                                                    .spaceBetween,
+                                                children: [
+                                                  Container(
+                                                    alignment: Alignment.center,
+                                                    padding:
+                                                    const EdgeInsets.only(
+                                                        left: 10,
+                                                        top: 8,
+                                                        bottom: 8),
+                                                    child: Text(
+                                                        S
+                                                            .of(context)
+                                                            .pick_a_photo,
+                                                        style: StyleBkav
+                                                            .textStyleFW700(
+                                                            Colors.white,
+                                                            18)),
+                                                  ),
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.clear,
+                                                      color: Colors.white,
+                                                      size: 20.0,
+                                                    ),
+                                                    onPressed: () {
+                                                      Get.back();
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            Container(
+                                              padding:
+                                              const EdgeInsets.only(top: 18),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                MainAxisAlignment.spaceEvenly,
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                                children: [
+                                                  GestureDetector(
+                                                    child: Column(
+                                                      children: [
+                                                        const Image(
+                                                          image: AssetImage(ImageAsset.imageCamera),
+                                                          width: 40,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
+                                                        Text(
+                                                          S
+                                                              .of(context)
+                                                              .from_camera,
+                                                          style: StyleBkav
+                                                              .textStyleFW500(
+                                                              AppColor
+                                                                  .black22,
+                                                              14),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    onTap: () async {
+                                                      Get.back();
+                                                      List<ImageEntity> list =
+                                                      await Utils
+                                                          .getImagePicker(
+                                                          ImageSource
+                                                              .camera);
+                                                      setState(() {
+                                                        if (list.length > 0) {
+                                                          blocContext.read<DetailActivityBloc>().add(AddOrDeleteImageEvent(list, -1, context));
+                                                        }
+                                                      });
+                                                      //HoangCV pick camera
+                                                    },
+                                                  ),
+                                                  GestureDetector(
+                                                    child: Column(
+                                                      children: [
+                                                        const Image(
+                                                          image: AssetImage(ImageAsset.imageGallery),
+                                                          width: 40,
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
+                                                        Text(
+                                                          S
+                                                              .of(context)
+                                                              .from_library,
+                                                          style: StyleBkav
+                                                              .textStyleFW500(
+                                                              AppColor
+                                                                  .black22,
+                                                              14),
+                                                        )
+                                                      ],
+                                                    ),
+                                                    onTap: () async {
+                                                      //Bkav DucLQ TODO: Tam tat tinh nang nay
+                                                      Get.back();
+
+                                                      //HoangCV: chup anh
+                                                      List<ImageEntity> list =
+                                                      await Utils
+                                                          .getImagePicker(
+                                                          ImageSource
+                                                              .gallery);
+                                                      setState(() {
+                                                        if (list.length > 0) {
+                                                          blocContext.read<DetailActivityBloc>().add(AddOrDeleteImageEvent(list, -1, context));
+                                                        }
+                                                      });
+                                                    },
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    )),
+                                // barrierColor: Colors.transparent,
+                                isDismissible: true,
+                                enableDrag: true,
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: AppColor.gray1.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(32),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 5),
+                                    child:   Image(
+                                      image: AssetImage(ImageAsset.imageCamera),
+                                      width: 40,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                  Text(
+                                    "Chụp ảnh",
+                                    style: StyleBkav.textStyleFW500(
+                                        AppColor.gray57, 16),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -610,11 +376,11 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                       onPressed: () {
                                         setState(() {
                                           edit = !edit;
-                                          state.listWidget.clear();
+                                          //state.listWidget.clear();
                                           if(edit) {
-                                            //state.initViewEdit();
+                                            blocContext.read<DetailActivityBloc>().add(ChangeEditActivityEvent());
                                           } else{
-                                            //state.initViewDetail();
+                                            blocContext.read<DetailActivityBloc>().add(ChangeDetailActivityEvent());
                                           }
                                         });
                                       }),
@@ -623,7 +389,12 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                               Visibility(
                                 visible: edit,
                                 child: Expanded(
-                                  child: BkavButton(text: "Hủy", onPressed: () {}),
+                                  child: BkavButton(text: "Hủy", onPressed: () {
+                                    setState(() {
+                                      edit = !edit;
+                                    });
+                                    blocContext.read<DetailActivityBloc>().add(ChangeDetailActivityEvent());
+                                  }),
                                 ),
                               ),
                               Visibility(
@@ -634,7 +405,13 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                               Visibility(
                                 visible: edit,
                                 child: Expanded(
-                                  child: BkavButton(text: "Lưu", onPressed: () {}),
+                                  child: BkavButton(text: "Lưu", onPressed: () {
+                                    /// luu goi api
+                                    setState(() {
+                                      edit = !edit;
+                                    });
+                                    blocContext.read<DetailActivityBloc>().add(ChangeDetailActivityEvent());
+                                  }),
                                 ),
                               )
                             ],
@@ -646,141 +423,6 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
             }),
       ),
     );
-  }
-
-  Widget inputText(String text, TextEditingController controller) {
-    return Container(
-      margin: EdgeInsets.only(top: 0),
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: Color(0xFFB2B8BB),
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          color: Colors.white),
-      child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            text.length > 25
-                ? Expanded(
-              flex: 5,
-              child: Text(
-                text,
-                style: TextStyle(
-                    color: Color(0xFFB2B8BB),
-                    fontSize:
-                    14) /*
-                    .merge(titleStyle)*/
-                ,
-              ),
-            )
-                : Text(
-              text,
-              style: TextStyle(
-                  color: Color(0xFFB2B8BB),
-                  fontSize: 14) /*
-                  .merge(titleStyle)*/
-              ,
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              flex: 3,
-              child: Row(
-                children: [
-                  Expanded(child: _rightWidget(context, controller)),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _rightWidget(context, TextEditingController controller) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            //obscureText: inputRegisterModel.isPassword,
-
-            /// Chỉ cho phép nhận số. Kể cả dấu chấm
-            // inputFormatters: TypeInputRegister.TextField,
-            focusNode: FocusNode(),
-            keyboardType: TextInputType.text,
-            controller: controller,
-            /*textCapitalization:
-                        inputRegisterModel.textCapitalization == null
-                            ? TextCapitalization.none
-                            : inputRegisterModel.textCapitalization!,*/
-            textAlign: TextAlign.right,
-            //autofocus: true,
-            onChanged: (newText) {},
-            //onSubmitted: ,
-            maxLength: 1000,
-            style: TextStyle(
-                color: Colors.black /*Color(0xFFA3A3A3)*/, fontSize: 14),
-            decoration: InputDecoration(
-                contentPadding:
-                EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-                isDense: true,
-                hintText: "",
-                border: InputBorder.none,
-                counterText: ''),
-            minLines: 1,
-            maxLines: 5,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Future<void> onSelectValue(
-      InputRegisterModel inputRegisterModel, BuildContext context) async {
-    int result;
-/*    if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucTinh && dMucTinhResponse.tinh == null) {
-      Toast.showLongTop("Không có danh mục tỉnh");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucHuyen && dMucHuyenResponse.dmucHuyenTPS == null) {
-      Toast.showLongTop("Không có danh mục huyện");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucXa && dMucXaResponse.dmucXaTPS == null) {
-      Toast.showLongTop("Không có danh mục xã");
-      return;
-    }*/
-    if (inputRegisterModel.valueSelected.runtimeType == DateTime ||
-        inputRegisterModel.typeInputEnum == TypeInputEnum.date) {
-      setState(() {
-        ServiceInfoExtension().selectValue(inputRegisterModel, context, () {});
-      });
-    } else {
-      result = await Extension().showBottomSheetSelection(
-          context,
-          inputRegisterModel.listValue,
-          inputRegisterModel.positionSelected,
-          "${inputRegisterModel.title}",
-          hasSearch: inputRegisterModel.hasSearch ?? false);
-      if (result != -1) {
-        setState(() {
-          inputRegisterModel.positionSelected = result;
-          inputRegisterModel.valueDefault = null;
-          inputRegisterModel.valueSelected =
-          inputRegisterModel.listValue[result];
-          inputRegisterModel.error = null;
-        });
-        if(inputRegisterModel.title.compareTo("Tên công việc")== 0){
-/*          _listWidget.insert(2, InputRegisterModel<String, String>(
-              title: "Các công việc liên quan:",
-              isCompulsory: false,
-              type: TypeInputRegister.MultiSelection,
-              listMutiChoice: listMutiChoice));*/
-        }
-      }
-    }
   }
   Widget itemAccount(BuildContext context,
       {required String image,

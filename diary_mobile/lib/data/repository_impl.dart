@@ -2,8 +2,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
+import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_executor.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
@@ -78,6 +80,9 @@ class RepositoryImpl extends Repository {
       //sharedPreferences.setString(SharedPreferencesKey.accessToken,objectResult.response["access_token"]);
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
+      getListMaterials();
+      getListUnits();
+      getListTools();
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -255,7 +260,33 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<Diary> getDetailDiary(int id) async{
+  Future<List<ActivityDiary>> getListActivityDiary() async{
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListActivity + "/1",
+            method: HttpMethod.GET,
+            body: {"token": "token"}));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListUnits response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.isOK) {
+      List<ActivityDiary> list = List.from(objectResult.response)
+          .map((json) => ActivityDiary.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    return FakeRepositoryImpl().getListActivityDiary();
+  }
+
+  @override
+  Future<ActivityDiary> getDetailDiary(int id) async{
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getListDiary + "/1",
@@ -263,6 +294,30 @@ class RepositoryImpl extends Repository {
             body: {"token": "token"}));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.isOK) {
+      ActivityDiary list = ActivityDiary.fromJson(objectResult.response);
+      return list;
+    }
+    else {
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    return FakeRepositoryImpl().getDetailDiary(id);
+  }
+
+  @override
+  Future<Diary> getInfoDiary(int id) async{
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getInfoDiary + "/1",
+            method: HttpMethod.GET,
+            body: {"token": "token"}));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListUnits response: ${objectResult.response}: ${objectResult.isOK}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.isOK) {
       Diary list = Diary.fromJson(objectResult.response);
@@ -275,7 +330,31 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );*/
     }
-    return FakeRepositoryImpl().getDetailDiary(id);
+    return FakeRepositoryImpl().getInfoDiary(id);
+  }
+
+  @override
+  Future<UserInfo> getUserInfo(int id) async{
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getInfoDiary + "/1",
+            method: HttpMethod.GET,
+            body: {"token": "token"}));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListUnits response: ${objectResult.response}: ${objectResult.isOK}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.isOK) {
+      UserInfo list = UserInfo.fromJson(objectResult.response);
+      return list;
+    }
+    else {
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    return FakeRepositoryImpl().getUserInfo(id);
   }
 
 }

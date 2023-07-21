@@ -215,7 +215,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                               "Trạng thái: ",
                                               state.listDiaryActivity[index].status == 0 ? "Đang xử lý" :
                                               state.listDiaryActivity[index].status == 1 ? "Đã hoàn thành" : "Đã hủy",
-                                              AppColor.blue15),
+                                              AppColor.blue15, 12),
                                           maxLines: 1,
                                           overflow: TextOverflow
                                               .ellipsis,
