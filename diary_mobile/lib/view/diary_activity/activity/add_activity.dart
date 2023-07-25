@@ -121,7 +121,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                               width: state.imageWidth,
                                               fit: BoxFit.cover,
                                             )
-                                          : Image.memory(
+                                          : Image.memory(gaplessPlayback: true,
                                               base64Decode(state
                                                       .listImage[index]
                                                       .fileContent ??

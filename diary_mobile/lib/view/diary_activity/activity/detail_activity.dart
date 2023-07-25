@@ -131,7 +131,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                         //width: 100,
                                         width: state.imageWidth,
                                         fit: BoxFit.cover,
-                                      ) : Image.memory(base64Decode( state.listImage[index].fileContent ?? ""),
+                                      ) : Image.memory(gaplessPlayback: true,base64Decode( state.listImage[index].fileContent ?? ""),
                                       height: state.imageHeight, width: state.imageWidth,fit: BoxFit.cover,),
                                       Visibility(
                                         visible: edit,

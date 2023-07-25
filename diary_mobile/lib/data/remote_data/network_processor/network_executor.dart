@@ -52,7 +52,7 @@ class NetworkExecutor{
               var options = error.response!.requestOptions;
               ObjectResult response = await request(
                   route: ApiBaseGenerator(
-                      body: ObjectData(object: {
+                      body: ObjectData(params: {
                 ApiParameterConst.refreshToken: refreshToken
               }/*, commandType: ApiConst.refreshAccessToken*/)));
 
@@ -86,7 +86,9 @@ class NetworkExecutor{
             orgGuid= sharedPreferences.getString(SharedPreferencesKey.orgGuid)?? "";
             //route.body.token = token;
             print("HoangCV123: ${token} bug: ${route.body} bug: ${token}");
-            if(token.isNotEmpty || route.body["token"].isNotEmpty){
+            if(token.isNotEmpty || route.body.token.isNotEmpty){
+              route.body.token = token;
+              print("HoangCV123111: ${    route.body.token} bug: ${route.body} bug: ${token}");
               return ObjectResult(1, "Lần đầu đăng nhập", "", "",false , true);
             }
           }
@@ -98,7 +100,7 @@ class NetworkExecutor{
               method: route.method,
               path: route.path,
               queryParameters: route.queryParameters,
-              data: route.body/*.toJson()*/,
+              data: route.body.toJson(),
               sendTimeout: const Duration(seconds: 180),
               receiveTimeout: const Duration(seconds: 180),
               validateStatus: (statusCode) =>
@@ -113,7 +115,7 @@ class NetworkExecutor{
 
             ObjectResult response = await request(
                 route: ApiBaseGenerator(
-                    body: ObjectData(object: {
+                    body: ObjectData(params: {
                       ApiParameterConst.refreshToken: refreshToken
                     }, /*commandType: ApiConst.refreshAccessToken*/)));
             // debugPrint(

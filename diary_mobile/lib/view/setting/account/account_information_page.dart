@@ -32,20 +32,6 @@ class AccountInformationPage extends StatefulWidget {
 }
 
 class _AccountInformationPageState extends State<AccountInformationPage> {
-  List<InputRegisterModel> _listWidget = [];
-
-  List<String> listSex = ["Nam", "Nữ"];
-  TextEditingController nameController =
-      TextEditingController(text: "Cao Văn Hoàng");
-  TextEditingController sexController = TextEditingController(text: "Nam");
-  TextEditingController addressController = TextEditingController(
-      text:
-          "421 hoàng quốc việt, hà nội, 421 hoàng quốc việt, cầu giấy, hà nội");
-  TextEditingController statusController =
-      TextEditingController(text: "Đang hoạt động");
-  TextEditingController mainController = TextEditingController(text: "Nông hộ");
-  TextEditingController dateController =
-      TextEditingController(text: "04/07/2000");
 
   bool edit = false;
 
@@ -111,7 +97,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   child:ClipOval(
                               child: state.userInfo!= null ? state.userInfo!.mediaContent == null ?
                                   Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
-                                  Image.memory(base64Decode( state.userInfo!.mediaContent ?? ""), fit: BoxFit.cover, width: 140, height: 140,
+                                  Image.memory(base64Decode( state.userInfo!.mediaContent ?? ""),gaplessPlayback: true, fit: BoxFit.cover, width: 140, height: 140,
                                     errorBuilder: (context, error, stackTrace) {
                                     // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
                                   return Image.asset(
@@ -120,7 +106,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       width: 140,
                                       height: 140,
                                     );
-                                  },):
+                                  },
+                                 ):
                                   Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.cover, width: 140, height: 140, )), //CircleAvatar
                             )),
                             Container(
@@ -132,9 +119,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   Visibility(
                                     visible: edit,
                                     child: GestureDetector(
-                                      child: Column(
+                                      child: const Column(
                                         children: [
-                                          const Image(
+                                          Image(
                                             image: AssetImage(
                                                 ImageAsset.imageCamera),
                                             width: 40,
@@ -166,15 +153,15 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       },
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                   Visibility(
                                     visible: edit,
                                     child: GestureDetector(
-                                      child: Column(
+                                      child: const Column(
                                         children: [
-                                          const Image(
+                                          Image(
                                             image: AssetImage(
                                                 ImageAsset.imageGallery),
                                             width: 40,
@@ -200,7 +187,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                             await Utils.getImagePicker(
                                                 ImageSource.gallery,
                                                 multiSelect: false);
-                                          if (list.length > 0) {
+                                          if (list.isNotEmpty) {
                                             context.read<AccountInformationBloc>().add(AddOrDeleteImageEvent(list, context));
                                           }
                                       },
@@ -223,7 +210,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                             margin: const EdgeInsets.only(
                                 top: 16, left: 16, right: 16),
                             child: ListView.builder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
                               itemCount: state.listWidget.length,
                               itemBuilder: (_, index) => ContainerInputWidget(
@@ -256,13 +243,12 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       onPressed: () {
                                         setState(() {
                                           edit = !edit;
-                                          _listWidget.clear();
-                                          if (edit) {
-                                            context.read<AccountInformationBloc>().add(ChangeEditInfoEvent());
-                                          } else {
-                                            context.read<AccountInformationBloc>().add(ChangeDetailInfoEvent());
-                                          }
                                         });
+                                        if (edit) {
+                                          context.read<AccountInformationBloc>().add(ChangeEditInfoEvent());
+                                        } else {
+                                          context.read<AccountInformationBloc>().add(ChangeDetailInfoEvent());
+                                        }
                                       }),
                                 ),
                               ),

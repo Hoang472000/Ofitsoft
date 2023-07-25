@@ -6,7 +6,7 @@ class Item {
   bool? isOrganic;
   bool? notation;
   bool? isActive;
-  bool? image;
+  String? image;
   int? diaryFarmerId;
   int? toolId;
   int? quantity;
@@ -36,7 +36,7 @@ class Item {
       categoryId: json['category_id'] ?? -1,
       isOrganic: json['is_organic'] ?? false,
       notation: json['notation'] ?? false,
-      image: json['image'] ?? false,
+      image: json['image'] ?? '',
       isActive: json['is_active'] ?? false,
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
       toolId: json['tool_id'] ?? '',

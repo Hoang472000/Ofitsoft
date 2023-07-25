@@ -79,6 +79,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
         (AppBar().preferredSize.height + 40) -
         (appBarHeight + searchWidgetHeight + 8 * 2)) /
         itemHeight;
+    print("HoangCV: maxItemDisplay: ${maxItemDisplay} : ${_list.length}");
     if (_list.length > maxItemDisplay) {
       int maxItemDisplayInt = maxItemDisplay.toInt();
       heightWidget = (maxItemDisplayInt * 60 + appBarHeight);
@@ -93,7 +94,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
         if (_list.length == 0) {
           heightWidget = appBarHeight;
         } else {
-          heightWidget = (_list.length * 60 + appBarHeight - 16);
+          heightWidget = (_list.length * 74 + appBarHeight - 16);
         }
       }
     }
@@ -144,7 +145,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                           .toString()
                                           .length <
                                       50
-                                  ? itemHeight
+                                  ? listDataSearch(controller.text)[index].image!='' ? 70 : itemHeight
                                   : Extension()
                                               .getValueDisplay(listDataSearch(
                                                   controller.text)[index])
@@ -158,16 +159,25 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
-                                    child: Text(
-                                      "${Extension().getValueDisplay(
-                                        listDataSearch(controller.text)[index],
-                                      )}",
-                                      style: TextStyle(
-                                          color: !isItemSelected
-                                              ? Colors.black
-                                              : Theme.of(context)
-                                                  .primaryColorDark,
-                                          fontSize: 16),
+                                    child: Row(
+                                      children: [(listDataSearch(controller.text)[index].image!='') ?
+                                        Flexible(
+                                            flex: 1,child: Image.asset(listDataSearch(controller.text)[index].image/*ImageAsset.imageActGardenVentilation*/, height: 65, fit: BoxFit.fitWidth,)) : const SizedBox(),
+                                        Flexible(
+                                          flex: 3,
+                                          child: Text(
+                                            "${Extension().getValueDisplay(
+                                              listDataSearch(controller.text)[index],
+                                            )}",
+                                            style: TextStyle(
+                                                color: !isItemSelected
+                                                    ? Colors.black
+                                                    : Theme.of(context)
+                                                        .primaryColorDark,
+                                                fontSize: 16),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   Padding(

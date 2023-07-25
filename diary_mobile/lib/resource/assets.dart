@@ -177,4 +177,29 @@ class ImageAsset {
   static const String imageFarmerProfile = "${iMages}farmer.png";
   static const String imageSex = "${iMages}sex.png";
   static const String imageCollaboration = "${iMages}collaboration.png";
+
+  //activity_image
+  static const String imageActGardenVentilation = "${iMages}act_garden_ventilation.png";
+  static const String imageActGardening = "${iMages}act_gardening.png";
+  static const String imageActGardenCare = "${iMages}act_garden_care.png";
+  static const String imageActHarvesting = "${iMages}act_harvesting.png";
+  static const String imageActHarvest = "${iMages}act_harvest.png";
+  static const String imageActPestAndDiseaseControl = "${iMages}act_pest_and_disease_control.png";
+  static const String imageActPruning = "${iMages}act_pruning.png";
+  static const String imageActWeedControl = "${iMages}act_weed_control.png";
+  //material_image
+  static const String imageMtlGinger = "${iMages}mtl_ginger.png";
+  static const String imageMtlGarlic = "${iMages}mtl_garlic.png";
+  static const String imageMtlChili = "${iMages}mtl_chili.png";
+  static const String imageMtlLemongrass = "${iMages}mtl_lemongrass.png";
+  //tool_image
+  static const String imageToolBag = "${iMages}tool_bag.png";
+  static const String imageToolBroom = "${iMages}tool_broom.png";
+  static const String imageToolHoe = "${iMages}tool_hoe.png";
+  static const String imageToolKnife = "${iMages}tool_knife.png";
+  static const String imageToolMachete = "${iMages}tool_machete.png";
+  static const String imageToolMachineWeed = "${iMages}tool_machine_weed.png";
+  static const String imageToolRake = "${iMages}tool_rake.png";
+  static const String imageToolSaw = "${iMages}tool_saw.png";
+  static const String imageToolSpecialized = "${iMages}tool_specialized.png";
 }

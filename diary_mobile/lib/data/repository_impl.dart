@@ -65,16 +65,15 @@ class RepositoryImpl extends Repository {
     // final Dio _dio = Dio();
     // final response = await _dio.fetch(RequestOptions(path: 'https://10.0.2.2:8015/api/login', data: object1,headers: _headers));
     // print("HoangCV: login response: ${response.data}");
-/*    ObjectResult objectResult = await networkExecutor.request(
+    ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: "/api/login",
             method: HttpMethod.POST,
-            body: object1,
+            body: ObjectData(params: object1, isLogin: true),
             header: headers),
-        isLogin: true);*/
-    //
+        isLogin: true);
 
-    ObjectResult objectResult =  ObjectResult(1, "object", "1", "", true, false);
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.isOK) {
       //sharedPreferences.setString(SharedPreferencesKey.accessToken,objectResult.response["access_token"]);
@@ -135,7 +134,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
           path: ApiConst.getListActivities,
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+          body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListActivities response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -161,7 +160,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListMaterials,
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListMaterials response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -187,7 +186,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListTools,
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListTools response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -213,7 +212,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListUnits,
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -239,7 +238,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListDiary + "/1",
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -265,7 +264,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListActivity + "/1",
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -291,7 +290,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getListDiary + "/1",
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -315,7 +314,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getInfoDiary + "/1",
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}: ${objectResult.isOK}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
@@ -339,7 +338,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.getInfoDiary + "/1",
             method: HttpMethod.GET,
-            body: {"token": "token"}));
+            body: ObjectData(token: '1')));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListUnits response: ${objectResult.response}: ${objectResult.isOK}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);

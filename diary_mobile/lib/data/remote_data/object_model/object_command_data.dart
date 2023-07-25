@@ -4,11 +4,11 @@ class ObjectData{
   String token;
   final bool isLogin;
   //final int commandType;
-  final dynamic object;
+  final dynamic params;
 
   ObjectData(
       {this.token = "",
-        this.object = const {},
+        this.params = const {},
         //required this.commandType,
         this.isLogin= false,
       });
@@ -17,6 +17,6 @@ class ObjectData{
     "token": token,
     //"OrgGUID": orgGUID,
    /* "CommandType": commandType,*/
-    "object": object,
+    "params": params,
   };
 }

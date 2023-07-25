@@ -606,15 +606,9 @@ class $ActivityTableTable extends ActivityTable
           }));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
-  late final GeneratedColumn<bool> image =
-      GeneratedColumn<bool>('image', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("image" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _diaryFarmerIdMeta =
       const VerificationMeta('diaryFarmerId');
   @override
@@ -749,7 +743,7 @@ class $ActivityTableTable extends ActivityTable
       notation: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}notation']),
       image: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}image']),
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       diaryFarmerId: attachedDatabase.typeMapping
@@ -779,7 +773,7 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
   final Value<bool?> isOrganic;
   final Value<bool?> notation;
   final Value<bool?> isActive;
-  final Value<bool?> image;
+  final Value<String?> image;
   final Value<int?> diaryFarmerId;
   final Value<int?> toolId;
   final Value<int?> quantity;
@@ -823,7 +817,7 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
     Expression<bool>? isOrganic,
     Expression<bool>? notation,
     Expression<bool>? isActive,
-    Expression<bool>? image,
+    Expression<String>? image,
     Expression<int>? diaryFarmerId,
     Expression<int>? toolId,
     Expression<int>? quantity,
@@ -855,7 +849,7 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
       Value<bool?>? isOrganic,
       Value<bool?>? notation,
       Value<bool?>? isActive,
-      Value<bool?>? image,
+      Value<String?>? image,
       Value<int?>? diaryFarmerId,
       Value<int?>? toolId,
       Value<int?>? quantity,
@@ -903,7 +897,7 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
       map['is_active'] = Variable<bool>(isActive.value);
     }
     if (image.present) {
-      map['image'] = Variable<bool>(image.value);
+      map['image'] = Variable<String>(image.value);
     }
     if (diaryFarmerId.present) {
       map['diary_farmer_id'] = Variable<int>(diaryFarmerId.value);
@@ -1009,15 +1003,9 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
           }));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
-  late final GeneratedColumn<bool> image =
-      GeneratedColumn<bool>('image', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("image" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _diaryFarmerIdMeta =
       const VerificationMeta('diaryFarmerId');
   @override
@@ -1163,7 +1151,7 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
       notation: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}notation']),
       image: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}image']),
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       diaryFarmerId: attachedDatabase.typeMapping
@@ -1195,7 +1183,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   final Value<bool?> isOrganic;
   final Value<bool?> notation;
   final Value<bool?> isActive;
-  final Value<bool?> image;
+  final Value<String?> image;
   final Value<int?> diaryFarmerId;
   final Value<int?> toolId;
   final Value<double?> quantity;
@@ -1242,7 +1230,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     Expression<bool>? isOrganic,
     Expression<bool>? notation,
     Expression<bool>? isActive,
-    Expression<bool>? image,
+    Expression<String>? image,
     Expression<int>? diaryFarmerId,
     Expression<int>? toolId,
     Expression<double>? quantity,
@@ -1276,7 +1264,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
       Value<bool?>? isOrganic,
       Value<bool?>? notation,
       Value<bool?>? isActive,
-      Value<bool?>? image,
+      Value<String?>? image,
       Value<int?>? diaryFarmerId,
       Value<int?>? toolId,
       Value<double?>? quantity,
@@ -1326,7 +1314,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
       map['is_active'] = Variable<bool>(isActive.value);
     }
     if (image.present) {
-      map['image'] = Variable<bool>(image.value);
+      map['image'] = Variable<String>(image.value);
     }
     if (diaryFarmerId.present) {
       map['diary_farmer_id'] = Variable<int>(diaryFarmerId.value);
@@ -1437,15 +1425,9 @@ class $MaterialTableTable extends MaterialTable
           }));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
-  late final GeneratedColumn<bool> image =
-      GeneratedColumn<bool>('image', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("image" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _diaryFarmerIdMeta =
       const VerificationMeta('diaryFarmerId');
   @override
@@ -1591,7 +1573,7 @@ class $MaterialTableTable extends MaterialTable
       notation: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}notation']),
       image: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}image']),
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       diaryFarmerId: attachedDatabase.typeMapping
@@ -1623,7 +1605,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   final Value<bool?> isOrganic;
   final Value<bool?> notation;
   final Value<bool?> isActive;
-  final Value<bool?> image;
+  final Value<String?> image;
   final Value<int?> diaryFarmerId;
   final Value<int?> toolId;
   final Value<double?> quantity;
@@ -1670,7 +1652,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     Expression<bool>? isOrganic,
     Expression<bool>? notation,
     Expression<bool>? isActive,
-    Expression<bool>? image,
+    Expression<String>? image,
     Expression<int>? diaryFarmerId,
     Expression<int>? toolId,
     Expression<double>? quantity,
@@ -1704,7 +1686,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
       Value<bool?>? isOrganic,
       Value<bool?>? notation,
       Value<bool?>? isActive,
-      Value<bool?>? image,
+      Value<String?>? image,
       Value<int?>? diaryFarmerId,
       Value<int?>? toolId,
       Value<double?>? quantity,
@@ -1754,7 +1736,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
       map['is_active'] = Variable<bool>(isActive.value);
     }
     if (image.present) {
-      map['image'] = Variable<bool>(image.value);
+      map['image'] = Variable<String>(image.value);
     }
     if (diaryFarmerId.present) {
       map['diary_farmer_id'] = Variable<int>(diaryFarmerId.value);
@@ -1864,15 +1846,9 @@ class $UnitTableTable extends UnitTable with TableInfo<$UnitTableTable, Unit> {
           }));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
-  late final GeneratedColumn<bool> image =
-      GeneratedColumn<bool>('image', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("image" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _diaryFarmerIdMeta =
       const VerificationMeta('diaryFarmerId');
   @override
@@ -2007,7 +1983,7 @@ class $UnitTableTable extends UnitTable with TableInfo<$UnitTableTable, Unit> {
       notation: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}notation']),
       image: attachedDatabase.typeMapping
-          .read(DriftSqlType.bool, data['${effectivePrefix}image']),
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
       isActive: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       diaryFarmerId: attachedDatabase.typeMapping
@@ -2037,7 +2013,7 @@ class UnitTableCompanion extends UpdateCompanion<Unit> {
   final Value<bool?> isOrganic;
   final Value<bool?> notation;
   final Value<bool?> isActive;
-  final Value<bool?> image;
+  final Value<String?> image;
   final Value<int?> diaryFarmerId;
   final Value<int?> toolId;
   final Value<double?> quantity;
@@ -2081,7 +2057,7 @@ class UnitTableCompanion extends UpdateCompanion<Unit> {
     Expression<bool>? isOrganic,
     Expression<bool>? notation,
     Expression<bool>? isActive,
-    Expression<bool>? image,
+    Expression<String>? image,
     Expression<int>? diaryFarmerId,
     Expression<int>? toolId,
     Expression<double>? quantity,
@@ -2113,7 +2089,7 @@ class UnitTableCompanion extends UpdateCompanion<Unit> {
       Value<bool?>? isOrganic,
       Value<bool?>? notation,
       Value<bool?>? isActive,
-      Value<bool?>? image,
+      Value<String?>? image,
       Value<int?>? diaryFarmerId,
       Value<int?>? toolId,
       Value<double?>? quantity,
@@ -2161,7 +2137,7 @@ class UnitTableCompanion extends UpdateCompanion<Unit> {
       map['is_active'] = Variable<bool>(isActive.value);
     }
     if (image.present) {
-      map['image'] = Variable<bool>(image.value);
+      map['image'] = Variable<String>(image.value);
     }
     if (diaryFarmerId.present) {
       map['diary_farmer_id'] = Variable<int>(diaryFarmerId.value);

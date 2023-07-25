@@ -20,11 +20,10 @@ class Extension {
       {bool hasSearch = false}) async {
     /// Đóng bàn phím nếu đang chọn
     FocusScope.of(context).requestFocus(FocusNode());
-    int result = -1;
-    result = await showModalBottomSheet<dynamic>(
+    var result = await showModalBottomSheet<dynamic>(
       backgroundColor: Colors.white.withOpacity(0),
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
           topRight: Radius.circular(20),

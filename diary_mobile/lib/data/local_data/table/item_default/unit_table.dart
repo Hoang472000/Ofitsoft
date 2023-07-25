@@ -13,7 +13,7 @@ class UnitTable extends Table {
   BoolColumn get isOrganic => boolean().nullable()();
   BoolColumn get notation => boolean().nullable()();
   BoolColumn get isActive => boolean().nullable()();
-  BoolColumn get image => boolean().nullable()();
+  TextColumn get image => text().nullable()();
   IntColumn get diaryFarmerId => integer().nullable()();
   IntColumn get toolId => integer().nullable()();
   RealColumn get quantity => real().nullable()();

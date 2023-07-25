@@ -9,6 +9,7 @@ import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
+import '../../resource/assets.dart';
 import '../entity/diary/diary.dart';
 import '../entity/item_default/item_default.dart';
 import '../entity/item_default/tool.dart';
@@ -35,51 +36,59 @@ class FakeRepositoryImpl extends Repository {
         "id": 25,
         "name": "Garden Care",
         "category_id": 19,
-        "description": "<p>Garden Care</p>"
+        "description": "<p>Garden Care</p>",
+        "image": ImageAsset.imageActGardenCare
       },
       {
         "id": 26,
         "name": "Garden Cleaning",
         "category_id": 19,
-        "description": "<p>Garden Cleaning</p>"
+        "description": "<p>Garden Cleaning</p>",
+        "image": ImageAsset.imageActGardenVentilation
       },
       {
         "id": 27,
         "name": "Garden Ventilation",
         "category_id": 19,
-        "description": "<p>Garden Ventilation</p>"
+        "description": "<p>Garden Ventilation</p>",
+        "image": ImageAsset.imageActGardenVentilation
       },
       {
         "id": 28,
         "name": "Pest and disease control",
         "category_id": 19,
-        "description": "<p>Pest and disease control</p>"
+        "description": "<p>Pest and disease control</p>",
+        "image": ImageAsset.imageActPestAndDiseaseControl
       },
       {
         "id": 29,
         "name": "Gardening",
         "category_id": 19,
-        "description": "<p>Gardening</p>"
+        "description": "<p>Gardening</p>",
+        "image": ImageAsset.imageActGardening
       },
       {
         "id": 30,
         "name": "Pruning",
         "category_id": 19,
-        "description": "<p>Pruning</p>"
+        "description": "<p>Pruning</p>",
+        "image": ImageAsset.imageActPruning
       },
       {
         "id": 31,
         "name": "Weed control",
         "category_id": 19,
-        "description": "<p>Weed control</p>"
+        "description": "<p>Weed control</p>",
+        "image": ImageAsset.imageActWeedControl
       },
       {
         "id": 32,
         "name": "Harvesting",
         "category_id": 19,
-        "description": "<p>Harvesting</p>"
+        "description": "<p>Harvesting</p>",
+        "image": ImageAsset.imageActHarvesting
       },
-      {
+  /*    {
         "id": 33,
         "name": "Do farmers store pesticides/herbicides in their house?",
         "category_id": 20,
@@ -105,7 +114,7 @@ class FakeRepositoryImpl extends Repository {
         "category_id": 20,
         "description":
             "<p>Is there any sign of using compost for the product?</p>"
-      }
+      }*/
     ];
     List<Activity> list =
         List.from(json).map((json) => Activity.fromJson(json)).toList();
@@ -127,7 +136,7 @@ class FakeRepositoryImpl extends Repository {
         "is_organic": false,
         "description": "<p>Using garlic to care for plants.</p>",
         "valid": true,
-        "image": false
+        "image": ImageAsset.imageMtlGinger
       },
       {
         "id": 10,
@@ -136,7 +145,7 @@ class FakeRepositoryImpl extends Repository {
         "is_organic": false,
         "description": "<p>Using chili pepper to take care of plants.</p>",
         "valid": true,
-        "image": false
+        "image": ImageAsset.imageMtlChili
       },
       {
         "id": 11,
@@ -145,7 +154,7 @@ class FakeRepositoryImpl extends Repository {
         "is_organic": false,
         "description": "<p>Using ginger to take care of plants.</p>",
         "valid": true,
-        "image": false
+        "image": ImageAsset.imageMtlGinger
       },
       {
         "id": 12,
@@ -154,7 +163,7 @@ class FakeRepositoryImpl extends Repository {
         "is_organic": false,
         "description": "<p>Using lemongrass to take care of plants.</p>",
         "valid": false,
-        "image": false
+        "image": ImageAsset.imageMtlLemongrass
       }
     ];
     List<MaterialEntity> list =
@@ -171,63 +180,72 @@ class FakeRepositoryImpl extends Repository {
         "name": "Specialized Grass Rake",
         "category_id": 42,
         "description": "<p>Specialized Grass Rake</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolRake
       },
       {
         "id": 20,
         "name": "Broom",
         "category_id": 42,
         "description": "<p>Broom</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolBroom
       },
       {
         "id": 21,
         "name": "Saw",
         "category_id": 42,
         "description": "<p>Saw</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolSaw
       },
       {
         "id": 22,
         "name": "Hoe",
         "category_id": 42,
         "description": "<p>Hoe</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolHoe
       },
       {
         "id": 23,
         "name": "Knife",
         "category_id": 42,
         "description": "<p>Knife</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolKnife
       },
       {
         "id": 24,
         "name": "Specialized Tools",
         "category_id": 42,
         "description": "<p>Specialized Tools</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolSpecialized
       },
       {
         "id": 25,
         "name": "Remove Weeds Machine",
         "category_id": 42,
         "description": "<p>Remove Weeds Machine</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolMachineWeed
       },
       {
         "id": 26,
         "name": "Machete",
         "category_id": 42,
         "description": "<p>Machete</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolMachete
       },
       {
         "id": 27,
         "name": "New Bag",
         "category_id": 42,
         "description": "<p>New Bag</p>",
-        "valid": true
+        "valid": true,
+        "image": ImageAsset.imageToolBag
       }
     ];
     List<Tool> list =
