@@ -1,25 +1,26 @@
 class ApiConst {
 
-  //static const String domainApi = "http://qlvsx.ofitsoft.com:8069";//"http://10.0.2.2:8069";//http://diary.visimex.com:8069/
+  static const String domainApi = "http://qlvsx.ofitsoft.com:8069";//"http://10.0.2.2:8069";//http://diary.visimex.com:8069/
   //
-  static const String domainApi = "http://10.0.2.2:8015";
-  //static const String domainApi = "http://192.168.2.79:8015";
-  //static const String domainApi = "http://localhost:8015";
-  //static const String domainApi = "http://hoangofit-system-product-name:8015";
+  //static const String domainApi = "http://10.0.2.2:8015";
   static const String get_diaries_farmer = "/get/diaries/farmer/";// /get/diaries/farmer/<int:id>
 
   //api login
   static const String login = "/api/login";
 
   //api lay danh muc dung chung
-  static const String getListTools = "/api/tools";
-  static const String getListMaterials = "/api/materials";
-  static const String getListActivities = "/api/activities";
-  static const String getListUnits = "/api/units";
+  static const String getListTools = "/get/tools_farmer/";
+  static const String getListMaterials = "/get/materials_farmer/";
+  static const String getListActivities = "/get/activites_farmer/";
+  static const String getListUnits = "/get/units_farmer/";
   //api danh sach diary
-  static const String getListActivity = "/get/seasons/farmer";
-  static const String getListDiary = "/get/diary";
-  static const String getInfoDiary = "/get/diary/detail";
+  static const String getListActivity = "/get/diary_farmer/";
+  static const String getListDiary = "/get/diaries/farmer/";
+  static const String getInfoDiary = "/get/season_diary/";
+  //api user info
+  static const String getUserInfo = "/get/infor/user/";
+  //api add 1 activity diary
+  static const String addActivityDiary = "/add/item/diary_farmer";
 
 
 

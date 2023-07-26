@@ -91,8 +91,9 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(unitTable, values);
     });
   }
-  Future<List<Unit>> getListUnit() async {
-    return await select(unitTable).get();
+  Future<List<Unit>> getListUnit(int categoryIdUnitAmount) async {
+    return await (select(unitTable)..where((tbl) => tbl.categoryId.equals(categoryIdUnitAmount)))
+        .get();
   }
 
   SingleSelectable<UserInfo> singleUser(int userId) {

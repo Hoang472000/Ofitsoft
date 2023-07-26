@@ -15,7 +15,7 @@ class ApiBaseGenerator{
 
   ///cac truong bat buoc : body, method, cac truong khac neu khong truyen vao thi lay gia tri mac dinh
   ///body: truong bat buoc: commandObject,
-  ApiBaseGenerator({this.path= "", this.method= HttpMethod.POST, this.baseUrl= ApiConst.domainApi,
+  ApiBaseGenerator({this.path= "", this.method= HttpMethod.GET, this.baseUrl= ApiConst.domainApi,
     required this.body, this.queryParameters=const {}, this.header=const {}});
 
   static int get sendTimeout => 20000;

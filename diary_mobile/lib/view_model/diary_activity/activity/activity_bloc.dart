@@ -17,13 +17,13 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
   ActivityBloc(this.repository) : super(ActivityState()) {
     on<GetListActivityEvent>(_getListActivity);
-    add(GetListActivityEvent());
+    //add(GetListActivityEvent());
   }
 
   void _getListActivity(
       GetListActivityEvent event, Emitter<ActivityState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final listDiaryActivity = await repository.getListActivityDiary();
+    final listDiaryActivity = await repository.getListActivityDiary(event.id);
     DiaryDB.instance.getListDiary();
     emitter(state.copyWith(
       isShowProgress: false,
@@ -38,7 +38,10 @@ class ActivityEvent extends BlocEvent {
 }
 
 class GetListActivityEvent extends ActivityEvent {
-  GetListActivityEvent();
+  final int id;
+  GetListActivityEvent(this.id);
+  @override
+  List<Object?> get props => [id];
 }
 
 class UpdateAvataEvent extends ActivityEvent {

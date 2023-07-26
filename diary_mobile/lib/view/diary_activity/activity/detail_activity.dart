@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
@@ -25,13 +27,14 @@ import '../../../view_model/diary/list_diary_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class DetailActivityPage extends StatefulWidget {
-  const DetailActivityPage({super.key});
+  DetailActivityPage({super.key, required this.activityDiary});
+  ActivityDiary activityDiary;
 
   @override
   _DetailActivityPageState createState() => _DetailActivityPageState();
 
-  static Route route() {
-    return Utils.pageRouteBuilder(DetailActivityPage(), true);
+  static Route route(ActivityDiary activityDiary) {
+    return Utils.pageRouteBuilder(DetailActivityPage(activityDiary: activityDiary,), true);
   }
 }
 
@@ -47,7 +50,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DetailActivityBloc(context.read<Repository>()),
+      create: (context) => DetailActivityBloc(context.read<Repository>())..add(GetDetailActivityEvent(widget.activityDiary)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,

@@ -21,7 +21,7 @@ class ContainerInputWidget extends StatelessWidget {
   final ValueChanged<int>? onMutiChoice;
   final ValueChanged<String>? onChangeText;
   final ValueChanged<String>? onSubmittedText;
-  final Function? onEditingComplete;
+  final Function(String)? onEditingComplete;
   final Function? onClickIcon;
   final Function? showPassword;
   final ValueChanged<bool>? checkFocus;
@@ -306,68 +306,81 @@ class ContainerInputWidget extends StatelessWidget {
         return Row(
           children: [
             Expanded(
-              child: TextField(
-                obscureText: inputRegisterModel.isPassword,
+              child: Focus(
+                child: TextField(
+                  obscureText: inputRegisterModel.isPassword,
 
-                /// Chỉ cho phép nhận số. Kể cả dấu chấm
-                inputFormatters: _textFormat,
-                focusNode: inputRegisterModel.focusNode,
-                keyboardType: inputRegisterModel.typeInput,
-                controller: inputRegisterModel.controller,
-                textCapitalization:
-                    inputRegisterModel.textCapitalization == null
-                        ? TextCapitalization.none
-                        : inputRegisterModel.textCapitalization!,
-                textAlign: TextAlign.right,
-                //autofocus: true,
-                // onTap: () {
-                //   inputRegisterModel.controller.selection =
-                //       new TextSelection.fromPosition(new TextPosition(
-                //           offset: inputRegisterModel.controller.text.length));
-                // },
-                onChanged: (newText) {
-                  setTrailingSpaceWhenInput(inputRegisterModel);
+                  /// Chỉ cho phép nhận số. Kể cả dấu chấm
+                  inputFormatters: _textFormat,
+                  focusNode: inputRegisterModel.focusNode,
+                  keyboardType: inputRegisterModel.typeInput,
+                  controller: inputRegisterModel.controller,
+                  textCapitalization:
+                      inputRegisterModel.textCapitalization == null
+                          ? TextCapitalization.none
+                          : inputRegisterModel.textCapitalization!,
+                  textAlign: TextAlign.right,
+                  //autofocus: true,
+                  // onTap: () {
+                  //   inputRegisterModel.controller.selection =
+                  //       new TextSelection.fromPosition(new TextPosition(
+                  //           offset: inputRegisterModel.controller.text.length));
+                  // },
+                  onChanged: (newText) {//HoangCV: đoạn này cần xem lại đang lỗi // đọc thì khá giống format cho nhập số điện thoại, kiểu int với double  `
+                    //setTrailingSpaceWhenInput(inputRegisterModel);
 
-                  if(onChangeText != null){
-                    onChangeText!(newText);
-                  }
-
-                  try {
-                    if (inputRegisterModel.controller!.text
-                                .replaceAll(',', '')
-                                .length <=
-                            inputRegisterModel.maxLengthTextInput! &&
-                        inputRegisterModel.isFormatText) {
-                      inputRegisterModel.controller!.value = TextEditingValue(
-                        text: Utils.formatCurrency(
-                            inputRegisterModel.controller!.text),
-                        selection: TextSelection.collapsed(
-                            offset: Utils.formatCurrency(
-                                    inputRegisterModel.controller!.text)
-                                .length),
-                      );
+                    if(onChangeText != null){
+                      onChangeText!(newText);
                     }
-                    // print(inputRegisterModel.controller.text);
-                  } catch (e) {
-                    print(e);
+
+                    try {
+                      if (inputRegisterModel.controller!.text
+                                  .replaceAll(',', '')
+                                  .length <=
+                              inputRegisterModel.maxLengthTextInput! &&
+                          inputRegisterModel.isFormatText) {
+                        inputRegisterModel.controller!.value = TextEditingValue(
+                          text: Utils.formatCurrency(
+                              inputRegisterModel.controller!.text),
+                          selection: TextSelection.collapsed(
+                              offset: Utils.formatCurrency(
+                                      inputRegisterModel.controller!.text)
+                                  .length),
+                        );
+                      }
+                      // print(inputRegisterModel.controller.text);
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  onSubmitted: onSubmittedText,
+                  maxLength: maxLength,
+                  style: TextStyle(
+                      color: inputRegisterModel.unit == null
+                          ? Colors.black
+                          : Color(0xFFA3A3A3),
+                      fontSize: 14),
+                  decoration: InputDecoration(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                      isDense: true,
+                      hintText: inputRegisterModel.hintText,
+                      border: InputBorder.none,
+                      counterText: ''),
+                  minLines: 1,
+                  maxLines: 5,
+                ),
+                onFocusChange: (focus){
+                  if(!focus){
+            /*        print("HoangCV: inputRegisterModel.controller!.text: ${focus}");
+                    onSubmittedText;
+                    FocusScope.of(context).unfocus();
+                    if(inputRegisterModel.controller!=null){
+                      print("HoangCV: inputRegisterModel.controller!.text: ${inputRegisterModel.controller!.text}");
+                      onEditingComplete!(inputRegisterModel.controller!.text);
+                    }*/
                   }
                 },
-                onSubmitted: onSubmittedText,
-                maxLength: maxLength,
-                style: TextStyle(
-                    color: inputRegisterModel.unit == null
-                        ? Colors.black
-                        : Color(0xFFA3A3A3),
-                    fontSize: 14),
-                decoration: InputDecoration(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-                    isDense: true,
-                    hintText: inputRegisterModel.hintText,
-                    border: InputBorder.none,
-                    counterText: ''),
-                minLines: 1,
-                maxLines: 5,
               ),
             ),
             inputRegisterModel.icon != null
@@ -505,6 +518,7 @@ class ContainerInputWidget extends StatelessWidget {
             // onChangeText(newText);
           },
           onSubmitted: onSubmittedText,
+          onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
           style: TextStyle(
               color: inputRegisterModel.unit == null
                   ? Colors.black
@@ -606,6 +620,7 @@ class ContainerInputWidget extends StatelessWidget {
             // onChangeText(newText);
           },
           onSubmitted: onSubmittedText,
+          onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
           style: TextStyle(
               color: inputRegisterModel.unit == null
                   ? Colors.black
@@ -628,7 +643,8 @@ class ContainerInputWidget extends StatelessWidget {
 }
 
 void setTrailingSpaceWhenInput(InputRegisterModel inputRegisterModel) {
-  TextSelection previousSelection = inputRegisterModel.controller!.selection;
+  TextSelection previousSelection = inputRegisterModel.controller!.selection != null ? inputRegisterModel.controller!.selection : TextSelection(
+      baseOffset: 0, extentOffset: inputRegisterModel.controller!.text.length);
   if (inputRegisterModel.controller!.text
           .substring(inputRegisterModel.controller!.text.length - 1) ==
       " ") {

@@ -152,7 +152,7 @@ class AccountInformationBloc
   void _initInfo(
       InitInfoEvent event, Emitter<AccountInformationState> emitter) async {
     emitter(state.copyWith(isShowProgress: true, listWidget: [], userInfo: UserInfo()));
-    UserInfo userInfo = await repository.getUserInfo(1);
+    UserInfo userInfo = await repository.getUserInfo(25);
     emitter(state.copyWith(
       isShowProgress: false,
       userInfo: userInfo,

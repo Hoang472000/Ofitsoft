@@ -21,13 +21,14 @@ import '../../../view_model/diary_activity/activity/add_actitivy_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class AddActivityPage extends StatefulWidget {
-  const AddActivityPage({super.key});
+  const AddActivityPage({super.key, required this.seasonFarmId});
+  final int seasonFarmId;
 
   @override
   _AddActivityPageState createState() => _AddActivityPageState();
 
-  static Route route() {
-    return Utils.pageRouteBuilder(const AddActivityPage(), true);
+  static Route route(int seasonFarmId) {
+    return Utils.pageRouteBuilder(AddActivityPage(seasonFarmId: seasonFarmId,), true);
   }
 }
 
@@ -42,7 +43,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AddActivityBloc(context.read<Repository>()),
+      create: (context) => AddActivityBloc(context.read<Repository>())..add(InitAddActivityEvent(widget.seasonFarmId)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -61,14 +62,14 @@ class _AddActivityPageState extends State<AddActivityPage> {
             listener: (context, state) async {},
             builder: (blocContext, state) {
               return Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: SingleChildScrollView(
                     //physics: NeverScrollableScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         ListView.builder(
-                          physics: NeverScrollableScrollPhysics(),
+                          physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
                           itemCount: state.listWidget.length,
                           itemBuilder: (_, index) => ContainerInputWidget(
@@ -82,9 +83,55 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             },
                             onMutiChoice: (id) {
                             },
-                            onChangeText: (text) {},
+                            onChangeText: (text) {
+                              blocContext.read<AddActivityBloc>().add(SaveValueTextFieldEvent(text, state.listWidget[index], index));
+                            },
+                            onEditingComplete: (text){
+                              blocContext.read<AddActivityBloc>().add(SaveValueTextFieldEvent(text, state.listWidget[index], index));
+                            },
                           ),
                         ),
+                        state.listWidgetArea.isNotEmpty?Row(
+                          children: [
+                            Expanded(
+                                flex: 5,
+                                child:
+                                ContainerInputWidget(
+                                    contextParent: context,
+                                    inputRegisterModel: state.listWidgetArea[0],
+                                    onClick: () {
+                                      setState(() {});
+                                      blocContext.read<AddActivityBloc>().add(
+                                          OnSelectValueEvent(
+                                              state.listWidgetArea, 0, context));
+                                    },                    onChangeText: (text) {
+                                      print("HoangCV: text: ${text}");
+                                      blocContext.read<AddActivityBloc>().add(SaveValueTextFieldEvent(text, state.listWidgetArea[0], 0));
+                                },onSubmittedText: (text){
+                                  print("HoangCV: onSubmittedText: ${text}");
+                                },onEditingComplete: (text){
+                                  print("HoangCV: onEditingComplete: ${text} : ${state.listWidgetArea[0].controller}");
+                                  blocContext.read<AddActivityBloc>().add(SaveValueTextFieldEvent(text, state.listWidgetArea[0], 0));
+                                },
+                                )),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                                flex: 5,
+                                child: ContainerInputWidget(
+                                    contextParent: context,
+                                    inputRegisterModel: state.listWidgetArea[1],
+                                    onClick: () {
+                                      setState(() {});
+                                      blocContext.read<AddActivityBloc>().add(
+                                          OnSelectValueEvent(
+                                              state.listWidgetArea, 1, context));
+                                    },                    onChangeText: (text) {},     onEditingComplete: (text){
+
+                                },)),
+                          ],
+                        ): const SizedBox(),
                         itemAccount(context,
                             text: "Danh sách vật tư, công cụ",
                             image: ImageAsset.imageGardening,
@@ -390,7 +437,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                               onPressed: () {
                                 blocContext
                                     .read<AddActivityBloc>()
-                                    .add(ChangeEditActivityEvent());
+                                    .add(AddActivityDiaryEvent());
                               }),
                         )
                       ],

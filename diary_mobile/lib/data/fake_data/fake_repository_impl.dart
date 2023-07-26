@@ -121,7 +121,8 @@ class FakeRepositoryImpl extends Repository {
     print("HoangCV: fake data: getListActivities: ${list.length}");
     await DiaryDB.instance.insertListActivity(list);
     getListMaterials();
-    getListUnits();
+    getListUnits(10);
+    getListUnits(8);
     getListTools();
     return list;
   }
@@ -255,7 +256,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Unit>> getListUnits() async {
+  Future<List<Unit>> getListUnits(int id) async {
     var json = [
       {
         "id": 25,
@@ -389,7 +390,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<ActivityDiary>> getListActivityDiary() async {
+  Future<List<ActivityDiary>> getListActivityDiary(int id) async {
     var json = [
       {
         "id": 1,
@@ -480,11 +481,11 @@ class FakeRepositoryImpl extends Repository {
       "start_date": "2022-02-02",
       "end_date": "2022-12-08",
       "area": 2.0,
-      "area_unit_id": "ha",
+      "area_unit_id": -1,
       "amount": 500.0,
-      "amount_unit_id": "Cây",
+      "amount_unit_id": -1,
       "yield_estimate": 5.0,
-      "yield_estimate_unit_id": "Tấn (1000kg)",
+      "yield_estimate_unit_id": -1,
       "description": "<p>Đã hoàn thành mùa điều</p>",
       "status": "done"
     };
@@ -501,7 +502,8 @@ class FakeRepositoryImpl extends Repository {
       "activity_id": 25,
       "action_time": "2022-05-11 08:08:10",
       "action_area": 1.0,
-      "action_area_unit_id": "km",
+      "action_area_unit_id": 1,
+      "action_area_unit": "m2",
       "description":
           "Sản xuất lúa thu đông năm 2022 phục vụ xuất nhập khẩu trong và ngoài nước",
       "name_activity": "Garden Care",
@@ -563,7 +565,7 @@ class FakeRepositoryImpl extends Repository {
       ]
     };
     ActivityDiary list = ActivityDiary.fromJson(json);
-    print("HoangCV: get detail Diary: ${list.nameActivity}");
+    print("HoangCV: get detail Diary: ${list.activity}");
     return list;
   }
 
@@ -584,5 +586,11 @@ class FakeRepositoryImpl extends Repository {
     UserInfo userInfo = await UserInfo.fromJson(json);
     //print("HoangCV: getUserInfo: ${userInfo.mediaContent}");
     return userInfo;
+  }
+
+  @override
+  Future<ObjectResult> addActivityDiary(ActivityDiary diary) {
+    // TODO: implement addActivityDiary
+    throw UnimplementedError();
   }
 }

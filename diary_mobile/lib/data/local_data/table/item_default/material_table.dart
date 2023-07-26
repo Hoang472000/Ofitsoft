@@ -9,6 +9,7 @@ class MaterialTable extends Table {
 
   IntColumn get id => integer().nullable()();
   IntColumn get categoryId => integer().nullable()();
+  TextColumn get material => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get description => text().nullable()();
   BoolColumn get isOrganic => boolean().nullable()();
@@ -18,7 +19,7 @@ class MaterialTable extends Table {
   IntColumn get diaryFarmerId => integer().nullable()();
   IntColumn get toolId => integer().nullable()();
   RealColumn get quantity => real().nullable()();
-  IntColumn get unitId => integer().nullable()();
+  IntColumn get materialId => integer().nullable()();
   TextColumn get unitName => text().nullable()();
   TextColumn get mediaContent => text().nullable()();
   @override

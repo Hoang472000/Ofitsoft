@@ -5,6 +5,7 @@ import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/entity/activity/activity_diary.dart';
 import '../../../data/entity/diary/diary.dart';
@@ -13,6 +14,7 @@ import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
 import '../../../data/repository.dart';
 import '../../../resource/assets.dart';
+import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/extenstion/extenstions.dart';
 import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';
@@ -32,7 +34,7 @@ class DetailActivityBloc
     on<ChangeDetailActivityEvent>(_changeDetailActivity);
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
-    add(GetDetailActivityEvent());
+    //add(GetDetailActivityEvent());
   }
 
   bool edit = false;
@@ -72,7 +74,7 @@ class DetailActivityBloc
     ));
 
     list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
+        title: "Thời gian thực hiện",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
@@ -80,14 +82,14 @@ class DetailActivityBloc
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-    list.add(InputRegisterModel<String, DateTime>(
+/*    list.add(InputRegisterModel<String, DateTime>(
         title: "Ngày kết thúc",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
         controller: state.endTimeController,
         image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
+        icon: Icons.calendar_today));*/
 
     listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
         title: "Vật tư liên quan",
@@ -116,7 +118,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -126,7 +128,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -167,7 +169,7 @@ class DetailActivityBloc
     ));
 
     list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
+        title: "Thời gian thực hiện",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
@@ -175,14 +177,14 @@ class DetailActivityBloc
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-    list.add(InputRegisterModel<String, DateTime>(
+/*    list.add(InputRegisterModel<String, DateTime>(
         title: "Ngày kết thúc",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
         // valueSelected: DateTime.now(),
         image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
+        icon: Icons.calendar_today));*/
 
     listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
         title: "Vật tư liên quan",
@@ -211,7 +213,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -221,7 +223,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
     emitter(state.copyWith(
@@ -263,7 +265,7 @@ class DetailActivityBloc
     ));
 
     list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
+        title: "Thời gian thực hiện",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
@@ -272,7 +274,7 @@ class DetailActivityBloc
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-    list.add(InputRegisterModel<String, DateTime>(
+/*    list.add(InputRegisterModel<String, DateTime>(
         title: "Ngày kết thúc",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
@@ -280,7 +282,7 @@ class DetailActivityBloc
         valueSelected:
         Utils.stringToDate(state.endTimeController!.text),
         image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));
+        icon: Icons.calendar_today));*/
 
     listVT.add(InputRegisterModel(
         title: "Vật tư liên quan",
@@ -309,7 +311,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -319,7 +321,7 @@ class DetailActivityBloc
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
-      listValue: state.listUnit,
+      listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -334,15 +336,22 @@ class DetailActivityBloc
         listWidget: [],
         listWidgetVT: [],
         listWidgetCC: [], listVatTuAdd: [], listCongCuAdd: []));
-    final detailActivity = await repository.getDetailDiary(1);
+    final detailActivity = event.activityDiary;
     final listActivity = await DiaryDB.instance.getListActivity();
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
-    final listUnit = await DiaryDB.instance.getListUnit();
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final categoryIdUnitArea = sharedPreferences.getInt(SharedPreferencesKey.unitArea) ?? -1;
+    final categoryIdUnitAmount = sharedPreferences.getInt(SharedPreferencesKey.unitAmount) ?? -1;
+    final listUnitArea = await DiaryDB.instance.getListUnit(categoryIdUnitArea);
+    final listUnitAmount = await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
+    for (var element in listUnitAmount) {
+      print("HoangCV: listUnitAmount: ${element.categoryId} : ${listUnitAmount.length} : ${listUnitArea.length}");
+    }
     _initViewDetail(emitter);
     int index = listActivity
         .indexWhere((element) => element.id == detailActivity.activityId);
-    print("HoangCV: detailActivity.description: ${detailActivity.description} : ${detailActivity.media[0].fileContent} : ${listTool.length}");
+    //print("HoangCV: detailActivity.description: ${detailActivity.description} : ${detailActivity.media[0].fileContent} : ${listTool.length}");
     double imageWidth = state.imageWidth;
     double imageHeight = state.imageHeight;
     if (detailActivity.media.length < 2) {
@@ -363,7 +372,8 @@ class DetailActivityBloc
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
-      listUnit: listUnit,
+        listUnitAmount: listUnitAmount,
+      listUnitArea: listUnitArea,
       listVatTuAdd: detailActivity.material,
       listCongCuAdd: detailActivity.tool,
       listImage: detailActivity.media,
@@ -392,7 +402,7 @@ class DetailActivityBloc
       if (state.listWidget[i].title.compareTo("Người liên quan") == 0) {
         state.listWidget[i].controller = state.peopleController;
       }
-      if (state.listWidget[i].title.compareTo("Ngày bắt đầu") == 0) {
+      if (state.listWidget[i].title.compareTo("Thời gian thực hiện") == 0) {
         state.listWidget[i].controller = state.startTimeController;
       }
       if (state.listWidget[i].title.compareTo("Ngày kết thúc") == 0) {
@@ -444,7 +454,7 @@ class DetailActivityBloc
         });
       print("HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}" );
          if(result1 == 1) {
-           if (event.list[event.index].title.compareTo("Ngày bắt đầu") == 0) {
+           if (event.list[event.index].title.compareTo("Thời gian thực hiện") == 0) {
              print("HoangCV:1 event.list[event.index].valueSelected: ${Utils
                  .formatDateTimeToString(
                  event.list[event.index].valueSelected)}");
@@ -528,7 +538,10 @@ class DetailActivityEvent extends BlocEvent {
 }
 
 class GetDetailActivityEvent extends DetailActivityEvent {
-  GetDetailActivityEvent();
+  ActivityDiary activityDiary;
+  GetDetailActivityEvent(this.activityDiary);
+  @override
+  List<Object?> get props => [activityDiary];
 }
 
 class ChangeEditActivityEvent extends DetailActivityEvent {
@@ -572,7 +585,8 @@ class DetailActivityState extends BlocState {
         isShowProgress,
         listMaterial,
         listTool,
-        listUnit,
+        listUnitAmount,
+        listUnitArea,
         listActivity,
         listWidget,
         listWidgetVT,
@@ -590,11 +604,13 @@ class DetailActivityState extends BlocState {
         endTimeController,
         isEdit,
         indexActivity,
+        listUnitArea
       ];
   final ActivityDiary? detailActivity;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
-  final List<Unit> listUnit;
+  final List<Unit> listUnitAmount;
+  final List<Unit>? listUnitArea;
   final List<Activity> listActivity;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
@@ -623,7 +639,8 @@ class DetailActivityState extends BlocState {
     this.isShowProgress = true,
     this.listMaterial = const [],
     this.listTool = const [],
-    this.listUnit = const [],
+    this.listUnitArea = const [],
+    this.listUnitAmount = const [],
     this.listActivity = const [],
     this.listCongCuAdd = const [],
     this.listVatTuAdd = const [],
@@ -650,7 +667,8 @@ class DetailActivityState extends BlocState {
     bool? isShowProgress,
     List<MaterialEntity>? listMaterial,
     List<Tool>? listTool,
-    List<Unit>? listUnit,
+    List<Unit>? listUnitAmount,
+    List<Unit>? listUnitArea,
     List<Activity>? listActivity,
     List<InputRegisterModel>? listWidget,
     List<InputRegisterModel>? listWidgetVT,
@@ -677,7 +695,8 @@ class DetailActivityState extends BlocState {
         isShowProgress: isShowProgress ?? this.isShowProgress,
         listMaterial: listMaterial ?? this.listMaterial,
         listTool: listTool ?? this.listTool,
-        listUnit: listUnit ?? this.listUnit,
+        listUnitArea: listUnitArea ?? this.listUnitArea,
+        listUnitAmount: listUnitAmount ?? this.listUnitAmount,
         listActivity: listActivity ?? this.listActivity,
         listWidget: listWidget ?? this.listWidget,
         listWidgetVT: listWidgetVT ?? this.listWidgetVT,

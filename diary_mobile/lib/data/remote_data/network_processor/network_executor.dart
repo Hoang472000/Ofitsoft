@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -48,7 +49,7 @@ class NetworkExecutor{
               print("HoangCV: ${route.path} bug: ${error.toString()} : ${error.response} ");
           if (error.response != null) {
             if (/*NetworkUtils.decryptedResult(*/error.response!.data ==
-                "AIB12001") {
+                StatusConst.code03) {
               var options = error.response!.requestOptions;
               ObjectResult response = await request(
                   route: ApiBaseGenerator(
@@ -80,19 +81,19 @@ class NetworkExecutor{
           String token= "";
           String orgGuid= "";
           //print("HoangCV123: ${route.path} bug: ${route.body.token} ");
-          if(!isLogin){
-            SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-            token= sharedPreferences.getString(SharedPreferencesKey.accessToken)?? "";
-            orgGuid= sharedPreferences.getString(SharedPreferencesKey.orgGuid)?? "";
-            //route.body.token = token;
-            print("HoangCV123: ${token} bug: ${route.body} bug: ${token}");
-            if(token.isNotEmpty || route.body.token.isNotEmpty){
-              route.body.token = token;
-              print("HoangCV123111: ${    route.body.token} bug: ${route.body} bug: ${token}");
-              return ObjectResult(1, "Lần đầu đăng nhập", "", "",false , true);
-            }
-          }
-          print("HoangCV1234: ${route.path} bug:/* ${route.body}*/ bug: ${route.header}");
+          // if(!isLogin){
+          //   SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
+          //   token= sharedPreferences.getString(SharedPreferencesKey.accessToken)?? "";
+          //   orgGuid= sharedPreferences.getString(SharedPreferencesKey.orgGuid)?? "";
+          //   //route.body.token = token;
+          //   print("HoangCV123: ${token} bug: ${route.body} bug: ${token}");
+          //   if(token.isEmpty || route.body.token.isEmpty){
+          //     //route.body.token = token;
+          //     print("HoangCV123111: ${    route.body.token} bug: ${route.body} bug: ${token}");
+          //     return ObjectResult(1, "Lần đầu đăng nhập", "", "",false , true);
+          //   }
+          // }
+          print("HoangCV1234: ${route.path} bug:/* ${route.body.toJson()}*/ bug: ${route.header}");
           print("HoangCV1235: ${route.baseUrl} bug: ${route.method} bug: ${route.queryParameters}");
           Response response = await client.fetch(RequestOptions(
               headers: route.header,
@@ -106,8 +107,13 @@ class NetworkExecutor{
               validateStatus: (statusCode) =>
               (statusCode! >= HttpStatus.ok &&
                   statusCode <= HttpStatus.multipleChoices)));
-          objectResult = /*NetworkUtils.decryptedResult(*/ObjectResult.fromJson(json.decode(response.data));
-          if (objectResult.code == "AIB12001") {
+
+          print("HoangCV: result: ${response.data['result']}");
+       /*   Map<String, dynamic> jsonMap = json.decode(response.data);
+          Map<String, dynamic> result = jsonMap['result'];*/
+          objectResult = ObjectResult.fromJson(response.data['result']);
+          // Đoạn này là đoạn refresh token nếu token hết hạn
+          /*if (objectResult.responseCode == StatusConst.code03) {
             reFetchApi = true; // neu token het han thi re fetch lai api
             final pref = await SharedPreferences.getInstance();
             String refreshToken =
@@ -117,7 +123,7 @@ class NetworkExecutor{
                 route: ApiBaseGenerator(
                     body: ObjectData(params: {
                       ApiParameterConst.refreshToken: refreshToken
-                    }, /*commandType: ApiConst.refreshAccessToken*/)));
+                    }, *//*commandType: ApiConst.refreshAccessToken*//*)));
             // debugPrint(
             //     " HanhNTHe:-- is ok--------------------- ${response.toString()} , == $refreshToken");
 
@@ -129,7 +135,7 @@ class NetworkExecutor{
               pref.setString(SharedPreferencesKey.refreshToken,
                   response.response['RefreshToken']);
             }
-          }
+          }*/
         } while(reFetchApi);
 
         // debugPrint(" HanhNTHe: isOK = =================== ${objectResult.toString()}");
@@ -164,7 +170,7 @@ class NetworkExecutor{
 
   static void handlerError(ObjectResult? objectResult, bool? isHandlererror){
     if(objectResult!= null && objectResult.status==1){
-      if(objectResult.code== tokenExpires){
+      if(objectResult.responseCode== tokenExpires){
         ///logout
 
       }else if(isHandlererror== true){

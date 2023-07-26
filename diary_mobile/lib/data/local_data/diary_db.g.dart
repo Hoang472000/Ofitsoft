@@ -14,12 +14,34 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonIdMeta =
+      const VerificationMeta('seasonId');
+  @override
+  late final GeneratedColumn<int> seasonId = GeneratedColumn<int>(
+      'season_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _seasonFarmIdMeta =
       const VerificationMeta('seasonFarmId');
   @override
   late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
       'season_farm_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activityMeta =
+      const VerificationMeta('activity');
+  @override
+  late final GeneratedColumn<String> activity = GeneratedColumn<String>(
+      'activity', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmIdMeta = const VerificationMeta('farmId');
+  @override
+  late final GeneratedColumn<int> farmId = GeneratedColumn<int>(
+      'farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _farmMeta = const VerificationMeta('farm');
+  @override
+  late final GeneratedColumn<String> farm = GeneratedColumn<String>(
+      'farm', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _activityIdMeta =
       const VerificationMeta('activityId');
   @override
@@ -46,9 +68,9 @@ class $DiaryTableTable extends DiaryTable
   static const VerificationMeta _actionAreaUnitIdMeta =
       const VerificationMeta('actionAreaUnitId');
   @override
-  late final GeneratedColumn<String> actionAreaUnitId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> actionAreaUnitId = GeneratedColumn<int>(
       'action_area_unit_id', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -90,8 +112,14 @@ class $DiaryTableTable extends DiaryTable
   static const VerificationMeta _amountUnitIdMeta =
       const VerificationMeta('amountUnitId');
   @override
-  late final GeneratedColumn<String> amountUnitId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> amountUnitId = GeneratedColumn<int>(
       'amount_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _amountUnitMeta =
+      const VerificationMeta('amountUnit');
+  @override
+  late final GeneratedColumn<String> amountUnit = GeneratedColumn<String>(
+      'amount_unit', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _areaMeta = const VerificationMeta('area');
   @override
@@ -101,8 +129,14 @@ class $DiaryTableTable extends DiaryTable
   static const VerificationMeta _areaUnitIdMeta =
       const VerificationMeta('areaUnitId');
   @override
-  late final GeneratedColumn<String> areaUnitId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> areaUnitId = GeneratedColumn<int>(
       'area_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _areaUnitMeta =
+      const VerificationMeta('areaUnit');
+  @override
+  late final GeneratedColumn<String> areaUnit = GeneratedColumn<String>(
+      'area_unit', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _yieldEstimateMeta =
       const VerificationMeta('yieldEstimate');
@@ -113,13 +147,29 @@ class $DiaryTableTable extends DiaryTable
   static const VerificationMeta _yieldEstimateUnitIdMeta =
       const VerificationMeta('yieldEstimateUnitId');
   @override
-  late final GeneratedColumn<String> yieldEstimateUnitId =
-      GeneratedColumn<String>('yield_estimate_unit_id', aliasedName, true,
+  late final GeneratedColumn<int> yieldEstimateUnitId = GeneratedColumn<int>(
+      'yield_estimate_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _yieldEstimateUnitMeta =
+      const VerificationMeta('yieldEstimateUnit');
+  @override
+  late final GeneratedColumn<String> yieldEstimateUnit =
+      GeneratedColumn<String>('yield_estimate_unit', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerNameMeta =
+      const VerificationMeta('farmerName');
+  @override
+  late final GeneratedColumn<String> farmerName = GeneratedColumn<String>(
+      'farmer_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        seasonId,
         seasonFarmId,
+        activity,
+        farmId,
+        farm,
         activityId,
         user,
         actionTime,
@@ -133,10 +183,14 @@ class $DiaryTableTable extends DiaryTable
         status,
         amount,
         amountUnitId,
+        amountUnit,
         area,
         areaUnitId,
+        areaUnit,
         yieldEstimate,
-        yieldEstimateUnitId
+        yieldEstimateUnitId,
+        yieldEstimateUnit,
+        farmerName
       ];
   @override
   String get aliasedName => _alias ?? 'diary';
@@ -150,11 +204,27 @@ class $DiaryTableTable extends DiaryTable
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('season_id')) {
+      context.handle(_seasonIdMeta,
+          seasonId.isAcceptableOrUnknown(data['season_id']!, _seasonIdMeta));
+    }
     if (data.containsKey('season_farm_id')) {
       context.handle(
           _seasonFarmIdMeta,
           seasonFarmId.isAcceptableOrUnknown(
               data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('activity')) {
+      context.handle(_activityMeta,
+          activity.isAcceptableOrUnknown(data['activity']!, _activityMeta));
+    }
+    if (data.containsKey('farm_id')) {
+      context.handle(_farmIdMeta,
+          farmId.isAcceptableOrUnknown(data['farm_id']!, _farmIdMeta));
+    }
+    if (data.containsKey('farm')) {
+      context.handle(
+          _farmMeta, farm.isAcceptableOrUnknown(data['farm']!, _farmMeta));
     }
     if (data.containsKey('activity_id')) {
       context.handle(
@@ -220,6 +290,12 @@ class $DiaryTableTable extends DiaryTable
           amountUnitId.isAcceptableOrUnknown(
               data['amount_unit_id']!, _amountUnitIdMeta));
     }
+    if (data.containsKey('amount_unit')) {
+      context.handle(
+          _amountUnitMeta,
+          amountUnit.isAcceptableOrUnknown(
+              data['amount_unit']!, _amountUnitMeta));
+    }
     if (data.containsKey('area')) {
       context.handle(
           _areaMeta, area.isAcceptableOrUnknown(data['area']!, _areaMeta));
@@ -229,6 +305,10 @@ class $DiaryTableTable extends DiaryTable
           _areaUnitIdMeta,
           areaUnitId.isAcceptableOrUnknown(
               data['area_unit_id']!, _areaUnitIdMeta));
+    }
+    if (data.containsKey('area_unit')) {
+      context.handle(_areaUnitMeta,
+          areaUnit.isAcceptableOrUnknown(data['area_unit']!, _areaUnitMeta));
     }
     if (data.containsKey('yield_estimate')) {
       context.handle(
@@ -242,6 +322,18 @@ class $DiaryTableTable extends DiaryTable
           yieldEstimateUnitId.isAcceptableOrUnknown(
               data['yield_estimate_unit_id']!, _yieldEstimateUnitIdMeta));
     }
+    if (data.containsKey('yield_estimate_unit')) {
+      context.handle(
+          _yieldEstimateUnitMeta,
+          yieldEstimateUnit.isAcceptableOrUnknown(
+              data['yield_estimate_unit']!, _yieldEstimateUnitMeta));
+    }
+    if (data.containsKey('farmer_name')) {
+      context.handle(
+          _farmerNameMeta,
+          farmerName.isAcceptableOrUnknown(
+              data['farmer_name']!, _farmerNameMeta));
+    }
     return context;
   }
 
@@ -253,8 +345,12 @@ class $DiaryTableTable extends DiaryTable
     return Diary(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_id']),
       seasonFarmId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      activity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity']),
       activityId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}activity_id']),
       actionTime: attachedDatabase.typeMapping
@@ -262,34 +358,43 @@ class $DiaryTableTable extends DiaryTable
       actionArea: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}action_area']),
       actionAreaUnitId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}action_area_unit_id']),
+          DriftSqlType.int, data['${effectivePrefix}action_area_unit_id']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
-      user: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}user']),
+      farmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
+      crop: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}crop']),
+      area: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}area']),
+      areaUnit: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area_unit']),
+      areaUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}area_unit_id']),
+      amount: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}amount']),
+      amountUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}amount_unit_id']),
+      amountUnit: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}amount_unit']),
       startDate: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}start_date']),
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}end_date']),
       status: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status']),
-      crop: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}crop']),
-      areaUnitId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}area_unit_id']),
-      area: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}area']),
-      amount: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}amount']),
-      amountUnitId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}amount_unit_id']),
       yieldEstimate: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}yield_estimate']),
       yieldEstimateUnitId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string,
-          data['${effectivePrefix}yield_estimate_unit_id']),
+          DriftSqlType.int, data['${effectivePrefix}yield_estimate_unit_id']),
+      yieldEstimateUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}yield_estimate_unit']),
+      farm: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farm']),
+      farmerName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farmer_name']),
     );
   }
 
@@ -301,12 +406,16 @@ class $DiaryTableTable extends DiaryTable
 
 class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> id;
+  final Value<int?> seasonId;
   final Value<int?> seasonFarmId;
+  final Value<String?> activity;
+  final Value<int?> farmId;
+  final Value<String?> farm;
   final Value<int?> activityId;
   final Value<String?> user;
   final Value<String?> actionTime;
   final Value<double?> actionArea;
-  final Value<String?> actionAreaUnitId;
+  final Value<int?> actionAreaUnitId;
   final Value<String?> description;
   final Value<String?> name;
   final Value<String?> crop;
@@ -314,14 +423,22 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> endDate;
   final Value<String?> status;
   final Value<double?> amount;
-  final Value<String?> amountUnitId;
+  final Value<int?> amountUnitId;
+  final Value<String?> amountUnit;
   final Value<double?> area;
-  final Value<String?> areaUnitId;
+  final Value<int?> areaUnitId;
+  final Value<String?> areaUnit;
   final Value<double?> yieldEstimate;
-  final Value<String?> yieldEstimateUnitId;
+  final Value<int?> yieldEstimateUnitId;
+  final Value<String?> yieldEstimateUnit;
+  final Value<String?> farmerName;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
+    this.seasonId = const Value.absent(),
     this.seasonFarmId = const Value.absent(),
+    this.activity = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
@@ -335,14 +452,22 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.status = const Value.absent(),
     this.amount = const Value.absent(),
     this.amountUnitId = const Value.absent(),
+    this.amountUnit = const Value.absent(),
     this.area = const Value.absent(),
     this.areaUnitId = const Value.absent(),
+    this.areaUnit = const Value.absent(),
     this.yieldEstimate = const Value.absent(),
     this.yieldEstimateUnitId = const Value.absent(),
+    this.yieldEstimateUnit = const Value.absent(),
+    this.farmerName = const Value.absent(),
   });
   DiaryTableCompanion.insert({
     this.id = const Value.absent(),
+    this.seasonId = const Value.absent(),
     this.seasonFarmId = const Value.absent(),
+    this.activity = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
@@ -356,19 +481,27 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.status = const Value.absent(),
     this.amount = const Value.absent(),
     this.amountUnitId = const Value.absent(),
+    this.amountUnit = const Value.absent(),
     this.area = const Value.absent(),
     this.areaUnitId = const Value.absent(),
+    this.areaUnit = const Value.absent(),
     this.yieldEstimate = const Value.absent(),
     this.yieldEstimateUnitId = const Value.absent(),
+    this.yieldEstimateUnit = const Value.absent(),
+    this.farmerName = const Value.absent(),
   });
   static Insertable<Diary> custom({
     Expression<int>? id,
+    Expression<int>? seasonId,
     Expression<int>? seasonFarmId,
+    Expression<String>? activity,
+    Expression<int>? farmId,
+    Expression<String>? farm,
     Expression<int>? activityId,
     Expression<String>? user,
     Expression<String>? actionTime,
     Expression<double>? actionArea,
-    Expression<String>? actionAreaUnitId,
+    Expression<int>? actionAreaUnitId,
     Expression<String>? description,
     Expression<String>? name,
     Expression<String>? crop,
@@ -376,15 +509,23 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? endDate,
     Expression<String>? status,
     Expression<double>? amount,
-    Expression<String>? amountUnitId,
+    Expression<int>? amountUnitId,
+    Expression<String>? amountUnit,
     Expression<double>? area,
-    Expression<String>? areaUnitId,
+    Expression<int>? areaUnitId,
+    Expression<String>? areaUnit,
     Expression<double>? yieldEstimate,
-    Expression<String>? yieldEstimateUnitId,
+    Expression<int>? yieldEstimateUnitId,
+    Expression<String>? yieldEstimateUnit,
+    Expression<String>? farmerName,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (seasonId != null) 'season_id': seasonId,
       if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (activity != null) 'activity': activity,
+      if (farmId != null) 'farm_id': farmId,
+      if (farm != null) 'farm': farm,
       if (activityId != null) 'activity_id': activityId,
       if (user != null) 'user': user,
       if (actionTime != null) 'action_time': actionTime,
@@ -398,22 +539,30 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (status != null) 'status': status,
       if (amount != null) 'amount': amount,
       if (amountUnitId != null) 'amount_unit_id': amountUnitId,
+      if (amountUnit != null) 'amount_unit': amountUnit,
       if (area != null) 'area': area,
       if (areaUnitId != null) 'area_unit_id': areaUnitId,
+      if (areaUnit != null) 'area_unit': areaUnit,
       if (yieldEstimate != null) 'yield_estimate': yieldEstimate,
       if (yieldEstimateUnitId != null)
         'yield_estimate_unit_id': yieldEstimateUnitId,
+      if (yieldEstimateUnit != null) 'yield_estimate_unit': yieldEstimateUnit,
+      if (farmerName != null) 'farmer_name': farmerName,
     });
   }
 
   DiaryTableCompanion copyWith(
       {Value<int?>? id,
+      Value<int?>? seasonId,
       Value<int?>? seasonFarmId,
+      Value<String?>? activity,
+      Value<int?>? farmId,
+      Value<String?>? farm,
       Value<int?>? activityId,
       Value<String?>? user,
       Value<String?>? actionTime,
       Value<double?>? actionArea,
-      Value<String?>? actionAreaUnitId,
+      Value<int?>? actionAreaUnitId,
       Value<String?>? description,
       Value<String?>? name,
       Value<String?>? crop,
@@ -421,14 +570,22 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? endDate,
       Value<String?>? status,
       Value<double?>? amount,
-      Value<String?>? amountUnitId,
+      Value<int?>? amountUnitId,
+      Value<String?>? amountUnit,
       Value<double?>? area,
-      Value<String?>? areaUnitId,
+      Value<int?>? areaUnitId,
+      Value<String?>? areaUnit,
       Value<double?>? yieldEstimate,
-      Value<String?>? yieldEstimateUnitId}) {
+      Value<int?>? yieldEstimateUnitId,
+      Value<String?>? yieldEstimateUnit,
+      Value<String?>? farmerName}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
+      seasonId: seasonId ?? this.seasonId,
       seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      activity: activity ?? this.activity,
+      farmId: farmId ?? this.farmId,
+      farm: farm ?? this.farm,
       activityId: activityId ?? this.activityId,
       user: user ?? this.user,
       actionTime: actionTime ?? this.actionTime,
@@ -442,10 +599,14 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       status: status ?? this.status,
       amount: amount ?? this.amount,
       amountUnitId: amountUnitId ?? this.amountUnitId,
+      amountUnit: amountUnit ?? this.amountUnit,
       area: area ?? this.area,
       areaUnitId: areaUnitId ?? this.areaUnitId,
+      areaUnit: areaUnit ?? this.areaUnit,
       yieldEstimate: yieldEstimate ?? this.yieldEstimate,
       yieldEstimateUnitId: yieldEstimateUnitId ?? this.yieldEstimateUnitId,
+      yieldEstimateUnit: yieldEstimateUnit ?? this.yieldEstimateUnit,
+      farmerName: farmerName ?? this.farmerName,
     );
   }
 
@@ -455,8 +616,20 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (seasonId.present) {
+      map['season_id'] = Variable<int>(seasonId.value);
+    }
     if (seasonFarmId.present) {
       map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (activity.present) {
+      map['activity'] = Variable<String>(activity.value);
+    }
+    if (farmId.present) {
+      map['farm_id'] = Variable<int>(farmId.value);
+    }
+    if (farm.present) {
+      map['farm'] = Variable<String>(farm.value);
     }
     if (activityId.present) {
       map['activity_id'] = Variable<int>(activityId.value);
@@ -471,7 +644,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       map['action_area'] = Variable<double>(actionArea.value);
     }
     if (actionAreaUnitId.present) {
-      map['action_area_unit_id'] = Variable<String>(actionAreaUnitId.value);
+      map['action_area_unit_id'] = Variable<int>(actionAreaUnitId.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
@@ -495,20 +668,31 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       map['amount'] = Variable<double>(amount.value);
     }
     if (amountUnitId.present) {
-      map['amount_unit_id'] = Variable<String>(amountUnitId.value);
+      map['amount_unit_id'] = Variable<int>(amountUnitId.value);
+    }
+    if (amountUnit.present) {
+      map['amount_unit'] = Variable<String>(amountUnit.value);
     }
     if (area.present) {
       map['area'] = Variable<double>(area.value);
     }
     if (areaUnitId.present) {
-      map['area_unit_id'] = Variable<String>(areaUnitId.value);
+      map['area_unit_id'] = Variable<int>(areaUnitId.value);
+    }
+    if (areaUnit.present) {
+      map['area_unit'] = Variable<String>(areaUnit.value);
     }
     if (yieldEstimate.present) {
       map['yield_estimate'] = Variable<double>(yieldEstimate.value);
     }
     if (yieldEstimateUnitId.present) {
-      map['yield_estimate_unit_id'] =
-          Variable<String>(yieldEstimateUnitId.value);
+      map['yield_estimate_unit_id'] = Variable<int>(yieldEstimateUnitId.value);
+    }
+    if (yieldEstimateUnit.present) {
+      map['yield_estimate_unit'] = Variable<String>(yieldEstimateUnit.value);
+    }
+    if (farmerName.present) {
+      map['farmer_name'] = Variable<String>(farmerName.value);
     }
     return map;
   }
@@ -517,7 +701,11 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   String toString() {
     return (StringBuffer('DiaryTableCompanion(')
           ..write('id: $id, ')
+          ..write('seasonId: $seasonId, ')
           ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('activity: $activity, ')
+          ..write('farmId: $farmId, ')
+          ..write('farm: $farm, ')
           ..write('activityId: $activityId, ')
           ..write('user: $user, ')
           ..write('actionTime: $actionTime, ')
@@ -531,10 +719,14 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('status: $status, ')
           ..write('amount: $amount, ')
           ..write('amountUnitId: $amountUnitId, ')
+          ..write('amountUnit: $amountUnit, ')
           ..write('area: $area, ')
           ..write('areaUnitId: $areaUnitId, ')
+          ..write('areaUnit: $areaUnit, ')
           ..write('yieldEstimate: $yieldEstimate, ')
-          ..write('yieldEstimateUnitId: $yieldEstimateUnitId')
+          ..write('yieldEstimateUnitId: $yieldEstimateUnitId, ')
+          ..write('yieldEstimateUnit: $yieldEstimateUnit, ')
+          ..write('farmerName: $farmerName')
           ..write(')'))
         .toString();
   }
@@ -954,6 +1146,11 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
   late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
       'category_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _toolMeta = const VerificationMeta('tool');
+  @override
+  late final GeneratedColumn<String> tool = GeneratedColumn<String>(
+      'tool', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1044,6 +1241,7 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
   List<GeneratedColumn> get $columns => [
         id,
         categoryId,
+        tool,
         name,
         description,
         isOrganic,
@@ -1074,6 +1272,10 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
           _categoryIdMeta,
           categoryId.isAcceptableOrUnknown(
               data['category_id']!, _categoryIdMeta));
+    }
+    if (data.containsKey('tool')) {
+      context.handle(
+          _toolMeta, tool.isAcceptableOrUnknown(data['tool']!, _toolMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -1140,6 +1342,8 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
     return Tool(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      tool: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tool']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       description: attachedDatabase.typeMapping
@@ -1178,6 +1382,7 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
 class ToolTableCompanion extends UpdateCompanion<Tool> {
   final Value<int?> id;
   final Value<int?> categoryId;
+  final Value<String?> tool;
   final Value<String?> name;
   final Value<String?> description;
   final Value<bool?> isOrganic;
@@ -1193,6 +1398,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   const ToolTableCompanion({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.tool = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1209,6 +1415,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   ToolTableCompanion.insert({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.tool = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1225,6 +1432,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   static Insertable<Tool> custom({
     Expression<int>? id,
     Expression<int>? categoryId,
+    Expression<String>? tool,
     Expression<String>? name,
     Expression<String>? description,
     Expression<bool>? isOrganic,
@@ -1241,6 +1449,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (categoryId != null) 'category_id': categoryId,
+      if (tool != null) 'tool': tool,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (isOrganic != null) 'is_organic': isOrganic,
@@ -1259,6 +1468,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   ToolTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? categoryId,
+      Value<String?>? tool,
       Value<String?>? name,
       Value<String?>? description,
       Value<bool?>? isOrganic,
@@ -1274,6 +1484,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return ToolTableCompanion(
       id: id ?? this.id,
       categoryId: categoryId ?? this.categoryId,
+      tool: tool ?? this.tool,
       name: name ?? this.name,
       description: description ?? this.description,
       isOrganic: isOrganic ?? this.isOrganic,
@@ -1297,6 +1508,9 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     }
     if (categoryId.present) {
       map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (tool.present) {
+      map['tool'] = Variable<String>(tool.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -1342,6 +1556,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return (StringBuffer('ToolTableCompanion(')
           ..write('id: $id, ')
           ..write('categoryId: $categoryId, ')
+          ..write('tool: $tool, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('isOrganic: $isOrganic, ')
@@ -1376,6 +1591,12 @@ class $MaterialTableTable extends MaterialTable
   late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
       'category_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _materialMeta =
+      const VerificationMeta('material');
+  @override
+  late final GeneratedColumn<String> material = GeneratedColumn<String>(
+      'material', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -1445,10 +1666,11 @@ class $MaterialTableTable extends MaterialTable
   late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
       'quantity', aliasedName, true,
       type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _unitIdMeta = const VerificationMeta('unitId');
+  static const VerificationMeta _materialIdMeta =
+      const VerificationMeta('materialId');
   @override
-  late final GeneratedColumn<int> unitId = GeneratedColumn<int>(
-      'unit_id', aliasedName, true,
+  late final GeneratedColumn<int> materialId = GeneratedColumn<int>(
+      'material_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _unitNameMeta =
       const VerificationMeta('unitName');
@@ -1466,6 +1688,7 @@ class $MaterialTableTable extends MaterialTable
   List<GeneratedColumn> get $columns => [
         id,
         categoryId,
+        material,
         name,
         description,
         isOrganic,
@@ -1475,7 +1698,7 @@ class $MaterialTableTable extends MaterialTable
         diaryFarmerId,
         toolId,
         quantity,
-        unitId,
+        materialId,
         unitName,
         mediaContent
       ];
@@ -1496,6 +1719,10 @@ class $MaterialTableTable extends MaterialTable
           _categoryIdMeta,
           categoryId.isAcceptableOrUnknown(
               data['category_id']!, _categoryIdMeta));
+    }
+    if (data.containsKey('material')) {
+      context.handle(_materialMeta,
+          material.isAcceptableOrUnknown(data['material']!, _materialMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -1537,9 +1764,11 @@ class $MaterialTableTable extends MaterialTable
       context.handle(_quantityMeta,
           quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
     }
-    if (data.containsKey('unit_id')) {
-      context.handle(_unitIdMeta,
-          unitId.isAcceptableOrUnknown(data['unit_id']!, _unitIdMeta));
+    if (data.containsKey('material_id')) {
+      context.handle(
+          _materialIdMeta,
+          materialId.isAcceptableOrUnknown(
+              data['material_id']!, _materialIdMeta));
     }
     if (data.containsKey('unit_name')) {
       context.handle(_unitNameMeta,
@@ -1562,6 +1791,8 @@ class $MaterialTableTable extends MaterialTable
     return MaterialEntity(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      material: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}material']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       description: attachedDatabase.typeMapping
@@ -1578,12 +1809,10 @@ class $MaterialTableTable extends MaterialTable
           .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       diaryFarmerId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}diary_farmer_id']),
-      toolId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}tool_id']),
+      materialId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}material_id']),
       quantity: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
-      unitId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}unit_id']),
       unitName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}unit_name']),
       mediaContent: attachedDatabase.typeMapping
@@ -1600,6 +1829,7 @@ class $MaterialTableTable extends MaterialTable
 class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   final Value<int?> id;
   final Value<int?> categoryId;
+  final Value<String?> material;
   final Value<String?> name;
   final Value<String?> description;
   final Value<bool?> isOrganic;
@@ -1609,12 +1839,13 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   final Value<int?> diaryFarmerId;
   final Value<int?> toolId;
   final Value<double?> quantity;
-  final Value<int?> unitId;
+  final Value<int?> materialId;
   final Value<String?> unitName;
   final Value<String?> mediaContent;
   const MaterialTableCompanion({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.material = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1624,13 +1855,14 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     this.diaryFarmerId = const Value.absent(),
     this.toolId = const Value.absent(),
     this.quantity = const Value.absent(),
-    this.unitId = const Value.absent(),
+    this.materialId = const Value.absent(),
     this.unitName = const Value.absent(),
     this.mediaContent = const Value.absent(),
   });
   MaterialTableCompanion.insert({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
+    this.material = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1640,13 +1872,14 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     this.diaryFarmerId = const Value.absent(),
     this.toolId = const Value.absent(),
     this.quantity = const Value.absent(),
-    this.unitId = const Value.absent(),
+    this.materialId = const Value.absent(),
     this.unitName = const Value.absent(),
     this.mediaContent = const Value.absent(),
   });
   static Insertable<MaterialEntity> custom({
     Expression<int>? id,
     Expression<int>? categoryId,
+    Expression<String>? material,
     Expression<String>? name,
     Expression<String>? description,
     Expression<bool>? isOrganic,
@@ -1656,13 +1889,14 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     Expression<int>? diaryFarmerId,
     Expression<int>? toolId,
     Expression<double>? quantity,
-    Expression<int>? unitId,
+    Expression<int>? materialId,
     Expression<String>? unitName,
     Expression<String>? mediaContent,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (categoryId != null) 'category_id': categoryId,
+      if (material != null) 'material': material,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (isOrganic != null) 'is_organic': isOrganic,
@@ -1672,7 +1906,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
       if (diaryFarmerId != null) 'diary_farmer_id': diaryFarmerId,
       if (toolId != null) 'tool_id': toolId,
       if (quantity != null) 'quantity': quantity,
-      if (unitId != null) 'unit_id': unitId,
+      if (materialId != null) 'material_id': materialId,
       if (unitName != null) 'unit_name': unitName,
       if (mediaContent != null) 'media_content': mediaContent,
     });
@@ -1681,6 +1915,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   MaterialTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? categoryId,
+      Value<String?>? material,
       Value<String?>? name,
       Value<String?>? description,
       Value<bool?>? isOrganic,
@@ -1690,12 +1925,13 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
       Value<int?>? diaryFarmerId,
       Value<int?>? toolId,
       Value<double?>? quantity,
-      Value<int?>? unitId,
+      Value<int?>? materialId,
       Value<String?>? unitName,
       Value<String?>? mediaContent}) {
     return MaterialTableCompanion(
       id: id ?? this.id,
       categoryId: categoryId ?? this.categoryId,
+      material: material ?? this.material,
       name: name ?? this.name,
       description: description ?? this.description,
       isOrganic: isOrganic ?? this.isOrganic,
@@ -1705,7 +1941,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
       diaryFarmerId: diaryFarmerId ?? this.diaryFarmerId,
       toolId: toolId ?? this.toolId,
       quantity: quantity ?? this.quantity,
-      unitId: unitId ?? this.unitId,
+      materialId: materialId ?? this.materialId,
       unitName: unitName ?? this.unitName,
       mediaContent: mediaContent ?? this.mediaContent,
     );
@@ -1719,6 +1955,9 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     }
     if (categoryId.present) {
       map['category_id'] = Variable<int>(categoryId.value);
+    }
+    if (material.present) {
+      map['material'] = Variable<String>(material.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -1747,8 +1986,8 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     if (quantity.present) {
       map['quantity'] = Variable<double>(quantity.value);
     }
-    if (unitId.present) {
-      map['unit_id'] = Variable<int>(unitId.value);
+    if (materialId.present) {
+      map['material_id'] = Variable<int>(materialId.value);
     }
     if (unitName.present) {
       map['unit_name'] = Variable<String>(unitName.value);
@@ -1764,6 +2003,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     return (StringBuffer('MaterialTableCompanion(')
           ..write('id: $id, ')
           ..write('categoryId: $categoryId, ')
+          ..write('material: $material, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('isOrganic: $isOrganic, ')
@@ -1773,7 +2013,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
           ..write('diaryFarmerId: $diaryFarmerId, ')
           ..write('toolId: $toolId, ')
           ..write('quantity: $quantity, ')
-          ..write('unitId: $unitId, ')
+          ..write('materialId: $materialId, ')
           ..write('unitName: $unitName, ')
           ..write('mediaContent: $mediaContent')
           ..write(')'))
@@ -2195,17 +2435,23 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
       'season_farm_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmMeta =
+      const VerificationMeta('seasonFarm');
+  @override
+  late final GeneratedColumn<String> seasonFarm = GeneratedColumn<String>(
+      'season_farm', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _activityIdMeta =
       const VerificationMeta('activityId');
   @override
   late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
       'activity_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _nameActivityMeta =
-      const VerificationMeta('nameActivity');
+  static const VerificationMeta _activityMeta =
+      const VerificationMeta('activity');
   @override
-  late final GeneratedColumn<String> nameActivity = GeneratedColumn<String>(
-      'name_activity', aliasedName, true,
+  late final GeneratedColumn<String> activity = GeneratedColumn<String>(
+      'activity', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _actionTimeMeta =
       const VerificationMeta('actionTime');
@@ -2222,8 +2468,14 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   static const VerificationMeta _actionAreaUnitIdMeta =
       const VerificationMeta('actionAreaUnitId');
   @override
-  late final GeneratedColumn<String> actionAreaUnitId = GeneratedColumn<String>(
+  late final GeneratedColumn<int> actionAreaUnitId = GeneratedColumn<int>(
       'action_area_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _actionAreaUnitMeta =
+      const VerificationMeta('actionAreaUnit');
+  @override
+  late final GeneratedColumn<String> actionAreaUnit = GeneratedColumn<String>(
+      'action_area_unit', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
@@ -2231,6 +2483,17 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isShowMeta = const VerificationMeta('isShow');
+  @override
+  late final GeneratedColumn<bool> isShow =
+      GeneratedColumn<bool>('is_show', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_show" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -2262,12 +2525,15 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   List<GeneratedColumn> get $columns => [
         id,
         seasonFarmId,
+        seasonFarm,
         activityId,
-        nameActivity,
+        activity,
         actionTime,
         actionArea,
         actionAreaUnitId,
+        actionAreaUnit,
         description,
+        isShow,
         name,
         byName,
         startTime,
@@ -2292,17 +2558,21 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           seasonFarmId.isAcceptableOrUnknown(
               data['season_farm_id']!, _seasonFarmIdMeta));
     }
+    if (data.containsKey('season_farm')) {
+      context.handle(
+          _seasonFarmMeta,
+          seasonFarm.isAcceptableOrUnknown(
+              data['season_farm']!, _seasonFarmMeta));
+    }
     if (data.containsKey('activity_id')) {
       context.handle(
           _activityIdMeta,
           activityId.isAcceptableOrUnknown(
               data['activity_id']!, _activityIdMeta));
     }
-    if (data.containsKey('name_activity')) {
-      context.handle(
-          _nameActivityMeta,
-          nameActivity.isAcceptableOrUnknown(
-              data['name_activity']!, _nameActivityMeta));
+    if (data.containsKey('activity')) {
+      context.handle(_activityMeta,
+          activity.isAcceptableOrUnknown(data['activity']!, _activityMeta));
     }
     if (data.containsKey('action_time')) {
       context.handle(
@@ -2322,11 +2592,21 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           actionAreaUnitId.isAcceptableOrUnknown(
               data['action_area_unit_id']!, _actionAreaUnitIdMeta));
     }
+    if (data.containsKey('action_area_unit')) {
+      context.handle(
+          _actionAreaUnitMeta,
+          actionAreaUnit.isAcceptableOrUnknown(
+              data['action_area_unit']!, _actionAreaUnitMeta));
+    }
     if (data.containsKey('description')) {
       context.handle(
           _descriptionMeta,
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('is_show')) {
+      context.handle(_isShowMeta,
+          isShow.isAcceptableOrUnknown(data['is_show']!, _isShowMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -2368,11 +2648,17 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
       actionArea: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}action_area']),
       actionAreaUnitId: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}action_area_unit_id']),
+          DriftSqlType.int, data['${effectivePrefix}action_area_unit_id']),
+      actionAreaUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}action_area_unit']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
-      nameActivity: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}name_activity']),
+      activity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity']),
+      seasonFarm: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}season_farm']),
+      isShow: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_show']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       byName: attachedDatabase.typeMapping
@@ -2395,12 +2681,15 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
 class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   final Value<int?> id;
   final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarm;
   final Value<int?> activityId;
-  final Value<String?> nameActivity;
+  final Value<String?> activity;
   final Value<String?> actionTime;
   final Value<double?> actionArea;
-  final Value<String?> actionAreaUnitId;
+  final Value<int?> actionAreaUnitId;
+  final Value<String?> actionAreaUnit;
   final Value<String?> description;
+  final Value<bool?> isShow;
   final Value<String?> name;
   final Value<String?> byName;
   final Value<String?> startTime;
@@ -2409,12 +2698,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   const ActivityDiaryTableCompanion({
     this.id = const Value.absent(),
     this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
     this.activityId = const Value.absent(),
-    this.nameActivity = const Value.absent(),
+    this.activity = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
     this.actionAreaUnitId = const Value.absent(),
+    this.actionAreaUnit = const Value.absent(),
     this.description = const Value.absent(),
+    this.isShow = const Value.absent(),
     this.name = const Value.absent(),
     this.byName = const Value.absent(),
     this.startTime = const Value.absent(),
@@ -2424,12 +2716,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   ActivityDiaryTableCompanion.insert({
     this.id = const Value.absent(),
     this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
     this.activityId = const Value.absent(),
-    this.nameActivity = const Value.absent(),
+    this.activity = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
     this.actionAreaUnitId = const Value.absent(),
+    this.actionAreaUnit = const Value.absent(),
     this.description = const Value.absent(),
+    this.isShow = const Value.absent(),
     this.name = const Value.absent(),
     this.byName = const Value.absent(),
     this.startTime = const Value.absent(),
@@ -2439,12 +2734,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   static Insertable<ActivityDiary> custom({
     Expression<int>? id,
     Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarm,
     Expression<int>? activityId,
-    Expression<String>? nameActivity,
+    Expression<String>? activity,
     Expression<String>? actionTime,
     Expression<double>? actionArea,
-    Expression<String>? actionAreaUnitId,
+    Expression<int>? actionAreaUnitId,
+    Expression<String>? actionAreaUnit,
     Expression<String>? description,
+    Expression<bool>? isShow,
     Expression<String>? name,
     Expression<String>? byName,
     Expression<String>? startTime,
@@ -2454,12 +2752,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarm != null) 'season_farm': seasonFarm,
       if (activityId != null) 'activity_id': activityId,
-      if (nameActivity != null) 'name_activity': nameActivity,
+      if (activity != null) 'activity': activity,
       if (actionTime != null) 'action_time': actionTime,
       if (actionArea != null) 'action_area': actionArea,
       if (actionAreaUnitId != null) 'action_area_unit_id': actionAreaUnitId,
+      if (actionAreaUnit != null) 'action_area_unit': actionAreaUnit,
       if (description != null) 'description': description,
+      if (isShow != null) 'is_show': isShow,
       if (name != null) 'name': name,
       if (byName != null) 'by_name': byName,
       if (startTime != null) 'start_time': startTime,
@@ -2471,12 +2772,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   ActivityDiaryTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarm,
       Value<int?>? activityId,
-      Value<String?>? nameActivity,
+      Value<String?>? activity,
       Value<String?>? actionTime,
       Value<double?>? actionArea,
-      Value<String?>? actionAreaUnitId,
+      Value<int?>? actionAreaUnitId,
+      Value<String?>? actionAreaUnit,
       Value<String?>? description,
+      Value<bool?>? isShow,
       Value<String?>? name,
       Value<String?>? byName,
       Value<String?>? startTime,
@@ -2485,12 +2789,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     return ActivityDiaryTableCompanion(
       id: id ?? this.id,
       seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarm: seasonFarm ?? this.seasonFarm,
       activityId: activityId ?? this.activityId,
-      nameActivity: nameActivity ?? this.nameActivity,
+      activity: activity ?? this.activity,
       actionTime: actionTime ?? this.actionTime,
       actionArea: actionArea ?? this.actionArea,
       actionAreaUnitId: actionAreaUnitId ?? this.actionAreaUnitId,
+      actionAreaUnit: actionAreaUnit ?? this.actionAreaUnit,
       description: description ?? this.description,
+      isShow: isShow ?? this.isShow,
       name: name ?? this.name,
       byName: byName ?? this.byName,
       startTime: startTime ?? this.startTime,
@@ -2508,11 +2815,14 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     if (seasonFarmId.present) {
       map['season_farm_id'] = Variable<int>(seasonFarmId.value);
     }
+    if (seasonFarm.present) {
+      map['season_farm'] = Variable<String>(seasonFarm.value);
+    }
     if (activityId.present) {
       map['activity_id'] = Variable<int>(activityId.value);
     }
-    if (nameActivity.present) {
-      map['name_activity'] = Variable<String>(nameActivity.value);
+    if (activity.present) {
+      map['activity'] = Variable<String>(activity.value);
     }
     if (actionTime.present) {
       map['action_time'] = Variable<String>(actionTime.value);
@@ -2521,10 +2831,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       map['action_area'] = Variable<double>(actionArea.value);
     }
     if (actionAreaUnitId.present) {
-      map['action_area_unit_id'] = Variable<String>(actionAreaUnitId.value);
+      map['action_area_unit_id'] = Variable<int>(actionAreaUnitId.value);
+    }
+    if (actionAreaUnit.present) {
+      map['action_area_unit'] = Variable<String>(actionAreaUnit.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
+    }
+    if (isShow.present) {
+      map['is_show'] = Variable<bool>(isShow.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -2549,12 +2865,15 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     return (StringBuffer('ActivityDiaryTableCompanion(')
           ..write('id: $id, ')
           ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarm: $seasonFarm, ')
           ..write('activityId: $activityId, ')
-          ..write('nameActivity: $nameActivity, ')
+          ..write('activity: $activity, ')
           ..write('actionTime: $actionTime, ')
           ..write('actionArea: $actionArea, ')
           ..write('actionAreaUnitId: $actionAreaUnitId, ')
+          ..write('actionAreaUnit: $actionAreaUnit, ')
           ..write('description: $description, ')
+          ..write('isShow: $isShow, ')
           ..write('name: $name, ')
           ..write('byName: $byName, ')
           ..write('startTime: $startTime, ')

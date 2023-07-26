@@ -21,103 +21,31 @@ import '../../../view_model/diary/list_diary_bloc.dart';
 import 'add_activity.dart';
 
 class ActivityPage extends StatefulWidget {
-  const ActivityPage({super.key, required this.action});
+  const ActivityPage({super.key, required this.action, required this.seasonFarmId});
   final String action;
+  final int seasonFarmId;
 
   @override
   _ActivityPageState createState() => _ActivityPageState();
 
-  static Route route(String action) {
-    return Utils.pageRouteBuilder(ActivityPage(action: action,), true);
+  static Route route(String action, int seasonFarmId) {
+    return Utils.pageRouteBuilder(ActivityPage(action: action, seasonFarmId: seasonFarmId,), true);
   }
 }
 
 class _ActivityPageState extends State<ActivityPage> {
-  List<InputRegisterModel> _listWidget = [];
-  List<String> _listDanhMuc = [
-    "Tất cả",
-    // "Nghĩa vụ tài chính về đất đai",
-    "LPTB phương tiện"
-  ];
-  List<String> listTypePayment = [
-    "Ruộng 1",
-    "Ruộng 2",
-    "Ruộng 3",
-    "Ruộng 4",
-  ];
-  String loaiThanhToan = 'Account', soThe = '', tenTinh = '', dbhc_tinh = '';
-  bool isAddNgayPhatHanh = true;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController soCayController = TextEditingController();
-  TextEditingController soLuongController = TextEditingController();
-  TextEditingController moTaController = TextEditingController();
-
-  bool isSecretCode = true;
-  bool isMstKinhDoanh = false;
-
-  void _initView() {
-    _listWidget.add(InputRegisterModel<String, String>(
-        title: "Thửa ruộng",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-/*        valueSelected: listTypePayment[0],
-        valueDefault: listTypePayment[0],*/
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: listTypePayment));
-    _listWidget.add(InputRegisterModel(
-      title: "Tên nhật ký",
-      isCompulsory: true,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      maxLengthTextInput: 200,
-      controller: nameController,
-    ));
-    _listWidget.add(InputRegisterModel(
-      title: "Số cây trồng",
-      isCompulsory: true,
-      maxLengthTextInput: 12,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.number,
-      controller: soCayController,
-    ));
-    _listWidget.add(InputRegisterModel(
-      title: "Sản lượng dự kiến",
-      isCompulsory: true,
-      maxLengthTextInput: 12,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.number,
-      controller: soLuongController,
-    ));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày bắt đầu",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        // valueSelected: DateTime.now(),
-        icon: Icons.calendar_today));
-
-    _listWidget.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        // valueSelected: DateTime.now(),
-        icon: Icons.calendar_today));
-  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initView();
+    //_initView();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ActivityBloc(context.read<Repository>()),
+      create: (context) => ActivityBloc(context.read<Repository>())..add(GetListActivityEvent(widget.seasonFarmId)),
       child: Scaffold(
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -126,7 +54,7 @@ class _ActivityPageState extends State<ActivityPage> {
           child: Icon(Icons.add),
           onPressed: () {
             widget.action.compareTo("activity")==0 ?
-            Navigator.of(context).push(AddActivityPage.route()) :
+            Navigator.of(context).push(AddActivityPage.route(widget.seasonFarmId)) :
             Navigator.of(context).push(AddMonitorPage.route());
           },
         ),
@@ -140,7 +68,7 @@ class _ActivityPageState extends State<ActivityPage> {
                       behavior: HitTestBehavior.opaque,
                       onTap: () {
                         //Truyen id de sang man ben goi api hoac DB
-                        Navigator.push(context, DetailActivityPage.route());
+                        Navigator.push(context, DetailActivityPage.route(state.listDiaryActivity[index]));
                       },
                       onLongPress: () {},
                       child: Container(
@@ -181,7 +109,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     const EdgeInsets.only(
                                         bottom: 5),
                                     child: Text(
-                                      state.listDiaryActivity[index].name ?? "",
+                                      state.listDiaryActivity[index].activity ?? "",
                                       style:
                                       StyleBkav.textStyleFW700(
                                           AppColor.gray500, 16),
@@ -193,8 +121,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                       margin:
                                       const EdgeInsets.only(
                                           bottom: 5, top: 5),
-                                      child: Text(
-                                        "Ngày: ${state.listDiaryActivity[index].name}",
+                                      child: /*Text(
+                                        "Thời gian thực hiện: ${state.listDiaryActivity[index].actionTime}",
                                         style: StyleBkav
                                             .textStyleFW400(
                                             AppColor.gray57,
@@ -202,7 +130,15 @@ class _ActivityPageState extends State<ActivityPage> {
                                         maxLines: 1,
                                         overflow:
                                         TextOverflow.ellipsis,
-                                      )),
+                                      )*/RichText(
+                                  text: Utils.convertText(
+                                  "Thời gian thực hiện: ",
+                                      "${state.listDiaryActivity[index].actionTime}",
+                                      AppColor.blue15, 14),
+                        maxLines: 1,
+                        overflow: TextOverflow
+                            .ellipsis,
+                      )),
                                   SizedBox(
                                     child: Container(
                                         alignment:
@@ -212,10 +148,9 @@ class _ActivityPageState extends State<ActivityPage> {
                                             top: 5),
                                         child: RichText(
                                           text: Utils.convertText(
-                                              "Trạng thái: ",
-                                              state.listDiaryActivity[index].status == 0 ? "Đang xử lý" :
-                                              state.listDiaryActivity[index].status == 1 ? "Đã hoàn thành" : "Đã hủy",
-                                              AppColor.blue15, 12),
+                                              "Diện tích: ",
+                                              "${state.listDiaryActivity[index].actionArea} ${state.listDiaryActivity[index].actionAreaUnit}",
+                                              AppColor.blue15, 14),
                                           maxLines: 1,
                                           overflow: TextOverflow
                                               .ellipsis,

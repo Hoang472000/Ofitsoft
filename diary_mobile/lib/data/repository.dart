@@ -28,7 +28,7 @@ abstract class Repository {
 
   Stream<AuthenticationStatus> get status async* {
     //await Future.delayed(const Duration(seconds: 2));
-    bool isExpToken = (await getListActivities()).isNotEmpty ? true : false;
+    bool isExpToken = /*(await getListActivities()).isNotEmpty*/false ? true : false;
     yield !isExpToken
         ? AuthenticationStatus.unauthenticated
         : AuthenticationStatus.authenticated;
@@ -47,9 +47,9 @@ abstract class Repository {
 
   Future<List<Diary>> getListDiary();
 
-  Future<List<ActivityDiary>> getListActivityDiary();
+  Future<List<ActivityDiary>> getListActivityDiary(int id);
 
-  Future<List<Unit>> getListUnits();
+  Future<List<Unit>> getListUnits(int id);
 
   Future<List<Tool>> getListTools();
 
@@ -62,4 +62,6 @@ abstract class Repository {
   Future<Diary> getInfoDiary(int id);
 
   Future<UserInfo> getUserInfo(int id);
+
+  Future<ObjectResult> addActivityDiary(ActivityDiary diary);
 }

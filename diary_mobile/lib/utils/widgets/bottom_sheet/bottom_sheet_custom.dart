@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diary_mobile/resource/style.dart';
 import 'package:flutter/material.dart';
 
@@ -162,7 +164,11 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                     child: Row(
                                       children: [(listDataSearch(controller.text)[index].image!='') ?
                                         Flexible(
-                                            flex: 1,child: Image.asset(listDataSearch(controller.text)[index].image/*ImageAsset.imageActGardenVentilation*/, height: 65, fit: BoxFit.fitWidth,)) : const SizedBox(),
+                                            flex: 1,child: Image.memory(gaplessPlayback: true,
+                                          base64Decode(listDataSearch(controller.text)[index].image??
+                                              ""),
+                                          height: 65, fit: BoxFit.fitWidth,
+                                        ),) : const SizedBox(),
                                         Flexible(
                                           flex: 3,
                                           child: Text(

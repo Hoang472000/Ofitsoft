@@ -183,7 +183,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                               setState(() {});
                                               onSelectValue(
                                                   _listWidget1[0], context);
-                                            })),
+                                            }, onEditingComplete: (text){},)),
                                     SizedBox(
                                       width: 8,
                                     ),
@@ -196,7 +196,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                               setState(() {});
                                               onSelectValue(
                                                   widget.listWidgetVT[1], context);
-                                            })),
+                                            }, onEditingComplete: (text){},)),
                                   ],
                                 ),
                                 TextButton(
@@ -208,11 +208,13 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
-                                        widget.listVatTuAdd.add(MaterialEntity(name:
+                                        widget.listVatTuAdd.add(MaterialEntity(material:
                                         widget.listWidgetVT[0].valueSelected.name,
                                             quantity: double.parse(
                                                 soLuongController.text != "" ? soLuongController.text : "1"),
                                             unitName: widget.listWidgetVT[1].valueSelected.name,
+                                            materialId: widget.listWidgetVT[1].valueSelected.id,
+                                          unitId: widget.listWidgetVT[1].valueSelected.unitId,
                                             ));
                                       }
                                       widget.listWidgetVT[0].valueSelected = null;
@@ -281,7 +283,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                       Padding(
                                                         padding: const EdgeInsets.all(4.0),
                                                         child: Text(
-                                                          "Tên vật tư: ${widget.listVatTuAdd[index].name}",
+                                                          "Tên vật tư: ${widget.listVatTuAdd[index].material}",
                                                           style: StyleBkav
                                                               .textStyleFW500(
                                                               AppColor.gray57,
@@ -378,7 +380,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                           setState(() {});
                                           onSelectValue(
                                               widget.listWidgetCC[0], context);
-                                        }),
+                                        }, onEditingComplete: (text){},),
                                 Row(
                                   children: [
                                     Expanded(
@@ -391,7 +393,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                               setState(() {});
                                               onSelectValue(
                                                   _listWidget2[0], context);
-                                            })),
+                                            }, onEditingComplete: (text){},)),
                                     SizedBox(
                                       width: 8,
                                     ),
@@ -416,11 +418,13 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
-                                        widget.listCongCuAdd.add(Tool(name:
+                                        widget.listCongCuAdd.add(Tool(tool:
                                         widget.listWidgetCC[0].valueSelected.name,
                                             quantity: double.parse(
                                                 soLuong2Controller.text != "" ? soLuongController.text : "1"),
                                             unitName: widget.listWidgetCC[1].valueSelected.name,
+                                          toolId: widget.listWidgetCC[1].valueSelected.id,
+                                          unitId: widget.listWidgetCC[1].valueSelected.unitId,
                                         ));
                                       }
                                       widget.listWidgetCC[0].valueSelected = null;
@@ -491,7 +495,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                         const EdgeInsets.all(
                                                             4.0),
                                                         child: Text(
-                                                          "Tên công cụ: ${widget.listCongCuAdd[index].name}",
+                                                          "Tên công cụ: ${widget.listCongCuAdd[index].tool}",
                                                           style: StyleBkav
                                                               .textStyleFW500(
                                                               AppColor.gray57,

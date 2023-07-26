@@ -509,6 +509,13 @@ class Utils {
     return formattedString;
   }
 
+  static String formatDateTimeToStringFull(DateTime dateTime) {
+    print("HoangCV: dateTime: ${dateTime.toString()}");
+    DateFormat formatter = DateFormat();
+    String formattedString = formatter.format(dateTime);
+    return formattedString;
+  }
+
 
   static String timeToText(DateTime dateTime) {
     String date = dateTime.day.toString().padLeft(2, '0');

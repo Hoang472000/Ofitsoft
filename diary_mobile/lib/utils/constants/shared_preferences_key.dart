@@ -18,29 +18,12 @@ class SharedPreferencesKey {
   static String listSupport = 'listSupport';
   static String imageSelected = 'imageSelected';
   static String isRemember = 'isRemember';
-  static String isXuatKhoAm = 'isXuatKhoAm';
   static String coQuyTrinhKiemDuyet = 'coQuyTrinhKiemDuyet';
-  static String cart= "cart"; //voucher trong gio hang
-  static String point= "point"; //diem thuong
-  static String encodePassword = 'encodePassword';
-  static String loginFirst = 'loginFirst';
-  static String listPopupNotifyDisplayed= "list_popup_notify_displayed";
-  static String orgGUID = "OrgGUID";
-  static String userGUID = "userGUID";
-  static String OrgName= "OrgName";
   static String isFaceIDLogin= "isFaceIDLogin";
   static String OTP= "OTP";
   static String orgGuid= "orgGuid";
-  static String financialYear= "financialYears";
-  static String currency= "currencys";
-  static String dateFormat= "dateFormats";
-  static String numberFormatType= "numberFormatTypes";
-  static String costMethodID= "costMethodIDs";
-  static String taxCircularsCompany= "taxCircularsCompanys";
-  static String StrtaxCircularsCompany= "StrtaxCircularsCompany";
-  static String taxCircular= "taxCirculars";
-  static String taxDecMethod= "taxDecMethods";
-  static String taxPeriod= "taxPeriods";
-  static String orgType= "orgType";
-  static String amountChoose= "amountChoose";
+
+  //
+  static String unitArea= "unit_area";
+  static String unitAmount= "unit_amount";
 }

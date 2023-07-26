@@ -8,12 +8,16 @@ class DiaryTable extends Table {
   String get tableName => 'diary';
 
   IntColumn get id => integer().nullable()();
+  IntColumn get seasonId => integer().nullable()();
   IntColumn get seasonFarmId => integer().nullable()();
+  TextColumn get activity => text().nullable()();
+  IntColumn get farmId => integer().nullable()();
+  TextColumn get farm => text().nullable()();
   IntColumn get activityId => integer().nullable()();
   TextColumn get user => text().nullable()();
   TextColumn get actionTime => text().nullable()();
   RealColumn get actionArea => real().nullable()();
-  TextColumn get actionAreaUnitId => text().nullable()();
+  IntColumn get actionAreaUnitId => integer().nullable()();
   TextColumn get description => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get crop => text().nullable()();
@@ -21,11 +25,15 @@ class DiaryTable extends Table {
   TextColumn get endDate => text().nullable()();
   TextColumn get status => text().nullable()();
   RealColumn get amount => real().nullable()();
-  TextColumn get amountUnitId => text().nullable()();
+  IntColumn get amountUnitId => integer().nullable()();
+  TextColumn get amountUnit => text().nullable()();
   RealColumn get area => real().nullable()();
-  TextColumn get areaUnitId => text().nullable()();
+  IntColumn get areaUnitId => integer().nullable()();
+  TextColumn get areaUnit => text().nullable()();
   RealColumn get yieldEstimate => real().nullable()();
-  TextColumn get yieldEstimateUnitId => text().nullable()();
+  IntColumn get yieldEstimateUnitId => integer().nullable()();
+  TextColumn get yieldEstimateUnit => text().nullable()();
+  TextColumn get farmerName => text().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id};

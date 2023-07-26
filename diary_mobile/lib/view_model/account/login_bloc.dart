@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -59,13 +60,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 /*     reponse = ObjectResult(1, '', '', true, false);*/
        Logger.loggerDebug(
           " _loginSubmitted   === reponse = ${reponse.toString()}");
-      if (reponse.isOK) {
+      if (reponse.responseCode == StatusConst.code00) {
         emitter(state.copyWith(
             formStatus: SubmissionSuccess()));
         //HoangLD fix bug sau khi đăng nhập vẫn hiển thị snackbar đăng xuất
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
       } else {
-        emitter(state.copyWith(formStatus: SubmissionFailed(reponse.response)));
+        emitter(state.copyWith(formStatus: SubmissionFailed(reponse.message)));
       }
   }
   void _loginGoogle(LoginWithGoogle event,Emitter<LoginState> emitter)async{

@@ -15,11 +15,14 @@ import '../../diary_activity/activity/activity_page.dart';
 import '../../diary_activity/infomation_activity/infomation_activity_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {
+  const DetailDiaryPage({super.key, required this.seasonFarmId});
+  final int seasonFarmId;
+
   @override
   _DetailDiaryPageState createState() => _DetailDiaryPageState();
 
-  static Route route() {
-    return Utils.pageRouteBuilder(DetailDiaryPage(), true);
+  static Route route(int seasonFarmId) {
+    return Utils.pageRouteBuilder(DetailDiaryPage(seasonFarmId: seasonFarmId,), true);
   }
 }
 
@@ -98,12 +101,12 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
               ])),
       body: TabBarView(
         controller: _tabController,
-        children: const <Widget>[
+        children: <Widget>[
           ActivityPage(
-            action: "activity",
+            action: "activity", seasonFarmId: widget.seasonFarmId,
           ),
           ActivityPage(
-            action: "monitor",
+            action: "monitor", seasonFarmId: widget.seasonFarmId,
           ),
           InformationActivityPage(id: 1,)
         ],

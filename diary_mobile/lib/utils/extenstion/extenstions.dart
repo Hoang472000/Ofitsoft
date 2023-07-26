@@ -60,9 +60,9 @@ class Extension {
       case PickerItem:
         return model.value;
         break;
-      case Activity:
       case MaterialEntity:
       case Tool:
+      case Activity:
       case Unit:
       case Item:
         return model.name;

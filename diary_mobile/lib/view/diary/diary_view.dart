@@ -123,7 +123,7 @@ class _DiaryViewState extends State<DiaryView> {
                                 Diary diary = tasksForMonthAndYear[index];
                                 return GestureDetector(
                                   onTap: (){
-                                    Navigator.push(context, DetailDiaryPage.route());
+                                    Navigator.push(context, DetailDiaryPage.route(diary.id ?? -1));
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
@@ -178,7 +178,7 @@ class _DiaryViewState extends State<DiaryView> {
                                                 child: RichText(
                                                   text: Utils.convertText(
                                                       "Thực hiện: ",
-                                                      "${tasksForMonthAndYear[index].user}",
+                                                      "${tasksForMonthAndYear[index].farmerName}",
                                                       AppColor.blue15, 12),
                                                   maxLines: 3,
                                                   overflow: TextOverflow

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 class Tool implements Insertable<Tool> {
   int? id;
   int? categoryId;
+  String? tool;
   String? name;
   String? description;
   bool? isOrganic;
@@ -20,6 +21,7 @@ class Tool implements Insertable<Tool> {
 
   Tool(
       {this.id,
+      this.tool,
       this.name,
       this.description,
       this.categoryId,
@@ -37,6 +39,7 @@ class Tool implements Insertable<Tool> {
   factory Tool.fromJson(Map<String, dynamic> json) {
     return Tool(
       id: json['id'] ?? -1,
+      tool: json['tool'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       categoryId: json['category_id'] ?? -1,
@@ -53,15 +56,16 @@ class Tool implements Insertable<Tool> {
     );
   }
 
-  Map<String, dynamic> toJson() {
+   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['tool'] = tool;
     data['name'] = name;
     data['category_id'] = categoryId;
     data['is_organic'] = isOrganic;
     data['notation'] = notation;
     data['description'] = description;
-    data['image'] = image;
+    //data['image'] = image;
     data['is_active'] = isActive;
     data['diary_farmer_id'] = diaryFarmerId;
     data['tool_id'] = toolId;
@@ -76,6 +80,7 @@ class Tool implements Insertable<Tool> {
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ToolTableCompanion(
             id: Value(id),
+            tool: Value(tool),
             name: Value(name),
             categoryId: Value(categoryId),
             isOrganic: Value(isOrganic),
