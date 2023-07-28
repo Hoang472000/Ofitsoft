@@ -157,7 +157,7 @@ class Utils {
   static String formatDate(String time) {
     if (time.isNotEmpty) {
       DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
-      final f = DateFormat('dd/MM/yyyy');
+      final f = DateFormat('dd/MM/yyyy HH:mm:ss');
       return f.format(dateTime);
     } else {
       return "";
@@ -182,10 +182,20 @@ class Utils {
     return dateTime/*.toUtc()*/;
   }
   static DateTime stringToDate(String time) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+    DateTime dateTime = formatter.parse(time/*.replaceFirst(' ', 'T')*/);
+    return dateTime;
+  }
+
+  static DateTime stringToDateDOB(String time) {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
     DateTime dateTime = formatter.parse(time);
-/*    DateTime dateTime = formatter.parse(time);
-    DateTime dateTime1 = DateTime.parse(dateTime.toString());*/
+    return dateTime;
+  }
+
+  static DateTime stringToDateHour(String time) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+    DateTime dateTime = formatter.parse(time.replaceFirst(' ', 'T'));
     return dateTime;
   }
 

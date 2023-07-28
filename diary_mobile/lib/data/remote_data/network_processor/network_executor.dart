@@ -46,7 +46,7 @@ class NetworkExecutor{
 /*              Logger.loggerDebug(
                   "Bkav Nhungltk call api ${route.body.commandType} error ${error.response?.statusCode} isRemember $isRemember");*/
           // duy tri dang nhap, khong hoat dong do server dang tra ve status code = 200 khi token het han
-              print("HoangCV: ${route.path} bug: ${error.toString()} : ${error.response} ");
+              print("HoangCV: ${route.path} bug: ${error.toString()} : ${error.message}  : ${error.response} ");
           if (error.response != null) {
             if (/*NetworkUtils.decryptedResult(*/error.response!.data ==
                 StatusConst.code03) {
@@ -142,7 +142,7 @@ class NetworkExecutor{
         return objectResult;
       } else {
         ///khong co mang
-        objectResult= ObjectResult(1, "Không có mạng", "", "",false , true);
+        objectResult= ObjectResult(1, "Lost Internet connection" , "Lost Internet connection", "06",false , true);
       }
     }on DioException catch(dioError){
         /// loi timeout
@@ -150,7 +150,7 @@ class NetworkExecutor{
         if(dioError.type== DioExceptionType.connectionTimeout||
         dioError.type== DioExceptionType.sendTimeout||
         dioError.type== DioExceptionType.receiveTimeout){
-          objectResult= ObjectResult(1, "Hết thời gian chờ", "", "",false, true);
+          objectResult= ObjectResult(1, "Connection timed out", "Connection timed out", "07",false, true);
         }else {
           if (dioError.type == DioExceptionType.badResponse) {
             ///may chu phan hoi nhung co trang thai khong chinh xac (404,503...)
@@ -161,7 +161,7 @@ class NetworkExecutor{
           } else {
 /*            Logger.loggerDebug("Bkav Nhungltk call api ${route.body.commandType} request DioError other: ${dioError.error?? ""}");*/
           }
-          objectResult= ObjectResult(1, "Có lỗi xảy ra", "", "", false, true);
+          objectResult= ObjectResult(1, "Unknown error", dioError.message??"", "08", false, true);
         }
     }
     handlerError(objectResult, isHandlerError);

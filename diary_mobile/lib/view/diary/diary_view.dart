@@ -12,9 +12,11 @@ import 'detail_diary/detail_diary_page.dart';
 
 class DiaryView extends StatefulWidget {
   const DiaryView({super.key});
+
   static Route route() {
     return Utils.pageRouteBuilder(const DiaryView(), true);
   }
+
   @override
   _DiaryViewState createState() => _DiaryViewState();
 }
@@ -43,7 +45,8 @@ class _DiaryViewState extends State<DiaryView> {
   Widget build(BuildContext context) {
     List<String> distinctMonthsAndYears = getDistinctMonthsAndYears();
     return BlocProvider(
-      create: (context) => ListDiaryBloc(context.read<Repository>())..add(GetListDiaryEvent()),
+      create: (context) =>
+          ListDiaryBloc(context.read<Repository>())..add(GetListDiaryEvent()),
       child: Scaffold(
         backgroundColor: AppColor.background,
         appBar: BkavAppBar(
@@ -90,7 +93,8 @@ class _DiaryViewState extends State<DiaryView> {
                       itemBuilder: (context, index) {
                         String monthAndYear = state.listDate[index];
                         List<Diary> tasksForMonthAndYear =
-                            getTasksForMonthAndYear(monthAndYear, state.listDiary);
+                            getTasksForMonthAndYear(
+                                monthAndYear, state.listDiary);
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,7 +104,7 @@ class _DiaryViewState extends State<DiaryView> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                               /*   Image(
+                                  /*   Image(
                                     image: AssetImage(ImageAsset.imageCalendarPick),
                                     width: 40,
                                     fit: BoxFit.contain,
@@ -109,7 +113,8 @@ class _DiaryViewState extends State<DiaryView> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
                                       monthAndYear,
-                                      style: StyleBkav.textStyleFW500(AppColor.gray57, 20),
+                                      style: StyleBkav.textStyleFW500(
+                                          AppColor.gray57, 20),
                                     ),
                                   ),
                                 ],
@@ -122,20 +127,15 @@ class _DiaryViewState extends State<DiaryView> {
                               itemBuilder: (context, index) {
                                 Diary diary = tasksForMonthAndYear[index];
                                 return GestureDetector(
-                                  onTap: (){
-                                    Navigator.push(context, DetailDiaryPage.route(diary.id ?? -1));
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        DetailDiaryPage.route(diary.id ?? -1));
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
-                                        top: 8,
-                                        bottom: 8,
-                                        left: 24,
-                                        right: 16),
+                                        top: 8, bottom: 8, left: 24, right: 16),
                                     margin: const EdgeInsets.only(
-                                        left: 20,
-                                        right: 16,
-                                        top: 4,
-                                        bottom: 4),
+                                        left: 20, right: 16, top: 4, bottom: 4),
                                     decoration: BoxDecoration(
                                         boxShadow: const [
                                           BoxShadow(
@@ -144,66 +144,92 @@ class _DiaryViewState extends State<DiaryView> {
                                             offset: Offset(0, 0),
                                           ),
                                         ],
-                                        borderRadius:
-                                        BorderRadius.circular(8),
+                                        borderRadius: BorderRadius.circular(8),
                                         color: Colors.white),
                                     child: Row(
                                       children: [
                                         Expanded(
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                                                child: Text(Utils.formatTime(tasksForMonthAndYear[index].startDate??""),
-                                                style: StyleBkav.textStyleFW400(AppColor.black22, 14),),
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0, bottom: 8),
+                                                child: Text(
+                                                  Utils.formatTime(
+                                                      tasksForMonthAndYear[
+                                                                  index]
+                                                              .startDate ??
+                                                          ""),
+                                                  style:
+                                                      StyleBkav.textStyleFW400(
+                                                          AppColor.black22, 14),
+                                                ),
                                               ),
-                                              Text(tasksForMonthAndYear[index].name.toString(),
-                                                style: StyleBkav.textStyleFW500(AppColor.main, 16),maxLines: 3,overflow: TextOverflow.visible),
+                                              Text(
+                                                  tasksForMonthAndYear[index]
+                                                      .name
+                                                      .toString(),
+                                                  style:
+                                                      StyleBkav.textStyleFW500(
+                                                          AppColor.main, 16),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.visible),
                                               Padding(
-                                                padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0, bottom: 8),
                                                 child: RichText(
                                                   text: Utils.convertText(
                                                       "Cây trồng: ",
-                                                      "${tasksForMonthAndYear[index].crop}",
-                                                      AppColor.blue15, 14),
+                                                      "${tasksForMonthAndYear[index].productName}",
+                                                      AppColor.blue15,
+                                                      14),
                                                   maxLines: 3,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(bottom: 8),
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 8),
                                                 child: RichText(
                                                   text: Utils.convertText(
                                                       "Thực hiện: ",
                                                       "${tasksForMonthAndYear[index].farmerName}",
-                                                      AppColor.blue15, 12),
+                                                      AppColor.blue15,
+                                                      12),
                                                   maxLines: 3,
-                                                  overflow: TextOverflow
-                                                      .ellipsis,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
                                               )
                                             ],
                                           ),
                                         ),
-                                        Image(image: AssetImage(ImageAsset.imageOfitsoftText),
-                                         width: 75, fit: BoxFit.contain,),
+                                        Image(
+                                          image: AssetImage(
+                                              ImageAsset.imageOfitsoftText),
+                                          width: 75,
+                                          fit: BoxFit.contain,
+                                        ),
                                         //Icon(tasksForMonthAndYear[index].icon, color: AppColor.main,),
                                       ],
                                     ),
                                   ),
                                 )
-                                  /*ListTile(
+                                    /*ListTile(
                                   title: Text(task.name),
                                   subtitle: Text(
                                       '${task.date.day}/${task.date.month}/${task.date.year}'),
-                                )*/;
+                                )*/
+                                    ;
                               },
                             ),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 4),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 70, vertical: 4),
                               child: Divider(
                                 height: 1,
                                 thickness: 1,
@@ -224,12 +250,36 @@ class _DiaryViewState extends State<DiaryView> {
   }
 
   final List<Task> tasks = [
-    Task(name: 'Sản xuất rau', date: DateTime(2022, 12, 25), activity: "Mùa vụ sản xuất rau bắp cải năm 2022", icon: Icons.spa),
-    Task(name: 'Sản xuất lúa', date: DateTime(2022, 1, 10), activity: "Mùa vụ sản xuất lúa đông xuân năm 2022", icon: Icons.spa_outlined),
-    Task(name: 'Sản xuất lúa', date: DateTime(2023, 3, 5), activity: "Mùa vụ sản xuất lúa hè thu năm 2023", icon: Icons.spa),
-    Task(name: 'Sản xuất cải thảo', date: DateTime(2023, 3, 15), activity: "Mùa vụ sản xuất rau cải thảo năm 2023", icon: Icons.spa),
-    Task(name: 'Sản xuất hạt điều', date: DateTime(2021, 3, 8), activity: "Mùa vụ sản xuất hạt điều năm 2023", icon: Icons.local_cafe),
-    Task(name: 'Sản xuất cà phê', date: DateTime(2023, 3, 12), activity: "Mùa vụ sản xuất cà phê năm 2023", icon: Icons.local_cafe),
+    Task(
+        name: 'Sản xuất rau',
+        date: DateTime(2022, 12, 25),
+        activity: "Mùa vụ sản xuất rau bắp cải năm 2022",
+        icon: Icons.spa),
+    Task(
+        name: 'Sản xuất lúa',
+        date: DateTime(2022, 1, 10),
+        activity: "Mùa vụ sản xuất lúa đông xuân năm 2022",
+        icon: Icons.spa_outlined),
+    Task(
+        name: 'Sản xuất lúa',
+        date: DateTime(2023, 3, 5),
+        activity: "Mùa vụ sản xuất lúa hè thu năm 2023",
+        icon: Icons.spa),
+    Task(
+        name: 'Sản xuất cải thảo',
+        date: DateTime(2023, 3, 15),
+        activity: "Mùa vụ sản xuất rau cải thảo năm 2023",
+        icon: Icons.spa),
+    Task(
+        name: 'Sản xuất hạt điều',
+        date: DateTime(2021, 3, 8),
+        activity: "Mùa vụ sản xuất hạt điều năm 2023",
+        icon: Icons.local_cafe),
+    Task(
+        name: 'Sản xuất cà phê',
+        date: DateTime(2023, 3, 12),
+        activity: "Mùa vụ sản xuất cà phê năm 2023",
+        icon: Icons.local_cafe),
   ];
 
   List<String> getDistinctMonthsAndYears() {
@@ -246,19 +296,19 @@ class _DiaryViewState extends State<DiaryView> {
 
   List<Diary> getTasksForMonthAndYear(String monthAndYear, List<Diary> list) {
     List<Diary> tasksForMonthAndYear = [];
-    list.sort((a, b) => (b.startDate??"").compareTo((a.startDate??"")));
+    list.sort((a, b) => (b.startDate ?? "").compareTo((a.startDate ?? "")));
     print("HoangCV: taskMonthAndYear: ${list.length} : ${monthAndYear} ");
     for (var task in list) {
-      DateTime dateTime = Utils.formatStringToDate(task.startDate??"");
+      DateTime dateTime = Utils.formatStringToDate(task.startDate ?? "");
       String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
-      print("HoangCV: taskMonthAndYear: ${taskMonthAndYear} : ${monthAndYear} ");
+      print(
+          "HoangCV: taskMonthAndYear: ${taskMonthAndYear} : ${monthAndYear} ");
       if (taskMonthAndYear == monthAndYear) {
         tasksForMonthAndYear.add(task);
       }
     }
     return tasksForMonthAndYear;
   }
-
 }
 
 class Task {
@@ -267,5 +317,9 @@ class Task {
   final IconData icon;
   final DateTime date;
 
-  Task({required this.name, required this.date, required this.activity, required this.icon});
+  Task(
+      {required this.name,
+      required this.date,
+      required this.activity,
+      required this.icon});
 }

@@ -116,7 +116,7 @@ class AccountInformationBloc
         isCompulsory: false,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
-        valueSelected: Utils.stringToDate(state.dateController!.text),
+        valueSelected: Utils.stringToDateDOB(state.dateController!.text),
         icon: Icons.calendar_today,
         image: ImageAsset.imageCalendarPick));
     list.add(InputRegisterModel(

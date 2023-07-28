@@ -53,7 +53,8 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "0937668690",
+      'login': "0987890987",
+      //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
     var headers = {'Content-Type': 'application/json'};
@@ -79,6 +80,7 @@ class RepositoryImpl extends Repository {
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.responseCode == StatusConst.code00) {
       sharedPreferences.setString(SharedPreferencesKey.token,objectResult.response["token"]);
+      sharedPreferences.setInt(SharedPreferencesKey.userId,objectResult.response["user_id"]);
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
       getListMaterials();
@@ -222,9 +224,10 @@ class RepositoryImpl extends Repository {
   Future<List<Diary>> getListDiary() async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.getListDiary + "25",
+            path: ApiConst.getListDiary + "$userId",
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
@@ -263,7 +266,7 @@ class RepositoryImpl extends Repository {
       List<ActivityDiary> list = List.from(objectResult.response)
           .map((json) => ActivityDiary.fromJson(json))
           .toList();
-      list.sort((a,b)=> (a.actionTime??"").compareTo((b.actionTime??"")));
+      list.sort((a,b)=> (b.actionTime??"").compareTo((a.actionTime??"")));
       DiaryDB.instance.insertListActivityDiary(list);
       return list;
     }
@@ -378,6 +381,49 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
+    return objectResult;
+  }
+
+  @override
+  Future<ObjectResult> updateActivityDiary(ActivityDiary diary) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.updateActivityDiary}${diary.id}",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: diary.toJson())));
+    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<ObjectResult> removeActivityDiary(int id) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.removeActivityDiary}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+
+    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
+
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
     return objectResult;
   }
 

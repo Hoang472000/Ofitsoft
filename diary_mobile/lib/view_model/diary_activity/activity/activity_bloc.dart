@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/diary/diary.dart';
@@ -17,18 +20,34 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
 
   ActivityBloc(this.repository) : super(ActivityState()) {
     on<GetListActivityEvent>(_getListActivity);
+    on<RemoveActivityEvent>(_removeActivity);
     //add(GetListActivityEvent());
   }
 
   void _getListActivity(
       GetListActivityEvent event, Emitter<ActivityState> emitter) async {
-    emitter(state.copyWith(isShowProgress: true));
+    emitter(state.copyWith(
+        isShowProgress: true, formStatus: const InitialFormStatus()));
     final listDiaryActivity = await repository.getListActivityDiary(event.id);
     DiaryDB.instance.getListDiary();
     emitter(state.copyWith(
-      isShowProgress: false,
-        listDiaryActivity: listDiaryActivity
-    ));
+        isShowProgress: false, listDiaryActivity: listDiaryActivity));
+  }
+
+  FutureOr<void> _removeActivity(
+      RemoveActivityEvent event, Emitter<ActivityState> emit) async {
+    emit(state.copyWith(isShowProgress: true, formStatus: FormSubmitting()));
+    final objectResult = await repository.removeActivityDiary(event.id);
+    //DiaryDB.instance.getListDiary();
+    if (objectResult.responseCode == StatusConst.code00) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          formStatus: SubmissionSuccess(success: objectResult.message)));
+    } else if (objectResult.responseCode == StatusConst.code01) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          formStatus: SubmissionFailed(objectResult.message)));
+    }
   }
 }
 
@@ -39,20 +58,26 @@ class ActivityEvent extends BlocEvent {
 
 class GetListActivityEvent extends ActivityEvent {
   final int id;
+
   GetListActivityEvent(this.id);
+
   @override
   List<Object?> get props => [id];
 }
 
-class UpdateAvataEvent extends ActivityEvent {
-  //final ImageSource source;
-  UpdateAvataEvent();
+class RemoveActivityEvent extends ActivityEvent {
+  final int id;
+
+  RemoveActivityEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
 }
 
 class ActivityState extends BlocState {
   @override
   List<Object?> get props => [
-    listDiaryActivity,
+        listDiaryActivity,
         formStatus,
         isShowProgress,
         listMaterial,

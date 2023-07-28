@@ -40,6 +40,7 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(diaryTable, values);
     });
   }
+
   Future<List<Diary>> getListDiary() async {
     return await select(diaryTable).get();
   }

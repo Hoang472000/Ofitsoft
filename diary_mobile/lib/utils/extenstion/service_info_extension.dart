@@ -132,9 +132,10 @@ class ServiceInfoExtension {
         // String result = picker.adapter.text;
         String result = picker.adapter.text;
         int resultInt = int.parse(result.substring(1, result.length - 1));
+        print("HoangCV: picker: ${result} : ${resultInt} : ${modelInput.listValue[resultInt]}");
         modelInput.positionSelected = resultInt;
         modelInput.valueDefault = null;
-        modelInput.valueSelected = modelInput.listValue![resultInt];
+        modelInput.valueSelected = modelInput.listValue[resultInt];
         modelInput.error = null;
        // onNotification(modelInput);
         completer.complete(1);

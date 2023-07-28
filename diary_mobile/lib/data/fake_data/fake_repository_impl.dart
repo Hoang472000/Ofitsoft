@@ -593,4 +593,16 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement addActivityDiary
     throw UnimplementedError();
   }
+
+  @override
+  Future<ObjectResult> updateActivityDiary(ActivityDiary diary) {
+    // TODO: implement addActivityDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> removeActivityDiary(int id) {
+    // TODO: implement removeActivityDiary
+    throw UnimplementedError();
+  }
 }

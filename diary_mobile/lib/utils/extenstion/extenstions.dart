@@ -68,7 +68,7 @@ class Extension {
         return model.name;
 
       case DateTime:
-        return DateFormat('dd/MM/yyyy').format(model);
+        return DateFormat('dd/MM/yyyy HH:mm:ss').format(model);
       case String:
         return model;
         break;

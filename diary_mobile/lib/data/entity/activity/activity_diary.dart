@@ -90,7 +90,7 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     data['action_area_unit_id'] = actionAreaUnitId;
     data['description'] = description;
     data['activity'] = activity;
-    data['is_Shown'] = isShow;
+    data['is_shown'] = isShow;
 
     data['name'] = name;
     data['by_name'] = byName;
@@ -106,9 +106,13 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     for (int i = 0; i < material.length; i++) {
       listMaterial.add(material[i].toJson());
     }
+    List<Map> listImage= [];
+    for (int i = 0; i < media.length; i++) {
+      listImage.add(media[i].toJson());
+    }
     data['diary_tool_ids'] = listTool;
     data['diary_material_ids'] = listMaterial;
-    data['diary_media_ids'] = media;
+    data['diary_media_ids'] = listImage;
     return data;
   }
 

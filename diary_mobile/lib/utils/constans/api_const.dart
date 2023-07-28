@@ -21,7 +21,10 @@ class ApiConst {
   static const String getUserInfo = "/get/infor/user/";
   //api add 1 activity diary
   static const String addActivityDiary = "/add/item/diary_farmer";
-
+  //api remove 1 activity diary
+  static const String removeActivityDiary = "/delete/item/diary_farmer/";
+  //api update 1 activity diary
+  static const String updateActivityDiary = "/edit/diary_farmer/";
 
 
   //update

@@ -1,6 +1,6 @@
 class SharedPreferencesKey {
   static String userName = "lastUserName";
-  static String userId = "uid";
+  static String userId = "user_id";
   static String debugLogin = "debug_login";
   static String token = "token";
   static String refreshToken = "refreshToken";

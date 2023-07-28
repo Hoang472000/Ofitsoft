@@ -61,7 +61,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
       isCompulsory: false,
       maxLengthTextInput: 15,
       type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
+      typeInput: TextInputType.number,
       controller: soLuongController,
         image: ImageAsset.imageBudget
     ));
@@ -70,7 +70,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
       isCompulsory: false,
       maxLengthTextInput: 15,
       type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
+      typeInput: TextInputType.number,
       controller: soLuong2Controller,
         image: ImageAsset.imageBudget
     ));
@@ -81,7 +81,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
-        typeInput: TextInputType.text,
+        typeInput: TextInputType.number,
         controller: soLuongController,
         image: ImageAsset.imageBudget
     ));
@@ -90,7 +90,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
-        typeInput: TextInputType.text,
+        typeInput: TextInputType.number,
         controller: soLuong2Controller,
         image: ImageAsset.imageBudget
     ));
@@ -208,13 +208,15 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
+                                        print("HoangCV: listWidgetCC: ${widget.listWidgetVT[1].valueSelected.toJson()}");
+                                        print("HoangCV: listWidgetVT: ${widget.listWidgetVT[0].valueSelected.toJson()}");
                                         widget.listVatTuAdd.add(MaterialEntity(material:
                                         widget.listWidgetVT[0].valueSelected.name,
+                                          materialId: widget.listWidgetVT[0].valueSelected.id,
                                             quantity: double.parse(
                                                 soLuongController.text != "" ? soLuongController.text : "1"),
                                             unitName: widget.listWidgetVT[1].valueSelected.name,
-                                            materialId: widget.listWidgetVT[1].valueSelected.id,
-                                          unitId: widget.listWidgetVT[1].valueSelected.unitId,
+                                          unitId: widget.listWidgetVT[1].valueSelected.id,
                                             ));
                                       }
                                       widget.listWidgetVT[0].valueSelected = null;
@@ -418,13 +420,14 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   onPressed: () {
                                     setState(() {
                                       if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
+                                        print("HoangCV: listWidgetCC: ${widget.listWidgetCC[1].valueSelected.toJson()}");
                                         widget.listCongCuAdd.add(Tool(tool:
                                         widget.listWidgetCC[0].valueSelected.name,
+                                          toolId: widget.listWidgetCC[0].valueSelected.id,
                                             quantity: double.parse(
-                                                soLuong2Controller.text != "" ? soLuongController.text : "1"),
+                                                soLuong2Controller.text != "" ? soLuong2Controller.text : "1"),
                                             unitName: widget.listWidgetCC[1].valueSelected.name,
-                                          toolId: widget.listWidgetCC[1].valueSelected.id,
-                                          unitId: widget.listWidgetCC[1].valueSelected.unitId,
+                                          unitId: widget.listWidgetCC[1].valueSelected.id,
                                         ));
                                       }
                                       widget.listWidgetCC[0].valueSelected = null;

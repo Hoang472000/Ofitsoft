@@ -12,6 +12,8 @@ class ImageEntity {
   String? fileExtension;
   String? fileContent;
   File? fileImage;
+  int? diaryFarmerId;
+  String? type;
 
   ImageEntity(
       {this.imageGuid,
@@ -20,7 +22,7 @@ class ImageEntity {
         this.fileName,
         this.fileContent,
         this.fileImage,
-        this.fileExtension});
+        this.fileExtension, this.diaryFarmerId, this.type});
 
 /*  static Future<File?> base64ToFile(String? base64String, String fileName) async {
     if (base64String == null) return null;
@@ -62,6 +64,8 @@ class ImageEntity {
       fileName: json['file_name'] ?? '',
       fileExtension: json['fileExtension'] ?? '',
       fileContent: json['media_content'] ?? '',
+      diaryFarmerId: json['diary_farmer_id'] ?? -1,
+      type: json['type'] ?? '',
       fileImage: fileImage,
     );
   }
@@ -69,12 +73,14 @@ class ImageEntity {
   // Phương thức chuyển đổi từ đối tượng ImageEntity thành JSON
   Map<String, dynamic> toJson() {
     return {
-      'imageGuid': imageGuid,
+      'id': imageGuid,
+      'media_content': fileContent,
+      'type': type,
+      'diary_farmer_id': diaryFarmerId,
       'imageUrl': imageUrl,
       'isMain': isMain,
       'fileName': fileName,
       'fileExtension': fileExtension,
-      'fileContent': fileContent,
     };
   }
 

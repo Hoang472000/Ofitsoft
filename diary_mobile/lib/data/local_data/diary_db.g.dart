@@ -48,6 +48,18 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
       'activity_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _userMeta = const VerificationMeta('user');
   @override
   late final GeneratedColumn<String> user = GeneratedColumn<String>(
@@ -171,6 +183,8 @@ class $DiaryTableTable extends DiaryTable
         farmId,
         farm,
         activityId,
+        productName,
+        productId,
         user,
         actionTime,
         actionArea,
@@ -231,6 +245,16 @@ class $DiaryTableTable extends DiaryTable
           _activityIdMeta,
           activityId.isAcceptableOrUnknown(
               data['activity_id']!, _activityIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
     }
     if (data.containsKey('user')) {
       context.handle(
@@ -367,6 +391,10 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
       crop: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}crop']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
       area: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}area']),
       areaUnit: attachedDatabase.typeMapping
@@ -412,6 +440,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> farmId;
   final Value<String?> farm;
   final Value<int?> activityId;
+  final Value<String?> productName;
+  final Value<int?> productId;
   final Value<String?> user;
   final Value<String?> actionTime;
   final Value<double?> actionArea;
@@ -440,6 +470,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.farmId = const Value.absent(),
     this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.productId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
@@ -469,6 +501,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.farmId = const Value.absent(),
     this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.productId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
@@ -498,6 +532,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<int>? farmId,
     Expression<String>? farm,
     Expression<int>? activityId,
+    Expression<String>? productName,
+    Expression<int>? productId,
     Expression<String>? user,
     Expression<String>? actionTime,
     Expression<double>? actionArea,
@@ -527,6 +563,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (farmId != null) 'farm_id': farmId,
       if (farm != null) 'farm': farm,
       if (activityId != null) 'activity_id': activityId,
+      if (productName != null) 'product_name': productName,
+      if (productId != null) 'product_id': productId,
       if (user != null) 'user': user,
       if (actionTime != null) 'action_time': actionTime,
       if (actionArea != null) 'action_area': actionArea,
@@ -559,6 +597,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<int?>? farmId,
       Value<String?>? farm,
       Value<int?>? activityId,
+      Value<String?>? productName,
+      Value<int?>? productId,
       Value<String?>? user,
       Value<String?>? actionTime,
       Value<double?>? actionArea,
@@ -587,6 +627,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       farmId: farmId ?? this.farmId,
       farm: farm ?? this.farm,
       activityId: activityId ?? this.activityId,
+      productName: productName ?? this.productName,
+      productId: productId ?? this.productId,
       user: user ?? this.user,
       actionTime: actionTime ?? this.actionTime,
       actionArea: actionArea ?? this.actionArea,
@@ -633,6 +675,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     }
     if (activityId.present) {
       map['activity_id'] = Variable<int>(activityId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
     }
     if (user.present) {
       map['user'] = Variable<String>(user.value);
@@ -707,6 +755,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('farmId: $farmId, ')
           ..write('farm: $farm, ')
           ..write('activityId: $activityId, ')
+          ..write('productName: $productName, ')
+          ..write('productId: $productId, ')
           ..write('user: $user, ')
           ..write('actionTime: $actionTime, ')
           ..write('actionArea: $actionArea, ')

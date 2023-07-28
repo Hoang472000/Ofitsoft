@@ -207,6 +207,7 @@ class ContainerInputWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            inputRegisterModel.image != "" ? SizedBox(width: 44,) : SizedBox(),
             Expanded(
               child: Text(
                 "${inputRegisterModel.error ?? ""}",
