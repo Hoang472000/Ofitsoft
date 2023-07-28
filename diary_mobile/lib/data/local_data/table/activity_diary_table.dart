@@ -11,11 +11,11 @@ class ActivityDiaryTable extends Table {
   IntColumn get seasonFarmId => integer().nullable()();
   TextColumn get seasonFarm => text().nullable()();
   IntColumn get activityId => integer().nullable()();
-  TextColumn get activity => text().nullable()();
+  TextColumn get activityName => text().nullable()();
   TextColumn get actionTime => text().nullable()();
   RealColumn get actionArea => real().nullable()();
   IntColumn get actionAreaUnitId => integer().nullable()();
-  TextColumn get actionAreaUnit => text().nullable()();
+  TextColumn get actionAreaUnitName => text().nullable()();
   TextColumn get description => text().nullable()();
   BoolColumn get isShow => boolean().nullable()();
 

@@ -15,6 +15,7 @@ class DiaryTable extends Table {
   TextColumn get farm => text().nullable()();
   IntColumn get activityId => integer().nullable()();
   TextColumn get productName => text().nullable()();
+  TextColumn get cropName => text().nullable()();
   IntColumn get productId => integer().nullable()();
   TextColumn get user => text().nullable()();
   TextColumn get actionTime => text().nullable()();

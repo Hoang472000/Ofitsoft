@@ -38,6 +38,7 @@ class DetailActivityBloc
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
     on<SaveValueTextFieldEvent>(_saveValueTextField);
     on<UpdateActivityEvent>(_updateActivity);
+    on<BackEvent>(_back);
     //add(GetDetailActivityEvent());
   }
 
@@ -61,7 +62,7 @@ class DetailActivityBloc
 
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
-        isCompulsory: true,
+        isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.Non,
         typeInput: TextInputType.text,
@@ -180,7 +181,7 @@ class DetailActivityBloc
         image: ImageAsset.imageActivityFarm));
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
-        isCompulsory: true,
+        isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.Non,
         typeInput: TextInputType.text,
@@ -299,7 +300,7 @@ class DetailActivityBloc
         image: ImageAsset.imageActivityFarm));
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
-        isCompulsory: true,
+        isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.text,
@@ -418,21 +419,34 @@ class DetailActivityBloc
         listWidgetArea: listArea));
   }
 
-  void _getDetailActivity(GetDetailActivityEvent event,
-      Emitter<DetailActivityState> emitter) async {
-    emitter(state.copyWith(
-        isShowProgress: true,
-        formStatus: const InitialFormStatus(),
-        listWidget: [],
-        listWidgetVT: [],
-        listWidgetCC: [],
-        listVatTuAdd: [],
-        listCongCuAdd: []));
+  void _getDetailActivity(GetDetailActivityEvent event, Emitter<DetailActivityState> emitter) async {
+    if(event.resetView){
+      emitter(state.copyWith(
+          isShowProgress: true,
+          formStatus: const InitialFormStatus(),
+          listVatTuAdd: [],
+          listCongCuAdd: []));
+    }else{
+      emitter(state.copyWith(
+          isShowProgress: true,
+          formStatus: const InitialFormStatus(),
+          listWidget: [],
+          listWidgetVT: [],
+          listWidgetCC: [],
+          listVatTuAdd: [],
+          listCongCuAdd: []));
+    }
     final detailActivity = event.activityDiary;
+    final copiedActivityDiary = ActivityDiary.copy(detailActivity);
+    print("HoangCV: copiedActivityDiary: ${copiedActivityDiary.material.length}");
     final listActivity = await DiaryDB.instance.getListActivity();
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
     final sharedPreferences = await SharedPreferences.getInstance();
+    final listCopiesVTAdd = <MaterialEntity>[];
+    listCopiesVTAdd.addAll(detailActivity.material.map((material) => MaterialEntity.copy(material)));
+    final listCopiesCCAdd = <Tool>[];
+    listCopiesCCAdd.addAll(detailActivity.tool.map((tool) => Tool.copy(tool)));
     final categoryIdUnitArea =
         sharedPreferences.getInt(SharedPreferencesKey.unitArea) ?? -1;
     final categoryIdUnitAmount =
@@ -440,10 +454,6 @@ class DetailActivityBloc
     final listUnitArea = await DiaryDB.instance.getListUnit(categoryIdUnitArea);
     final listUnitAmount =
         await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
-    for (var element in listUnitAmount) {
-      print(
-          "HoangCV: listUnitAmount: ${element.categoryId} : ${listUnitAmount.length} : ${listUnitArea.length}");
-    }
     _initViewDetail(emitter);
     int index = listActivity
         .indexWhere((element) => element.id == detailActivity.activityId);
@@ -466,13 +476,14 @@ class DetailActivityBloc
     emitter(state.copyWith(
         isShowProgress: false,
         detailActivity: detailActivity,
+        copiedActivityDiary: copiedActivityDiary,
         listActivity: listActivity,
         listMaterial: listMaterial,
         listTool: listTool,
         listUnitAmount: listUnitAmount,
         listUnitArea: listUnitArea,
-        listVatTuAdd: detailActivity.material,
-        listCongCuAdd: detailActivity.tool,
+        listVatTuAdd: listCopiesVTAdd,
+        listCongCuAdd: listCopiesCCAdd,
         listImage: detailActivity.media,
         moTaController: TextEditingController(text: detailActivity.description),
         nameController: TextEditingController(text: listActivity[index].name),
@@ -480,7 +491,7 @@ class DetailActivityBloc
         areaController:
             TextEditingController(text: "${detailActivity.actionArea}"),
         donViController:
-            TextEditingController(text: "${detailActivity.actionAreaUnit}"),
+            TextEditingController(text: "${detailActivity.actionAreaUnitName}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(detailActivity.actionTime ?? "")),
         endTimeController: TextEditingController(
@@ -516,6 +527,8 @@ class DetailActivityBloc
         state.listWidgetArea[i].controller = state.donViController;
       }
     }
+    print(
+        "HoangCV: listWidgetArea run way: ${index} : ${listActivity[index].name}");
     emitter(state.copyWith(
         listWidget: state.listWidget, listWidgetArea: state.listWidgetArea));
   }
@@ -527,7 +540,8 @@ class DetailActivityBloc
 
   FutureOr<void> _changeDetailActivity(ChangeDetailActivityEvent event,
       Emitter<DetailActivityState> emit) async {
-    _changeViewDetail(emit);
+    //_changeViewDetail(emit);
+    add(GetDetailActivityEvent(state.copiedActivityDiary?? ActivityDiary(), resetView: true));
   }
 
   Future<FutureOr<void>> _onSelectValue(
@@ -687,12 +701,12 @@ class DetailActivityBloc
       ActivityDiary diary = ActivityDiary(
         id: state.detailActivity!.id,
         activityId: state.listActivity[state.indexActivity].id,
-        activity: state.listActivity[state.indexActivity].name,
+        activityName: state.listActivity[state.indexActivity].name,
         actionTime: state.listWidget[2].valueSelected.toString().split('.')[
             0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
         actionArea: double.parse("${state.areaController!.text}"),
         actionAreaUnitId: state.listWidgetArea[1].valueSelected.id,
-        actionAreaUnit: state.listWidgetArea[1].valueSelected.name,
+        actionAreaUnitName: state.listWidgetArea[1].valueSelected.name,
         description: state.moTaController!.text,
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,
@@ -704,7 +718,7 @@ class DetailActivityBloc
         // _changeViewDetail(emit);
       }
       if (objectResult.responseCode == StatusConst.code00) {
-        _changeViewDetail(emit);
+        //_changeViewDetail(emit);
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionSuccess(success: objectResult.message)));
@@ -715,6 +729,27 @@ class DetailActivityBloc
       }
     }
   }
+
+  FutureOr<void> _back(BackEvent event, Emitter<DetailActivityState> emit) {
+    emit(state.copyWith(
+        isShowProgress: false, formStatus: const InitialFormStatus(), listVatTuAdd: [],
+        listCongCuAdd: []));
+    print("HoangCV: state.copiedActivityDiary!.material: ${state.copiedActivityDiary!.material.length} : ${state.listVatTuAdd.length}");
+    print("HoangCV: event.listMtl.length: ${event.listMtl.length} : ${event.listTool.length}");
+    state.copiedActivityDiary!.material = event.listMtl;
+    state.copiedActivityDiary!.tool = event.listTool;
+    var copiesActivity = ActivityDiary.copy(state.detailActivity ?? ActivityDiary());
+    copiesActivity.tool = event.listTool;
+    copiesActivity.material = event.listMtl;
+    emit(state.copyWith(
+      isShowProgress: true,
+      detailActivity: copiesActivity,
+      listVatTuAdd: event.listMtl,
+      listCongCuAdd: event.listTool,
+    ));
+    print("HoangCV:1111 : ${state.detailActivity!.material.length}");
+  }
+
 }
 
 class DetailActivityEvent extends BlocEvent {
@@ -724,11 +759,12 @@ class DetailActivityEvent extends BlocEvent {
 
 class GetDetailActivityEvent extends DetailActivityEvent {
   ActivityDiary activityDiary;
+  bool resetView;
 
-  GetDetailActivityEvent(this.activityDiary);
+  GetDetailActivityEvent(this.activityDiary, {this.resetView = false});
 
   @override
-  List<Object?> get props => [activityDiary];
+  List<Object?> get props => [activityDiary, resetView];
 }
 
 class ChangeEditActivityEvent extends DetailActivityEvent {
@@ -737,6 +773,15 @@ class ChangeEditActivityEvent extends DetailActivityEvent {
 
 class ChangeDetailActivityEvent extends DetailActivityEvent {
   ChangeDetailActivityEvent();
+}
+
+class BackEvent extends DetailActivityEvent {
+  ActivityDiary activityDiary;
+  List<MaterialEntity> listMtl;
+  List<Tool> listTool;
+  BackEvent(this.activityDiary, this.listTool, this.listMtl);
+  @override
+  List<Object?> get props => [activityDiary, listTool, listMtl];
 }
 
 class UpdateActivityEvent extends DetailActivityEvent {
@@ -819,8 +864,10 @@ class DetailActivityState extends BlocState {
         listWidgetArea,
         areaController,
         indexDonViArea,
+    copiedActivityDiary,
       ];
   final ActivityDiary? detailActivity;
+  final ActivityDiary? copiedActivityDiary;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
   final List<Unit> listUnitAmount;
@@ -833,8 +880,8 @@ class DetailActivityState extends BlocState {
   List<InputRegisterModel> listWidgetCC;
   List<InputRegisterModel> listWidgetArea;
   List<ImageEntity> listImage = [];
-  List<MaterialEntity> listVatTuAdd = [];
-  List<Tool> listCongCuAdd = [];
+  final List<MaterialEntity> listVatTuAdd;
+  final List<Tool> listCongCuAdd;
   TextEditingController? nameController = TextEditingController();
   TextEditingController? soCayController = TextEditingController();
   TextEditingController? soLuongController = TextEditingController();
@@ -852,6 +899,7 @@ class DetailActivityState extends BlocState {
 
   DetailActivityState({
     this.detailActivity,
+    this.copiedActivityDiary,
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
     this.listMaterial = const [],
@@ -884,6 +932,7 @@ class DetailActivityState extends BlocState {
 
   DetailActivityState copyWith({
     ActivityDiary? detailActivity,
+    ActivityDiary? copiedActivityDiary,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<MaterialEntity>? listMaterial,
@@ -914,6 +963,7 @@ class DetailActivityState extends BlocState {
     double? imageHeight,
   }) {
     return DetailActivityState(
+      copiedActivityDiary: copiedActivityDiary ?? this.copiedActivityDiary,
       detailActivity: detailActivity ?? this.detailActivity,
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,

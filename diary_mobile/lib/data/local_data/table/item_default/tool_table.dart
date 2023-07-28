@@ -8,7 +8,7 @@ class ToolTable extends Table {
 
   IntColumn get id => integer().nullable()();
   IntColumn get categoryId => integer().nullable()();
-  TextColumn get tool => text().nullable()();
+  TextColumn get toolName => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get description => text().nullable()();
   BoolColumn get isOrganic => boolean().nullable()();

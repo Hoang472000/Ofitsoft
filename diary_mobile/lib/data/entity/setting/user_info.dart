@@ -10,8 +10,9 @@ class UserInfo implements Insertable<UserInfo> {
   String? gender;
   String? dateOfBirth;
   String? address;
-  String? active;
-  String? groupId;
+  bool? active;
+  String? group;
+  String? language;
   String? mediaContent;
 
   UserInfo(
@@ -22,7 +23,8 @@ class UserInfo implements Insertable<UserInfo> {
       this.dateOfBirth,
       this.address,
       this.active,
-      this.groupId,
+      this.group,
+      this.language,
       this.mediaContent});
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
@@ -34,8 +36,9 @@ class UserInfo implements Insertable<UserInfo> {
       gender: json['gender'] ?? '',
       dateOfBirth: json['date_of_birth'] ?? '',
       address: json['address'] ?? '',
-      active: json['active'] ?? '',
-      groupId: json['group_id'] ?? '',
+      active: json['active'] ?? true,
+      group: json['group'] ?? '',
+      language: json['language'] ?? '',
       mediaContent: json['media_content'] ?? '',
     );
   }
@@ -49,7 +52,8 @@ class UserInfo implements Insertable<UserInfo> {
     data['date_of_birth'] = dateOfBirth;
     data['address'] = address;
     data['active'] = active;
-    data['group_id'] = groupId;
+    data['language'] = language;
+    data['group'] = group;
     data['media_content'] = mediaContent;
     return data;
   }
@@ -64,7 +68,8 @@ class UserInfo implements Insertable<UserInfo> {
       dateOfBirth: Value(dateOfBirth),
       address: Value(address),
       active: Value(active),
-      groupId: Value(groupId),
+      group: Value(group),
+      language: Value(language),
       mediaContent: Value(mediaContent),
     ).toColumns(nullToAbsent);
   }

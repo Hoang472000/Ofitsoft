@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 class MaterialEntity implements Insertable<MaterialEntity> {
   int? id;
   int? categoryId;
-  String? material;
+  String? materialName;
   String? name;
   String? description;
   bool? isOrganic;
@@ -21,7 +21,7 @@ class MaterialEntity implements Insertable<MaterialEntity> {
 
   MaterialEntity(
       {this.id,
-      this.material,
+      this.materialName,
       this.name,
       this.description,
       this.categoryId,
@@ -39,7 +39,7 @@ class MaterialEntity implements Insertable<MaterialEntity> {
   factory MaterialEntity.fromJson(Map<String, dynamic> json) {
     return MaterialEntity(
       id: json['id'] ?? -1,
-      material: json['material'] ?? '',
+      materialName: json['material_name'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       categoryId: json['category_id'] ?? -1,
@@ -59,7 +59,7 @@ class MaterialEntity implements Insertable<MaterialEntity> {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['material'] = material;
+    data['material_name'] = materialName;
     data['material_id'] = materialId;
     data['name'] = name;
     data['category_id'] = categoryId;
@@ -76,11 +76,28 @@ class MaterialEntity implements Insertable<MaterialEntity> {
     return data;
   }
 
+  MaterialEntity.copy(MaterialEntity other)
+      : id = other.id,
+        categoryId = other.categoryId,
+        materialName = other.materialName,
+        name = other.name,
+        description = other.description,
+        isOrganic = other.isOrganic,
+        notation = other.notation,
+        isActive = other.isActive,
+        image = other.image,
+        diaryFarmerId = other.diaryFarmerId,
+        materialId = other.materialId,
+        quantity = other.quantity,
+        unitId = other.unitId,
+        unitName = other.unitName,
+        mediaContent = other.mediaContent;
+
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return MaterialTableCompanion(
             id: Value(id),
-            material: Value(material),
+        materialName: Value(materialName),
             name: Value(name),
             categoryId: Value(categoryId),
             isOrganic: Value(isOrganic),

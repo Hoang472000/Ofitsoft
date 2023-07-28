@@ -17,15 +17,14 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
 
   DetailDiaryBloc(this.repository) : super(DetailDiaryState()) {
     on<GetDetailDiaryEvent>(_getDetailDiary);
-    add(GetDetailDiaryEvent());
+
   }
 
   void _getDetailDiary(
       GetDetailDiaryEvent event, Emitter<DetailDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final detailDiary = await repository.getInfoDiary(1);
+    final detailDiary = await repository.getInfoDiary(event.id);
     print("HoangCV: detailDiary: ${detailDiary.name}");
-    //DiaryDB.instance.getListDiary();
     emitter(state.copyWith(
         isShowProgress: false,
         detailDiary: detailDiary
@@ -39,7 +38,8 @@ class DetailDiaryEvent extends BlocEvent {
 }
 
 class GetDetailDiaryEvent extends DetailDiaryEvent {
-  GetDetailDiaryEvent();
+  int id;
+  GetDetailDiaryEvent(this.id);
 }
 
 class UpdateAvatarEvent extends DetailDiaryEvent {

@@ -54,6 +54,12 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<String> productName = GeneratedColumn<String>(
       'product_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _cropNameMeta =
+      const VerificationMeta('cropName');
+  @override
+  late final GeneratedColumn<String> cropName = GeneratedColumn<String>(
+      'crop_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _productIdMeta =
       const VerificationMeta('productId');
   @override
@@ -184,6 +190,7 @@ class $DiaryTableTable extends DiaryTable
         farm,
         activityId,
         productName,
+        cropName,
         productId,
         user,
         actionTime,
@@ -251,6 +258,10 @@ class $DiaryTableTable extends DiaryTable
           _productNameMeta,
           productName.isAcceptableOrUnknown(
               data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('crop_name')) {
+      context.handle(_cropNameMeta,
+          cropName.isAcceptableOrUnknown(data['crop_name']!, _cropNameMeta));
     }
     if (data.containsKey('product_id')) {
       context.handle(_productIdMeta,
@@ -393,6 +404,8 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.string, data['${effectivePrefix}crop']),
       productName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      cropName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}crop_name']),
       productId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
       area: attachedDatabase.typeMapping
@@ -441,6 +454,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> farm;
   final Value<int?> activityId;
   final Value<String?> productName;
+  final Value<String?> cropName;
   final Value<int?> productId;
   final Value<String?> user;
   final Value<String?> actionTime;
@@ -471,6 +485,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
     this.productName = const Value.absent(),
+    this.cropName = const Value.absent(),
     this.productId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
@@ -502,6 +517,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.farm = const Value.absent(),
     this.activityId = const Value.absent(),
     this.productName = const Value.absent(),
+    this.cropName = const Value.absent(),
     this.productId = const Value.absent(),
     this.user = const Value.absent(),
     this.actionTime = const Value.absent(),
@@ -533,6 +549,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? farm,
     Expression<int>? activityId,
     Expression<String>? productName,
+    Expression<String>? cropName,
     Expression<int>? productId,
     Expression<String>? user,
     Expression<String>? actionTime,
@@ -564,6 +581,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (farm != null) 'farm': farm,
       if (activityId != null) 'activity_id': activityId,
       if (productName != null) 'product_name': productName,
+      if (cropName != null) 'crop_name': cropName,
       if (productId != null) 'product_id': productId,
       if (user != null) 'user': user,
       if (actionTime != null) 'action_time': actionTime,
@@ -598,6 +616,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? farm,
       Value<int?>? activityId,
       Value<String?>? productName,
+      Value<String?>? cropName,
       Value<int?>? productId,
       Value<String?>? user,
       Value<String?>? actionTime,
@@ -628,6 +647,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       farm: farm ?? this.farm,
       activityId: activityId ?? this.activityId,
       productName: productName ?? this.productName,
+      cropName: cropName ?? this.cropName,
       productId: productId ?? this.productId,
       user: user ?? this.user,
       actionTime: actionTime ?? this.actionTime,
@@ -678,6 +698,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     }
     if (productName.present) {
       map['product_name'] = Variable<String>(productName.value);
+    }
+    if (cropName.present) {
+      map['crop_name'] = Variable<String>(cropName.value);
     }
     if (productId.present) {
       map['product_id'] = Variable<int>(productId.value);
@@ -756,6 +779,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('farm: $farm, ')
           ..write('activityId: $activityId, ')
           ..write('productName: $productName, ')
+          ..write('cropName: $cropName, ')
           ..write('productId: $productId, ')
           ..write('user: $user, ')
           ..write('actionTime: $actionTime, ')
@@ -1196,10 +1220,11 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
   late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
       'category_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _toolMeta = const VerificationMeta('tool');
+  static const VerificationMeta _toolNameMeta =
+      const VerificationMeta('toolName');
   @override
-  late final GeneratedColumn<String> tool = GeneratedColumn<String>(
-      'tool', aliasedName, true,
+  late final GeneratedColumn<String> toolName = GeneratedColumn<String>(
+      'tool_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -1291,7 +1316,7 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
   List<GeneratedColumn> get $columns => [
         id,
         categoryId,
-        tool,
+        toolName,
         name,
         description,
         isOrganic,
@@ -1323,9 +1348,9 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
           categoryId.isAcceptableOrUnknown(
               data['category_id']!, _categoryIdMeta));
     }
-    if (data.containsKey('tool')) {
-      context.handle(
-          _toolMeta, tool.isAcceptableOrUnknown(data['tool']!, _toolMeta));
+    if (data.containsKey('tool_name')) {
+      context.handle(_toolNameMeta,
+          toolName.isAcceptableOrUnknown(data['tool_name']!, _toolNameMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -1392,8 +1417,8 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
     return Tool(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
-      tool: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}tool']),
+      toolName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tool_name']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       description: attachedDatabase.typeMapping
@@ -1432,7 +1457,7 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
 class ToolTableCompanion extends UpdateCompanion<Tool> {
   final Value<int?> id;
   final Value<int?> categoryId;
-  final Value<String?> tool;
+  final Value<String?> toolName;
   final Value<String?> name;
   final Value<String?> description;
   final Value<bool?> isOrganic;
@@ -1448,7 +1473,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   const ToolTableCompanion({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
-    this.tool = const Value.absent(),
+    this.toolName = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1465,7 +1490,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   ToolTableCompanion.insert({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
-    this.tool = const Value.absent(),
+    this.toolName = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1482,7 +1507,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   static Insertable<Tool> custom({
     Expression<int>? id,
     Expression<int>? categoryId,
-    Expression<String>? tool,
+    Expression<String>? toolName,
     Expression<String>? name,
     Expression<String>? description,
     Expression<bool>? isOrganic,
@@ -1499,7 +1524,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (categoryId != null) 'category_id': categoryId,
-      if (tool != null) 'tool': tool,
+      if (toolName != null) 'tool_name': toolName,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (isOrganic != null) 'is_organic': isOrganic,
@@ -1518,7 +1543,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
   ToolTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? categoryId,
-      Value<String?>? tool,
+      Value<String?>? toolName,
       Value<String?>? name,
       Value<String?>? description,
       Value<bool?>? isOrganic,
@@ -1534,7 +1559,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return ToolTableCompanion(
       id: id ?? this.id,
       categoryId: categoryId ?? this.categoryId,
-      tool: tool ?? this.tool,
+      toolName: toolName ?? this.toolName,
       name: name ?? this.name,
       description: description ?? this.description,
       isOrganic: isOrganic ?? this.isOrganic,
@@ -1559,8 +1584,8 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     if (categoryId.present) {
       map['category_id'] = Variable<int>(categoryId.value);
     }
-    if (tool.present) {
-      map['tool'] = Variable<String>(tool.value);
+    if (toolName.present) {
+      map['tool_name'] = Variable<String>(toolName.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -1606,7 +1631,7 @@ class ToolTableCompanion extends UpdateCompanion<Tool> {
     return (StringBuffer('ToolTableCompanion(')
           ..write('id: $id, ')
           ..write('categoryId: $categoryId, ')
-          ..write('tool: $tool, ')
+          ..write('toolName: $toolName, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('isOrganic: $isOrganic, ')
@@ -1641,11 +1666,11 @@ class $MaterialTableTable extends MaterialTable
   late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
       'category_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _materialMeta =
-      const VerificationMeta('material');
+  static const VerificationMeta _materialNameMeta =
+      const VerificationMeta('materialName');
   @override
-  late final GeneratedColumn<String> material = GeneratedColumn<String>(
-      'material', aliasedName, true,
+  late final GeneratedColumn<String> materialName = GeneratedColumn<String>(
+      'material_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
@@ -1738,7 +1763,7 @@ class $MaterialTableTable extends MaterialTable
   List<GeneratedColumn> get $columns => [
         id,
         categoryId,
-        material,
+        materialName,
         name,
         description,
         isOrganic,
@@ -1770,9 +1795,11 @@ class $MaterialTableTable extends MaterialTable
           categoryId.isAcceptableOrUnknown(
               data['category_id']!, _categoryIdMeta));
     }
-    if (data.containsKey('material')) {
-      context.handle(_materialMeta,
-          material.isAcceptableOrUnknown(data['material']!, _materialMeta));
+    if (data.containsKey('material_name')) {
+      context.handle(
+          _materialNameMeta,
+          materialName.isAcceptableOrUnknown(
+              data['material_name']!, _materialNameMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -1841,8 +1868,8 @@ class $MaterialTableTable extends MaterialTable
     return MaterialEntity(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
-      material: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}material']),
+      materialName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}material_name']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       description: attachedDatabase.typeMapping
@@ -1879,7 +1906,7 @@ class $MaterialTableTable extends MaterialTable
 class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   final Value<int?> id;
   final Value<int?> categoryId;
-  final Value<String?> material;
+  final Value<String?> materialName;
   final Value<String?> name;
   final Value<String?> description;
   final Value<bool?> isOrganic;
@@ -1895,7 +1922,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   const MaterialTableCompanion({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
-    this.material = const Value.absent(),
+    this.materialName = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1912,7 +1939,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   MaterialTableCompanion.insert({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
-    this.material = const Value.absent(),
+    this.materialName = const Value.absent(),
     this.name = const Value.absent(),
     this.description = const Value.absent(),
     this.isOrganic = const Value.absent(),
@@ -1929,7 +1956,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   static Insertable<MaterialEntity> custom({
     Expression<int>? id,
     Expression<int>? categoryId,
-    Expression<String>? material,
+    Expression<String>? materialName,
     Expression<String>? name,
     Expression<String>? description,
     Expression<bool>? isOrganic,
@@ -1946,7 +1973,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (categoryId != null) 'category_id': categoryId,
-      if (material != null) 'material': material,
+      if (materialName != null) 'material_name': materialName,
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (isOrganic != null) 'is_organic': isOrganic,
@@ -1965,7 +1992,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
   MaterialTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? categoryId,
-      Value<String?>? material,
+      Value<String?>? materialName,
       Value<String?>? name,
       Value<String?>? description,
       Value<bool?>? isOrganic,
@@ -1981,7 +2008,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     return MaterialTableCompanion(
       id: id ?? this.id,
       categoryId: categoryId ?? this.categoryId,
-      material: material ?? this.material,
+      materialName: materialName ?? this.materialName,
       name: name ?? this.name,
       description: description ?? this.description,
       isOrganic: isOrganic ?? this.isOrganic,
@@ -2006,8 +2033,8 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     if (categoryId.present) {
       map['category_id'] = Variable<int>(categoryId.value);
     }
-    if (material.present) {
-      map['material'] = Variable<String>(material.value);
+    if (materialName.present) {
+      map['material_name'] = Variable<String>(materialName.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -2053,7 +2080,7 @@ class MaterialTableCompanion extends UpdateCompanion<MaterialEntity> {
     return (StringBuffer('MaterialTableCompanion(')
           ..write('id: $id, ')
           ..write('categoryId: $categoryId, ')
-          ..write('material: $material, ')
+          ..write('materialName: $materialName, ')
           ..write('name: $name, ')
           ..write('description: $description, ')
           ..write('isOrganic: $isOrganic, ')
@@ -2497,11 +2524,11 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
       'activity_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _activityMeta =
-      const VerificationMeta('activity');
+  static const VerificationMeta _activityNameMeta =
+      const VerificationMeta('activityName');
   @override
-  late final GeneratedColumn<String> activity = GeneratedColumn<String>(
-      'activity', aliasedName, true,
+  late final GeneratedColumn<String> activityName = GeneratedColumn<String>(
+      'activity_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _actionTimeMeta =
       const VerificationMeta('actionTime');
@@ -2521,12 +2548,12 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   late final GeneratedColumn<int> actionAreaUnitId = GeneratedColumn<int>(
       'action_area_unit_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _actionAreaUnitMeta =
-      const VerificationMeta('actionAreaUnit');
+  static const VerificationMeta _actionAreaUnitNameMeta =
+      const VerificationMeta('actionAreaUnitName');
   @override
-  late final GeneratedColumn<String> actionAreaUnit = GeneratedColumn<String>(
-      'action_area_unit', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumn<String> actionAreaUnitName =
+      GeneratedColumn<String>('action_area_unit_name', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -2577,11 +2604,11 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
         seasonFarmId,
         seasonFarm,
         activityId,
-        activity,
+        activityName,
         actionTime,
         actionArea,
         actionAreaUnitId,
-        actionAreaUnit,
+        actionAreaUnitName,
         description,
         isShow,
         name,
@@ -2620,9 +2647,11 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           activityId.isAcceptableOrUnknown(
               data['activity_id']!, _activityIdMeta));
     }
-    if (data.containsKey('activity')) {
-      context.handle(_activityMeta,
-          activity.isAcceptableOrUnknown(data['activity']!, _activityMeta));
+    if (data.containsKey('activity_name')) {
+      context.handle(
+          _activityNameMeta,
+          activityName.isAcceptableOrUnknown(
+              data['activity_name']!, _activityNameMeta));
     }
     if (data.containsKey('action_time')) {
       context.handle(
@@ -2642,11 +2671,11 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           actionAreaUnitId.isAcceptableOrUnknown(
               data['action_area_unit_id']!, _actionAreaUnitIdMeta));
     }
-    if (data.containsKey('action_area_unit')) {
+    if (data.containsKey('action_area_unit_name')) {
       context.handle(
-          _actionAreaUnitMeta,
-          actionAreaUnit.isAcceptableOrUnknown(
-              data['action_area_unit']!, _actionAreaUnitMeta));
+          _actionAreaUnitNameMeta,
+          actionAreaUnitName.isAcceptableOrUnknown(
+              data['action_area_unit_name']!, _actionAreaUnitNameMeta));
     }
     if (data.containsKey('description')) {
       context.handle(
@@ -2699,12 +2728,12 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           .read(DriftSqlType.double, data['${effectivePrefix}action_area']),
       actionAreaUnitId: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}action_area_unit_id']),
-      actionAreaUnit: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}action_area_unit']),
+      actionAreaUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}action_area_unit_name']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
-      activity: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}activity']),
+      activityName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity_name']),
       seasonFarm: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}season_farm']),
       isShow: attachedDatabase.typeMapping
@@ -2733,11 +2762,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   final Value<int?> seasonFarmId;
   final Value<String?> seasonFarm;
   final Value<int?> activityId;
-  final Value<String?> activity;
+  final Value<String?> activityName;
   final Value<String?> actionTime;
   final Value<double?> actionArea;
   final Value<int?> actionAreaUnitId;
-  final Value<String?> actionAreaUnit;
+  final Value<String?> actionAreaUnitName;
   final Value<String?> description;
   final Value<bool?> isShow;
   final Value<String?> name;
@@ -2750,11 +2779,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     this.seasonFarmId = const Value.absent(),
     this.seasonFarm = const Value.absent(),
     this.activityId = const Value.absent(),
-    this.activity = const Value.absent(),
+    this.activityName = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
     this.actionAreaUnitId = const Value.absent(),
-    this.actionAreaUnit = const Value.absent(),
+    this.actionAreaUnitName = const Value.absent(),
     this.description = const Value.absent(),
     this.isShow = const Value.absent(),
     this.name = const Value.absent(),
@@ -2768,11 +2797,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     this.seasonFarmId = const Value.absent(),
     this.seasonFarm = const Value.absent(),
     this.activityId = const Value.absent(),
-    this.activity = const Value.absent(),
+    this.activityName = const Value.absent(),
     this.actionTime = const Value.absent(),
     this.actionArea = const Value.absent(),
     this.actionAreaUnitId = const Value.absent(),
-    this.actionAreaUnit = const Value.absent(),
+    this.actionAreaUnitName = const Value.absent(),
     this.description = const Value.absent(),
     this.isShow = const Value.absent(),
     this.name = const Value.absent(),
@@ -2786,11 +2815,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     Expression<int>? seasonFarmId,
     Expression<String>? seasonFarm,
     Expression<int>? activityId,
-    Expression<String>? activity,
+    Expression<String>? activityName,
     Expression<String>? actionTime,
     Expression<double>? actionArea,
     Expression<int>? actionAreaUnitId,
-    Expression<String>? actionAreaUnit,
+    Expression<String>? actionAreaUnitName,
     Expression<String>? description,
     Expression<bool>? isShow,
     Expression<String>? name,
@@ -2804,11 +2833,12 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
       if (seasonFarm != null) 'season_farm': seasonFarm,
       if (activityId != null) 'activity_id': activityId,
-      if (activity != null) 'activity': activity,
+      if (activityName != null) 'activity_name': activityName,
       if (actionTime != null) 'action_time': actionTime,
       if (actionArea != null) 'action_area': actionArea,
       if (actionAreaUnitId != null) 'action_area_unit_id': actionAreaUnitId,
-      if (actionAreaUnit != null) 'action_area_unit': actionAreaUnit,
+      if (actionAreaUnitName != null)
+        'action_area_unit_name': actionAreaUnitName,
       if (description != null) 'description': description,
       if (isShow != null) 'is_show': isShow,
       if (name != null) 'name': name,
@@ -2824,11 +2854,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       Value<int?>? seasonFarmId,
       Value<String?>? seasonFarm,
       Value<int?>? activityId,
-      Value<String?>? activity,
+      Value<String?>? activityName,
       Value<String?>? actionTime,
       Value<double?>? actionArea,
       Value<int?>? actionAreaUnitId,
-      Value<String?>? actionAreaUnit,
+      Value<String?>? actionAreaUnitName,
       Value<String?>? description,
       Value<bool?>? isShow,
       Value<String?>? name,
@@ -2841,11 +2871,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       seasonFarmId: seasonFarmId ?? this.seasonFarmId,
       seasonFarm: seasonFarm ?? this.seasonFarm,
       activityId: activityId ?? this.activityId,
-      activity: activity ?? this.activity,
+      activityName: activityName ?? this.activityName,
       actionTime: actionTime ?? this.actionTime,
       actionArea: actionArea ?? this.actionArea,
       actionAreaUnitId: actionAreaUnitId ?? this.actionAreaUnitId,
-      actionAreaUnit: actionAreaUnit ?? this.actionAreaUnit,
+      actionAreaUnitName: actionAreaUnitName ?? this.actionAreaUnitName,
       description: description ?? this.description,
       isShow: isShow ?? this.isShow,
       name: name ?? this.name,
@@ -2871,8 +2901,8 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     if (activityId.present) {
       map['activity_id'] = Variable<int>(activityId.value);
     }
-    if (activity.present) {
-      map['activity'] = Variable<String>(activity.value);
+    if (activityName.present) {
+      map['activity_name'] = Variable<String>(activityName.value);
     }
     if (actionTime.present) {
       map['action_time'] = Variable<String>(actionTime.value);
@@ -2883,8 +2913,8 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     if (actionAreaUnitId.present) {
       map['action_area_unit_id'] = Variable<int>(actionAreaUnitId.value);
     }
-    if (actionAreaUnit.present) {
-      map['action_area_unit'] = Variable<String>(actionAreaUnit.value);
+    if (actionAreaUnitName.present) {
+      map['action_area_unit_name'] = Variable<String>(actionAreaUnitName.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
@@ -2917,11 +2947,11 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
           ..write('seasonFarmId: $seasonFarmId, ')
           ..write('seasonFarm: $seasonFarm, ')
           ..write('activityId: $activityId, ')
-          ..write('activity: $activity, ')
+          ..write('activityName: $activityName, ')
           ..write('actionTime: $actionTime, ')
           ..write('actionArea: $actionArea, ')
           ..write('actionAreaUnitId: $actionAreaUnitId, ')
-          ..write('actionAreaUnit: $actionAreaUnit, ')
+          ..write('actionAreaUnitName: $actionAreaUnitName, ')
           ..write('description: $description, ')
           ..write('isShow: $isShow, ')
           ..write('name: $name, ')
@@ -2974,14 +3004,25 @@ class $UserInfoTableTable extends UserInfoTable
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _activeMeta = const VerificationMeta('active');
   @override
-  late final GeneratedColumn<String> active = GeneratedColumn<String>(
-      'active', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _groupIdMeta =
-      const VerificationMeta('groupId');
+  late final GeneratedColumn<bool> active =
+      GeneratedColumn<bool>('active', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _groupMeta = const VerificationMeta('group');
   @override
-  late final GeneratedColumn<String> groupId = GeneratedColumn<String>(
-      'group_id', aliasedName, true,
+  late final GeneratedColumn<String> group = GeneratedColumn<String>(
+      'group', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _languageMeta =
+      const VerificationMeta('language');
+  @override
+  late final GeneratedColumn<String> language = GeneratedColumn<String>(
+      'language', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _mediaContentMeta =
       const VerificationMeta('mediaContent');
@@ -2998,7 +3039,8 @@ class $UserInfoTableTable extends UserInfoTable
         dateOfBirth,
         address,
         active,
-        groupId,
+        group,
+        language,
         mediaContent
       ];
   @override
@@ -3039,9 +3081,13 @@ class $UserInfoTableTable extends UserInfoTable
       context.handle(_activeMeta,
           active.isAcceptableOrUnknown(data['active']!, _activeMeta));
     }
-    if (data.containsKey('group_id')) {
-      context.handle(_groupIdMeta,
-          groupId.isAcceptableOrUnknown(data['group_id']!, _groupIdMeta));
+    if (data.containsKey('group')) {
+      context.handle(
+          _groupMeta, group.isAcceptableOrUnknown(data['group']!, _groupMeta));
+    }
+    if (data.containsKey('language')) {
+      context.handle(_languageMeta,
+          language.isAcceptableOrUnknown(data['language']!, _languageMeta));
     }
     if (data.containsKey('media_content')) {
       context.handle(
@@ -3071,9 +3117,11 @@ class $UserInfoTableTable extends UserInfoTable
       address: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}address']),
       active: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}active']),
-      groupId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}group_id']),
+          .read(DriftSqlType.bool, data['${effectivePrefix}active']),
+      group: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}group']),
+      language: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}language']),
       mediaContent: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}media_content']),
     );
@@ -3092,8 +3140,9 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
   final Value<String?> gender;
   final Value<String?> dateOfBirth;
   final Value<String?> address;
-  final Value<String?> active;
-  final Value<String?> groupId;
+  final Value<bool?> active;
+  final Value<String?> group;
+  final Value<String?> language;
   final Value<String?> mediaContent;
   const UserInfoTableCompanion({
     this.id = const Value.absent(),
@@ -3103,7 +3152,8 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
     this.dateOfBirth = const Value.absent(),
     this.address = const Value.absent(),
     this.active = const Value.absent(),
-    this.groupId = const Value.absent(),
+    this.group = const Value.absent(),
+    this.language = const Value.absent(),
     this.mediaContent = const Value.absent(),
   });
   UserInfoTableCompanion.insert({
@@ -3114,7 +3164,8 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
     this.dateOfBirth = const Value.absent(),
     this.address = const Value.absent(),
     this.active = const Value.absent(),
-    this.groupId = const Value.absent(),
+    this.group = const Value.absent(),
+    this.language = const Value.absent(),
     this.mediaContent = const Value.absent(),
   });
   static Insertable<UserInfo> custom({
@@ -3124,8 +3175,9 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
     Expression<String>? gender,
     Expression<String>? dateOfBirth,
     Expression<String>? address,
-    Expression<String>? active,
-    Expression<String>? groupId,
+    Expression<bool>? active,
+    Expression<String>? group,
+    Expression<String>? language,
     Expression<String>? mediaContent,
   }) {
     return RawValuesInsertable({
@@ -3136,7 +3188,8 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
       if (dateOfBirth != null) 'date_of_birth': dateOfBirth,
       if (address != null) 'address': address,
       if (active != null) 'active': active,
-      if (groupId != null) 'group_id': groupId,
+      if (group != null) 'group': group,
+      if (language != null) 'language': language,
       if (mediaContent != null) 'media_content': mediaContent,
     });
   }
@@ -3148,8 +3201,9 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
       Value<String?>? gender,
       Value<String?>? dateOfBirth,
       Value<String?>? address,
-      Value<String?>? active,
-      Value<String?>? groupId,
+      Value<bool?>? active,
+      Value<String?>? group,
+      Value<String?>? language,
       Value<String?>? mediaContent}) {
     return UserInfoTableCompanion(
       id: id ?? this.id,
@@ -3159,7 +3213,8 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       address: address ?? this.address,
       active: active ?? this.active,
-      groupId: groupId ?? this.groupId,
+      group: group ?? this.group,
+      language: language ?? this.language,
       mediaContent: mediaContent ?? this.mediaContent,
     );
   }
@@ -3186,10 +3241,13 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
       map['address'] = Variable<String>(address.value);
     }
     if (active.present) {
-      map['active'] = Variable<String>(active.value);
+      map['active'] = Variable<bool>(active.value);
     }
-    if (groupId.present) {
-      map['group_id'] = Variable<String>(groupId.value);
+    if (group.present) {
+      map['group'] = Variable<String>(group.value);
+    }
+    if (language.present) {
+      map['language'] = Variable<String>(language.value);
     }
     if (mediaContent.present) {
       map['media_content'] = Variable<String>(mediaContent.value);
@@ -3207,8 +3265,515 @@ class UserInfoTableCompanion extends UpdateCompanion<UserInfo> {
           ..write('dateOfBirth: $dateOfBirth, ')
           ..write('address: $address, ')
           ..write('active: $active, ')
-          ..write('groupId: $groupId, ')
+          ..write('group: $group, ')
+          ..write('language: $language, ')
           ..write('mediaContent: $mediaContent')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ActivityMonitorTableTable extends ActivityMonitorTable
+    with TableInfo<$ActivityMonitorTableTable, ActivityMonitor> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityMonitorTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _diaryMonitorIdMeta =
+      const VerificationMeta('diaryMonitorId');
+  @override
+  late final GeneratedColumn<int> diaryMonitorId = GeneratedColumn<int>(
+      'diary_monitor_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activityIdMeta =
+      const VerificationMeta('activityId');
+  @override
+  late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
+      'activity_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activityMeta =
+      const VerificationMeta('activity');
+  @override
+  late final GeneratedColumn<String> activity = GeneratedColumn<String>(
+      'activity', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _checkYesMeta =
+      const VerificationMeta('checkYes');
+  @override
+  late final GeneratedColumn<bool> checkYes =
+      GeneratedColumn<bool>('check_yes', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("check_yes" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _checkNoMeta =
+      const VerificationMeta('checkNo');
+  @override
+  late final GeneratedColumn<bool> checkNo =
+      GeneratedColumn<bool>('check_no', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("check_no" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, diaryMonitorId, activityId, activity, checkYes, checkNo];
+  @override
+  String get aliasedName => _alias ?? 'activity';
+  @override
+  String get actualTableName => 'activity';
+  @override
+  VerificationContext validateIntegrity(Insertable<ActivityMonitor> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('diary_monitor_id')) {
+      context.handle(
+          _diaryMonitorIdMeta,
+          diaryMonitorId.isAcceptableOrUnknown(
+              data['diary_monitor_id']!, _diaryMonitorIdMeta));
+    }
+    if (data.containsKey('activity_id')) {
+      context.handle(
+          _activityIdMeta,
+          activityId.isAcceptableOrUnknown(
+              data['activity_id']!, _activityIdMeta));
+    }
+    if (data.containsKey('activity')) {
+      context.handle(_activityMeta,
+          activity.isAcceptableOrUnknown(data['activity']!, _activityMeta));
+    }
+    if (data.containsKey('check_yes')) {
+      context.handle(_checkYesMeta,
+          checkYes.isAcceptableOrUnknown(data['check_yes']!, _checkYesMeta));
+    }
+    if (data.containsKey('check_no')) {
+      context.handle(_checkNoMeta,
+          checkNo.isAcceptableOrUnknown(data['check_no']!, _checkNoMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ActivityMonitor map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityMonitor(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      diaryMonitorId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}diary_monitor_id']),
+      activityId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}activity_id']),
+      activity: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity']),
+      checkYes: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}check_yes']),
+      checkNo: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}check_no']),
+    );
+  }
+
+  @override
+  $ActivityMonitorTableTable createAlias(String alias) {
+    return $ActivityMonitorTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityMonitorTableCompanion extends UpdateCompanion<ActivityMonitor> {
+  final Value<int?> id;
+  final Value<int?> diaryMonitorId;
+  final Value<int?> activityId;
+  final Value<String?> activity;
+  final Value<bool?> checkYes;
+  final Value<bool?> checkNo;
+  const ActivityMonitorTableCompanion({
+    this.id = const Value.absent(),
+    this.diaryMonitorId = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activity = const Value.absent(),
+    this.checkYes = const Value.absent(),
+    this.checkNo = const Value.absent(),
+  });
+  ActivityMonitorTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.diaryMonitorId = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activity = const Value.absent(),
+    this.checkYes = const Value.absent(),
+    this.checkNo = const Value.absent(),
+  });
+  static Insertable<ActivityMonitor> custom({
+    Expression<int>? id,
+    Expression<int>? diaryMonitorId,
+    Expression<int>? activityId,
+    Expression<String>? activity,
+    Expression<bool>? checkYes,
+    Expression<bool>? checkNo,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (diaryMonitorId != null) 'diary_monitor_id': diaryMonitorId,
+      if (activityId != null) 'activity_id': activityId,
+      if (activity != null) 'activity': activity,
+      if (checkYes != null) 'check_yes': checkYes,
+      if (checkNo != null) 'check_no': checkNo,
+    });
+  }
+
+  ActivityMonitorTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<int?>? diaryMonitorId,
+      Value<int?>? activityId,
+      Value<String?>? activity,
+      Value<bool?>? checkYes,
+      Value<bool?>? checkNo}) {
+    return ActivityMonitorTableCompanion(
+      id: id ?? this.id,
+      diaryMonitorId: diaryMonitorId ?? this.diaryMonitorId,
+      activityId: activityId ?? this.activityId,
+      activity: activity ?? this.activity,
+      checkYes: checkYes ?? this.checkYes,
+      checkNo: checkNo ?? this.checkNo,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (diaryMonitorId.present) {
+      map['diary_monitor_id'] = Variable<int>(diaryMonitorId.value);
+    }
+    if (activityId.present) {
+      map['activity_id'] = Variable<int>(activityId.value);
+    }
+    if (activity.present) {
+      map['activity'] = Variable<String>(activity.value);
+    }
+    if (checkYes.present) {
+      map['check_yes'] = Variable<bool>(checkYes.value);
+    }
+    if (checkNo.present) {
+      map['check_no'] = Variable<bool>(checkNo.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityMonitorTableCompanion(')
+          ..write('id: $id, ')
+          ..write('diaryMonitorId: $diaryMonitorId, ')
+          ..write('activityId: $activityId, ')
+          ..write('activity: $activity, ')
+          ..write('checkYes: $checkYes, ')
+          ..write('checkNo: $checkNo')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $MonitorDiaryTableTable extends MonitorDiaryTable
+    with TableInfo<$MonitorDiaryTableTable, MonitorDiary> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MonitorDiaryTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmMeta =
+      const VerificationMeta('seasonFarm');
+  @override
+  late final GeneratedColumn<String> seasonFarm = GeneratedColumn<String>(
+      'season_farm', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _actionTimeMeta =
+      const VerificationMeta('actionTime');
+  @override
+  late final GeneratedColumn<String> actionTime = GeneratedColumn<String>(
+      'action_time', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<String> latitude = GeneratedColumn<String>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _monitorIdMeta =
+      const VerificationMeta('monitorId');
+  @override
+  late final GeneratedColumn<int> monitorId = GeneratedColumn<int>(
+      'monitor_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _monitorMeta =
+      const VerificationMeta('monitor');
+  @override
+  late final GeneratedColumn<String> monitor = GeneratedColumn<String>(
+      'monitor', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        seasonFarmId,
+        seasonFarm,
+        actionTime,
+        latitude,
+        longitude,
+        monitorId,
+        monitor,
+        description
+      ];
+  @override
+  String get aliasedName => _alias ?? 'monitor_diary';
+  @override
+  String get actualTableName => 'monitor_diary';
+  @override
+  VerificationContext validateIntegrity(Insertable<MonitorDiary> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm')) {
+      context.handle(
+          _seasonFarmMeta,
+          seasonFarm.isAcceptableOrUnknown(
+              data['season_farm']!, _seasonFarmMeta));
+    }
+    if (data.containsKey('action_time')) {
+      context.handle(
+          _actionTimeMeta,
+          actionTime.isAcceptableOrUnknown(
+              data['action_time']!, _actionTimeMeta));
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('monitor_id')) {
+      context.handle(_monitorIdMeta,
+          monitorId.isAcceptableOrUnknown(data['monitor_id']!, _monitorIdMeta));
+    }
+    if (data.containsKey('monitor')) {
+      context.handle(_monitorMeta,
+          monitor.isAcceptableOrUnknown(data['monitor']!, _monitorMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MonitorDiary map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MonitorDiary(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      seasonFarm: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}season_farm']),
+      actionTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action_time']),
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}longitude']),
+      monitorId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}monitor_id']),
+      monitor: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}monitor']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+    );
+  }
+
+  @override
+  $MonitorDiaryTableTable createAlias(String alias) {
+    return $MonitorDiaryTableTable(attachedDatabase, alias);
+  }
+}
+
+class MonitorDiaryTableCompanion extends UpdateCompanion<MonitorDiary> {
+  final Value<int?> id;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarm;
+  final Value<String?> actionTime;
+  final Value<String?> latitude;
+  final Value<String?> longitude;
+  final Value<int?> monitorId;
+  final Value<String?> monitor;
+  final Value<String?> description;
+  const MonitorDiaryTableCompanion({
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
+    this.actionTime = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.monitorId = const Value.absent(),
+    this.monitor = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  MonitorDiaryTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
+    this.actionTime = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.monitorId = const Value.absent(),
+    this.monitor = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  static Insertable<MonitorDiary> custom({
+    Expression<int>? id,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarm,
+    Expression<String>? actionTime,
+    Expression<String>? latitude,
+    Expression<String>? longitude,
+    Expression<int>? monitorId,
+    Expression<String>? monitor,
+    Expression<String>? description,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarm != null) 'season_farm': seasonFarm,
+      if (actionTime != null) 'action_time': actionTime,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (monitorId != null) 'monitor_id': monitorId,
+      if (monitor != null) 'monitor': monitor,
+      if (description != null) 'description': description,
+    });
+  }
+
+  MonitorDiaryTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarm,
+      Value<String?>? actionTime,
+      Value<String?>? latitude,
+      Value<String?>? longitude,
+      Value<int?>? monitorId,
+      Value<String?>? monitor,
+      Value<String?>? description}) {
+    return MonitorDiaryTableCompanion(
+      id: id ?? this.id,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarm: seasonFarm ?? this.seasonFarm,
+      actionTime: actionTime ?? this.actionTime,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      monitorId: monitorId ?? this.monitorId,
+      monitor: monitor ?? this.monitor,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarm.present) {
+      map['season_farm'] = Variable<String>(seasonFarm.value);
+    }
+    if (actionTime.present) {
+      map['action_time'] = Variable<String>(actionTime.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<String>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (monitorId.present) {
+      map['monitor_id'] = Variable<int>(monitorId.value);
+    }
+    if (monitor.present) {
+      map['monitor'] = Variable<String>(monitor.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MonitorDiaryTableCompanion(')
+          ..write('id: $id, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarm: $seasonFarm, ')
+          ..write('actionTime: $actionTime, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('monitorId: $monitorId, ')
+          ..write('monitor: $monitor, ')
+          ..write('description: $description')
           ..write(')'))
         .toString();
   }
@@ -3224,6 +3789,10 @@ abstract class _$DiaryDB extends GeneratedDatabase {
   late final $ActivityDiaryTableTable activityDiaryTable =
       $ActivityDiaryTableTable(this);
   late final $UserInfoTableTable userInfoTable = $UserInfoTableTable(this);
+  late final $ActivityMonitorTableTable activityMonitorTable =
+      $ActivityMonitorTableTable(this);
+  late final $MonitorDiaryTableTable monitorDiaryTable =
+      $MonitorDiaryTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3235,6 +3804,8 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         materialTable,
         unitTable,
         activityDiaryTable,
-        userInfoTable
+        userInfoTable,
+        activityMonitorTable,
+        monitorDiaryTable
       ];
 }

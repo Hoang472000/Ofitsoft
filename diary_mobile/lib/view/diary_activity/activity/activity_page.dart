@@ -22,6 +22,7 @@ import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/diary/list_diary_bloc.dart';
+import '../monitor/detail_monitor_page.dart';
 import 'add_activity.dart';
 
 class ActivityPage extends StatefulWidget {
@@ -56,7 +57,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ActivityBloc(context.read<Repository>())
-        ..add(GetListActivityEvent(widget.seasonFarmId)),
+        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action)),
       child: Scaffold(
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -73,7 +74,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 if (result != null && result[0]) {
                   contextBloc
                       .read<ActivityBloc>()
-                      .add(GetListActivityEvent(widget.seasonFarmId));
+                      .add(GetListActivityEvent(widget.seasonFarmId, widget.action));
                 }
               },
             );
@@ -94,32 +95,45 @@ class _ActivityPageState extends State<ActivityPage> {
               Get.back();
               blocContext
                   .read<ActivityBloc>()
-                  .add(GetListActivityEvent(widget.seasonFarmId));
+                  .add(GetListActivityEvent(widget.seasonFarmId, widget.action));
             }, () {
               Get.back();
               blocContext
                   .read<ActivityBloc>()
-                  .add(GetListActivityEvent(widget.seasonFarmId));
+                  .add(GetListActivityEvent(widget.seasonFarmId, widget.action));
             }, '', S.of(context).close_dialog);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
           }
         }, builder: (blocContext, state) {
           return ListView.builder(
-              itemCount: state.listDiaryActivity.length,
+              itemCount:   widget.action.compareTo('activity')==0?state.listDiaryActivity.length:state.listDiaryMonitor.length,
               itemBuilder: (BuildContext contextBloc, int index) {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     //Truyen id de sang man ben goi api hoac DB
-                    var result = await Navigator.push(
-                        context,
-                        DetailActivityPage.route(
-                            state.listDiaryActivity[index]));
-                    if (result != null && result[0]) {
-                      contextBloc
-                          .read<ActivityBloc>()
-                          .add(GetListActivityEvent(widget.seasonFarmId));
+                    if(widget.action.compareTo('activity')==0) {
+                      var result = await Navigator.push(
+                          context,
+                          DetailActivityPage.route(
+                              state.listDiaryActivity[index]));
+                      if (result != null && result[0]) {
+                        contextBloc
+                            .read<ActivityBloc>()
+                            .add(GetListActivityEvent(widget.seasonFarmId, widget.action));
+                      }
+                    } else {
+                      var result = await Navigator.push(
+                          context,
+                          DetailMonitorPage.route(
+                              state.listDiaryMonitor[index]));
+                      if (result != null && result[0]) {
+                        contextBloc
+                            .read<ActivityBloc>()
+                            .add(GetListActivityEvent(
+                            widget.seasonFarmId, widget.action));
+                      }
                     }
                   },
                   onLongPress: () {},
@@ -144,13 +158,14 @@ class _ActivityPageState extends State<ActivityPage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          widget.action.compareTo('activity')==0?
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
                                 margin: const EdgeInsets.only(bottom: 5),
                                 child: Text(
-                                  state.listDiaryActivity[index].activity ?? "",
+                                  state.listDiaryActivity[index].activityName ?? "",
                                   style: StyleBkav.textStyleFW700(
                                       AppColor.gray500, 16),
                                 ),
@@ -185,7 +200,48 @@ class _ActivityPageState extends State<ActivityPage> {
                                     child: RichText(
                                       text: Utils.convertText(
                                           "Diện tích: ",
-                                          "${state.listDiaryActivity[index].actionArea} ${state.listDiaryActivity[index].actionAreaUnit}",
+                                          "${state.listDiaryActivity[index].actionArea} ${state.listDiaryActivity[index].actionAreaUnitName}",
+                                          AppColor.blue15,
+                                          14),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    )),
+                              )
+                            ],
+                          ):
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 5),
+                                child: Text(
+                                  state.listDiaryMonitor[index].activityIds[0].activity ?? "",
+                                  style: StyleBkav.textStyleFW700(
+                                      AppColor.gray500, 16),
+                                ),
+                              ),
+                              Container(
+                                  alignment: Alignment.centerLeft,
+                                  margin:
+                                  const EdgeInsets.only(bottom: 5, top: 5),
+                                  child:
+                                  RichText(
+                                    text: Utils.convertText(
+                                        "Thời gian thực hiện: ",
+                                        "${state.listDiaryMonitor[index].actionTime}",
+                                        AppColor.blue15,
+                                        14),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  )),
+                              SizedBox(
+                                child: Container(
+                                    alignment: Alignment.centerLeft,
+                                    margin: const EdgeInsets.only(top: 5),
+                                    child: RichText(
+                                      text: Utils.convertText(
+                                          "Trạng thái thực hiện: ",
+                                          "${state.listDiaryMonitor[index].activityIds[0].checkYes}",
                                           AppColor.blue15,
                                           14),
                                       maxLines: 1,
@@ -205,10 +261,22 @@ class _ActivityPageState extends State<ActivityPage> {
                                 fit: BoxFit.contain,
                               ),
                               onPressed: () {
-                                blocContext.read<ActivityBloc>().add(
-                                    RemoveActivityEvent(
-                                        state.listDiaryActivity[index].id ??
-                                            -1));
+                                DiaLogManager.displayDialog(context, "", "Bạn có muốn xóa hoạt động này không.", () {
+                                  Get.back();
+                                  if(widget.action.compareTo('activity')==0){
+                                    blocContext.read<ActivityBloc>().add(
+                                      RemoveActivityEvent(state.listDiaryActivity[index].id ?? -1));
+                                  }else{
+                                    DiaLogManager.showDialogSuccess(context, "Chức năng này đang phát triển. Vui lòng thử lại sau",
+                                            () {
+                                      Get.back();
+                                    });
+                                  }
+                                  
+                                }, () {
+                                  Get.back();
+                                }, S.of(context).no,
+                                    S.of(context).yes);
                               },
                             ),
                           )

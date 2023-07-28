@@ -14,18 +14,18 @@ class ApiConst {
   static const String getListActivities = "/get/activites_farmer/";
   static const String getListUnits = "/get/units_farmer/";
   //api danh sach diary
-  static const String getListActivity = "/get/diary_farmer/";
   static const String getListDiary = "/get/diaries/farmer/";
-  static const String getInfoDiary = "/get/season_diary/";
   //api user info
   static const String getUserInfo = "/get/infor/user/";
-  //api add 1 activity diary
+  //api get, add 1 activity diary, remove, edit
+  static const String getListActivity = "/get/diary_farmer/";
   static const String addActivityDiary = "/add/item/diary_farmer";
-  //api remove 1 activity diary
   static const String removeActivityDiary = "/delete/item/diary_farmer/";
-  //api update 1 activity diary
   static const String updateActivityDiary = "/edit/diary_farmer/";
-
+  //api get information 1 diary
+  static const String getInfoDiary = "/get/season_diary/";
+  //api get, add 1 monitor diary, remove, edit
+  static const String getListMonitor = "/get/diary_monitor/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

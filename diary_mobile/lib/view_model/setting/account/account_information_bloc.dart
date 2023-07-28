@@ -31,6 +31,7 @@ class AccountInformationBloc
     on<ChangeDetailInfoEvent>(_changeDetailInfo);
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
+    on<UpdateInfoEvent>(_updateInfo);
     add(InitInfoEvent());
   }
 
@@ -161,8 +162,8 @@ class AccountInformationBloc
       dateController: TextEditingController(
           text: Utils.formatDate(userInfo.dateOfBirth??'')),
       addressController: TextEditingController(text: userInfo.address),
-      statusController: TextEditingController(text: userInfo.active),
-      mainController: TextEditingController(text: userInfo.groupId),
+      statusController: TextEditingController(text: userInfo.active ?? true ? "Đang hoạt động": "Ngưng hoạt động"),
+      mainController: TextEditingController(text: userInfo.group),
     ));
     print("HoangCV: media content: ${userInfo.mediaContent}");
     _initView(emitter);
@@ -242,6 +243,63 @@ class AccountInformationBloc
     userInfo!.mediaContent = list[0].fileContent;
     emit(state.copyWith(listImage: list, userInfo: userInfo));
   }
+
+  FutureOr<void> _updateInfo(UpdateInfoEvent event, Emitter<AccountInformationState> emit) async{
+/*    print("HoangCV: state.indexActivity: ${state.indexActivity}");
+    emit(state.copyWith(
+      isShowProgress: true,
+    ));
+    List<InputRegisterModel> list = List.from(state.listWidget);
+    List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
+    bool validate = true;
+    if (state.indexActivity == -1) {
+      validate = false;
+      state.listWidget[0].error = "Vui lòng chọn tên công việc";
+    }
+    *//*else if(state.areaController!.text.isEmpty){
+      validate = false;
+      listArea[1].error = "Vui lòng nhập diện tích";
+    }*//*
+    else if (state.areaController!.text.isNotEmpty &&
+        state.listWidgetArea[1].valueSelected == null) {
+      validate = false;
+      state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
+    }
+    if (!validate) {
+      emit(state.copyWith(isShowProgress: false));
+      print("HoangCV: state.indexActivity: ${state.indexActivity}");
+    } else {
+      ActivityDiary diary = ActivityDiary(
+        id: state.detailActivity!.id,
+        activityId: state.listActivity[state.indexActivity].id,
+        activity: state.listActivity[state.indexActivity].name,
+        actionTime: state.listWidget[2].valueSelected.toString().split('.')[
+        0] *//* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*//*,
+        actionArea: double.parse("${state.areaController!.text}"),
+        actionAreaUnitId: state.listWidgetArea[1].valueSelected.id,
+        actionAreaUnit: state.listWidgetArea[1].valueSelected.name,
+        description: state.moTaController!.text,
+        tool: state.listCongCuAdd,
+        material: state.listVatTuAdd,
+        media: state.listImage,
+      );
+      //"is_shown": true,
+      ObjectResult objectResult = await repository.updateActivityDiary(diary);
+      if (objectResult.responseCode == StatusConst.code00) {
+        // _changeViewDetail(emit);
+      }
+      if (objectResult.responseCode == StatusConst.code00) {
+        //_changeViewDetail(emit);
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionSuccess(success: objectResult.message)));
+      } else if (objectResult.responseCode == StatusConst.code01) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed(objectResult.message)));
+      }
+    }*/
+  }
 }
 
 class AccountInformationEvent extends BlocEvent {
@@ -260,6 +318,11 @@ class ChangeEditInfoEvent extends AccountInformationEvent {
 class ChangeDetailInfoEvent extends AccountInformationEvent {
   ChangeDetailInfoEvent();
 }
+
+class UpdateInfoEvent extends AccountInformationEvent {
+  UpdateInfoEvent();
+}
+
 
 class OnSelectValueEvent extends AccountInformationEvent {
   List<InputRegisterModel> list;

@@ -10,9 +10,9 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../view_model/diary_activity/activity/activity_bloc.dart';
-import '../../../view_model/diary_activity/activity/detail_diary_bloc.dart';
+import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../diary_activity/activity/activity_page.dart';
-import '../../diary_activity/infomation_activity/infomation_activity_page.dart';
+import '../../diary_activity/infomation_diary/info_diary_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {
   const DetailDiaryPage({super.key, required this.seasonFarmId});
@@ -108,7 +108,7 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
           ActivityPage(
             action: "monitor", seasonFarmId: widget.seasonFarmId,
           ),
-          InformationActivityPage(id: 1,)
+          InfoDiaryPage(id: widget.seasonFarmId,)
         ],
       ),
     );

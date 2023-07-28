@@ -12,11 +12,11 @@ class ActivityDiary implements Insertable<ActivityDiary>{
   int? seasonFarmId;
   String? seasonFarm;
   int? activityId;
-  String? activity;
+  String? activityName;
   String? actionTime;
   double? actionArea;
   int? actionAreaUnitId;
-  String? actionAreaUnit;
+  String? actionAreaUnitName;
   String? description;
   bool? isShow;
   // api chua co
@@ -37,9 +37,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     this.actionTime,
     this.actionArea,
     this.actionAreaUnitId,
-    this.actionAreaUnit,
+    this.actionAreaUnitName,
     this.description,
-    this.activity,
+    this.activityName,
     this.seasonFarm,
     this.isShow,
 
@@ -63,9 +63,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       actionTime: json['action_time'] ?? "",
       actionArea: json['action_area'] ?? 0,
       actionAreaUnitId: json['action_area_unit_id'] ?? -1,
-      actionAreaUnit: json['action_area_unit'] ?? '',
+      actionAreaUnitName: json['action_area_unit_name'] ?? '',
       description: json['description'] ?? '',
-      activity: json['activity'] ?? '',
+      activityName: json['activity_name'] ?? '',
       name: json['name'] ?? "",
       byName: json['by_name'] ?? "",
       startTime: json['start_time'] ?? "",
@@ -88,8 +88,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     data['action_time'] = actionTime;
     data['action_area'] = actionArea;
     data['action_area_unit_id'] = actionAreaUnitId;
+    data['action_area_unit_name'] = actionAreaUnitName;
     data['description'] = description;
-    data['activity'] = activity;
+    data['activity_name'] = activityName;
     data['is_shown'] = isShow;
 
     data['name'] = name;
@@ -116,6 +117,27 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     return data;
   }
 
+  ActivityDiary.copy(ActivityDiary other)
+      : id = other.id,
+        seasonFarmId = other.seasonFarmId,
+        seasonFarm = other.seasonFarm,
+        activityId = other.activityId,
+        actionTime = other.actionTime,
+        actionArea = other.actionArea,
+        actionAreaUnitId = other.actionAreaUnitId,
+        actionAreaUnitName = other.actionAreaUnitName,
+        description = other.description,
+        activityName = other.activityName,
+        isShow = other.isShow,
+        name = other.name,
+        byName = other.byName,
+        startTime = other.startTime,
+        endTime = other.endTime,
+        status = other.status,
+        tool = List.of(other.tool), // Tạo bản sao của danh sách tool
+        material = List.of(other.material), // Tạo bản sao của danh sách material
+        media = List.of(other.media); // Tạo bản sao của danh sách media
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     return ActivityDiaryTableCompanion(
@@ -125,9 +147,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         actionTime: Value(actionTime),
         actionArea: Value(actionArea),
         actionAreaUnitId: Value(actionAreaUnitId),
-        actionAreaUnit: Value(actionAreaUnit),
+        actionAreaUnitName: Value(actionAreaUnitName),
         description: Value(description),
-        activity: Value(activity),
+        activityName: Value(activityName),
         name: Value(name),
         byName: Value(byName),
         startTime: Value(startTime),

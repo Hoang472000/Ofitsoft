@@ -35,8 +35,7 @@ class _NotifyViewState extends State<NotifyView> {
           style: StyleBkav.textStyleFW700(Colors.white, 20),
         ),
         backgroundColor: AppColor.main,
-        actions: [
-        ],
+        actions: [],
       ),
       //endDrawer: AppDrawer(),
       body: Center(

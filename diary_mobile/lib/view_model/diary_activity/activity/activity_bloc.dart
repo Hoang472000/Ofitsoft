@@ -4,6 +4,7 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,10 +29,17 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       GetListActivityEvent event, Emitter<ActivityState> emitter) async {
     emitter(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
-    final listDiaryActivity = await repository.getListActivityDiary(event.id);
-    DiaryDB.instance.getListDiary();
-    emitter(state.copyWith(
-        isShowProgress: false, listDiaryActivity: listDiaryActivity));
+    if (event.action.compareTo("activity") == 0) {
+      final listDiaryActivity = await repository.getListActivityDiary(event.id);
+      emitter(state.copyWith(
+          isShowProgress: false, listDiaryActivity: listDiaryActivity));
+    } else {
+      final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
+      print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
+      emitter(state.copyWith(
+          isShowProgress: false, listDiaryMonitor: listDiaryMonitor));
+    }
+    //DiaryDB.instance.getListDiary();
   }
 
   FutureOr<void> _removeActivity(
@@ -58,8 +66,9 @@ class ActivityEvent extends BlocEvent {
 
 class GetListActivityEvent extends ActivityEvent {
   final int id;
+  final String action;
 
-  GetListActivityEvent(this.id);
+  GetListActivityEvent(this.id, this.action);
 
   @override
   List<Object?> get props => [id];
@@ -74,6 +83,15 @@ class RemoveActivityEvent extends ActivityEvent {
   List<Object?> get props => [id];
 }
 
+class RemoveMonitorEvent extends ActivityEvent {
+  final int id;
+
+  RemoveMonitorEvent(this.id);
+
+  @override
+  List<Object?> get props => [id];
+}
+
 class ActivityState extends BlocState {
   @override
   List<Object?> get props => [
@@ -83,7 +101,8 @@ class ActivityState extends BlocState {
         listMaterial,
         listTool,
         listUnit,
-        listActivity
+        listActivity,
+        listDiaryMonitor
       ];
   final List<ActivityDiary> listDiaryActivity;
   final List<MaterialEntity> listMaterial;
@@ -92,9 +111,11 @@ class ActivityState extends BlocState {
   final List<Activity>? listActivity;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
+  final List<MonitorDiary> listDiaryMonitor;
 
   ActivityState({
     this.listDiaryActivity = const [],
+    this.listDiaryMonitor = const [],
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
     this.listMaterial = const [],
@@ -105,6 +126,7 @@ class ActivityState extends BlocState {
 
   ActivityState copyWith({
     List<ActivityDiary>? listDiaryActivity,
+    List<MonitorDiary>? listDiaryMonitor,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<MaterialEntity>? listMaterial,
@@ -114,6 +136,7 @@ class ActivityState extends BlocState {
   }) {
     return ActivityState(
       listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
+      listDiaryMonitor: listDiaryMonitor ?? this.listDiaryMonitor,
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,
       listMaterial: listMaterial ?? this.listMaterial,

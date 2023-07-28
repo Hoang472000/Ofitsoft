@@ -210,7 +210,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                       if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
                                         print("HoangCV: listWidgetCC: ${widget.listWidgetVT[1].valueSelected.toJson()}");
                                         print("HoangCV: listWidgetVT: ${widget.listWidgetVT[0].valueSelected.toJson()}");
-                                        widget.listVatTuAdd.add(MaterialEntity(material:
+                                        widget.listVatTuAdd.add(MaterialEntity(materialName:
                                         widget.listWidgetVT[0].valueSelected.name,
                                           materialId: widget.listWidgetVT[0].valueSelected.id,
                                             quantity: double.parse(
@@ -285,7 +285,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                       Padding(
                                                         padding: const EdgeInsets.all(4.0),
                                                         child: Text(
-                                                          "Tên vật tư: ${widget.listVatTuAdd[index].material}",
+                                                          "Tên vật tư: ${widget.listVatTuAdd[index].materialName}",
                                                           style: StyleBkav
                                                               .textStyleFW500(
                                                               AppColor.gray57,
@@ -421,7 +421,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                     setState(() {
                                       if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
                                         print("HoangCV: listWidgetCC: ${widget.listWidgetCC[1].valueSelected.toJson()}");
-                                        widget.listCongCuAdd.add(Tool(tool:
+                                        widget.listCongCuAdd.add(Tool(toolName:
                                         widget.listWidgetCC[0].valueSelected.name,
                                           toolId: widget.listWidgetCC[0].valueSelected.id,
                                             quantity: double.parse(
@@ -498,7 +498,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                         const EdgeInsets.all(
                                                             4.0),
                                                         child: Text(
-                                                          "Tên công cụ: ${widget.listCongCuAdd[index].tool}",
+                                                          "Tên công cụ: ${widget.listCongCuAdd[index].toolName}",
                                                           style: StyleBkav
                                                               .textStyleFW500(
                                                               AppColor.gray57,

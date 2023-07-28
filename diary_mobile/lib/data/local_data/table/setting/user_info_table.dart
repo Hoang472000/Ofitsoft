@@ -12,8 +12,9 @@ class UserInfoTable extends Table {
   TextColumn get gender => text().nullable()();
   TextColumn get dateOfBirth => text().nullable()();
   TextColumn get address => text().nullable()();
-  TextColumn get active => text().nullable()();
-  TextColumn get groupId => text().nullable()();
+  BoolColumn get active => boolean().nullable()();
+  TextColumn get group => text().nullable()();
+  TextColumn get language => text().nullable()();
   TextColumn get mediaContent => text().nullable()();
 
   @override

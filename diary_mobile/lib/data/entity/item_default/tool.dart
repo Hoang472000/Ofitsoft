@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 class Tool implements Insertable<Tool> {
   int? id;
   int? categoryId;
-  String? tool;
+  String? toolName;
   String? name;
   String? description;
   bool? isOrganic;
@@ -21,7 +21,7 @@ class Tool implements Insertable<Tool> {
 
   Tool(
       {this.id,
-      this.tool,
+      this.toolName,
       this.name,
       this.description,
       this.categoryId,
@@ -39,7 +39,7 @@ class Tool implements Insertable<Tool> {
   factory Tool.fromJson(Map<String, dynamic> json) {
     return Tool(
       id: json['id'] ?? -1,
-      tool: json['tool'] ?? '',
+      toolName: json['tool_name'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       categoryId: json['category_id'] ?? -1,
@@ -59,7 +59,7 @@ class Tool implements Insertable<Tool> {
    Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
-    data['tool'] = tool;
+    data['tool_name'] = toolName;
     data['name'] = name;
     data['category_id'] = categoryId;
     data['is_organic'] = isOrganic;
@@ -76,11 +76,30 @@ class Tool implements Insertable<Tool> {
     return data;
   }
 
+
+  Tool.copy(Tool other)
+      : id = other.id,
+        categoryId = other.categoryId,
+        toolName = other.toolName,
+        name = other.name,
+        description = other.description,
+        isOrganic = other.isOrganic,
+        notation = other.notation,
+        isActive = other.isActive,
+        image = other.image,
+        diaryFarmerId = other.diaryFarmerId,
+        toolId = other.toolId,
+        quantity = other.quantity,
+        unitId = other.unitId,
+        unitName = other.unitName,
+        mediaContent = other.mediaContent;
+
+
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ToolTableCompanion(
             id: Value(id),
-            tool: Value(tool),
+        toolName: Value(toolName),
             name: Value(name),
             categoryId: Value(categoryId),
             isOrganic: Value(isOrganic),

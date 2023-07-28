@@ -6,10 +6,12 @@ import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
+import 'package:diary_mobile/data/local_data/table/item_default/activity_monitor_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/activity_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/material_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/tool_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/unit_table.dart';
+import 'package:diary_mobile/data/local_data/table/monitor_diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -17,11 +19,13 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import '../entity/item_default/activity.dart';
+import '../entity/item_default/activity_monitor.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/item_default/unit.dart';
+import '../entity/monitor/monitor_diary.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable])
+@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -40,12 +44,11 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(diaryTable, values);
     });
   }
-
   Future<List<Diary>> getListDiary() async {
     return await select(diaryTable).get();
   }
 
-  ///Thêm, sửa, xóa, lấy Diary
+  ///Thêm, sửa, xóa, lấy Activity Diary
   Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
     await batch((batch) {
       batch.insertAllOnConflictUpdate(activityDiaryTable, values);
@@ -53,6 +56,16 @@ class DiaryDB extends _$DiaryDB {
   }
   Future<List<ActivityDiary>> getListActivityDiary() async {
     return await select(activityDiaryTable).get();
+  }
+
+  ///Thêm, sửa, xóa, lấy Monitor Diary
+  Future<void> insertListMonitorDiary(List<MonitorDiary> values) async {
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(monitorDiaryTable, values);
+    });
+  }
+  Future<List<MonitorDiary>> getListMonitorDiary() async {
+    return await select(monitorDiaryTable).get();
   }
 
   ///Thêm, sửa, xóa, lấy tool

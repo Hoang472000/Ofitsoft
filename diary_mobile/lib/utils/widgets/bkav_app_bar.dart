@@ -15,7 +15,7 @@ class BkavAppBar extends AppBar {
       child: IconButton(
         icon: SvgPicture.asset(
           IconAsset.icArrowLeft,
-          height: 15,
+          height: 20,
           color:color.value==AppColor.main.value? AppColor.whiteF2:AppColor.whiteF2
         ),
         onPressed: () {

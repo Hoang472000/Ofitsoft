@@ -95,9 +95,9 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   backgroundColor: const Color(0xFF319A4B),
                                   radius: 70,
                                   child:ClipOval(
-                              child: state.userInfo!= null ? state.userInfo!.mediaContent == null ?
+                              child: state.userInfo != null ? (state.userInfo!.mediaContent != '' ?
                                   Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
-                                  Image.memory(base64Decode( state.userInfo!.mediaContent ?? ""),gaplessPlayback: true, fit: BoxFit.cover, width: 140, height: 140,
+                                  Image.memory(base64Decode(state.userInfo!.mediaContent ?? ""),gaplessPlayback: true, fit: BoxFit.cover, width: 140, height: 140,
                                     errorBuilder: (context, error, stackTrace) {
                                     // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
                                   return Image.asset(
@@ -107,7 +107,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                       height: 140,
                                     );
                                   },
-                                 ):
+                                 )):
                                   Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.cover, width: 140, height: 140, )), //CircleAvatar
                             )),
                             Container(

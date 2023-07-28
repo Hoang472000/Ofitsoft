@@ -22,6 +22,7 @@ import 'entity/item_default/item_default.dart';
 import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
+import 'entity/monitor/monitor_diary.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -315,10 +316,8 @@ class RepositoryImpl extends Repository {
             path: "${ApiConst.getInfoDiary}$id",
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
-    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getInfoDiary response: ${objectResult.response}: ${objectResult.isOK}");
-    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.message == "Successfully") {
       Diary list = Diary.fromJson(objectResult.response);
       return list;
     }
@@ -336,14 +335,13 @@ class RepositoryImpl extends Repository {
   Future<UserInfo> getUserInfo(int id) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: "${ApiConst.getUserInfo}$id",
+            path: "${ApiConst.getUserInfo}$userId",
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
-    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getUserInfo response: ${objectResult.response}: ${objectResult.isOK}");
-    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00) {
       UserInfo list = UserInfo.fromJson(objectResult.response);
       return list;
@@ -367,11 +365,8 @@ class RepositoryImpl extends Repository {
             path: ApiConst.addActivityDiary,
             method: HttpMethod.GET,
             body: ObjectData(token: token, params: diary.toJson())));
-    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
-    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00) {
-      //UserInfo list = UserInfo.fromJson(objectResult.response);
       return objectResult;
     }
     else {
@@ -425,6 +420,36 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     return objectResult;
+  }
+
+  @override
+  Future<List<MonitorDiary>> getListMonitorDiary(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.getListMonitor}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListMonitorDiary response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<MonitorDiary> list = List.from(objectResult.response)
+          .map((json) => MonitorDiary.fromJson(json))
+          .toList();
+      list.sort((a,b)=> (b.actionTime??"").compareTo((a.actionTime??"")));
+      DiaryDB.instance.insertListMonitorDiary(list);
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return FakeRepositoryImpl().getListMonitorDiary(id);
   }
 
 }

@@ -17,7 +17,6 @@ class Activity implements Insertable<Activity> {
   int? quantity;
   String? unitId;
   String? mediaContent;
-
   Activity(
       {this.id,
       this.name,

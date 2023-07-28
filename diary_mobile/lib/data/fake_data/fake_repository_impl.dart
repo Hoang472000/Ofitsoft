@@ -13,6 +13,7 @@ import '../../resource/assets.dart';
 import '../entity/diary/diary.dart';
 import '../entity/item_default/item_default.dart';
 import '../entity/item_default/tool.dart';
+import '../entity/monitor/monitor_diary.dart';
 import '../entity/setting/user_info.dart';
 import '../repository.dart';
 
@@ -472,6 +473,12 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
+  Future<List<MonitorDiary>> getListMonitorDiary(int id) {
+    // TODO: implement getListMonitorDiary
+    throw UnimplementedError();
+  }
+
+  @override
   Future<Diary> getInfoDiary(int id) async {
     var json = {
       "id": 1,
@@ -565,7 +572,7 @@ class FakeRepositoryImpl extends Repository {
       ]
     };
     ActivityDiary list = ActivityDiary.fromJson(json);
-    print("HoangCV: get detail Diary: ${list.activity}");
+    print("HoangCV: get detail Diary: ${list.activityName}");
     return list;
   }
 

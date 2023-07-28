@@ -22,6 +22,7 @@ class Diary implements Insertable<Diary> {
   String? crop;
   int? productId;
   String? productName;
+  String? cropName;
   double? area;
   int? areaUnitId;
   String? areaUnit;
@@ -61,6 +62,7 @@ class Diary implements Insertable<Diary> {
     this.cropId,
     this.crop,
     this.productName,
+    this.cropName,
     this.productId,
     this.area,
     this.areaUnit,
@@ -99,6 +101,7 @@ class Diary implements Insertable<Diary> {
       crop: json['crop'] ?? "",
       productId: json['product_id'] ?? -1,
       productName: json['product_name'] ?? "",
+      cropName: json['crop_name'] ?? "",
       startDate: json['start_date'] ?? "",
       endDate: json['end_date'] ?? "",
       status: json['status'] ?? "",
@@ -144,7 +147,8 @@ class Diary implements Insertable<Diary> {
     data['farm'] = farm;
     data['farm_id'] = farmId;
     data['product_id'] = productId;
-    data['product_name'] = productId;
+    data['product_name'] = productName;
+    data['crop_name'] = cropName;
     data['name'] = name;
     data['crop'] = crop;
     data['start_time'] = startDate;
@@ -187,6 +191,7 @@ class Diary implements Insertable<Diary> {
             farmerName: Value(farmerName),
         productId: Value(productId),
         productName: Value(productName),
+        cropName: Value(cropName),
             farm: Value(farm),
             name: Value(name),
             crop: Value(crop),

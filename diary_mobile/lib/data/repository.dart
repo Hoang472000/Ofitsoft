@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
+import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import 'entity/diary/diary.dart';
@@ -48,6 +49,8 @@ abstract class Repository {
   Future<List<Diary>> getListDiary();
 
   Future<List<ActivityDiary>> getListActivityDiary(int id);
+
+  Future<List<MonitorDiary>> getListMonitorDiary(int id);
 
   Future<List<Unit>> getListUnits(int id);
 

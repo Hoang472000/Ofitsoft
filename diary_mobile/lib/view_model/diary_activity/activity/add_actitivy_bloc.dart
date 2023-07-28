@@ -457,7 +457,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       ActivityDiary diary = ActivityDiary(
         seasonFarmId: state.seasonId,
         activityId: state.listActivity[state.indexActivity].id,
-        activity: state.listActivity[state.indexActivity].name,
+        activityName: state.listActivity[state.indexActivity].name,
         actionTime: state.listWidget[2].valueSelected.toString().split('.')[
             0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
         actionArea: state.areaController!.text.isNotEmpty
@@ -465,7 +465,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
             : 0,
         actionAreaUnitId: /*state.listWidgetArea[1].valueSelected != null ? */
             state.listWidgetArea[1].valueSelected?.id ?? null,
-        actionAreaUnit: state.listWidgetArea[1].valueSelected?.name ?? null,
+        actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name ?? null,
         description: state.moTaController!.text,
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,
