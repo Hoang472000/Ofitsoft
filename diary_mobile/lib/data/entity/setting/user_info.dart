@@ -29,11 +29,23 @@ class UserInfo implements Insertable<UserInfo> {
 
   factory UserInfo.fromJson(Map<String, dynamic> json) {
     //print("HoangCV:1 media_content: ${json['media_content']}");
+    String gen = json['gender'] ?? '';
+    String gender = '';
+    if(gen.isNotEmpty){
+      switch (gen){
+        case 'Male':
+          gender = 'Nam';
+        case 'Female':
+          gender = 'Nữ';
+          default :
+          gender = 'Khác';
+      }
+    }
     return UserInfo(
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
       login: json['login'] ?? '',
-      gender: json['gender'] ?? '',
+      gender: gender,
       dateOfBirth: json['date_of_birth'] ?? '',
       address: json['address'] ?? '',
       active: json['active'] ?? true,
@@ -44,11 +56,24 @@ class UserInfo implements Insertable<UserInfo> {
   }
 
   Map<String, dynamic> toJson() {
+    String gen = '';
+    if(gender!.isNotEmpty){
+      switch (gender){
+        case 'Nam':
+        case 'Male':
+          gen = 'Male';
+        case 'Nữ':
+        case 'FeMale':
+          gen = 'FeMale';
+        default :
+          gen = 'Other';
+      }
+    }
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     data['login'] = login;
-    data['gender'] = gender;
+    data['gender'] = gen;
     data['date_of_birth'] = dateOfBirth;
     data['address'] = address;
     data['active'] = active;
@@ -57,6 +82,19 @@ class UserInfo implements Insertable<UserInfo> {
     data['media_content'] = mediaContent;
     return data;
   }
+
+  UserInfo.copy(UserInfo other)
+      : id = other.id,
+        name = other.name,
+        login = other.login,
+        gender = other.gender,
+        dateOfBirth = other.dateOfBirth,
+        address = other.address,
+        active = other.active,
+        language = other.language,
+        mediaContent = other.mediaContent,
+        group = other.group; // Tạo bản sao của danh sách media
+
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {

@@ -64,7 +64,9 @@ abstract class Repository {
 
   Future<Diary> getInfoDiary(int id);
 
-  Future<UserInfo> getUserInfo(int id);
+  Future<UserInfo> getUserInfo();
+
+  Future<ObjectResult> updateUserInfo(UserInfo userInfo);
 
   Future<ObjectResult> addActivityDiary(ActivityDiary diary);
 

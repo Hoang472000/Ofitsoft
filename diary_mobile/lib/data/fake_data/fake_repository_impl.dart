@@ -577,7 +577,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<UserInfo> getUserInfo(int id) async {
+  Future<UserInfo> getUserInfo() async {
     var json = {
       "id": 1,
       "name": "Phạm Văn đè",
@@ -610,6 +610,12 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> removeActivityDiary(int id) {
     // TODO: implement removeActivityDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> updateUserInfo(UserInfo userInfo) {
+    // TODO: implement updateUserInfo
     throw UnimplementedError();
   }
 }

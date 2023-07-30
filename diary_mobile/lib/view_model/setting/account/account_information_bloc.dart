@@ -1,16 +1,10 @@
 import 'dart:async';
-
-import 'package:diary_mobile/data/entity/item_default/activity.dart';
-import 'package:diary_mobile/data/entity/item_default/tool.dart';
-import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
+import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/image/image_entity.dart';
-import '../../../data/entity/item_default/material_entity.dart';
-import '../../../data/local_data/diary_db.dart';
+import '../../../data/remote_data/object_model/object_result.dart';
 import '../../../data/repository.dart';
 import '../../../resource/assets.dart';
 import '../../../utils/extenstion/extenstions.dart';
@@ -32,7 +26,7 @@ class AccountInformationBloc
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
     on<UpdateInfoEvent>(_updateInfo);
-    add(InitInfoEvent());
+    add(InitInfoEvent(false));
   }
 
   bool edit = false;
@@ -108,18 +102,29 @@ class AccountInformationBloc
         type: TypeInputRegister.Select,
         typeInput: TextInputType.text,
         maxLengthTextInput: 200,
-        valueSelected: state.listSex[state.indexSex],
-        listValue: state.listSex,
+        valueSelected: state.listGender[state.indexSex],
+        listValue: state.listGender,
         icon: Icons.arrow_drop_down,
         image: ImageAsset.imageSex));
-    list.add(InputRegisterModel(
-        title: "Ngày sinh:",
-        isCompulsory: false,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: Utils.stringToDateDOB(state.dateController!.text),
-        icon: Icons.calendar_today,
-        image: ImageAsset.imageCalendarPick));
+    if(state.dateController!.text.isNotEmpty) {
+      list.add(InputRegisterModel(
+          title: "Ngày sinh:",
+          isCompulsory: false,
+          typeInputEnum: TypeInputEnum.date,
+          type: TypeInputRegister.Select,
+          valueSelected: Utils.stringToDate(state.dateController!.text),
+          icon: Icons.calendar_today,
+          image: ImageAsset.imageCalendarPick));
+    } else{
+      list.add(InputRegisterModel(
+          title: "Ngày sinh:",
+          isCompulsory: false,
+          typeInputEnum: TypeInputEnum.date,
+          type: TypeInputRegister.Select,
+          //valueSelected: Utils.stringToDate(state.dateController!.text),
+          icon: Icons.calendar_today,
+          image: ImageAsset.imageCalendarPick));
+    }
     list.add(InputRegisterModel(
         title: "Địa chỉ:",
         isCompulsory: false,
@@ -152,11 +157,25 @@ class AccountInformationBloc
 
   void _initInfo(
       InitInfoEvent event, Emitter<AccountInformationState> emitter) async {
-    emitter(state.copyWith(isShowProgress: true, listWidget: [], userInfo: UserInfo()));
-    UserInfo userInfo = await repository.getUserInfo(25);
+    UserInfo userInfo;
+    if(event.resetView){
+      emitter(state.copyWith(isShowProgress: true));
+      userInfo = UserInfo.copy(state.userInfo ?? UserInfo());
+    }else {
+      emitter(state.copyWith(
+          isShowProgress: true, listWidget: [], userInfo: UserInfo()));
+      userInfo = await repository.getUserInfo();
+    }
+    //UserInfo userInfo = await repository.getUserInfo();
+    List<Gender> listGender = [Gender("Nam"), Gender("Nữ"), Gender("Khác")];
+    int index = listGender
+        .indexWhere((element) => element.name == userInfo.gender);
+    print("HoangCV: ${userInfo.mediaContent}");
     emitter(state.copyWith(
       isShowProgress: false,
       userInfo: userInfo,
+      listGender: listGender,
+      indexSex: index,
       nameController: TextEditingController(text: userInfo.name),
       genderController: TextEditingController(text: userInfo.gender),
       dateController: TextEditingController(
@@ -178,7 +197,11 @@ class AccountInformationBloc
 
   FutureOr<void> _changeDetailInfo(ChangeDetailInfoEvent event,
       Emitter<AccountInformationState> emit) async {
-     _initView(emit);
+    if(event.resetView){
+
+    }
+    _initView(emit);
+
   }
 
   Future<FutureOr<void>> _onSelectValue(
@@ -226,7 +249,7 @@ class AccountInformationBloc
         event.list[event.index].error = null;
         if (event.list[event.index].title.compareTo("Giới tính:") == 0) {
           emit(state.copyWith(
-              genderController: TextEditingController(text: event.list[event.index].valueSelected),
+              genderController: TextEditingController(text: event.list[event.index].valueSelected.name),
               indexSex: result));
         }
       }
@@ -245,48 +268,33 @@ class AccountInformationBloc
   }
 
   FutureOr<void> _updateInfo(UpdateInfoEvent event, Emitter<AccountInformationState> emit) async{
-/*    print("HoangCV: state.indexActivity: ${state.indexActivity}");
+    print("HoangCV: state.indexActivity: ${state.nameController!.text}");
     emit(state.copyWith(
       isShowProgress: true,
     ));
-    List<InputRegisterModel> list = List.from(state.listWidget);
-    List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
-    if (state.indexActivity == -1) {
+   if(state.nameController!.text.isEmpty){
       validate = false;
-      state.listWidget[0].error = "Vui lòng chọn tên công việc";
+      state.listWidget[0].error = "Vui lòng nhập họ và tên";
     }
-    *//*else if(state.areaController!.text.isEmpty){
-      validate = false;
-      listArea[1].error = "Vui lòng nhập diện tích";
-    }*//*
-    else if (state.areaController!.text.isNotEmpty &&
-        state.listWidgetArea[1].valueSelected == null) {
-      validate = false;
-      state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
-    }
+
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
-      print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
-      ActivityDiary diary = ActivityDiary(
-        id: state.detailActivity!.id,
-        activityId: state.listActivity[state.indexActivity].id,
-        activity: state.listActivity[state.indexActivity].name,
-        actionTime: state.listWidget[2].valueSelected.toString().split('.')[
-        0] *//* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*//*,
-        actionArea: double.parse("${state.areaController!.text}"),
-        actionAreaUnitId: state.listWidgetArea[1].valueSelected.id,
-        actionAreaUnit: state.listWidgetArea[1].valueSelected.name,
-        description: state.moTaController!.text,
-        tool: state.listCongCuAdd,
-        material: state.listVatTuAdd,
-        media: state.listImage,
-      );
-      //"is_shown": true,
-      ObjectResult objectResult = await repository.updateActivityDiary(diary);
+    UserInfo userInfo = UserInfo(
+      id: state.userInfo?.id,
+      name: state.nameController?.text,
+      login: state.userInfo?.login,
+      gender: state.genderController?.text,
+      dateOfBirth: state.dateController?.text,
+      address: state.addressController?.text,
+      active: true,
+      group: state.userInfo?.group, language: state.userInfo?.language,
+      mediaContent: state.listImage.isNotEmpty ? state.listImage[0].fileContent : '',
+    );
+    ObjectResult objectResult = await repository.updateUserInfo(userInfo);
       if (objectResult.responseCode == StatusConst.code00) {
-        // _changeViewDetail(emit);
+        _initView(emit);
       }
       if (objectResult.responseCode == StatusConst.code00) {
         //_changeViewDetail(emit);
@@ -298,7 +306,7 @@ class AccountInformationBloc
             isShowProgress: false,
             formStatus: SubmissionFailed(objectResult.message)));
       }
-    }*/
+    }
   }
 }
 
@@ -308,7 +316,10 @@ class AccountInformationEvent extends BlocEvent {
 }
 
 class InitInfoEvent extends AccountInformationEvent {
-  InitInfoEvent();
+  InitInfoEvent(this.resetView);
+  bool resetView;
+  @override
+  List<Object?> get props => [resetView];
 }
 
 class ChangeEditInfoEvent extends AccountInformationEvent {
@@ -316,7 +327,10 @@ class ChangeEditInfoEvent extends AccountInformationEvent {
 }
 
 class ChangeDetailInfoEvent extends AccountInformationEvent {
-  ChangeDetailInfoEvent();
+  bool resetView;
+  ChangeDetailInfoEvent(this.resetView);
+  @override
+  List<Object?> get props => [resetView];
 }
 
 class UpdateInfoEvent extends AccountInformationEvent {
@@ -355,7 +369,7 @@ class AccountInformationState extends BlocState {
   List<Object?> get props => [
         formStatus,
         isShowProgress,
-        listSex,
+        listGender,
         listWidget,
         listImage,
         nameController,
@@ -379,14 +393,14 @@ class AccountInformationState extends BlocState {
   TextEditingController? mainController = TextEditingController();
   TextEditingController? dateController = TextEditingController();
   bool isEdit;
-  List<String> listSex = ["Nam", "Nữ"];
+  List<Gender> listGender;
   int indexSex;
 
   AccountInformationState(
       {this.formStatus = const InitialFormStatus(),
       this.isShowProgress = true,
       this.userInfo,
-      this.listSex = const ["Nam", "Nữ"],
+      this.listGender = const [],
       this.listWidget = const [],
       this.listImage = const [],
       this.dateController,
@@ -402,7 +416,7 @@ class AccountInformationState extends BlocState {
     FormSubmissionStatus? formStatus,
     UserInfo? userInfo,
     bool? isShowProgress,
-    List<String>? listSex,
+    List<Gender>? listGender,
     List<InputRegisterModel>? listWidget,
     List<ImageEntity>? listImage,
     TextEditingController? nameController,
@@ -420,7 +434,7 @@ class AccountInformationState extends BlocState {
         formStatus: formStatus ?? this.formStatus,
         isShowProgress: isShowProgress ?? this.isShowProgress,
         userInfo: userInfo ?? this.userInfo,
-        listSex: listSex ?? this.listSex,
+        listGender: listGender ?? this.listGender,
         listWidget: listWidget ?? this.listWidget,
         listImage: listImage ?? this.listImage,
         nameController: nameController ?? this.nameController,
@@ -432,4 +446,10 @@ class AccountInformationState extends BlocState {
         indexSex: indexSex ?? this.indexSex,
         isEdit: isEdit ?? this.isEdit);
   }
+}
+
+class Gender{
+  String name;
+  String image;
+  Gender(this.name, {this.image = ''});
 }

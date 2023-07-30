@@ -332,7 +332,7 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<UserInfo> getUserInfo(int id) async{
+  Future<UserInfo> getUserInfo() async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
@@ -353,7 +353,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getUserInfo(id);
+    return FakeRepositoryImpl().getUserInfo();
   }
 
   @override
@@ -450,6 +450,32 @@ class RepositoryImpl extends Repository {
       );
     }
     return FakeRepositoryImpl().getListMonitorDiary(id);
+  }
+
+  @override
+  Future<ObjectResult> updateUserInfo(UserInfo userInfo) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.editUserInfo}$userId",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: userInfo.toJson())));
+    print("HoangCV: updateUserInfo response: ${objectResult.response}: ${objectResult.isOK}");
+    DiaLogManager.showDialogHTTPError(
+      status: objectResult.status,
+      resultStatus: objectResult.status,
+      resultObject: objectResult.message,
+    );
+    if (objectResult.responseCode == StatusConst.code00) {
+      //UserInfo list = UserInfo.fromJson(objectResult.response);
+      return objectResult;
+    }
+    else {
+
+    }
+    return objectResult;
   }
 
 }

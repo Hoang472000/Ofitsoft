@@ -106,7 +106,7 @@ class Diary implements Insertable<Diary> {
       endDate: json['end_date'] ?? "",
       status: json['status'] ?? "",
       areaUnitId: json['area_unit_id'] ?? -1,
-      areaUnit: json['area_unit'] ?? '',
+      areaUnit: json['area_unit_name'] ?? '',
       area: json['area'] ?? -1,
       amountUnitId: json['amount_unit_id'] ?? -1,
       amountUnit: json['amount_unit'] ?? "",
@@ -159,14 +159,15 @@ class Diary implements Insertable<Diary> {
     data['amount_unit_id'] = amountUnitId;
     data['area'] = area;
     data['area_unit_id'] = areaUnitId;
+    data['area_unit_name'] = areaUnit;
     data['yield_estimate'] = yieldEstimate;
     data['yield_estimate_unit'] = yieldEstimateUnit;
     data['yield_estimate_unit_id'] = yieldEstimateUnitId;
-    List<Map> listTool= [];
+    List<Map> listTool = [];
     for (int i = 0; i < tool.length; i++) {
       listTool.add(tool[i].toJson());
     }
-    List<Map> listMaterial= [];
+    List<Map> listMaterial = [];
     for (int i = 0; i < material.length; i++) {
       listMaterial.add(material[i].toJson());
     }
@@ -189,9 +190,9 @@ class Diary implements Insertable<Diary> {
             actionAreaUnitId: Value(actionAreaUnitId),
             description: Value(description),
             farmerName: Value(farmerName),
-        productId: Value(productId),
-        productName: Value(productName),
-        cropName: Value(cropName),
+            productId: Value(productId),
+            productName: Value(productName),
+            cropName: Value(cropName),
             farm: Value(farm),
             name: Value(name),
             crop: Value(crop),
@@ -202,6 +203,7 @@ class Diary implements Insertable<Diary> {
             amountUnitId: Value(amountUnitId),
             amountUnit: Value(amountUnit),
             areaUnitId: Value(areaUnitId),
+            areaUnit: Value(areaUnit),
             area: Value(area),
             yieldEstimateUnitId: Value(yieldEstimateUnitId),
             yieldEstimateUnit: Value(yieldEstimateUnit),

@@ -52,7 +52,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageDisaster),*/
                         CardTile(
                             label: "Loại vật nuôi/cây trồng",
-                            value: "${state.detailDiary!.crop}",
+                            value: "${state.detailDiary!.cropName}",
                             image: ImageAsset.imageTree),
                         CardTile(
                             label: "Diện tích",
@@ -60,12 +60,12 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageManagement),
                         CardTileDouble(
                             label1: "Số lượng ban đầu",
-                            value1:  "${state.detailDiary!.amount== -1 ? '' : state.detailDiary!.amount}",
+                            value1:  "${state.detailDiary!.amount== -1 ? '' : (state.detailDiary!.amount??0).toInt()}",
                             value2: "${state.detailDiary!.amountUnit}",
                             image: ImageAsset.imageBudget),
                         CardTileDouble(
                             label1: "Sản lượng ước tính",
-                            value1: "${state.detailDiary!.yieldEstimate== -1 ? '' : state.detailDiary!.yieldEstimate}",
+                            value1: "${state.detailDiary!.yieldEstimate== -1 ? '' : (state.detailDiary!.yieldEstimate??0).toInt()}",
                             value2: "${state.detailDiary!.yieldEstimateUnit}",
                             image: ImageAsset.imageBudget),
                         CardTile(

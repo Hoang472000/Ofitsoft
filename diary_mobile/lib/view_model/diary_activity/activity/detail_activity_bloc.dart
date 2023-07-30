@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/entity/activity/activity_diary.dart';
-import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/image/image_entity.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
@@ -22,7 +22,6 @@ import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';
 import '../../../utils/form_submission_status.dart';
 import '../../../utils/utils.dart';
-import '../../../view/diary_activity/activity/add_activity_sub/add_activity_sub.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
@@ -489,7 +488,7 @@ class DetailActivityBloc
         nameController: TextEditingController(text: listActivity[index].name),
         peopleController: TextEditingController(),
         areaController:
-            TextEditingController(text: "${detailActivity.actionArea}"),
+            TextEditingController(text: "${detailActivity.actionArea??''}"),
         donViController:
             TextEditingController(text: "${detailActivity.actionAreaUnitName}"),
         startTimeController: TextEditingController(
@@ -689,7 +688,7 @@ class DetailActivityBloc
       validate = false;
       listArea[1].error = "Vui lòng nhập diện tích";
     }*/
-    else if (state.areaController!.text.isNotEmpty &&
+    else if (state.areaController!.text.isNotEmpty && double.parse(state.areaController!.text) > 0 &&
         state.listWidgetArea[1].valueSelected == null) {
       validate = false;
       state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
@@ -704,9 +703,11 @@ class DetailActivityBloc
         activityName: state.listActivity[state.indexActivity].name,
         actionTime: state.listWidget[2].valueSelected.toString().split('.')[
             0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
-        actionArea: double.parse("${state.areaController!.text}"),
-        actionAreaUnitId: state.listWidgetArea[1].valueSelected.id,
-        actionAreaUnitName: state.listWidgetArea[1].valueSelected.name,
+        actionArea: state.areaController!.text.isNotEmpty
+            ? double.parse(state.areaController!.text)
+            : null,
+        actionAreaUnitId: state.listWidgetArea[1].valueSelected?.id,
+        actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name,
         description: state.moTaController!.text,
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,

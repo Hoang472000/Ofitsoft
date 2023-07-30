@@ -61,7 +61,7 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       seasonFarm: json['season_farm'] ?? "",
       activityId: json['activity_id'] ?? -1,
       actionTime: json['action_time'] ?? "",
-      actionArea: json['action_area'] ?? 0,
+      actionArea: json['action_area'],
       actionAreaUnitId: json['action_area_unit_id'] ?? -1,
       actionAreaUnitName: json['action_area_unit_name'] ?? '',
       description: json['description'] ?? '',

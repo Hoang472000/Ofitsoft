@@ -462,10 +462,10 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
             0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
         actionArea: state.areaController!.text.isNotEmpty
             ? double.parse(state.areaController!.text)
-            : 0,
+            : null,
         actionAreaUnitId: /*state.listWidgetArea[1].valueSelected != null ? */
-            state.listWidgetArea[1].valueSelected?.id ?? null,
-        actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name ?? null,
+            state.listWidgetArea[1].valueSelected?.id,
+        actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name,
         description: state.moTaController!.text,
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,

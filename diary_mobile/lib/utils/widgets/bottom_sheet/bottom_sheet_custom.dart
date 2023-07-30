@@ -147,7 +147,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                           .toString()
                                           .length <
                                       50
-                                  ? listDataSearch(controller.text)[index].image!='' ? 70 : itemHeight
+                                  ? listDataSearch(controller.text)[index]?.image!='' ? 70 : itemHeight
                                   : Extension()
                                               .getValueDisplay(listDataSearch(
                                                   controller.text)[index])

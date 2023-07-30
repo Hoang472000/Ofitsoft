@@ -1,33 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
-import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
-import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
-import 'package:diary_mobile/view/diary_activity/activity/activity_page.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../data/entity/item_default/tool.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/extenstion/extenstions.dart';
-import '../../../utils/extenstion/input_register_model.dart';
-import '../../../utils/extenstion/service_info_extension.dart';
 import '../../../utils/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../view_model/diary/list_diary_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class DetailActivityPage extends StatefulWidget {

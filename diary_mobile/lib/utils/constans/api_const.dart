@@ -15,8 +15,9 @@ class ApiConst {
   static const String getListUnits = "/get/units_farmer/";
   //api danh sach diary
   static const String getListDiary = "/get/diaries/farmer/";
-  //api user info
-  static const String getUserInfo = "/get/infor/user/";
+  //api get, update user info
+  static const String getUserInfo = "/get/user/";
+  static const String editUserInfo = "/edit/user/";
   //api get, add 1 activity diary, remove, edit
   static const String getListActivity = "/get/diary_farmer/";
   static const String addActivityDiary = "/add/item/diary_farmer";
