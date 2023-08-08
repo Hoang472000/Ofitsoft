@@ -215,10 +215,10 @@ class DetailMonitorBloc
     final detailMonitor = event.monitorDiary;
     var copiedMonitorDiary = MonitorDiary.copy(detailMonitor);
     //final listActivity = await DiaryDB.instance.getListActivity();
-    final listActivity = [ActivityMonitor(id: 15, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có làm vườn", checkNo: false, checkYes: true),
-      ActivityMonitor(id: 16, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có kiểm soát sâu bệnh", checkNo: false, checkYes: true),
-      ActivityMonitor(id: 17, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có chăm sóc cây", checkNo: false, checkYes: true),
-      ActivityMonitor(id: 18, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có thông thoáng sân vườn", checkNo: false, checkYes: true)];
+    final listActivity = [ActivityMonitor(id: 15, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có làm vườn", checkNo: false, checkYes: true, image: ''),
+      ActivityMonitor(id: 16, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có kiểm soát sâu bệnh", checkNo: false, checkYes: true, image: ''),
+      ActivityMonitor(id: 17, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có chăm sóc cây", checkNo: false, checkYes: true, image: ''),
+      ActivityMonitor(id: 18, diaryMonitorId: 1, activityId: 1, activity: "Kiểm tra xem có thông thoáng sân vườn", checkNo: false, checkYes: true, image: '')];
     _initViewDetail(emitter);
     int index = listActivity
         .indexWhere((element) => element.id == detailMonitor.activityIds[0].activityId);

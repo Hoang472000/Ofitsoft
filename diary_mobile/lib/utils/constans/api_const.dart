@@ -1,8 +1,8 @@
 class ApiConst {
 
-  static const String domainApi = "http://qlvsx.ofitsoft.com:8069";//"http://10.0.2.2:8069";//http://diary.visimex.com:8069/
+  static const String domainApi = "http://qlvsx.ofitsoft.com:8069";//"http://10.0.20.249:8069";//http://diary.visimex.com:8069/
   //
-  //static const String domainApi = "http://10.0.2.2:8015";
+  //static const String domainApi = "http://10.0.20.249:8069";
   static const String get_diaries_farmer = "/get/diaries/farmer/";// /get/diaries/farmer/<int:id>
 
   //api login
@@ -27,6 +27,8 @@ class ApiConst {
   static const String getInfoDiary = "/get/season_diary/";
   //api get, add 1 monitor diary, remove, edit
   static const String getListMonitor = "/get/diary_monitor/";
+  //api change password truyền vào id của nông hộ
+  static const String changePassword = "/edit/password/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

@@ -28,13 +28,18 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   void _getListActivity(
       GetListActivityEvent event, Emitter<ActivityState> emitter) async {
     emitter(state.copyWith(
-        isShowProgress: true, formStatus: const InitialFormStatus()));
+        isShowProgress: true,
+        formStatus: const InitialFormStatus(),
+        seasonFarmId: event.id));
+    print("HoangCV: runtime1 :");
     if (event.action.compareTo("activity") == 0) {
       final listDiaryActivity = await repository.getListActivityDiary(event.id);
+      print("HoangCV: runtime2  :");
       emitter(state.copyWith(
           isShowProgress: false, listDiaryActivity: listDiaryActivity));
     } else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
+      print("HoangCV: runtime3  :");
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
       emitter(state.copyWith(
           isShowProgress: false, listDiaryMonitor: listDiaryMonitor));
@@ -48,6 +53,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     final objectResult = await repository.removeActivityDiary(event.id);
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
+      add(GetListActivityEvent(
+          state.seasonFarmId ?? 0, event.action));
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: objectResult.message)));
@@ -71,16 +78,17 @@ class GetListActivityEvent extends ActivityEvent {
   GetListActivityEvent(this.id, this.action);
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, action];
 }
 
 class RemoveActivityEvent extends ActivityEvent {
   final int id;
+  final String action;
 
-  RemoveActivityEvent(this.id);
+  RemoveActivityEvent(this.id, this.action);
 
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, action];
 }
 
 class RemoveMonitorEvent extends ActivityEvent {
@@ -102,7 +110,9 @@ class ActivityState extends BlocState {
         listTool,
         listUnit,
         listActivity,
-        listDiaryMonitor
+        listDiaryMonitor,
+        seasonFarmId,
+        diary
       ];
   final List<ActivityDiary> listDiaryActivity;
   final List<MaterialEntity> listMaterial;
@@ -112,6 +122,8 @@ class ActivityState extends BlocState {
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final List<MonitorDiary> listDiaryMonitor;
+  final int? seasonFarmId;
+  final Diary? diary;
 
   ActivityState({
     this.listDiaryActivity = const [],
@@ -122,6 +134,8 @@ class ActivityState extends BlocState {
     this.listTool = const [],
     this.listUnit = const [],
     this.listActivity = const [],
+    this.seasonFarmId,
+    this.diary,
   });
 
   ActivityState copyWith({
@@ -133,6 +147,8 @@ class ActivityState extends BlocState {
     List<Tool>? listTool,
     List<Unit>? listUnit,
     List<Activity>? listActivity,
+    int? seasonFarmId,
+    Diary? diary,
   }) {
     return ActivityState(
       listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
@@ -143,6 +159,8 @@ class ActivityState extends BlocState {
       listTool: listTool ?? this.listTool,
       listUnit: listUnit ?? this.listUnit,
       listActivity: listActivity ?? this.listActivity,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      diary: diary ?? this.diary,
     );
   }
 }

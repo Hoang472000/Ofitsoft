@@ -92,7 +92,7 @@ class Validator {
   }
 
   static bool validateFormatPassWord(String pass){
-    RegExp regExp= RegExp(r"^(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*)).{8,}");
+    RegExp regExp= RegExp(r"^(?=(.*[0-9]))(?=.*[a-z])(?=(.*[A-Z]))(?=(.*[\!@#$%^&*])).{8,}");
     return regExp.hasMatch(pass) && !pass.contains(" ");
   }
 

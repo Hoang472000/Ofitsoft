@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
@@ -50,12 +51,69 @@ class DiaryDB extends _$DiaryDB {
 
   ///Thêm, sửa, xóa, lấy Activity Diary
   Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
-    await batch((batch) {
+ /*   await batch((batch) {
       batch.insertAllOnConflictUpdate(activityDiaryTable, values);
+    });*/
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry: ${entry.convertToolsListToJson()}");
+        final ActivityDiaryTableCompanion entryCompanion = ActivityDiaryTableCompanion(
+          id: Value(entry.id),
+          seasonFarmId: Value(entry.seasonFarmId),
+          seasonFarm: Value(entry.seasonFarm),
+          activityId: Value(entry.activityId),
+          actionTime: Value(entry.actionTime),
+          actionArea: Value(entry.actionArea),
+          actionAreaUnitId: Value(entry.actionAreaUnitId),
+          actionAreaUnitName: Value(entry.actionAreaUnitName),
+          description: Value(entry.description),
+          activityName: Value(entry.activityName),
+          name: Value(entry.name),
+          byName: Value(entry.byName),
+          startTime: Value(entry.startTime),
+          endTime: Value(entry.endTime),
+          status: Value(entry.status),
+          stringTool: Value(entry.convertToolsListToJson()),
+          stringMaterial: Value(entry.convertMaterialsListToJson()),
+          stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
+        );
+        print("HoangCV: stringTool: ${entryCompanion.stringTool}");
+        batch.insertAllOnConflictUpdate(activityDiaryTable, [entryCompanion]);
+      }
     });
   }
-  Future<List<ActivityDiary>> getListActivityDiary() async {
-    return await select(activityDiaryTable).get();
+
+  Future<List<ActivityDiary>> getListActivityDiary(int id) async {
+    final query = await (select(activityDiaryTable)..where((tbl) => tbl.seasonFarmId.equals(id)))
+        .get();
+    final List<ActivityDiary> diaryEntriesList = [];
+
+    for (final queriedEntry in query) {
+      print('Diary Entry Tools String: ${queriedEntry.tool.length} : ${query}');
+      final diaryEntry = ActivityDiary.fromJson({
+        'id': queriedEntry.id,
+        'season_farm_id': queriedEntry.seasonFarmId,
+        'season_farm': queriedEntry.seasonFarm,
+        'activity_id': queriedEntry.activityId,
+        'action_time': queriedEntry.actionTime,
+        'action_area': queriedEntry.actionArea,
+        'action_area_unit_id': queriedEntry.actionAreaUnitId,
+        'action_area_unit_name': queriedEntry.actionAreaUnitName,
+        'description': queriedEntry.description,
+        'activity_name': queriedEntry.activityName,
+        'name': queriedEntry.name,
+        'by_name': queriedEntry.byName,
+        'start_time': queriedEntry.startTime,
+        'end_time': queriedEntry.endTime,
+        'status': queriedEntry.status,
+        'is_Shown': queriedEntry.isShow,
+        'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
+        'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),
+        'diary_media_ids': jsonDecode(queriedEntry.stringMedia??'[]'),
+      });
+      diaryEntriesList.add(diaryEntry);
+    }
+     return diaryEntriesList;
   }
 
   ///Thêm, sửa, xóa, lấy Monitor Diary

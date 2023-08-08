@@ -420,7 +420,12 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                     margin: const EdgeInsets.symmetric(
                         horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
-                      color: AppColor.gray1.withOpacity(0.9),
+                      //color: AppColor.gray1.withOpacity(0.9),
+                      gradient: const LinearGradient(
+                        colors: [AppColor.grayC7, AppColor.gray9B],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
                       borderRadius: BorderRadius.circular(32),
                     ),
                     child: Row(

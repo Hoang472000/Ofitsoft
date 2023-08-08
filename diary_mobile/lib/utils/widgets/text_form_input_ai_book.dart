@@ -153,7 +153,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                         ? AppColor.redDD
                         : const Color(0xFFBDBDBD) /*Bkav Nhungltk*/,
                 width: 1.0)),
-        errorText: widget.isNotEdit ?? false//
+ /*       errorText: widget.isNotEdit ?? false//
             ? widget.errorValidate
             : (widget.isNotValidStart == null ||
                     (widget.isNotValidStart != null &&
@@ -167,7 +167,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                             !hideError
                         ? widget.errorValidate
                         : null)
-                : null,
+                : null,*/
         // label: (_showAsterisk /*Bkav Nhungltk && (_notEmpty*/ ||
         //         _textIsNotEmpty) /*)*/
         //     ? Row(
@@ -208,6 +208,8 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
         //         : Text(widget._label,
         //             style:
         //                 StyleBkav.textStyleFW400(AppColor.labelInputText, 15)),
+        labelText:" ${widget._label}",
+        labelStyle:  widget.redBoder?StyleBkav.textStyleFW400(AppColor.main, 14):StyleBkav.textStyleFW400(AppColor.gray11, 14),
         hintText: " ${widget._label}",
         hintStyle:  widget.redBoder?StyleBkav.textStyleFW400(AppColor.main, 14):StyleBkav.textStyleFW400(AppColor.gray1, 14),
         suffixIcon: widget.isNotEdit ?? false

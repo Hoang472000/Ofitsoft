@@ -43,7 +43,7 @@ class _DiaryViewState extends State<DiaryView> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> distinctMonthsAndYears = getDistinctMonthsAndYears();
+/*    List<String> distinctMonthsAndYears = getDistinctMonthsAndYears();*/
     return BlocProvider(
       create: (context) =>
           ListDiaryBloc(context.read<Repository>())..add(GetListDiaryEvent()),
@@ -129,7 +129,7 @@ class _DiaryViewState extends State<DiaryView> {
                                 return GestureDetector(
                                   onTap: () {
                                     Navigator.push(context,
-                                        DetailDiaryPage.route(diary.id ?? -1));
+                                        DetailDiaryPage.route(diary.id ?? -1, diary));
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
@@ -183,7 +183,7 @@ class _DiaryViewState extends State<DiaryView> {
                                                 child: RichText(
                                                   text: Utils.convertText(
                                                       "Cây trồng: ",
-                                                      "${tasksForMonthAndYear[index].productName}",
+                                                      "${tasksForMonthAndYear[index].cropName}",
                                                       AppColor.blue15,
                                                       14),
                                                   maxLines: 3,
@@ -249,60 +249,12 @@ class _DiaryViewState extends State<DiaryView> {
     );
   }
 
-  final List<Task> tasks = [
-    Task(
-        name: 'Sản xuất rau',
-        date: DateTime(2022, 12, 25),
-        activity: "Mùa vụ sản xuất rau bắp cải năm 2022",
-        icon: Icons.spa),
-    Task(
-        name: 'Sản xuất lúa',
-        date: DateTime(2022, 1, 10),
-        activity: "Mùa vụ sản xuất lúa đông xuân năm 2022",
-        icon: Icons.spa_outlined),
-    Task(
-        name: 'Sản xuất lúa',
-        date: DateTime(2023, 3, 5),
-        activity: "Mùa vụ sản xuất lúa hè thu năm 2023",
-        icon: Icons.spa),
-    Task(
-        name: 'Sản xuất cải thảo',
-        date: DateTime(2023, 3, 15),
-        activity: "Mùa vụ sản xuất rau cải thảo năm 2023",
-        icon: Icons.spa),
-    Task(
-        name: 'Sản xuất hạt điều',
-        date: DateTime(2021, 3, 8),
-        activity: "Mùa vụ sản xuất hạt điều năm 2023",
-        icon: Icons.local_cafe),
-    Task(
-        name: 'Sản xuất cà phê',
-        date: DateTime(2023, 3, 12),
-        activity: "Mùa vụ sản xuất cà phê năm 2023",
-        icon: Icons.local_cafe),
-  ];
-
-  List<String> getDistinctMonthsAndYears() {
-    List<String> distinctMonthsAndYears = [];
-    tasks.sort((a, b) => b.date.compareTo(a.date));
-    for (var task in tasks) {
-      String monthAndYear = '${task.date.month}/${task.date.year}';
-      if (!distinctMonthsAndYears.contains(monthAndYear)) {
-        distinctMonthsAndYears.add(monthAndYear);
-      }
-    }
-    return distinctMonthsAndYears;
-  }
-
   List<Diary> getTasksForMonthAndYear(String monthAndYear, List<Diary> list) {
     List<Diary> tasksForMonthAndYear = [];
     list.sort((a, b) => (b.startDate ?? "").compareTo((a.startDate ?? "")));
-    print("HoangCV: taskMonthAndYear: ${list.length} : ${monthAndYear} ");
     for (var task in list) {
       DateTime dateTime = Utils.formatStringToDate(task.startDate ?? "");
       String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
-      print(
-          "HoangCV: taskMonthAndYear: ${taskMonthAndYear} : ${monthAndYear} ");
       if (taskMonthAndYear == monthAndYear) {
         tasksForMonthAndYear.add(task);
       }
@@ -311,15 +263,3 @@ class _DiaryViewState extends State<DiaryView> {
   }
 }
 
-class Task {
-  final String name;
-  final String activity;
-  final IconData icon;
-  final DateTime date;
-
-  Task(
-      {required this.name,
-      required this.date,
-      required this.activity,
-      required this.icon});
-}

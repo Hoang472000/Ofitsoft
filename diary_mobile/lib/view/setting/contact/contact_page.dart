@@ -43,18 +43,49 @@ class _ContactPageState extends State<ContactPage> {
           ),
           extendBodyBehindAppBar: true,
           body: Container(
-            decoration: BoxDecoration(
+         /*   decoration: BoxDecoration(
               image: DecorationImage(
                   image: AssetImage(ImageAsset.imageOfitsoftText),
                   fit: BoxFit.scaleDown
               ),
               color: AppColor.whiteF2,
               //color: AppColor.orangeF8,
-            ),
+            ),*/
             padding: const EdgeInsets.only(top: 64),
             child: Column(
               // mainAxisSize: MainAxisSize.min,
               children: [
+                Container(
+                    //margin: const EdgeInsets.symmetric(vertical: 15),
+                    //padding: const EdgeInsets.all(10),
+                    height: 300,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      //borderRadius: BorderRadius.circular(20),
+                      image: DecorationImage(
+                        image:
+                        AssetImage(ImageAsset.imageTeamSupport),
+                        fit: BoxFit.fill,
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.2),
+                            BlendMode.darken
+                        ),),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Image(image: AssetImage(ImageAsset.imageOfitsoftText),/* opacity: const AlwaysStoppedAnimation(.9),*/ height: 100,),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Hỗ trợ hỏi đáp 24/7",
+                            style:
+                            StyleBkav.textStyleFW600(Colors.white, 18),
+                          ),
+                        ),
+                          ],
+                    )),
                 Expanded(
                   child: Container(
                     width: double.infinity,
@@ -65,7 +96,7 @@ class _ContactPageState extends State<ContactPage> {
                           fit: BoxFit.fill),
                     ),*/
                     margin: const EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.only(top: 75),
+                    //padding: const EdgeInsets.only(top: 75),
                     child: Container(
                       alignment: Alignment.topCenter,
                       padding: const EdgeInsets.only(left: 16, right: 18),
@@ -79,10 +110,13 @@ class _ContactPageState extends State<ContactPage> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SvgPicture.asset(IconAsset.icContact),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10.0),
+                                  child: SvgPicture.asset(IconAsset.icContact),
+                                ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 16),
+                                    padding: const EdgeInsets.only(left: 16,),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,10 +131,13 @@ class _ContactPageState extends State<ContactPage> {
                                               crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  "Liên hệ kỹ thuật:",
-                                                  style: StyleBkav.textStyleFW400(
-                                                      AppColor.main, 15),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 10.0),
+                                                  child: Text(
+                                                    "Liên hệ kỹ thuật:",
+                                                    style: StyleBkav.textStyleFW400(
+                                                        AppColor.main, 15),
+                                                  ),
                                                 ),
                                                 Padding(
                                                   padding: EdgeInsets.only(
@@ -130,12 +167,15 @@ class _ContactPageState extends State<ContactPage> {
                                               CrossAxisAlignment
                                                   .start,
                                               children: [
-                                                Text(
-                                                  "Đăng ký dịch vụ:",
-                                                  style: StyleBkav
-                                                      .textStyleFW400(
-                                                      AppColor.main,
-                                                      15),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 10.0),
+                                                  child: Text(
+                                                    "Đăng ký dịch vụ:",
+                                                    style: StyleBkav
+                                                        .textStyleFW400(
+                                                        AppColor.main,
+                                                        15),
+                                                  ),
                                                 ),
                                                 Padding(
                                                   padding:
@@ -159,7 +199,10 @@ class _ContactPageState extends State<ContactPage> {
                                         Material(
                                           color: Colors.transparent,
                                           child: InkWell(
-                                            onTap: () {},
+                                            onTap: () {
+                                              Utils.launchPhoneUrl(
+                                                  "+84 24 560 5552");
+                                            },
                                             child: Column(
                                               crossAxisAlignment:
                                               CrossAxisAlignment
@@ -167,12 +210,15 @@ class _ContactPageState extends State<ContactPage> {
                                               mainAxisSize:
                                               MainAxisSize.max,
                                               children: [
-                                                Text(
-                                                  "Fax:",
-                                                  style: StyleBkav
-                                                      .textStyleFW400(
-                                                      AppColor.main,
-                                                      15),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 10.0),
+                                                  child: Text(
+                                                    "Fax:",
+                                                    style: StyleBkav
+                                                        .textStyleFW400(
+                                                        AppColor.main,
+                                                        15),
+                                                  ),
                                                 ),
                                                 Padding(
                                                   padding:
@@ -204,7 +250,7 @@ class _ContactPageState extends State<ContactPage> {
                             // const Divider(color: AppColor.grayE8,thickness: 1,),
                             const Padding(
                               padding: EdgeInsets.only(right: 30),
-                              child: DottedLine(dashColor:Color(0xFFE8E9EE),),
+                              child: DottedLine(dashColor: AppColor.gray9B,),
                             ),
                             const SizedBox(height: 8,),
                             Material(
@@ -239,17 +285,19 @@ class _ContactPageState extends State<ContactPage> {
                             const SizedBox(height: 8,),
                             const Padding(
                               padding: EdgeInsets.only(right: 30),
-                              child: DottedLine(dashColor:Color(0xFFE8E9EE),),
+                              child: DottedLine(dashColor: AppColor.gray9B,),
                             ),
                             const SizedBox(height: 8,),
-                            GestureDetector(
-                              onTap: () {},
+                            InkWell(
+                              onTap: () {
+                                Utils.launchMapUrl("108A Lò Đúc, Đồng Xuân, Hai Bà Trưng, Hà Nội");
+                              },
                               child: Container(
                                 padding: const EdgeInsets.only(top: 10, bottom: 10),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(IconAsset.icKho, color: AppColor.badgeBackground,),
+                                    SvgPicture.asset(IconAsset.icKho,),
                                     Expanded(
                                       child: Container(
                                         padding: const EdgeInsets.only(

@@ -5,14 +5,18 @@ import 'package:diary_mobile/utils/widgets/button_widget.dart';
 import 'package:diary_mobile/view_model/setting/account/account_information_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../data/entity/image/image_entity.dart';
+import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
+import '../../../utils/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 
 class AccountInformationPage extends StatefulWidget {
@@ -40,6 +44,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
       child: BlocProvider(
         create: (context) => AccountInformationBloc(context.read<Repository>()),
         child: Scaffold(
+            //backgroundColor: AppColor.background,
             appBar: BkavAppBar(
               context,
               showDefaultBackButton: true,
@@ -48,20 +53,34 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                 "Thông tin tài khoản",
                 style: StyleBkav.textStyleFW700(AppColor.whiteF2, 20),
               ),
-              //backgroundColor: Colors.transparent,
               elevation: 0.0,
-              hasBottom: true,
+              //hasBottom: true,
             ),
             //extendBodyBehindAppBar: true,
-
             body: BlocConsumer<AccountInformationBloc,
     AccountInformationState>(
-              listener: (context, state){
+              listener: (context, state)async {
+                final formStatus = state.formStatus;
+                if (formStatus is SubmissionFailed) {
+                } else if (formStatus is SubmissionSuccess) {
+                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                          () {
+                        Get.back();
+                         setState(() {
+                    edit = !edit;
+                  });
+                      }, () {
+                        Get.back();
+                        Navigator.pop(context, [true]);
 
+                      }, '', S.of(context).close_dialog, dismissible: false);
+                } else if (formStatus is FormSubmitting) {
+                  DiaLogManager.showDialogLoading(context);
+                }
               },
     builder: (contextBloc, state) {
     return Container(
-                color: AppColor.whiteF5,
+                //color: AppColor.whiteF5,
                 padding: const EdgeInsets.only(top: 0),
                 child: SingleChildScrollView(
                   child: Column(
@@ -201,7 +220,34 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                         ],
                       ),
                       Flexible(
-                            child: Container(
+                            child: BlocConsumer<AccountInformationBloc,
+                                AccountInformationState>(
+                          listener: (context, state) async {
+                            final formStatus = state.formStatus;
+                            if (formStatus is SubmissionFailed) {
+/*                              DiaLogManager.displayDialog(
+                                  context, "", formStatus.exception, () {
+                                Get.back();
+                              }, () {
+                                Get.back();
+                              }, '', S.of(context).close_dialog);*/
+                            } else if (formStatus is SubmissionSuccess) {
+  /*                            DiaLogManager.displayDialog(
+                                  context, "", formStatus.success ?? "", () {
+                                Get.back();
+                              }, () {
+                                Get.back();
+                              }, '', S.of(context).close_dialog);*/
+                            } else if (formStatus is FormSubmitting) {
+                              DiaLogManager.showDialogLoading(context);
+                            } else if(formStatus is InitialFormStatus){
+                              if(Get.isDialogOpen== true){
+                                Get.back();
+                              }
+                            }
+                          },
+                          builder: (contextBloc, state) {
+                            return Container(
                               margin: const EdgeInsets.only(
                                   top: 16, left: 16, right: 16),
                               child: ListView.builder(
@@ -218,8 +264,10 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                               state.listWidget, index, context));
                                     }),
                               ),
-                            ),
-                          ),
+                            );
+                          },
+                        ),
+                      ),
 
                       Container(
                             margin: const EdgeInsets.only(

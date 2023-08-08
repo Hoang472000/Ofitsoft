@@ -1,6 +1,12 @@
+import 'dart:convert';
+
+import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
+import 'package:diary_mobile/utils/widgets/dialog_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
@@ -9,6 +15,8 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
+import '../home/home_page.dart';
+import '../login/login_page.dart';
 import 'account/account_information_page.dart';
 import 'change_password/change_password_page.dart';
 import 'contact/contact_page.dart';
@@ -28,6 +36,25 @@ class SettingView extends StatefulWidget {
 }
 
 class _SettingViewState extends State<SettingView> {
+  String fullName= '';
+  String group= '';
+  String image= '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUserInfo();
+    super.initState();
+  }
+
+  Future<void> getUserInfo() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = sharedPreferences.getString(SharedPreferencesKey.fullName)??'';
+      group = sharedPreferences.getString(SharedPreferencesKey.group)??'';
+      image = sharedPreferences.getString(SharedPreferencesKey.imageProfile)??'';
+    });
+  }
   @override
   Widget build(BuildContext context) {
     //precacheImage(AssetImage(ImageAsset.imageContactBackgroundBottom), context);
@@ -55,14 +82,26 @@ class _SettingViewState extends State<SettingView> {
                 Row(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 28.0, right: 20),
-                      child: SizedBox(
-                          height: 60,
-                          width: 60,
-                          child: Image.asset(
-                            ImageAsset.imagePerson,
-                            fit: BoxFit.fitHeight,
-                          )),
+                      padding: const EdgeInsets.only(left: 16.0, right: 16),
+                      child: CircleAvatar(
+                        backgroundColor: AppColor.background,
+                        radius: 40,
+                        child:ClipOval(
+                            child: image == '' ?
+                            Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
+                            Image.memory(base64Decode(image),gaplessPlayback: true, fit: BoxFit.cover, width: 80, height: 80,
+                              errorBuilder: (context, error, stackTrace) {
+                                // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
+                                print("HoangCV: run way");
+                                return Image.asset(
+                                  ImageAsset.imagePersonProfile,
+                                  fit: BoxFit.fitHeight,
+                                  width: 80,
+                                  height: 80,
+                                );
+                              },
+                            )), //CircleAvatar
+                      ),
                     ),
                     SizedBox(
                       height: 100,
@@ -75,7 +114,7 @@ class _SettingViewState extends State<SettingView> {
                                 padding: const EdgeInsets.only(bottom: 5),
                                 child: RichText(
                                     text: TextSpan(
-                                        text: "Cao Văn Hoàng",
+                                        text: fullName,
                                         style: StyleBkav.textStyleFW700(
                                             Colors.black, 18,
                                             overflow: TextOverflow.visible)))),
@@ -83,7 +122,7 @@ class _SettingViewState extends State<SettingView> {
                           Flexible(
                               child: RichText(
                                   text: TextSpan(
-                                      text: "Hộ nông dân",
+                                      text: group,
                                       style: StyleBkav.textStyleFW400(
                                           Colors.black, 14,
                                           overflow: TextOverflow.visible)))),
@@ -95,14 +134,30 @@ class _SettingViewState extends State<SettingView> {
                 Container(
                   padding: const EdgeInsets.only(top: 14),
                   child: itemAccount(context, text: "Thông tin tài khoản",
-                      voidCallback: () {
-                        Navigator.push(context, AccountInformationPage.route());
+                      voidCallback: () async{
+                        var result = await Navigator.push(context, AccountInformationPage.route());
+                        print("result: $result");
+                        if(result == null){
+                          SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                          setState(() {
+                            image = sharedPreferences.getString(SharedPreferencesKey.imageProfile)??'';
+                          });
+                        }
                   }, icon: IconAsset.icPersonSetting),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: itemAccount(context, text: "Tra cứu mùa vụ",
+                      voidCallback: () {
+                        DiaLogManager.showDialogDevelopingFeature();
+                        /*                Navigator.push(context, HistoryActivityPage.route());*/
+                      }, icon: IconAsset.icCart),
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 0),
                   child: itemAccount(context, text: "Lịch sử hoạt động",
                       voidCallback: () {
+                        DiaLogManager.showDialogDevelopingFeature();
                     /*                Navigator.push(context, HistoryActivityPage.route());*/
                   }, icon: IconAsset.icHistoryActivity),
                 ),
@@ -116,6 +171,7 @@ class _SettingViewState extends State<SettingView> {
 
                 itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
+                      DiaLogManager.showDialogDevelopingFeature();
                   /*          Navigator.push(context, UserManualPage.route());*/
                 }, icon: IconAsset.icUserManual),
                 itemAccount(context, text: "Liên hệ", voidCallback: () {
@@ -127,7 +183,16 @@ class _SettingViewState extends State<SettingView> {
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                   child: BkavButton(
                     text: S.of(context).logout,
-                    onPressed: () async {},
+                    onPressed: () async {
+                      DiaLogManager.displayDialog(context, "Đăng xuất", "Bạn có chắc chắn muốn đăng xuất?\nTất cả thông tin đăng nhập và dữ liệu đã lưu trữ sẽ bị xóa.\nBấm \'Đồng ý\' để đăng xuất.",
+                              () async {
+                        SharedPreferences preferences = await SharedPreferences.getInstance();
+                        preferences.remove(SharedPreferencesKey.token);
+                        preferences.remove(SharedPreferencesKey.userName);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            await LoginPage.route(), (route) => false);
+                      }, () {Get.back(); }, S.of(context).cancel, S.of(context).agree,);
+                    },
                     color: AppColor.main,
                   ),
                 )

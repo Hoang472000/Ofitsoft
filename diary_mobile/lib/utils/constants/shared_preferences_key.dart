@@ -15,10 +15,8 @@ class SharedPreferencesKey {
   static String tokenDeadline = "token_deadline";
   static String callApiError = 'callApiError';
   static String networkCallback = 'networkCallback';
-  static String listSupport = 'listSupport';
   static String imageSelected = 'imageSelected';
   static String isRemember = 'isRemember';
-  static String coQuyTrinhKiemDuyet = 'coQuyTrinhKiemDuyet';
   static String isFaceIDLogin= "isFaceIDLogin";
   static String OTP= "OTP";
   static String orgGuid= "orgGuid";
@@ -26,4 +24,6 @@ class SharedPreferencesKey {
   //
   static String unitArea= "unit_area";
   static String unitAmount= "unit_amount";
+  static String group= "group";
+  static String imageProfile= "image";
 }

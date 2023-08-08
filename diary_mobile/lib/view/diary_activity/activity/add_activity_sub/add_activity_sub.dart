@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
@@ -124,7 +126,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
             centerTitle: true,
             showDefaultBackButton: true,
             title: Text(
-              "Thêm mới hoạt động",
+              !widget.isEdit ? "Chi tiết vật tư/công cụ" : "Thêm mới vật tư/công cụ",
               style: StyleBkav.textStyleFW700(Colors.white, 20),
             ),
             backgroundColor: AppColor.main,
@@ -163,103 +165,127 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                     ),
                                   ],
                                 ),
-                               ContainerInputWidget(
-                                        contextParent: context,
-                                        inputRegisterModel: widget.listWidgetVT[0],
-                                        onClick: () {
-                                          setState(() {});
-                                          onSelectValue(
-                                              widget.listWidgetVT[0], context);
-                                        }),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 5,
-                                        child:
-                                        ContainerInputWidget(
+                               widget.isEdit ?
+                               Column(
+                                 children: [
+                                   ContainerInputWidget(
                                             contextParent: context,
-                                            inputRegisterModel: _listWidget1[0],
+                                            inputRegisterModel: widget.listWidgetVT[0],
                                             onClick: () {
                                               setState(() {});
                                               onSelectValue(
-                                                  _listWidget1[0], context);
-                                            }, onEditingComplete: (text){},)),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                        flex: 5,
-                                        child: ContainerInputWidget(
-                                            contextParent: context,
-                                            inputRegisterModel: widget.listWidgetVT[1],
-                                            onClick: () {
-                                              setState(() {});
-                                              onSelectValue(
-                                                  widget.listWidgetVT[1], context);
-                                            }, onEditingComplete: (text){},)),
-                                  ],
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.only(top: 4,bottom: 4),
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
-                                        print("HoangCV: listWidgetCC: ${widget.listWidgetVT[1].valueSelected.toJson()}");
-                                        print("HoangCV: listWidgetVT: ${widget.listWidgetVT[0].valueSelected.toJson()}");
-                                        widget.listVatTuAdd.add(MaterialEntity(materialName:
-                                        widget.listWidgetVT[0].valueSelected.name,
-                                          materialId: widget.listWidgetVT[0].valueSelected.id,
-                                            quantity: double.parse(
-                                                soLuongController.text != "" ? soLuongController.text : "1"),
-                                            unitName: widget.listWidgetVT[1].valueSelected.name,
-                                          unitId: widget.listWidgetVT[1].valueSelected.id,
-                                            ));
-                                      }
-                                      widget.listWidgetVT[0].valueSelected = null;
-                                      widget.listWidgetVT[0].positionSelected = -1;
-                                      widget.listWidgetVT[1].valueSelected = null;
-                                      widget.listWidgetVT[1].positionSelected = -1;
-                                      soLuongController.text = "";
-                                      //donViController.text = "";
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      const Padding(
-                                          padding: EdgeInsets.only(top: 0, right: 6),
-                                          child: Icon(
-                                            Icons.add_circle_outline,
-                                            color: AppColor.main,
-                                          )),
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 0),
-                                        child: Text(
-                                          "Thêm vật tư",
-                                          style: StyleBkav.textStyleUnderline500(
-                                              AppColor.main, 16),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                                  widget.listWidgetVT[0], context);
+                                            }),
+                                   Row(
+                                     children: [
+                                       Expanded(
+                                           flex: 5,
+                                           child:
+                                           ContainerInputWidget(
+                                             contextParent: context,
+                                             inputRegisterModel: _listWidget1[0],
+                                             onClick: () {
+                                               setState(() {});
+                                               onSelectValue(
+                                                   _listWidget1[0], context);
+                                             }, onEditingComplete: (text){},)),
+                                       SizedBox(
+                                         width: 8,
+                                       ),
+                                       Expanded(
+                                           flex: 5,
+                                           child: ContainerInputWidget(
+                                             contextParent: context,
+                                             inputRegisterModel: widget.listWidgetVT[1],
+                                             onClick: () {
+                                               setState(() {});
+                                               onSelectValue(
+                                                   widget.listWidgetVT[1], context);
+                                             }, onEditingComplete: (text){},)),
+                                     ],
+                                   ),
+                                   TextButton(
+                                     style: TextButton.styleFrom(
+                                       minimumSize: Size.zero,
+                                       padding: EdgeInsets.only(top: 4,bottom: 4),
+                                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                     ),
+                                     onPressed: () {
+                                       setState(() {
+                                         if (widget.listWidgetVT[0].valueSelected != null && widget.listWidgetVT[1].valueSelected != null) {
+                                           print("HoangCV: listWidgetCC: ${widget.listWidgetVT[1].valueSelected.toJson()}");
+                                           print("HoangCV: listWidgetVT: ${widget.listWidgetVT[0].valueSelected.toJson()}");
+                                           widget.listVatTuAdd.add(MaterialEntity(materialName:
+                                           widget.listWidgetVT[0].valueSelected.name,
+                                               materialId: widget.listWidgetVT[0].valueSelected.id,
+                                               quantity: double.parse(
+                                                   soLuongController.text != "" ? soLuongController.text : "1"),
+                                               unitName: widget.listWidgetVT[1].valueSelected.name,
+                                               unitId: widget.listWidgetVT[1].valueSelected.id,
+                                               mediaContent: widget.listWidgetVT[0].valueSelected.image
+                                           ));
+                                         }
+                                         widget.listWidgetVT[0].valueSelected = null;
+                                         widget.listWidgetVT[0].positionSelected = -1;
+                                         widget.listWidgetVT[1].valueSelected = null;
+                                         widget.listWidgetVT[1].positionSelected = -1;
+                                         soLuongController.text = "";
+                                         //donViController.text = "";
+                                       });
+                                     },
+                                     child: Row(
+                                       mainAxisAlignment: MainAxisAlignment.end,
+                                       children: [
+                                         const Padding(
+                                             padding: EdgeInsets.only(top: 0, right: 6),
+                                             child: Icon(
+                                               Icons.add_circle_outline,
+                                               color: AppColor.main,
+                                             )),
+                                         Padding(
+                                           padding: const EdgeInsets.only(top: 0),
+                                           child: Text(
+                                             "Thêm vật tư",
+                                             style: StyleBkav.textStyleUnderline500(
+                                                 AppColor.main, 16),
+                                           ),
+                                         )
+                                       ],
+                                     ),
+                                   ),
+                                 ],
+                               ) : const SizedBox(),
                                 ListView.builder(
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: widget.listVatTuAdd.length,
                                     itemBuilder: (_, index) => Row(
                                       children: [
-                                        const Padding(
+                                        Padding(
                                           padding: EdgeInsets.only(right: 4),
-                                          child: Image(
+                                          child:
+                                          widget.listVatTuAdd[index].mediaContent == '' || widget.listVatTuAdd[index].mediaContent == null ?
+                                          const Image(
                                             image: AssetImage(ImageAsset.imageGardening),
                                             width: 40,
                                             fit: BoxFit.contain,
-                                          ),
+                                          ) : Image.memory(
+                                                  base64Decode(widget.listVatTuAdd[index].mediaContent ?? ''),
+                                                  gaplessPlayback: true,
+                                                  fit: BoxFit.cover,
+                                                  width: 70,
+                                                  height: 70,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return const Image(
+                                                      image: AssetImage(
+                                                          ImageAsset
+                                                              .imageGardening),
+                                                      width: 40,
+                                                      fit: BoxFit.contain,
+                                                    );
+                                                  },
+                                                ),
                                         ),
                                         Expanded(
                                           child: Container(
@@ -284,13 +310,16 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                     children: [
                                                       Padding(
                                                         padding: const EdgeInsets.all(4.0),
-                                                        child: Text(
-                                                          "Tên vật tư: ${widget.listVatTuAdd[index].materialName}",
-                                                          style: StyleBkav
-                                                              .textStyleFW500(
-                                                              AppColor.gray57,
+                                                        child: RichText(
+                                                          text: Utils.convertText(
+                                                              "Tên vật tư: ",
+                                                              "${widget.listVatTuAdd[index].materialName}",
+                                                              AppColor.blue15,
                                                               15),
-                                                        ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        )
                                                       ),
                                                       Row(
                                                         children: [
@@ -298,26 +327,32 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                             flex: 4,
                                                             child: Padding(
                                                               padding: const EdgeInsets.all(4.0),
-                                                              child: Text(
-                                                                "SL: ${widget.listVatTuAdd[index].quantity}",
-                                                                style: StyleBkav
-                                                                    .textStyleFW500(
-                                                                    AppColor.gray57,
-                                                                    14),
-                                                              ),
+                                                              child: RichText(
+                                                                text: Utils.convertText(
+                                                                    "SL: ",
+                                                                    "${widget.listVatTuAdd[index].quantity}",
+                                                                    AppColor.blue15,
+                                                                    15),
+                                                                maxLines: 2,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                              )
                                                             ),
                                                           ),
                                                           Expanded(
                                                             flex: 7,
                                                             child: Padding(
                                                               padding: const EdgeInsets.all(4.0),
-                                                              child: Text(
-                                                                "Đơn vị: ${widget.listVatTuAdd[index].unitName}",
-                                                                style:
-                                                                StyleBkav.textStyleFW500(
-                                                                    AppColor.gray57, 14),
-                                                                maxLines: 5,
-                                                              ),
+                                                              child: RichText(
+                                                                text: Utils.convertText(
+                                                                    "Đơn vị: ",
+                                                                    "${widget.listVatTuAdd[index].unitName}",
+                                                                    AppColor.blue15,
+                                                                    15),
+                                                                maxLines: 2,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                              )
                                                             ),
                                                           ),
                                                         ],
@@ -375,101 +410,124 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                     ),
                                   ],
                                 ),
-                                ContainerInputWidget(
-                                        contextParent: context,
-                                        inputRegisterModel: widget.listWidgetCC[0],
-                                        onClick: () {
-                                          setState(() {});
-                                          onSelectValue(
-                                              widget.listWidgetCC[0], context);
-                                        }, onEditingComplete: (text){},),
-                                Row(
+                                widget.isEdit ?
+                                Column(
                                   children: [
-                                    Expanded(
-                                        flex: 5,
-                                        child:
-                                        ContainerInputWidget(
+                                    ContainerInputWidget(
                                             contextParent: context,
-                                            inputRegisterModel: _listWidget2[0],
+                                            inputRegisterModel: widget.listWidgetCC[0],
                                             onClick: () {
                                               setState(() {});
                                               onSelectValue(
-                                                  _listWidget2[0], context);
-                                            }, onEditingComplete: (text){},)),
-                                    SizedBox(
-                                      width: 8,
-                                    ),
-                                    Expanded(
-                                        flex: 5,
-                                        child: ContainerInputWidget(
-                                            contextParent: context,
-                                            inputRegisterModel: widget.listWidgetCC[1],
-                                            onClick: () {
-                                              setState(() {});
-                                              onSelectValue(
-                                                  widget.listWidgetCC[1], context);
-                                            })),
-                                  ],
-                                ),
-                                TextButton(
-                                  style: TextButton.styleFrom(
-                                    minimumSize: Size.zero,
-                                    padding: EdgeInsets.zero,
-                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
-                                        print("HoangCV: listWidgetCC: ${widget.listWidgetCC[1].valueSelected.toJson()}");
-                                        widget.listCongCuAdd.add(Tool(toolName:
-                                        widget.listWidgetCC[0].valueSelected.name,
-                                          toolId: widget.listWidgetCC[0].valueSelected.id,
-                                            quantity: double.parse(
-                                                soLuong2Controller.text != "" ? soLuong2Controller.text : "1"),
-                                            unitName: widget.listWidgetCC[1].valueSelected.name,
-                                          unitId: widget.listWidgetCC[1].valueSelected.id,
-                                        ));
-                                      }
-                                      widget.listWidgetCC[0].valueSelected = null;
-                                      widget.listWidgetCC[0].positionSelected = -1;
-                                      widget.listWidgetCC[1].valueSelected = null;
-                                      widget.listWidgetCC[1].positionSelected = -1;
-                                      soLuong2Controller.text = "";
-                                      //donVi2Controller.text = "";
-                                    });
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      Padding(
-                                          padding: EdgeInsets.only(top: 0, right: 6),
-                                          child: Icon(
-                                            Icons.add_circle_outline,
-                                            color: AppColor.main,
-                                          )),
-                                      Padding(
-                                        padding: EdgeInsets.only(top: 0),
-                                        child: Text(
-                                          "Thêm công cụ",
-                                          style: StyleBkav.textStyleUnderline500(
-                                              AppColor.main, 16),
+                                                  widget.listWidgetCC[0], context);
+                                            }, onEditingComplete: (text){},),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex: 5,
+                                            child:
+                                            ContainerInputWidget(
+                                              contextParent: context,
+                                              inputRegisterModel: _listWidget2[0],
+                                              onClick: () {
+                                                setState(() {});
+                                                onSelectValue(
+                                                    _listWidget2[0], context);
+                                              }, onEditingComplete: (text){},)),
+                                        SizedBox(
+                                          width: 8,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                        Expanded(
+                                            flex: 5,
+                                            child: ContainerInputWidget(
+                                                contextParent: context,
+                                                inputRegisterModel: widget.listWidgetCC[1],
+                                                onClick: () {
+                                                  setState(() {});
+                                                  onSelectValue(
+                                                      widget.listWidgetCC[1], context);
+                                                })),
+                                      ],
+                                    ),
+                                    TextButton(
+                                      style: TextButton.styleFrom(
+                                        minimumSize: Size.zero,
+                                        padding: EdgeInsets.zero,
+                                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          if (widget.listWidgetCC[0].valueSelected != null && widget.listWidgetCC[1].valueSelected != null) {
+                                            print("HoangCV: listWidgetCC: ${widget.listWidgetCC[1].valueSelected.toJson()}");
+                                            widget.listCongCuAdd.add(Tool(toolName:
+                                            widget.listWidgetCC[0].valueSelected.name,
+                                                toolId: widget.listWidgetCC[0].valueSelected.id,
+                                                quantity: double.parse(
+                                                    soLuong2Controller.text != "" ? soLuong2Controller.text : "1"),
+                                                unitName: widget.listWidgetCC[1].valueSelected.name,
+                                                unitId: widget.listWidgetCC[1].valueSelected.id,
+                                                mediaContent: widget.listWidgetCC[0].valueSelected.image
+                                            ));
+                                          }
+                                          widget.listWidgetCC[0].valueSelected = null;
+                                          widget.listWidgetCC[0].positionSelected = -1;
+                                          widget.listWidgetCC[1].valueSelected = null;
+                                          widget.listWidgetCC[1].positionSelected = -1;
+                                          soLuong2Controller.text = "";
+                                          //donVi2Controller.text = "";
+                                        });
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          Padding(
+                                              padding: EdgeInsets.only(top: 0, right: 6),
+                                              child: Icon(
+                                                Icons.add_circle_outline,
+                                                color: AppColor.main,
+                                              )),
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 0),
+                                            child: Text(
+                                              "Thêm công cụ",
+                                              style: StyleBkav.textStyleUnderline500(
+                                                  AppColor.main, 16),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ) : const SizedBox(),
                                 ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
+                                    physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: widget.listCongCuAdd.length,
                                     itemBuilder: (_, index) => Row(
                                       children: [
                                         Padding(
-                                          padding: EdgeInsets.only(right: 4),
-                                          child: Image(
-                                            image: AssetImage(ImageAsset.imageTools),
+                                          padding: const EdgeInsets.only(right: 4),
+                                          child:  widget.listCongCuAdd[index].mediaContent == '' || widget.listCongCuAdd[index].mediaContent == null ?
+                                          const Image(
+                                            image: AssetImage(ImageAsset.imageTool),
                                             width: 40,
                                             fit: BoxFit.contain,
+                                          ) : Image.memory(
+                                            base64Decode(widget.listCongCuAdd[index].mediaContent ?? ''),
+                                            gaplessPlayback: true,
+                                            fit: BoxFit.cover,
+                                            width: 70,
+                                            height: 70,
+                                            errorBuilder: (context, error,
+                                                stackTrace) {
+                                              return const Image(
+                                                image: AssetImage(
+                                                    ImageAsset
+                                                        .imageTool),
+                                                width: 40,
+                                                fit: BoxFit.contain,
+                                              );
+                                            },
                                           ),
                                         ),
                                         Expanded(
@@ -497,13 +555,16 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                         padding:
                                                         const EdgeInsets.all(
                                                             4.0),
-                                                        child: Text(
-                                                          "Tên công cụ: ${widget.listCongCuAdd[index].toolName}",
-                                                          style: StyleBkav
-                                                              .textStyleFW500(
-                                                              AppColor.gray57,
+                                                        child: RichText(
+                                                          text: Utils.convertText(
+                                                              "Tên công cụ: ",
+                                                              "${widget.listCongCuAdd[index].toolName}",
+                                                              AppColor.blue15,
                                                               15),
-                                                        ),
+                                                          maxLines: 2,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                        )
                                                       ),
                                                       Row(
                                                         children: [
@@ -513,26 +574,32 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                                               padding:
                                                               const EdgeInsets.all(
                                                                   4.0),
-                                                              child: Text(
-                                                                "SL: ${widget.listCongCuAdd[index].quantity}",
-                                                                style: StyleBkav
-                                                                    .textStyleFW500(
-                                                                    AppColor.gray57,
-                                                                    14),
-                                                              ),
+                                                              child: RichText(
+                                                                text: Utils.convertText(
+                                                                    "SL: ",
+                                                                    "${widget.listCongCuAdd[index].quantity}",
+                                                                    AppColor.blue15,
+                                                                    15),
+                                                                maxLines: 2,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                              )
                                                             ),
                                                           ),
                                                           Expanded(
                                                             flex: 7,
                                                             child: Padding(
                                                               padding: const EdgeInsets.all(4.0),
-                                                              child: Text(
-                                                                "Đơn vị: ${widget.listCongCuAdd[index].unitName}",
-                                                                style:
-                                                                StyleBkav.textStyleFW500(
-                                                                    AppColor.gray57, 14),
-                                                                maxLines: 5,
-                                                              ),
+                                                              child: RichText(
+                                                                text: Utils.convertText(
+                                                                    "Đơn vị: ",
+                                                                    "${widget.listCongCuAdd[index].unitName}",
+                                                                    AppColor.blue15,
+                                                                    15),
+                                                                maxLines: 2,
+                                                                overflow: TextOverflow
+                                                                    .ellipsis,
+                                                              )
                                                             ),
                                                           ),
                                                         ],

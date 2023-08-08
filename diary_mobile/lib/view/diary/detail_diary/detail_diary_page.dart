@@ -15,14 +15,18 @@ import '../../diary_activity/activity/activity_page.dart';
 import '../../diary_activity/infomation_diary/info_diary_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {
-  const DetailDiaryPage({super.key, required this.seasonFarmId});
+  const DetailDiaryPage(
+      {super.key, required this.seasonFarmId, required this.diary});
+
   final int seasonFarmId;
+  final Diary diary;
 
   @override
   _DetailDiaryPageState createState() => _DetailDiaryPageState();
 
-  static Route route(int seasonFarmId) {
-    return Utils.pageRouteBuilder(DetailDiaryPage(seasonFarmId: seasonFarmId,), true);
+  static Route route(int seasonFarmId, Diary diary) {
+    return Utils.pageRouteBuilder(
+        DetailDiaryPage(seasonFarmId: seasonFarmId, diary: diary), true);
   }
 }
 
@@ -75,15 +79,17 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
                   borderRadius: BorderRadius.circular(50), // Creates border
                   color: Colors.white),
               labelColor: AppColor.main,*/
-                controller: _tabController,
-                tabs: const <Tab>[
-                  Tab(
-                    icon: Image(
-                      image: AssetImage(ImageAsset.imageActivityFarm),
-                      width: 40,
-                      fit: BoxFit.contain,
-                    ),
-                    text: "Hoạt động", height: 80,),
+              controller: _tabController,
+              tabs: const <Tab>[
+                Tab(
+                  icon: Image(
+                    image: AssetImage(ImageAsset.imageActivityFarm),
+                    width: 40,
+                    fit: BoxFit.contain,
+                  ),
+                  text: "Hoạt động",
+                  height: 80,
+                ),
                 Tab(
                     icon: Image(
                       image: AssetImage(ImageAsset.imageSpyware),
@@ -103,12 +109,18 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
         controller: _tabController,
         children: <Widget>[
           ActivityPage(
-            action: "activity", seasonFarmId: widget.seasonFarmId,
+            action: "activity",
+            seasonFarmId: widget.seasonFarmId,
+            diary: widget.diary,
           ),
           ActivityPage(
-            action: "monitor", seasonFarmId: widget.seasonFarmId,
+            action: "monitor",
+            seasonFarmId: widget.seasonFarmId,
+            diary: widget.diary,
           ),
-          InfoDiaryPage(id: widget.seasonFarmId,)
+          InfoDiaryPage(
+            id: widget.seasonFarmId,
+          )
         ],
       ),
     );

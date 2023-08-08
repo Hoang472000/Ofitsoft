@@ -33,6 +33,9 @@ class DiaryTable extends Table {
   RealColumn get area => real().nullable()();
   IntColumn get areaUnitId => integer().nullable()();
   TextColumn get areaUnit => text().nullable()();
+  RealColumn get farmArea => real().nullable()();
+  IntColumn get farmAreaUnitId => integer().nullable()();
+  TextColumn get farmAreaUnit => text().nullable()();
   RealColumn get yieldEstimate => real().nullable()();
   IntColumn get yieldEstimateUnitId => integer().nullable()();
   TextColumn get yieldEstimateUnit => text().nullable()();

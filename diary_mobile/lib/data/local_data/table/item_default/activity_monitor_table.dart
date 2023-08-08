@@ -12,7 +12,7 @@ class ActivityMonitorTable extends Table {
   TextColumn get activity => text().nullable()();
   BoolColumn get checkYes => boolean().nullable()();
   BoolColumn get checkNo => boolean().nullable()();
-
+  TextColumn get image => text().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id};

@@ -157,7 +157,7 @@ class DetailActivityBloc
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
-    emitter(state.copyWith(
+    emitter(state.copyWith(          formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
@@ -274,7 +274,7 @@ class DetailActivityBloc
       listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
-    emitter(state.copyWith(
+    emitter(state.copyWith(          formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
@@ -437,7 +437,7 @@ class DetailActivityBloc
     }
     final detailActivity = event.activityDiary;
     final copiedActivityDiary = ActivityDiary.copy(detailActivity);
-    print("HoangCV: copiedActivityDiary: ${copiedActivityDiary.material.length}");
+    print("HoangCV: copiedActivityDiary: ${copiedActivityDiary.material.length}  : detailActivity.description: ${detailActivity.description}");
     final listActivity = await DiaryDB.instance.getListActivity();
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
@@ -502,6 +502,7 @@ class DetailActivityBloc
     for (int i = 0; i < state.listWidget.length; i++) {
       if (state.listWidget[i].title.compareTo("Tên công việc") == 0) {
         state.listWidget[i].controller = state.nameController;
+        state.listWidget[i].valueSelected = state.listActivity[index];
       }
       if (state.listWidget[i].title.compareTo("Chi tiết công việc") == 0) {
         state.listWidget[i].controller = state.moTaController;
@@ -526,10 +527,23 @@ class DetailActivityBloc
         state.listWidgetArea[i].controller = state.donViController;
       }
     }
+    for (int i = 0; i < state.listWidgetVT.length; i++) {
+      if (state.listWidgetVT[i].title.compareTo("Vật tư") == 0) {
+        //state.listWidgetVT[i].controller = state.areaController;
+        //state.listWidget[i].valueSelected = state.listActivity[index];
+      }
+    }
+    for (int i = 0; i < state.listWidgetCC.length; i++) {
+      if (state.listWidgetCC[i].title.compareTo("Công cụ") == 0) {
+       // state.listWidgetCC[i].controller = state.areaController;
+        //state.listWidget[i].valueSelected = state.listActivity[index];
+      }
+    }
     print(
         "HoangCV: listWidgetArea run way: ${index} : ${listActivity[index].name}");
     emitter(state.copyWith(
-        listWidget: state.listWidget, listWidgetArea: state.listWidgetArea));
+        listWidget: state.listWidget, listWidgetArea: state.listWidgetArea, listWidgetCC: state.listWidgetCC,
+    listWidgetVT: state.listWidgetVT));
   }
 
   FutureOr<void> _changeEditActivity(
@@ -607,6 +621,7 @@ class DetailActivityBloc
           emit(state.copyWith(
             nameController: TextEditingController(
                 text: event.list[event.index].valueSelected.name),
+            indexActivity: result,
           ));
         }
         if (event.list[event.index].title.compareTo("Chi tiết công việc") ==
@@ -623,6 +638,7 @@ class DetailActivityBloc
         if (event.list[event.index].title.compareTo("Diện tích") == 0) {
           emit(state.copyWith(
             areaController: event.list[event.index].controller,
+            indexDonViArea: result,
           ));
         }
       }
@@ -661,6 +677,7 @@ class DetailActivityBloc
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<DetailActivityState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     print("HoangCV: bug: ${event.text}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
@@ -675,7 +692,7 @@ class DetailActivityBloc
       UpdateActivityEvent event, Emitter<DetailActivityState> emit) async {
     print("HoangCV: state.indexActivity: ${state.indexActivity}");
     emit(state.copyWith(
-      isShowProgress: true,
+      isShowProgress: true, formStatus: const InitialFormStatus()
     ));
     List<InputRegisterModel> list = List.from(state.listWidget);
     List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
@@ -697,6 +714,7 @@ class DetailActivityBloc
       emit(state.copyWith(isShowProgress: false));
       print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
+      emit(state.copyWith(formStatus: FormSubmitting()));
       ActivityDiary diary = ActivityDiary(
         id: state.detailActivity!.id,
         activityId: state.listActivity[state.indexActivity].id,

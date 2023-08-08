@@ -3,20 +3,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
 import '../../../utils/change_password_status.dart';
+import '../../../utils/constans/status_const.dart';
 import '../../../utils/validator.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
 class ChangePasswordBloc
     extends Bloc<ChangePasswordEvent, ChangePasswordState> {
-  //final Repository repository;
+  final Repository repository;
   final BuildContext context;
   final bool isCreate; // tao mat khau
   final bool isFirst; // thay doi mat khau lan dau
 
-  ChangePasswordBloc(this.context,
+  ChangePasswordBloc(this.context, this.repository,
       {this.isCreate = false, this.isFirst = false})
       : super(ChangePasswordState()) {
     on<SubmissionChangePassword>(_submissionChangePassword);
@@ -27,12 +29,18 @@ class ChangePasswordBloc
 
   void _submissionChangePassword(
       SubmissionChangePassword event, Emitter<ChangePasswordState> emit) async {
-    //emit(state.copyWith(formStatus: ChangingPassword()));
-/*    int changePasswordOk =
-    await repository.changePassword(event.passwordOld, event.passwordNew);*/
-    emit(state.copyWith(
+    emit(state.copyWith(formStatus: ChangeFormSubmitting()));
+    var objectResult = await repository.changePassword(event.passwordOld, event.passwordNew);
+    if (objectResult.responseCode == StatusConst.code00) {
+      emit(state.copyWith(
+          formStatus: ChangePasswordSuccess(objectResult.message)));
+    } else if (objectResult.responseCode == StatusConst.code01) {
+      emit(state.copyWith(
+          formStatus: ChangePasswordFailed(objectResult.message)));
+    }
+/*    emit(state.copyWith(
         formStatus: ChangePasswordSuccess(""),
-        code: 1));
+        code: 1));*/
   }
 
   void _submissionCreatePassword(
@@ -58,8 +66,8 @@ class ChangePasswordBloc
       errorPassOld=S.of(context).error_pass_length;
     }
     if(event.passNew.isNotEmpty){
-      if (Validator.validateFormatPassWord(event.passNew) == false) {
-        if (Validator.validateFormatPassWord(event.passNew) == false) {
+      if (Validator.validateFormatPass(event.passNew) == false) {
+        if (Validator.validateFormatPass(event.passNew) == false) {
           if (Validator.validatePassLength(event.passNew) == false) {
             errorPassNew = S.of(event.context).error_pass_length;
           } else {

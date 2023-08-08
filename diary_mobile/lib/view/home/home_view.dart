@@ -8,7 +8,9 @@ import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/dialog_manager.dart';
 import '../../view_model/home_bloc.dart';
+import '../setting/contact/contact_page.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -72,7 +74,9 @@ class HomeView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          DiaLogManager.showDialogDevelopingFeature();
+                        },
                         child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 15),
                             height: 250,
@@ -89,9 +93,9 @@ class HomeView extends StatelessWidget {
                                 BlendMode.darken
                             ),)),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Image(image: AssetImage(ImageAsset.imageTree), opacity: const AlwaysStoppedAnimation(.8),height: 60,),
+                                Image(image: AssetImage(ImageAsset.imageTree), opacity: const AlwaysStoppedAnimation(.8),height: 50,),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
@@ -103,46 +107,42 @@ class HomeView extends StatelessWidget {
                               ],
                             )),
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 15),
-                          padding: const EdgeInsets.all(10),
-                          height: 250,
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
-                                  image:
-                                      AssetImage(ImageAsset.imageTeamSupport),
-                                  fit: BoxFit.fill,
-                                colorFilter: ColorFilter.mode(
-                                    Colors.black.withOpacity(0.2),
-                                    BlendMode.darken
-                                ),),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              /*Image(image: AssetImage(ImageAsset.imageVisimex),height: 60, width: 150,),*/
-                              Image(image: AssetImage(ImageAsset.imageOfitsoft), opacity: const AlwaysStoppedAnimation(.8), height: 60,),
-                          /*    Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Text(
-                                  "OFITSOFT",
-                                  style:
-                                      StyleBkav.textStyleFW600(AppColor.green99, 40),
+                      GestureDetector(
+                        onTap: (){
+                          Navigator.push(context, ContactPage.route());
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 15),
+                            padding: const EdgeInsets.all(10),
+                            height: 250,
+                            width: MediaQuery.of(context).size.width,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                image: DecorationImage(
+                                    image:
+                                        AssetImage(ImageAsset.imageTeamSupport),
+                                    fit: BoxFit.fill,
+                                  colorFilter: ColorFilter.mode(
+                                      Colors.black.withOpacity(0.2),
+                                      BlendMode.darken
+                                  ),),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Image(image: AssetImage(ImageAsset.imageOfitsoftText), opacity: const AlwaysStoppedAnimation(.8), height: 70,),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "Hỗ trợ hỏi đáp",
+                                    style:
+                                        StyleBkav.textStyleFW600(Colors.white, 18),
+                                  ),
                                 ),
-                              ),*/
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "Hỗ trợ hỏi đáp",
-                                  style:
-                                      StyleBkav.textStyleFW600(Colors.white, 18),
-                                ),
-                              ),
-                            ],
-                          )),
+                              ],
+                            )),
+                      ),
                     ],
                   ),
                 ),

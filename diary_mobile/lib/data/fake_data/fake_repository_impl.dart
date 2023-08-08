@@ -32,7 +32,7 @@ class FakeRepositoryImpl extends Repository {
 
   @override
   Future<List<Activity>> getListActivities() async {
-    var json = [
+    /*var json = [
       {
         "id": 25,
         "name": "Garden Care",
@@ -89,7 +89,7 @@ class FakeRepositoryImpl extends Repository {
         "description": "<p>Harvesting</p>",
         "image": ImageAsset.imageActHarvesting
       },
-  /*    {
+  *//*    {
         "id": 33,
         "name": "Do farmers store pesticides/herbicides in their house?",
         "category_id": 20,
@@ -115,7 +115,7 @@ class FakeRepositoryImpl extends Repository {
         "category_id": 20,
         "description":
             "<p>Is there any sign of using compost for the product?</p>"
-      }*/
+      }*//*
     ];
     List<Activity> list =
         List.from(json).map((json) => Activity.fromJson(json)).toList();
@@ -125,7 +125,9 @@ class FakeRepositoryImpl extends Repository {
     getListUnits(10);
     getListUnits(8);
     getListTools();
-    return list;
+    return list;*/
+    // TODO: implement login
+    throw UnimplementedError();
   }
 
   @override
@@ -403,7 +405,15 @@ class FakeRepositoryImpl extends Repository {
         "endTime": "20/01/2023",
         "status": 0,
         "description":
-            "Sản xuất lúa thu đông năm 2022 phục vụ xuất nhập khẩu trong và ngoài nước"
+            "Sản xuất lúa thu đông năm 2022 phục vụ xuất nhập khẩu trong và ngoài nước",
+    "diary_tool_ids": [
+        {
+          "id": 19,
+          "diary_farmer_id": 10,
+          "tool_id": 14,
+          "media_content": ""
+        }
+        ]
       },
       {
         "id": 1,
@@ -616,6 +626,12 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> updateUserInfo(UserInfo userInfo) {
     // TODO: implement updateUserInfo
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> changePassword(String passwordOld, String passwordNew) {
+    // TODO: implement changePassword
     throw UnimplementedError();
   }
 }

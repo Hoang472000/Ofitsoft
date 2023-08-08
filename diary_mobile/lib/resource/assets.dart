@@ -203,4 +203,7 @@ class ImageAsset {
   static const String imageToolRake = "${iMages}tool_rake.png";
   static const String imageToolSaw = "${iMages}tool_saw.png";
   static const String imageToolSpecialized = "${iMages}tool_specialized.png";
+  //background ofitsoft
+
+  static const String imageOfitSoftBackground = "${iMages}image_ofitsoft_background.jpg";
 }

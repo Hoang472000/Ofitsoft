@@ -25,10 +25,10 @@ class ActivityDiaryTable extends Table {
   TextColumn get endTime => text().nullable()();
   IntColumn get status => integer().nullable()();
 
+  TextColumn get stringTool => text().nullable()();
+  TextColumn get stringMaterial => text().nullable()();
+  TextColumn get stringMedia => text().nullable()();
+
   @override
   Set<Column>? get primaryKey => {id};
 }
-
-// List<Item> tool;
-// List<Item> material;
-// List<Item> media;

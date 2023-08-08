@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
@@ -22,17 +23,19 @@ import '../../../view_model/diary_activity/activity/add_actitivy_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class AddActivityPage extends StatefulWidget {
-  const AddActivityPage({super.key, required this.seasonFarmId});
+  const AddActivityPage({super.key, required this.seasonFarmId, required this.diary});
 
   final int seasonFarmId;
+  final Diary diary;
 
   @override
   _AddActivityPageState createState() => _AddActivityPageState();
 
-  static Route route(int seasonFarmId) {
+  static Route route(int seasonFarmId, Diary diary) {
     return Utils.pageRouteBuilder(
         AddActivityPage(
           seasonFarmId: seasonFarmId,
+            diary: diary
         ),
         true);
   }
@@ -49,7 +52,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddActivityBloc(context.read<Repository>())
-        ..add(InitAddActivityEvent(widget.seasonFarmId)),
+        ..add(InitAddActivityEvent(widget.seasonFarmId, widget.diary)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -81,7 +84,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
             }, () {
               Get.back();
               Navigator.pop(context, [true]);
-            }, '', S.of(context).close_dialog);
+            }, '', S.of(context).close_dialog, dismissible: false);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
           }
@@ -419,7 +422,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         margin: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 5),
                         decoration: BoxDecoration(
-                          color: AppColor.gray1.withOpacity(0.9),
+                          //color: AppColor.gray1.withOpacity(0.9),
+                          gradient: const LinearGradient(
+                            colors: [AppColor.grayC7, AppColor.gray9B],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                           borderRadius: BorderRadius.circular(32),
                         ),
                         child: Row(

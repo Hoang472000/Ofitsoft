@@ -146,7 +146,7 @@ class NetworkExecutor{
       }
     }on DioException catch(dioError){
         /// loi timeout
-      print("HoangCV: bug dioError.type: ${dioError.type}");
+      print("HoangCV: bug dioError.type: ${dioError.type} : message: ${dioError.message} : dioError: ${dioError}");
         if(dioError.type== DioExceptionType.connectionTimeout||
         dioError.type== DioExceptionType.sendTimeout||
         dioError.type== DioExceptionType.receiveTimeout){

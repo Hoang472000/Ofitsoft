@@ -80,7 +80,7 @@
   "pass_have_not_contain_space": "Không chứa khoảng trắng hay thông tin Tên đăng nhập",
   "pass_have_have": "Chứa 3 trong 4 kiểu ký tự ",
   "pass_have_special": "(a – z, A – Z, 0 – 9, !@#$%^&*) ",
-  "pass_have_vd": "Ví dụ: Bkav0722, AI@Books",
+  "pass_have_vd": "Example: Ofit2023, Ofit@Soft",
   "logout_message": "Đăng xuất thành công!",
   "hi": "Xin chào!",
   "face_login": "Đăng nhập bằng nhận diện khuôn mặt",

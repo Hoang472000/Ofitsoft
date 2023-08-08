@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:diary_mobile/resource/color.dart';
 import 'package:diary_mobile/resource/style.dart';
@@ -136,7 +137,7 @@ class ContainerInputWidget extends StatelessWidget {
                         primary: false,
                         children: [
                           Padding(
-                            padding: EdgeInsets.all(6),
+                            padding: const EdgeInsets.all(6),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -416,16 +417,32 @@ class ContainerInputWidget extends StatelessWidget {
         return Container();
         break;
       case TypeInputRegister.Select:
+    try {
+      print("HoangCV: run way111111 ${inputRegisterModel.valueSelected} : ${inputRegisterModel.valueSelected.image}");
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Expanded(
-              child: Text(
-                "${inputRegisterModel.valueDefault ?? Extension().getValueDisplay(
-                      inputRegisterModel.valueSelected,
-                    )}",
-                style: TextStyle(color: Colors.black, fontSize: 14),
-                textAlign: TextAlign.end,
+              child: Row(
+                children: [
+                  (inputRegisterModel.valueSelected.image != null && inputRegisterModel.valueSelected.image != null && inputRegisterModel.valueSelected.image !='') ?
+                  Expanded(
+                    child: Image.memory(gaplessPlayback: true,
+                    base64Decode(inputRegisterModel.valueSelected.image??
+                        ""),
+                    height: 50, fit: BoxFit.fitHeight,
+                    ),
+                  ) : const SizedBox(),
+                  Expanded(
+                    child: Text(
+                      "${inputRegisterModel.valueDefault ?? Extension().getValueDisplay(
+                            inputRegisterModel.valueSelected,
+                          )}",
+                      style: TextStyle(color: Colors.black, fontSize: 14),
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
               ),
             ),
             inputRegisterModel.icon != null
@@ -442,39 +459,108 @@ class ContainerInputWidget extends StatelessWidget {
                 : Container()
           ],
         );
+        } catch(e){
+      print("HoangCV: run way111111 ${inputRegisterModel.valueSelected}");
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Expanded(
+            child: Text(
+              "${inputRegisterModel.valueDefault ?? Extension().getValueDisplay(
+                inputRegisterModel.valueSelected,
+              )}",
+              style: TextStyle(color: Colors.black, fontSize: 14),
+              textAlign: TextAlign.end,
+            ),
+          ),
+          inputRegisterModel.icon != null
+              ? Padding(
+            padding: EdgeInsets.only(left: 8),
+            child: Transform.rotate(
+              angle: inputRegisterModel.rotateIcon ? 180 * pi / 180 : 0,
+              child: Utils.iconCustom(
+                  icon: inputRegisterModel.icon,
+                  context: contextParent,
+                  size: 30),
+            ),
+          )
+              : Container()
+        ],
+      );
+    }
         break;
       case TypeInputRegister.MultiSelection:
         return Container();
         break;
       case TypeInputRegister.Non:
-        return TextField(
-          enabled: false,
-          keyboardType: inputRegisterModel.typeInput,
-          controller: inputRegisterModel.controller,
-          textAlign: TextAlign.right,
-          // onTap: () {
-          //   inputRegisterModel.controller.selection =
-          //       new TextSelection.fromPosition(new TextPosition(
-          //           offset: inputRegisterModel.controller.text.length));
-          // },
-          onChanged: (newText) {
-            setTrailingSpaceWhenInput(inputRegisterModel);
-          },
-          autofocus: true,
-          style: TextStyle(
-              color: inputRegisterModel.unit == null
-                  ? Colors.black
-                  : Color(0xFFA3A3A3),
-              fontSize: 14),
-          decoration: InputDecoration(
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-              isDense: true,
-              border: InputBorder.none,
-              counterText: ''),
-          minLines: 1,
-          maxLines: 2,
-        );
+        try {
+          return TextField(
+            enabled: false,
+            keyboardType: inputRegisterModel.typeInput,
+            controller: inputRegisterModel.controller,
+            textAlign: TextAlign.right,
+            // onTap: () {
+            //   inputRegisterModel.controller.selection =
+            //       new TextSelection.fromPosition(new TextPosition(
+            //           offset: inputRegisterModel.controller.text.length));
+            // },
+            onChanged: (newText) {
+              setTrailingSpaceWhenInput(inputRegisterModel);
+            },
+            autofocus: true,
+            style: TextStyle(
+                color: inputRegisterModel.unit == null
+                    ? Colors.black
+                    : Color(0xFFA3A3A3),
+                fontSize: 14),
+            decoration: InputDecoration(
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+                isDense: true,
+                prefixIcon: (inputRegisterModel.valueSelected.image != null &&
+                    inputRegisterModel.valueSelected.image != null &&
+                    inputRegisterModel.valueSelected.image != '') ?
+                Image.memory(gaplessPlayback: true,
+                  base64Decode(inputRegisterModel.valueSelected.image ??
+                      ""),
+                  height: 50, fit: BoxFit.fitHeight,
+                ) : const SizedBox(),
+                border: InputBorder.none,
+                counterText: ''),
+            minLines: 1,
+            maxLines: 2,
+          );
+        } catch(e){
+          //print("HoiangCV: non: 1: ${inputRegisterModel.controller!.text}");
+          return TextField(
+            enabled: false,
+            keyboardType: inputRegisterModel.typeInput,
+            controller: inputRegisterModel.controller,
+            textAlign: TextAlign.right,
+            // onTap: () {
+            //   inputRegisterModel.controller.selection =
+            //       new TextSelection.fromPosition(new TextPosition(
+            //           offset: inputRegisterModel.controller.text.length));
+            // },
+            onChanged: (newText) {
+              setTrailingSpaceWhenInput(inputRegisterModel);
+            },
+            autofocus: true,
+            style: TextStyle(
+                color: inputRegisterModel.unit == null
+                    ? Colors.black
+                    : Color(0xFFA3A3A3),
+                fontSize: 14),
+            decoration: InputDecoration(
+                contentPadding:
+                EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                isDense: true,
+                border: InputBorder.none,
+                counterText: ''),
+            minLines: 1,
+            maxLines: 2,
+          );
+        }
         break;
 // các text container bình thường show số tiền và loại tiền input có 2 tham số các nhau bằng /
 

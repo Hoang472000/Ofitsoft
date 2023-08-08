@@ -1,4 +1,5 @@
 import 'package:diary_mobile/data/local_data/table/item_default/unit_table.dart';
+import 'package:diary_mobile/utils/utils.dart';
 import 'package:drift/drift.dart';
 
 import '../../local_data/diary_db.dart';
@@ -51,7 +52,7 @@ class UserInfo implements Insertable<UserInfo> {
       active: json['active'] ?? true,
       group: json['group'] ?? '',
       language: json['language'] ?? '',
-      mediaContent: json['media_content'] ?? '',
+      mediaContent: json['image'] ?? '',
     );
   }
 
@@ -61,12 +62,12 @@ class UserInfo implements Insertable<UserInfo> {
       switch (gender){
         case 'Nam':
         case 'Male':
-          gen = 'Male';
+          gen = 'male';
         case 'Nữ':
         case 'FeMale':
-          gen = 'FeMale';
+          gen = 'female';
         default :
-          gen = 'Other';
+          gen = 'other';
       }
     }
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -74,12 +75,12 @@ class UserInfo implements Insertable<UserInfo> {
     data['name'] = name;
     data['login'] = login;
     data['gender'] = gen;
-    data['date_of_birth'] = dateOfBirth;
+    data['date_of_birth'] = Utils.convertTimeUpSever(dateOfBirth ?? '');
     data['address'] = address;
     data['active'] = active;
     data['language'] = language;
     data['group'] = group;
-    data['media_content'] = mediaContent;
+    data['image'] = mediaContent;
     return data;
   }
 

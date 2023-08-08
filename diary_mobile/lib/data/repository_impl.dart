@@ -54,21 +54,13 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "0987890987",
+      'login': "0385672922",
       //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
     var headers = {'Content-Type': 'application/json'};
-    print("HoangCV: login data: ${object1}");
-    //HoangCV: fix accessToken
+    print("HoangCV: login data: ${object}");
 
-    // sharedPreferences.setString(SharedPreferencesKey.accessToken,
-    //     "72545975963369f5a96082a2d565772b2baa7e24");
-    //
-    //HoangCV: pass login
-    // final Dio _dio = Dio();
-    // final response = await _dio.fetch(RequestOptions(path: 'https://10.0.2.2:8015/api/login', data: object1,headers: _headers));
-    // print("HoangCV: login response: ${response.data}");
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.login,
@@ -77,11 +69,14 @@ class RepositoryImpl extends Repository {
             header: headers),
         isLogin: true);
 
-    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", true, false);
+    //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.responseCode == StatusConst.code00) {
-      sharedPreferences.setString(SharedPreferencesKey.token,objectResult.response["token"]);
-      sharedPreferences.setInt(SharedPreferencesKey.userId,objectResult.response["user_id"]);
+      sharedPreferences.setString(SharedPreferencesKey.token, objectResult.response["token"]);
+      sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
+      sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"]);
+      sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"]);
+      sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"]??'');
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
       getListMaterials();
@@ -248,7 +243,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListDiary();
+    return DiaryDB.instance.getListDiary();
   }
 
   @override
@@ -278,9 +273,11 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListActivityDiary(id);
+
+    return DiaryDB.instance.getListActivityDiary(id);
   }
 
+  //khong dung den
   @override
   Future<ActivityDiary> getDetailDiary(int id) async{
     final sharedPreferences = await SharedPreferences.getInstance();
@@ -474,6 +471,43 @@ class RepositoryImpl extends Repository {
     }
     else {
 
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<ObjectResult> changePassword(String passwordOld, String passwordNew) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    final Map<String, Object> object = {
+      'old_password': passwordOld,
+      'new_password': passwordNew,
+    };
+    var headers = {'Content-Type': 'application/json'};
+    print("HoangCV: login data: ${object}");
+
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.changePassword}$userId",
+            body: ObjectData(token: token, params: object),
+            /*header: headers*/),
+        isLogin: true);
+
+    print("HoangCV: login response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      sharedPreferences.remove(SharedPreferencesKey.token);
+      sharedPreferences.remove(SharedPreferencesKey.userId);
+      sharedPreferences.remove(SharedPreferencesKey.fullName);
+      sharedPreferences.remove(SharedPreferencesKey.group);
+      sharedPreferences.remove(SharedPreferencesKey.imageProfile);
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
     }
     return objectResult;
   }

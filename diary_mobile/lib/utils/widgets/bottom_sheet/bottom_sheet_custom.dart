@@ -162,11 +162,10 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                 children: [
                                   Expanded(
                                     child: Row(
-                                      children: [(listDataSearch(controller.text)[index].image!='') ?
+                                      children: [(listDataSearch(controller.text)[index].image!=null && listDataSearch(controller.text)[index].image !='') ?
                                         Flexible(
                                             flex: 1,child: Image.memory(gaplessPlayback: true,
-                                          base64Decode(listDataSearch(controller.text)[index].image??
-                                              ""),
+                                          base64Decode(listDataSearch(controller.text)[index]?.image ?? ""),
                                           height: 65, fit: BoxFit.fitWidth,
                                         ),) : const SizedBox(),
                                         Flexible(

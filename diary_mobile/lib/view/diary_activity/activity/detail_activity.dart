@@ -107,21 +107,11 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
             DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                 () {
               Get.back();
-              /* setState(() {
-                    edit = !edit;
-                  });*/
               Navigator.pop(context, [true]);
-              /*blocContext.read<DetailActivityBloc>().add(
-                      GetListActivityEvent(widget.seasonFarmId));*/
             }, () {
               Get.back();
-              /*setState(() {
-                    edit = !edit;
-                  });*/
               Navigator.pop(context, [true]);
-              /*      blocContext.read<ActivityBloc>().add(
-                      GetListActivityEvent(widget.seasonFarmId));*/
-            }, '', S.of(context).close_dialog);
+            }, '', S.of(context).close_dialog, dismissible: false);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
           }
@@ -491,10 +481,16 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                             );
                           },
                           child: Container(
+
                             margin: const EdgeInsets.symmetric(
                                 horizontal: 8, vertical: 5),
                             decoration: BoxDecoration(
-                              color: AppColor.gray1.withOpacity(0.9),
+                              //color: AppColor.gray1.withOpacity(0.9),
+                              gradient: const LinearGradient(
+                                colors: [AppColor.grayC7, AppColor.gray9B],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
                               borderRadius: BorderRadius.circular(32),
                             ),
                             child: Row(

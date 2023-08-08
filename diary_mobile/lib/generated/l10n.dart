@@ -850,10 +850,10 @@ class S {
     );
   }
 
-  /// `Ví dụ: Bkav0722, AI@Books`
+  /// `Example: Ofit2023, Ofit@Soft`
   String get pass_have_vd {
     return Intl.message(
-      'Ví dụ: Bkav0722, AI@Books',
+      'Example: Ofit2023, Ofit@Soft',
       name: 'pass_have_vd',
       desc: '',
       args: [],

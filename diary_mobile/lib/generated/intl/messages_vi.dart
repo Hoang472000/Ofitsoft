@@ -239,8 +239,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "extend": MessageLookupByLibrary.simpleMessage("Xem thêm>>"),
         "face_login": MessageLookupByLibrary.simpleMessage(
             "Đăng nhập bằng nhận diện khuôn mặt"),
-        "feature_mess":
-            MessageLookupByLibrary.simpleMessage("Tính năng đang phát triển"),
         "filter": MessageLookupByLibrary.simpleMessage("Bộ Lọc"),
         "financial_year": MessageLookupByLibrary.simpleMessage("Năm tài chính"),
         "fingerprint_authentication":
@@ -358,7 +356,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pass_have_special": MessageLookupByLibrary.simpleMessage(
             "(a – z, A – Z, 0 – 9, !@#\$%^&*) "),
         "pass_have_vd":
-            MessageLookupByLibrary.simpleMessage("Ví dụ: Bkav0722, AI@Books"),
+            MessageLookupByLibrary.simpleMessage("Ví dụ: Ofit2023, Ofit@Soft"),
         "pass_new": MessageLookupByLibrary.simpleMessage("Mật khẩu mới"),
         "pass_not_same_new_pass": MessageLookupByLibrary.simpleMessage(
             "Mật khẩu không khớp với mật khẩu mới."),

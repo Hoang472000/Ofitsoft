@@ -125,6 +125,24 @@ class Utils {
     return timeTemp[0].split('-').reversed.join('-');
   }
 
+  static String convertTimeUpSever(String time) {
+    if(time.isEmpty) {
+      return '';
+    }
+    // Định dạng cho ngày/tháng/năm đầu vào
+    final inputFormat = DateFormat('dd/MM/yyyy');
+    // Định dạng cho ngày/tháng/năm đầu ra
+    final outputFormat = DateFormat('yyyy-MM-dd');
+
+    // Chuyển đổi chuỗi đầu vào sang kiểu DateTime
+    final dateTime = inputFormat.parse(time);
+
+    // Chuyển đổi DateTime thành chuỗi theo định dạng đầu ra
+    final formattedDate = outputFormat.format(dateTime);
+
+    return formattedDate;
+  }
+
   static String convertTimeDay(String time) {
     final timeTemp = time.split('T');
     final timeTemp2 = timeTemp[1].split('.');
@@ -164,6 +182,12 @@ class Utils {
     }
   }
 
+  static String formatDateTimeToString(DateTime dateTime) {
+    DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+    String formattedString = formatter.format(dateTime);
+    return formattedString;
+  }
+
   static String formatDateToString(DateTime time) {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
       return formatter.format(time);
@@ -182,9 +206,16 @@ class Utils {
     return dateTime/*.toUtc()*/;
   }
   static DateTime stringToDate(String time) {
-    DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
-    DateTime dateTime = formatter.parse(time/*.replaceFirst(' ', 'T')*/);
-    return dateTime;
+    if(time.contains(' ')){
+      DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+      DateTime dateTime = formatter.parse(time/*.replaceFirst(' ', 'T')*/);
+      return dateTime;
+    } else{
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
+      DateTime dateTime = formatter.parse(time);
+      return dateTime;
+    }
+
   }
 
   static DateTime stringToDateDOB(String time) {
@@ -512,11 +543,6 @@ class Utils {
     DateTime dateTime = formatter.parse(time);
     DateTime dateTime1 = DateTime.parse(dateTime.toString());
     return dateTime1;
-  }
-  static String formatDateTimeToString(DateTime dateTime) {
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    String formattedString = formatter.format(dateTime);
-    return formattedString;
   }
 
   static String formatDateTimeToStringFull(DateTime dateTime) {

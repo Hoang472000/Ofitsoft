@@ -46,6 +46,8 @@ abstract class Repository {
 
   Future<ObjectResult> login(String userName, String pass);
 
+  Future<ObjectResult> changePassword(String passwordOld, String passwordNew);
+
   Future<List<Diary>> getListDiary();
 
   Future<List<ActivityDiary>> getListActivityDiary(int id);

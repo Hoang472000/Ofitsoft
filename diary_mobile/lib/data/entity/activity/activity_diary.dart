@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
 import 'package:drift/drift.dart';
@@ -29,6 +31,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
   List<Tool> tool;
   List<MaterialEntity> material;
   List<ImageEntity> media;
+  String? stringTool;
+  String? stringMaterial;
+  String? stringMedia;
 
   ActivityDiary({
     this.id,
@@ -52,6 +57,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     this.tool = const [],
     this.material = const [],
     this.media = const [],
+    this.stringTool,
+    this.stringMedia,
+    this.stringMaterial
   });
 
   factory ActivityDiary.fromJson(Map<String, dynamic> json) {
@@ -64,7 +72,7 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       actionArea: json['action_area'],
       actionAreaUnitId: json['action_area_unit_id'] ?? -1,
       actionAreaUnitName: json['action_area_unit_name'] ?? '',
-      description: json['description'] ?? '',
+      description: (json['description']??'').toString().replaceAll(RegExp(r'<\/?p>'),'') ?? '',
       activityName: json['activity_name'] ?? '',
       name: json['name'] ?? "",
       byName: json['by_name'] ?? "",
@@ -76,7 +84,27 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       tool: json['diary_tool_ids'] != null ? (json['diary_tool_ids'] as List<dynamic>).map((itemJson) => Tool.fromJson(itemJson)).toList() : [],
       material: json['diary_material_ids'] != null ? (json['diary_material_ids'] as List<dynamic>).map((itemJson) => MaterialEntity.fromJson(itemJson)).toList() : [],
       media: json['diary_media_ids'] != null ? (json['diary_media_ids'] as List<dynamic>).map((itemJson) => ImageEntity.fromJson(itemJson)).toList() : [],
+      stringTool: jsonEncode(json['diary_tool_ids']) ?? '[]',
+      stringMedia: jsonEncode(json['diary_media_ids']) ?? '[]',
+      stringMaterial: jsonEncode(json['diary_material_ids']) ?? '[]',
     );
+  }
+
+  String convertToolsListToJson() {
+    //print("HoangCV: tool: ${tool.length}");
+    final List<Map<String, dynamic>> toolListJson =
+    tool.map((tool) => tool.toJson()).toList();
+    return jsonEncode(toolListJson);
+  }
+  String convertMaterialsListToJson() {
+    final List<Map<String, dynamic>> toolListJson =
+    material.map((tool) => tool.toJson()).toList();
+    return jsonEncode(toolListJson);
+  }
+  String convertMediasListToJson() {
+    final List<Map<String, dynamic>> toolListJson =
+    media.map((tool) => tool.toJson()).toList();
+    return jsonEncode(toolListJson);
   }
 
   Map<String, dynamic> toJson() {
@@ -100,16 +128,16 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     data['status'] = status;
 
     List<Map> listTool= [];
-    for (int i = 0; i < tool.length; i++) {
-      listTool.add(tool[i].toJson());
+    for (int i = 0; i < (tool??[]).length; i++) {
+      listTool.add((tool??[])[i].toJson());
     }
     List<Map> listMaterial= [];
-    for (int i = 0; i < material.length; i++) {
-      listMaterial.add(material[i].toJson());
+    for (int i = 0; i < (material??[]).length; i++) {
+      listMaterial.add((material??[])[i].toJson());
     }
     List<Map> listImage= [];
-    for (int i = 0; i < media.length; i++) {
-      listImage.add(media[i].toJson());
+    for (int i = 0; i < (media??[]).length; i++) {
+      listImage.add((media??[])[i].toJson());
     }
     data['diary_tool_ids'] = listTool;
     data['diary_material_ids'] = listMaterial;
@@ -134,9 +162,9 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         startTime = other.startTime,
         endTime = other.endTime,
         status = other.status,
-        tool = List.of(other.tool), // Tạo bản sao của danh sách tool
-        material = List.of(other.material), // Tạo bản sao của danh sách material
-        media = List.of(other.media); // Tạo bản sao của danh sách media
+        tool = List.of(other.tool??[]), // Tạo bản sao của danh sách tool
+        material = List.of(other.material??[]), // Tạo bản sao của danh sách material
+        media = List.of(other.media??[]); // Tạo bản sao của danh sách media
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -154,7 +182,13 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         byName: Value(byName),
         startTime: Value(startTime),
         endTime: Value(endTime),
-        status: Value(status))
+        status: Value(status),
+/*        tool: Value(tool),
+        status: Value(status),
+        stringTool: Value(stringTool),*/
+      stringTool: Value(stringTool),
+    stringMaterial: Value(stringMaterial),
+    stringMedia: Value(stringMedia))
         .toColumns(nullToAbsent);
   }
 }

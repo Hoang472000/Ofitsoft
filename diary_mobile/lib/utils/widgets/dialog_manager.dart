@@ -321,9 +321,10 @@ class DiaLogManager {
       color: Colors.transparent,
       alignment: Alignment.center,
       child: const SizedBox(
-        height: 30,
-        width: 30,
-        child: CircularProgressIndicator(strokeWidth: 2,),
+        height: 40,
+        width: 40,
+        child: DashedCircle(
+            size: 39, stringIcon: IconAsset.icLoadOtp),
       ),
     ));
   }

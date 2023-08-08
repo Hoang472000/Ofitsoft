@@ -22,6 +22,7 @@ import '../../utils/widgets/text_form_input_ai_book.dart';
 import '../../view_model/account/login_bloc.dart';
 import '../forget_password/forget_password_page.dart';
 import '../home/home_page.dart';
+import '../setting/contact/contact_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage(
@@ -121,30 +122,39 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           resizeToAvoidBottomInset: false,
           body: Utils.bkavCheckOrientation(
             context,
-            SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: MultiBlocProvider(
-                    providers: [
+            Container(
+              decoration: const BoxDecoration(
+            image: DecorationImage(
+              opacity: 1,
+                image: AssetImage(
+                    ImageAsset.imageOfitSoftBackground),
+                fit: BoxFit.cover),
+                ),
+              child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: MultiBlocProvider(
+                      providers: [
 /*                      BlocProvider<SettingBloc>(
-                          create: (context) => SettingBloc(context,
-                              repository: context.read<Repository>(),
-                              showFace: widget.isFaceId,
-                              showFigure: widget.isFingerprint)),*/
-                      BlocProvider<LoginBloc>(
-                          create: (context) => LoginBloc(
-                              context,
-                              widget.isFaceId,
-                              widget.isFingerprint,
-                              _inputUsernameController.text,
-                              context.read<Repository>())),
-                    ],
-                    child: _loginForm(context),
-                    //),
-                  ),
-                )),
+                            create: (context) => SettingBloc(context,
+                                repository: context.read<Repository>(),
+                                showFace: widget.isFaceId,
+                                showFigure: widget.isFingerprint)),*/
+                        BlocProvider<LoginBloc>(
+                            create: (context) => LoginBloc(
+                                context,
+                                widget.isFaceId,
+                                widget.isFingerprint,
+                                _inputUsernameController.text,
+                                context.read<Repository>())),
+                      ],
+                      child: _loginForm(context),
+                      //),
+                    ),
+                  )),
+            ),
           ),
         ));
   }
@@ -192,7 +202,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 padding: const EdgeInsets.only(top: 105),
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Column(
@@ -201,7 +211,10 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                         _logoWidgetLogin(context),
                         _usernameField(context),
                         _passwordField(),
-                        _rowRememberPass(),
+                        //_rowRememberPass(),
+                        SizedBox(
+                          height: 40,
+                        ),
                         _rowButton(),
                         //_rowRegisterAccount(),
                         _rowHotline(context),
@@ -376,10 +389,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   Widget _rowHotline(BuildContext context) {
     return InkWell(
       onTap: () {
-/*        launchPhoneUrl(StringValue.sdtContact);*/
+        //Navigator.push(context, ContactPage.route());
+        Utils.launchPhoneUrl('0989426911');
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         margin: const EdgeInsets.only(top: 35, bottom: 15),
         decoration: BoxDecoration(boxShadow: [
           BoxShadow(
@@ -388,7 +402,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
             blurRadius: 3,
             offset: const Offset(0, 2), // changes position of shadow
           ),
-        ], color: Colors.white, borderRadius: BorderRadius.circular(22)),
+        ], color: Colors.white.withOpacity(0.9), borderRadius: BorderRadius.circular(22)),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -399,7 +413,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
               width: 6,
             ),
             Flexible(
-              child: Text("0989426911",
+              child: Text("Hỗ trợ",
                   style: StyleBkav.textStyleFW700(AppColor.yellowFF, 16,
                       overflow: TextOverflow.visible)),
             )
@@ -454,6 +468,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 style: TextButton.styleFrom(
                   primary: AppColor.blueE8,
                   padding: EdgeInsets.zero,
+                  backgroundColor: AppColor.whiteF2.withOpacity(0.5),
                 ),
                 onPressed: () async {
                   Navigator.push(
@@ -462,7 +477,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                           _inputUsernameController.text));
                 },
                 child: Text(S.of(context).forgot_password + " ?",
-                    style: StyleBkav.textStyleFW600(AppColor.black22, 14,
+                    style: StyleBkav.textStyleFW600(AppColor.back09, 14,
                         overflow: TextOverflow.visible)),
               ),
             ),

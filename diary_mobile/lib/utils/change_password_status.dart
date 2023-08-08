@@ -5,6 +5,7 @@ abstract class FormChangePasswordStatus {
 class ChangeFormStatus extends FormChangePasswordStatus {
   const ChangeFormStatus();
 }
+class ChangeFormSubmitting extends FormChangePasswordStatus {}
 
 class ChangePasswordSuccess extends FormChangePasswordStatus {
   final String message;

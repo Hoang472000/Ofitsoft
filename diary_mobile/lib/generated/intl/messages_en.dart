@@ -361,8 +361,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Không chứa khoảng trắng hay thông tin Tên đăng nhập"),
         "pass_have_special": MessageLookupByLibrary.simpleMessage(
             "(a – z, A – Z, 0 – 9, !@#\$%^&*) "),
-        "pass_have_vd":
-            MessageLookupByLibrary.simpleMessage("Ví dụ: Bkav0722, AI@Books"),
+        "pass_have_vd": MessageLookupByLibrary.simpleMessage(
+            "Example: Ofit2023, Ofit@Soft"),
         "pass_new": MessageLookupByLibrary.simpleMessage("Mật khẩu mới"),
         "pass_not_same_new_pass": MessageLookupByLibrary.simpleMessage(
             "Mật khẩu không khớp với mật khẩu mới."),

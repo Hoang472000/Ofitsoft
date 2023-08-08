@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
+import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -44,7 +45,7 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) =>
-            ChangePasswordBloc(context, /*repository: context.read<Repository>()*/),
+            ChangePasswordBloc(context, context.read<Repository>()),
         child: BlocListener<ChangePasswordBloc, ChangePasswordState>(
           listener: (context, state) async {
             if (state.formStatus is ChangePasswordSuccess) {
@@ -58,9 +59,9 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                     await LoginPage.route(), (route) => false);
                 if (!mounted) return;
                 Get.back();
-              }, S.of(context).agree, "", dialogComplete: true);
+              }, S.of(context).agree, "", dialogComplete: true,dismissible: false);
             } else if (state.formStatus is ChangePasswordFailed) {
-            } else if (state.formStatus is ChangePasswordFailed) {
+            } else if (state.formStatus is ChangeFormSubmitting) {
               DiaLogManager.showDialogLoading(context);
             }
           },
@@ -310,7 +311,13 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                                           )
                                               : BkavButton(
                                             text: S.of(context).agree,
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              context
+                                                  .read<
+                                                  ChangePasswordBloc>()
+                                                  .add(SubmissionChangePassword(
+                                                  _inputPassCurrent.text, _inputPassNew.text));
+                                            },
                                             color: AppColor.main
                                                 .withOpacity(0.3),
                                           ),

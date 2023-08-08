@@ -32,9 +32,10 @@ Future<void> initBkav() async{
   FirebaseMessaging.instance.getInitialMessage();*/
   // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   // makes Smartphone Statusbar transparent
+  SystemChrome.setEnabledSystemUIMode( SystemUiMode.manual,overlays: [SystemUiOverlay.top]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
       ));
 
 //

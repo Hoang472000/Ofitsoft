@@ -36,7 +36,10 @@ class Diary implements Insertable<Diary> {
   String? endDate;
   String? description;
   String? status;
-
+//
+  double? farmArea;
+  int? farmAreaUnitId;
+  String? farmAreaUnit;
   //Thuoc tinh information detail diary
 
   String? actionTime;
@@ -78,6 +81,9 @@ class Diary implements Insertable<Diary> {
     this.yieldEstimateUnit,
     this.farm,
     this.farmerName,
+    this.farmArea,
+    this.farmAreaUnit,
+    this.farmAreaUnitId,
     this.tool = const [],
     this.material = const [],
     this.media = const [],
@@ -108,11 +114,14 @@ class Diary implements Insertable<Diary> {
       areaUnitId: json['area_unit_id'] ?? -1,
       areaUnit: json['area_unit_name'] ?? '',
       area: json['area'] ?? -1,
+      farmAreaUnitId: json['farm_area_unit_id'] ?? -1,
+      farmAreaUnit: json['farm_area_unit_name'] ?? '',
+      farmArea: json['farm_area'] ?? -1,
       amountUnitId: json['amount_unit_id'] ?? -1,
-      amountUnit: json['amount_unit'] ?? "",
+      amountUnit: json['amount_unit_name'] ?? "",
       amount: json['amount'] ?? -1,
       yieldEstimateUnitId: json['yield_estimate_unit_id'] ?? -1,
-      yieldEstimateUnit: json['yield_estimate_unit'] ?? '',
+      yieldEstimateUnit: json['yield_estimate_unit_name'] ?? '',
       yieldEstimate: json['yield_estimate'] ?? -1,
       tool: json['tool'] != null
           ? (json['tool'] as List<dynamic>)
@@ -155,13 +164,13 @@ class Diary implements Insertable<Diary> {
     data['end_time'] = endDate;
     data['status'] = status;
     data['amount'] = amount;
-    data['amount_unit'] = amountUnit;
+    data['amount_unit_name'] = amountUnit;
     data['amount_unit_id'] = amountUnitId;
     data['area'] = area;
     data['area_unit_id'] = areaUnitId;
     data['area_unit_name'] = areaUnit;
     data['yield_estimate'] = yieldEstimate;
-    data['yield_estimate_unit'] = yieldEstimateUnit;
+    data['yield_estimate_unit_name'] = yieldEstimateUnit;
     data['yield_estimate_unit_id'] = yieldEstimateUnitId;
     List<Map> listTool = [];
     for (int i = 0; i < tool.length; i++) {
@@ -205,6 +214,9 @@ class Diary implements Insertable<Diary> {
             areaUnitId: Value(areaUnitId),
             areaUnit: Value(areaUnit),
             area: Value(area),
+            farmAreaUnitId: Value(farmAreaUnitId),
+            farmAreaUnit: Value(farmAreaUnit),
+            farmArea: Value(farmArea),
             yieldEstimateUnitId: Value(yieldEstimateUnitId),
             yieldEstimateUnit: Value(yieldEstimateUnit),
             yieldEstimate: Value(yieldEstimate))

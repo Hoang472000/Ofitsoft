@@ -58,14 +58,18 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             label: "Diện tích",
                             value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnit}",
                             image: ImageAsset.imageManagement),
+                        state.detailDiary!.amount == -1 ?
+                        Container() :
                         CardTileDouble(
                             label1: "Số lượng ban đầu",
-                            value1:  "${state.detailDiary!.amount== -1 ? '' : (state.detailDiary!.amount??0).toInt()}",
+                            value1:  "${state.detailDiary!.amount == -1 ? '' : (state.detailDiary!.amount??0).toInt()}",
                             value2: "${state.detailDiary!.amountUnit}",
                             image: ImageAsset.imageBudget),
+                        state.detailDiary!.yieldEstimate == -1 ?
+                        Container() :
                         CardTileDouble(
                             label1: "Sản lượng ước tính",
-                            value1: "${state.detailDiary!.yieldEstimate== -1 ? '' : (state.detailDiary!.yieldEstimate??0).toInt()}",
+                            value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : (state.detailDiary!.yieldEstimate??0).toInt()}",
                             value2: "${state.detailDiary!.yieldEstimateUnit}",
                             image: ImageAsset.imageBudget),
                         CardTile(
@@ -74,11 +78,15 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageCalendarBegin),
                         ((state.detailDiary!.status??'').compareTo("done") == 0)?CardTile(
                             label: "Ngày kết thúc",
-                            value: "${state.detailDiary!.startDate}",
+                            value: "${state.detailDiary!.endDate}",
                             image: ImageAsset.imageCalendarEnd): Container(),
+                        //draft//processing//done//cancelled//
                         CardTile(
                             label: "Trạng thái",
-                            value: "${state.detailDiary!.status}",
+                            value: (state.detailDiary!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
+                            (state.detailDiary!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
+                            (state.detailDiary!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
+                            (state.detailDiary!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
                             image: ImageAsset.imageStatus),
                       ],
                     ) : Container(),

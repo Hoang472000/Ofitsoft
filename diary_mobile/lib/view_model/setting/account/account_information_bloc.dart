@@ -3,10 +3,12 @@ import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/entity/image/image_entity.dart';
 import '../../../data/remote_data/object_model/object_result.dart';
 import '../../../data/repository.dart';
 import '../../../resource/assets.dart';
+import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/extenstion/extenstions.dart';
 import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';
@@ -83,7 +85,7 @@ class AccountInformationBloc
         maxLengthTextInput: 200,
         controller: state.mainController,
         image: ImageAsset.imageCollaboration));
-    emitter(state.copyWith(listWidget: list));
+    emitter(state.copyWith(listWidget: list, formStatus: const InitialFormStatus()));
   }
 
   void _changeViewEdit(Emitter<AccountInformationState> emitter) {
@@ -152,18 +154,18 @@ class AccountInformationBloc
         controller: state.mainController,
         image: ImageAsset.imageCollaboration));
 
-    emitter(state.copyWith(listWidget: list));
+    emitter(state.copyWith(listWidget: list, formStatus: const InitialFormStatus()));
   }
 
   void _initInfo(
       InitInfoEvent event, Emitter<AccountInformationState> emitter) async {
     UserInfo userInfo;
     if(event.resetView){
-      emitter(state.copyWith(isShowProgress: true));
+      emitter(state.copyWith(isShowProgress: true, formStatus: const InitialFormStatus()));
       userInfo = UserInfo.copy(state.userInfo ?? UserInfo());
     }else {
       emitter(state.copyWith(
-          isShowProgress: true, listWidget: [], userInfo: UserInfo()));
+          isShowProgress: true, listWidget: [], userInfo: UserInfo(), formStatus: FormSubmitting()));
       userInfo = await repository.getUserInfo();
     }
     //UserInfo userInfo = await repository.getUserInfo();
@@ -173,6 +175,7 @@ class AccountInformationBloc
     print("HoangCV: ${userInfo.mediaContent}");
     emitter(state.copyWith(
       isShowProgress: false,
+      formStatus: const InitialFormStatus(),
       userInfo: userInfo,
       listGender: listGender,
       indexSex: index,
@@ -250,7 +253,7 @@ class AccountInformationBloc
         if (event.list[event.index].title.compareTo("Giới tính:") == 0) {
           emit(state.copyWith(
               genderController: TextEditingController(text: event.list[event.index].valueSelected.name),
-              indexSex: result));
+              indexSex: result, formStatus: const InitialFormStatus()));
         }
       }
     }
@@ -264,13 +267,14 @@ class AccountInformationBloc
     list.addAll(event.listImage);
     UserInfo? userInfo = state.userInfo;
     userInfo!.mediaContent = list[0].fileContent;
-    emit(state.copyWith(listImage: list, userInfo: userInfo));
+    emit(state.copyWith(listImage: list, userInfo: userInfo, formStatus: const InitialFormStatus()));
   }
 
   FutureOr<void> _updateInfo(UpdateInfoEvent event, Emitter<AccountInformationState> emit) async{
     print("HoangCV: state.indexActivity: ${state.nameController!.text}");
     emit(state.copyWith(
       isShowProgress: true,
+      formStatus: const InitialFormStatus()
     ));
     bool validate = true;
    if(state.nameController!.text.isEmpty){
@@ -281,6 +285,10 @@ class AccountInformationBloc
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
     } else {
+      emit(state.copyWith(
+          isShowProgress: true,
+          formStatus: FormSubmitting()
+      ));
     UserInfo userInfo = UserInfo(
       id: state.userInfo?.id,
       name: state.nameController?.text,
@@ -290,7 +298,7 @@ class AccountInformationBloc
       address: state.addressController?.text,
       active: true,
       group: state.userInfo?.group, language: state.userInfo?.language,
-      mediaContent: state.listImage.isNotEmpty ? state.listImage[0].fileContent : '',
+      mediaContent: state.listImage.isNotEmpty ? state.listImage[0].fileContent : state.userInfo?.mediaContent,
     );
     ObjectResult objectResult = await repository.updateUserInfo(userInfo);
       if (objectResult.responseCode == StatusConst.code00) {
@@ -298,9 +306,12 @@ class AccountInformationBloc
       }
       if (objectResult.responseCode == StatusConst.code00) {
         //_changeViewDetail(emit);
+        UserInfo userInfo = await repository.getUserInfo();
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        sharedPreferences.setString(SharedPreferencesKey.imageProfile, userInfo.mediaContent??"");
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: objectResult.message)));
+            formStatus: SubmissionSuccess(success: objectResult.message), userInfo: userInfo));
       } else if (objectResult.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
