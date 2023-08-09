@@ -211,7 +211,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                     )),
                               ],
                             )
-                          :  Container(),
+                          : const SizedBox(),
                       itemAccount(context,
                           text: "Danh sách vật tư, công cụ",
                           image: ImageAsset.imageGardening,

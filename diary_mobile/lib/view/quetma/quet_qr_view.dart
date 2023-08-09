@@ -2,12 +2,10 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../generated/l10n.dart';
-import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/form_submission_status.dart';
@@ -39,10 +37,11 @@ class _QRCodeViewState extends State<QRCodeView> {
   late BarcodeState barcodeState;
   bool addOrRemoveFromCart = false;
 
+  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  Barcode? result;
   QRViewController? controller;
   String textError = "";
   String barCodeError = "";
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   @override
   void reassemble() {
@@ -55,6 +54,7 @@ class _QRCodeViewState extends State<QRCodeView> {
 
   @override
   initState() {
+    //controller!.resumeCamera();
     super.initState();
   }
 
