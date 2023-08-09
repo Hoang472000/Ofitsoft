@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
@@ -366,7 +367,17 @@ class RepositoryImpl extends Repository {
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
     }
-    else {
+    else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    else{
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,

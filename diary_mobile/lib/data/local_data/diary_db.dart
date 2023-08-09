@@ -5,6 +5,7 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
+import 'package:diary_mobile/data/local_data/table/activity_diary_no_network_table.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/activity_monitor_table.dart';
@@ -19,6 +20,7 @@ import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import '../entity/activity/activity_diary_no_network.dart';
 import '../entity/item_default/activity.dart';
 import '../entity/item_default/activity_monitor.dart';
 import '../entity/item_default/tool.dart';
@@ -26,7 +28,7 @@ import '../entity/item_default/unit.dart';
 import '../entity/monitor/monitor_diary.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable])
+@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable, ActDiaryNoNetworkTable ])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -114,6 +116,79 @@ class DiaryDB extends _$DiaryDB {
       diaryEntriesList.add(diaryEntry);
     }
      return diaryEntriesList;
+  }
+
+  ///Thêm, sửa, xóa, lấy Activity Diary no network
+  Future<void> insertListActDiaryNoNetWork(List<ActDiaryNoNetwork> values) async {
+    /*   await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityDiaryTable, values);
+    });*/
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry: ${entry.convertToolsListToJson()}");
+        final ActDiaryNoNetworkTableCompanion entryCompanion = ActDiaryNoNetworkTableCompanion(
+          api: Value(entry.api),
+          id: Value(entry.id),
+          seasonFarmId: Value(entry.seasonFarmId),
+          seasonFarm: Value(entry.seasonFarm),
+          activityId: Value(entry.activityId),
+          actionTime: Value(entry.actionTime),
+          actionArea: Value(entry.actionArea),
+          actionAreaUnitId: Value(entry.actionAreaUnitId),
+          actionAreaUnitName: Value(entry.actionAreaUnitName),
+          description: Value(entry.description),
+          activityName: Value(entry.activityName),
+          name: Value(entry.name),
+          byName: Value(entry.byName),
+          startTime: Value(entry.startTime),
+          endTime: Value(entry.endTime),
+          status: Value(entry.status),
+          stringTool: Value(entry.convertToolsListToJson()),
+          stringMaterial: Value(entry.convertMaterialsListToJson()),
+          stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
+        );
+        print("HoangCV: stringTool: ${entryCompanion.stringTool}");
+        batch.insertAllOnConflictUpdate(actDiaryNoNetworkTable, [entryCompanion]);
+      }
+    });
+  }
+
+  Future<List<ActDiaryNoNetwork>> getListActDiaryNoNetWork() async {
+    final query = await (select(actDiaryNoNetworkTable))
+        .get();
+    final List<ActDiaryNoNetwork> diaryEntriesList = [];
+
+    for (final queriedEntry in query) {
+      print('Diary Entry Tools String: ${queriedEntry.tool.length} : ${query}');
+      final diaryEntry = ActDiaryNoNetwork.fromJson({
+        'api': queriedEntry.api,
+        'id': queriedEntry.id,
+        'season_farm_id': queriedEntry.seasonFarmId,
+        'season_farm': queriedEntry.seasonFarm,
+        'activity_id': queriedEntry.activityId,
+        'action_time': queriedEntry.actionTime,
+        'action_area': queriedEntry.actionArea,
+        'action_area_unit_id': queriedEntry.actionAreaUnitId,
+        'action_area_unit_name': queriedEntry.actionAreaUnitName,
+        'description': queriedEntry.description,
+        'activity_name': queriedEntry.activityName,
+        'name': queriedEntry.name,
+        'by_name': queriedEntry.byName,
+        'start_time': queriedEntry.startTime,
+        'end_time': queriedEntry.endTime,
+        'status': queriedEntry.status,
+        'is_Shown': queriedEntry.isShow,
+        'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
+        'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),
+        'diary_media_ids': jsonDecode(queriedEntry.stringMedia??'[]'),
+      });
+      diaryEntriesList.add(diaryEntry);
+    }
+    return diaryEntriesList;
+  }
+  
+  Future<void> removeActDiaryNoNetWork(int id) async {
+     await (delete(actDiaryNoNetworkTable)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   ///Thêm, sửa, xóa, lấy Monitor Diary

@@ -10,6 +10,10 @@ class StatusConst {
   static const String code02 = "02"; // Không có dữ liệu
   static const String code03 = "03"; // Token hết hạn/Sai token/Lỗi token
   static const String code05 = "05"; // Lỗi hệ thống
+  static const String code06 = "06"; // Mất kết nối mạng
+  static const String code07 = "07"; // Kết nối quá hạn
+  static const String code08 = "08"; // Lỗi không xác định
+
  //trang thai xoa phieu kiem kho
   static const int deleteFromSystem= 1;
   static const int deleteAllowRestore= 2;

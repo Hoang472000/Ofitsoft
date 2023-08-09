@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_network_connectivity/flutter_network_connectivity.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -15,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/entity/image/image_entity.dart';
+import '../data/remote_data/network_processor/network_check_connect.dart';
 import '../generated/l10n.dart';
 import '../resource/color.dart';
 import '../resource/style.dart';
@@ -151,7 +151,7 @@ class Utils {
 
   //Bkav Nhungltk: check dieu kien mang
   static Future<bool> checkInternetConnection() async {
-    return await FlutterNetworkConnectivity().isInternetConnectionAvailable();
+    return await NetworkCheckConnect.status;
   }
 
   static void dismissDialog(BuildContext context) {

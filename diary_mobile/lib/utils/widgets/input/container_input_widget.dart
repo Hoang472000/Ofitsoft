@@ -418,7 +418,7 @@ class ContainerInputWidget extends StatelessWidget {
         break;
       case TypeInputRegister.Select:
     try {
-      print("HoangCV: run way111111 ${inputRegisterModel.valueSelected} : ${inputRegisterModel.valueSelected.image}");
+      // print("HoangCV: run way111111 ${inputRegisterModel.valueSelected} : ${inputRegisterModel.valueSelected.image}");
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -460,7 +460,7 @@ class ContainerInputWidget extends StatelessWidget {
           ],
         );
         } catch(e){
-      print("HoangCV: run way111111 ${inputRegisterModel.valueSelected}");
+      // print("HoangCV: run way111111 ${inputRegisterModel.valueSelected}");
       return Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [

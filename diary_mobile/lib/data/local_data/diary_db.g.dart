@@ -3955,6 +3955,577 @@ class MonitorDiaryTableCompanion extends UpdateCompanion<MonitorDiary> {
   }
 }
 
+class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
+    with TableInfo<$ActDiaryNoNetworkTableTable, ActDiaryNoNetwork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActDiaryNoNetworkTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _apiMeta = const VerificationMeta('api');
+  @override
+  late final GeneratedColumn<String> api = GeneratedColumn<String>(
+      'api', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmMeta =
+      const VerificationMeta('seasonFarm');
+  @override
+  late final GeneratedColumn<String> seasonFarm = GeneratedColumn<String>(
+      'season_farm', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _activityIdMeta =
+      const VerificationMeta('activityId');
+  @override
+  late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
+      'activity_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activityNameMeta =
+      const VerificationMeta('activityName');
+  @override
+  late final GeneratedColumn<String> activityName = GeneratedColumn<String>(
+      'activity_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _actionTimeMeta =
+      const VerificationMeta('actionTime');
+  @override
+  late final GeneratedColumn<String> actionTime = GeneratedColumn<String>(
+      'action_time', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _actionAreaMeta =
+      const VerificationMeta('actionArea');
+  @override
+  late final GeneratedColumn<double> actionArea = GeneratedColumn<double>(
+      'action_area', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _actionAreaUnitIdMeta =
+      const VerificationMeta('actionAreaUnitId');
+  @override
+  late final GeneratedColumn<int> actionAreaUnitId = GeneratedColumn<int>(
+      'action_area_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _actionAreaUnitNameMeta =
+      const VerificationMeta('actionAreaUnitName');
+  @override
+  late final GeneratedColumn<String> actionAreaUnitName =
+      GeneratedColumn<String>('action_area_unit_name', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isShowMeta = const VerificationMeta('isShow');
+  @override
+  late final GeneratedColumn<bool> isShow =
+      GeneratedColumn<bool>('is_show', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_show" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _byNameMeta = const VerificationMeta('byName');
+  @override
+  late final GeneratedColumn<String> byName = GeneratedColumn<String>(
+      'by_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _startTimeMeta =
+      const VerificationMeta('startTime');
+  @override
+  late final GeneratedColumn<String> startTime = GeneratedColumn<String>(
+      'start_time', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _endTimeMeta =
+      const VerificationMeta('endTime');
+  @override
+  late final GeneratedColumn<String> endTime = GeneratedColumn<String>(
+      'end_time', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<int> status = GeneratedColumn<int>(
+      'status', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _stringToolMeta =
+      const VerificationMeta('stringTool');
+  @override
+  late final GeneratedColumn<String> stringTool = GeneratedColumn<String>(
+      'string_tool', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringMaterialMeta =
+      const VerificationMeta('stringMaterial');
+  @override
+  late final GeneratedColumn<String> stringMaterial = GeneratedColumn<String>(
+      'string_material', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringMediaMeta =
+      const VerificationMeta('stringMedia');
+  @override
+  late final GeneratedColumn<String> stringMedia = GeneratedColumn<String>(
+      'string_media', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        api,
+        id,
+        seasonFarmId,
+        seasonFarm,
+        activityId,
+        activityName,
+        actionTime,
+        actionArea,
+        actionAreaUnitId,
+        actionAreaUnitName,
+        description,
+        isShow,
+        name,
+        byName,
+        startTime,
+        endTime,
+        status,
+        stringTool,
+        stringMaterial,
+        stringMedia
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_diary_no_network';
+  @override
+  String get actualTableName => 'activity_diary_no_network';
+  @override
+  VerificationContext validateIntegrity(Insertable<ActDiaryNoNetwork> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('api')) {
+      context.handle(
+          _apiMeta, api.isAcceptableOrUnknown(data['api']!, _apiMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm')) {
+      context.handle(
+          _seasonFarmMeta,
+          seasonFarm.isAcceptableOrUnknown(
+              data['season_farm']!, _seasonFarmMeta));
+    }
+    if (data.containsKey('activity_id')) {
+      context.handle(
+          _activityIdMeta,
+          activityId.isAcceptableOrUnknown(
+              data['activity_id']!, _activityIdMeta));
+    }
+    if (data.containsKey('activity_name')) {
+      context.handle(
+          _activityNameMeta,
+          activityName.isAcceptableOrUnknown(
+              data['activity_name']!, _activityNameMeta));
+    }
+    if (data.containsKey('action_time')) {
+      context.handle(
+          _actionTimeMeta,
+          actionTime.isAcceptableOrUnknown(
+              data['action_time']!, _actionTimeMeta));
+    }
+    if (data.containsKey('action_area')) {
+      context.handle(
+          _actionAreaMeta,
+          actionArea.isAcceptableOrUnknown(
+              data['action_area']!, _actionAreaMeta));
+    }
+    if (data.containsKey('action_area_unit_id')) {
+      context.handle(
+          _actionAreaUnitIdMeta,
+          actionAreaUnitId.isAcceptableOrUnknown(
+              data['action_area_unit_id']!, _actionAreaUnitIdMeta));
+    }
+    if (data.containsKey('action_area_unit_name')) {
+      context.handle(
+          _actionAreaUnitNameMeta,
+          actionAreaUnitName.isAcceptableOrUnknown(
+              data['action_area_unit_name']!, _actionAreaUnitNameMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('is_show')) {
+      context.handle(_isShowMeta,
+          isShow.isAcceptableOrUnknown(data['is_show']!, _isShowMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('by_name')) {
+      context.handle(_byNameMeta,
+          byName.isAcceptableOrUnknown(data['by_name']!, _byNameMeta));
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(_startTimeMeta,
+          startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta));
+    }
+    if (data.containsKey('end_time')) {
+      context.handle(_endTimeMeta,
+          endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('string_tool')) {
+      context.handle(
+          _stringToolMeta,
+          stringTool.isAcceptableOrUnknown(
+              data['string_tool']!, _stringToolMeta));
+    }
+    if (data.containsKey('string_material')) {
+      context.handle(
+          _stringMaterialMeta,
+          stringMaterial.isAcceptableOrUnknown(
+              data['string_material']!, _stringMaterialMeta));
+    }
+    if (data.containsKey('string_media')) {
+      context.handle(
+          _stringMediaMeta,
+          stringMedia.isAcceptableOrUnknown(
+              data['string_media']!, _stringMediaMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ActDiaryNoNetwork map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActDiaryNoNetwork(
+      api: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}api']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      activityId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}activity_id']),
+      actionTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action_time']),
+      actionArea: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}action_area']),
+      actionAreaUnitId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}action_area_unit_id']),
+      actionAreaUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}action_area_unit_name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      activityName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity_name']),
+      seasonFarm: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}season_farm']),
+      isShow: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_show']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      byName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}by_name']),
+      startTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}start_time']),
+      endTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}end_time']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}status']),
+      stringTool: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}string_tool']),
+      stringMedia: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}string_media']),
+      stringMaterial: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}string_material']),
+    );
+  }
+
+  @override
+  $ActDiaryNoNetworkTableTable createAlias(String alias) {
+    return $ActDiaryNoNetworkTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActDiaryNoNetworkTableCompanion
+    extends UpdateCompanion<ActDiaryNoNetwork> {
+  final Value<String?> api;
+  final Value<int?> id;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarm;
+  final Value<int?> activityId;
+  final Value<String?> activityName;
+  final Value<String?> actionTime;
+  final Value<double?> actionArea;
+  final Value<int?> actionAreaUnitId;
+  final Value<String?> actionAreaUnitName;
+  final Value<String?> description;
+  final Value<bool?> isShow;
+  final Value<String?> name;
+  final Value<String?> byName;
+  final Value<String?> startTime;
+  final Value<String?> endTime;
+  final Value<int?> status;
+  final Value<String?> stringTool;
+  final Value<String?> stringMaterial;
+  final Value<String?> stringMedia;
+  const ActDiaryNoNetworkTableCompanion({
+    this.api = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activityName = const Value.absent(),
+    this.actionTime = const Value.absent(),
+    this.actionArea = const Value.absent(),
+    this.actionAreaUnitId = const Value.absent(),
+    this.actionAreaUnitName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.isShow = const Value.absent(),
+    this.name = const Value.absent(),
+    this.byName = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.status = const Value.absent(),
+    this.stringTool = const Value.absent(),
+    this.stringMaterial = const Value.absent(),
+    this.stringMedia = const Value.absent(),
+  });
+  ActDiaryNoNetworkTableCompanion.insert({
+    this.api = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarm = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activityName = const Value.absent(),
+    this.actionTime = const Value.absent(),
+    this.actionArea = const Value.absent(),
+    this.actionAreaUnitId = const Value.absent(),
+    this.actionAreaUnitName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.isShow = const Value.absent(),
+    this.name = const Value.absent(),
+    this.byName = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.endTime = const Value.absent(),
+    this.status = const Value.absent(),
+    this.stringTool = const Value.absent(),
+    this.stringMaterial = const Value.absent(),
+    this.stringMedia = const Value.absent(),
+  });
+  static Insertable<ActDiaryNoNetwork> custom({
+    Expression<String>? api,
+    Expression<int>? id,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarm,
+    Expression<int>? activityId,
+    Expression<String>? activityName,
+    Expression<String>? actionTime,
+    Expression<double>? actionArea,
+    Expression<int>? actionAreaUnitId,
+    Expression<String>? actionAreaUnitName,
+    Expression<String>? description,
+    Expression<bool>? isShow,
+    Expression<String>? name,
+    Expression<String>? byName,
+    Expression<String>? startTime,
+    Expression<String>? endTime,
+    Expression<int>? status,
+    Expression<String>? stringTool,
+    Expression<String>? stringMaterial,
+    Expression<String>? stringMedia,
+  }) {
+    return RawValuesInsertable({
+      if (api != null) 'api': api,
+      if (id != null) 'id': id,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarm != null) 'season_farm': seasonFarm,
+      if (activityId != null) 'activity_id': activityId,
+      if (activityName != null) 'activity_name': activityName,
+      if (actionTime != null) 'action_time': actionTime,
+      if (actionArea != null) 'action_area': actionArea,
+      if (actionAreaUnitId != null) 'action_area_unit_id': actionAreaUnitId,
+      if (actionAreaUnitName != null)
+        'action_area_unit_name': actionAreaUnitName,
+      if (description != null) 'description': description,
+      if (isShow != null) 'is_show': isShow,
+      if (name != null) 'name': name,
+      if (byName != null) 'by_name': byName,
+      if (startTime != null) 'start_time': startTime,
+      if (endTime != null) 'end_time': endTime,
+      if (status != null) 'status': status,
+      if (stringTool != null) 'string_tool': stringTool,
+      if (stringMaterial != null) 'string_material': stringMaterial,
+      if (stringMedia != null) 'string_media': stringMedia,
+    });
+  }
+
+  ActDiaryNoNetworkTableCompanion copyWith(
+      {Value<String?>? api,
+      Value<int?>? id,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarm,
+      Value<int?>? activityId,
+      Value<String?>? activityName,
+      Value<String?>? actionTime,
+      Value<double?>? actionArea,
+      Value<int?>? actionAreaUnitId,
+      Value<String?>? actionAreaUnitName,
+      Value<String?>? description,
+      Value<bool?>? isShow,
+      Value<String?>? name,
+      Value<String?>? byName,
+      Value<String?>? startTime,
+      Value<String?>? endTime,
+      Value<int?>? status,
+      Value<String?>? stringTool,
+      Value<String?>? stringMaterial,
+      Value<String?>? stringMedia}) {
+    return ActDiaryNoNetworkTableCompanion(
+      api: api ?? this.api,
+      id: id ?? this.id,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarm: seasonFarm ?? this.seasonFarm,
+      activityId: activityId ?? this.activityId,
+      activityName: activityName ?? this.activityName,
+      actionTime: actionTime ?? this.actionTime,
+      actionArea: actionArea ?? this.actionArea,
+      actionAreaUnitId: actionAreaUnitId ?? this.actionAreaUnitId,
+      actionAreaUnitName: actionAreaUnitName ?? this.actionAreaUnitName,
+      description: description ?? this.description,
+      isShow: isShow ?? this.isShow,
+      name: name ?? this.name,
+      byName: byName ?? this.byName,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      status: status ?? this.status,
+      stringTool: stringTool ?? this.stringTool,
+      stringMaterial: stringMaterial ?? this.stringMaterial,
+      stringMedia: stringMedia ?? this.stringMedia,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (api.present) {
+      map['api'] = Variable<String>(api.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarm.present) {
+      map['season_farm'] = Variable<String>(seasonFarm.value);
+    }
+    if (activityId.present) {
+      map['activity_id'] = Variable<int>(activityId.value);
+    }
+    if (activityName.present) {
+      map['activity_name'] = Variable<String>(activityName.value);
+    }
+    if (actionTime.present) {
+      map['action_time'] = Variable<String>(actionTime.value);
+    }
+    if (actionArea.present) {
+      map['action_area'] = Variable<double>(actionArea.value);
+    }
+    if (actionAreaUnitId.present) {
+      map['action_area_unit_id'] = Variable<int>(actionAreaUnitId.value);
+    }
+    if (actionAreaUnitName.present) {
+      map['action_area_unit_name'] = Variable<String>(actionAreaUnitName.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (isShow.present) {
+      map['is_show'] = Variable<bool>(isShow.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (byName.present) {
+      map['by_name'] = Variable<String>(byName.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<String>(startTime.value);
+    }
+    if (endTime.present) {
+      map['end_time'] = Variable<String>(endTime.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<int>(status.value);
+    }
+    if (stringTool.present) {
+      map['string_tool'] = Variable<String>(stringTool.value);
+    }
+    if (stringMaterial.present) {
+      map['string_material'] = Variable<String>(stringMaterial.value);
+    }
+    if (stringMedia.present) {
+      map['string_media'] = Variable<String>(stringMedia.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActDiaryNoNetworkTableCompanion(')
+          ..write('api: $api, ')
+          ..write('id: $id, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarm: $seasonFarm, ')
+          ..write('activityId: $activityId, ')
+          ..write('activityName: $activityName, ')
+          ..write('actionTime: $actionTime, ')
+          ..write('actionArea: $actionArea, ')
+          ..write('actionAreaUnitId: $actionAreaUnitId, ')
+          ..write('actionAreaUnitName: $actionAreaUnitName, ')
+          ..write('description: $description, ')
+          ..write('isShow: $isShow, ')
+          ..write('name: $name, ')
+          ..write('byName: $byName, ')
+          ..write('startTime: $startTime, ')
+          ..write('endTime: $endTime, ')
+          ..write('status: $status, ')
+          ..write('stringTool: $stringTool, ')
+          ..write('stringMaterial: $stringMaterial, ')
+          ..write('stringMedia: $stringMedia')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -3969,6 +4540,8 @@ abstract class _$DiaryDB extends GeneratedDatabase {
       $ActivityMonitorTableTable(this);
   late final $MonitorDiaryTableTable monitorDiaryTable =
       $MonitorDiaryTableTable(this);
+  late final $ActDiaryNoNetworkTableTable actDiaryNoNetworkTable =
+      $ActDiaryNoNetworkTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3982,6 +4555,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         activityDiaryTable,
         userInfoTable,
         activityMonitorTable,
-        monitorDiaryTable
+        monitorDiaryTable,
+        actDiaryNoNetworkTable
       ];
 }

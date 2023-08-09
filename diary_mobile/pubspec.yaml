@@ -42,7 +42,6 @@ dependencies:
   flutter_bloc:
   equatable:
   flutter_svg:
-  flutter_network_connectivity:
   flutter_html:
   qr_code_scanner: ^1.0.1
   connectivity_plus:

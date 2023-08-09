@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
 import 'package:diary_mobile/utils/constans/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -9,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../utils/constans/api_parameter_const.dart';
 import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/logger.dart';
+import '../../local_data/diary_db.dart';
 import '../api_model/api_base_generator.dart';
 import '../object_model/object_command_data.dart';
 import '../object_model/object_result.dart';
@@ -27,10 +29,27 @@ class NetworkExecutor{
   ///neu la login thi isLogin= true
   ///nguoc lai mac dinh la false
   Future<ObjectResult> request({required ApiBaseGenerator route,
-    bool? tokenRefreshing= false, bool isHandlerError= true, bool isLogin= false}) async {
+    bool? tokenRefreshing= false, bool isHandlerError= true, bool isLogin= false, bool loop = false}) async {
     ObjectResult? objectResult;
     try {
       if (await NetworkCheckConnect.status) {
+        if(!loop) {
+          print("HoangCV: loop loop ");
+          List<ActDiaryNoNetwork> list = await DiaryDB.instance
+              .getListActDiaryNoNetWork();
+          for (var element in list) {
+            ObjectResult objectResult = await request(
+                loop: true,
+                route: ApiBaseGenerator(
+                    path: element.api ?? '',
+                    body: ObjectData(
+                        token: route.body.token, params: element.toJson())));
+            if (objectResult.responseCode == StatusConst.code00) {
+              print("HoangCV: loop remove : ${element.id}");
+              await DiaryDB.instance.removeActDiaryNoNetWork(element.id ?? -1);
+            }
+          }
+        }
         var client = Dio();
         client.interceptors.add(InterceptorsWrapper(
             onError: (error, handler) async {
@@ -107,8 +126,8 @@ class NetworkExecutor{
               validateStatus: (statusCode) =>
               (statusCode! >= HttpStatus.ok &&
                   statusCode <= HttpStatus.multipleChoices)));
-
-          print("HoangCV: result: ${response.data['result']}");
+          print("HoangCV: result: ${response.data}");
+         // print("HoangCV: result: ${response.data['result']}");
        /*   Map<String, dynamic> jsonMap = json.decode(response.data);
           Map<String, dynamic> result = jsonMap['result'];*/
           objectResult = ObjectResult.fromJson(response.data['result']);
