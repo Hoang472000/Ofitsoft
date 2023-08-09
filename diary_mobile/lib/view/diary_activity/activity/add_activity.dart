@@ -97,6 +97,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ListView.builder(
+                      padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: state.listWidget.length,

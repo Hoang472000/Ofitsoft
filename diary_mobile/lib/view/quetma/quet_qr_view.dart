@@ -200,9 +200,15 @@ class _QRCodeViewState extends State<QRCodeView> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
+      print("HoangCV: scanData.format: ${scanData.format} : ${scanData.format != BarcodeFormat.qrcode}");
       if ( scanData.format != BarcodeFormat.qrcode){
         if (scanData.format == BarcodeFormat.qrcode) {
-
+          DiaLogManager.displayDialog(
+              context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).qrcode:S.of(context).barcode_error, () {},
+                  () async {
+                controller.resumeCamera();
+                Get.back();
+              }, S.of(context).close_dialog, "");
         }
         else{
           setState(() {
@@ -212,15 +218,22 @@ class _QRCodeViewState extends State<QRCodeView> {
               "Bkav HoangCV: scanData=============: ${scanData.code.toString()} ");
           /*"HH-0000000029"*/
           controller.pauseCamera();
-          contextState.read<BarcodeBloc>().add(GetItemBarcodeEvent(
+          DiaLogManager.displayDialog(
+              context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).qrcode_error:S.of(context).barcode_error, () {},
+                  () async {
+                controller.resumeCamera();
+                Get.back();
+              }, S.of(context).close_dialog, "");
+         /* contextState.read<BarcodeBloc>().add(GetItemBarcodeEvent(
               scanData.code.toString(),
-              qrViewController: controller));
+              qrViewController: controller));*/
         }
 
       }else{
+        print("Hoangcv: qrcode");
         controller.pauseCamera();
         DiaLogManager.displayDialog(
-            context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).barcode_error:S.of(context).qrcode_error, () {},
+            context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).qrcode:S.of(context).qrcode_error, () {},
                 () async {
               controller.resumeCamera();
               Get.back();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/data/remote_data/network_processor/network_check_connect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -14,7 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../data/entity/image/image_entity.dart';
-import '../data/remote_data/network_processor/network_check_connect.dart';
 import '../generated/l10n.dart';
 import '../resource/color.dart';
 import '../resource/style.dart';

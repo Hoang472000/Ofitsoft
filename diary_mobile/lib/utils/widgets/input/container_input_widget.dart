@@ -133,6 +133,7 @@ class ContainerInputWidget extends StatelessWidget {
                         color: color == null ? Colors.white : color),
                     child: Container(
                       child: ListView(
+                        padding: EdgeInsets.zero,
                         shrinkWrap: true,
                         primary: false,
                         children: [

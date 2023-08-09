@@ -107,6 +107,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     ListView.builder(
+                      padding: EdgeInsets.zero,
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: state.listWidget.length,

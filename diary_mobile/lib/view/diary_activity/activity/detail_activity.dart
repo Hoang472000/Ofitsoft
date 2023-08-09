@@ -132,6 +132,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
                       ListView.builder(
+                        padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: state.listWidget.length,
@@ -174,20 +175,15 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                 context));
                                       },
                                       onChangeText: (text) {
-                                        print("HoangCV: text: ${text}");
                                         blocContext
                                             .read<DetailActivityBloc>()
                                             .add(SaveValueTextFieldEvent(text,
                                                 state.listWidgetArea[0], 0));
                                       },
                                       onSubmittedText: (text) {
-                                        print(
-                                            "HoangCV: onSubmittedText: ${text}");
                                       },
                                       onEditingComplete: (text) {
-                                        print(
-                                            "HoangCV: onEditingComplete: ${text} : ${state.listWidgetArea[0].controller}");
-                                        blocContext
+                                         blocContext
                                             .read<DetailActivityBloc>()
                                             .add(SaveValueTextFieldEvent(text,
                                                 state.listWidgetArea[0], 0));
@@ -215,7 +211,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                     )),
                               ],
                             )
-                          : const SizedBox(),
+                          :  Container(),
                       itemAccount(context,
                           text: "Danh sách vật tư, công cụ",
                           image: ImageAsset.imageGardening,

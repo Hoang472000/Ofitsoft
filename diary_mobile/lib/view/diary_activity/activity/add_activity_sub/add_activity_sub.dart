@@ -254,8 +254,9 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                      ),
                                    ),
                                  ],
-                               ) : const SizedBox(),
+                               ) :  Container(),
                                 ListView.builder(
+                                  padding: EdgeInsets.zero,
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: widget.listVatTuAdd.length,
@@ -500,6 +501,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   ],
                                 ) : const SizedBox(),
                                 ListView.builder(
+                                    padding: EdgeInsets.zero,
                                     physics: const NeverScrollableScrollPhysics(),
                                     shrinkWrap: true,
                                     itemCount: widget.listCongCuAdd.length,

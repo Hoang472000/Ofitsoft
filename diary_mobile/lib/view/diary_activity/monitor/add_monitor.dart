@@ -168,6 +168,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 ListView.builder(
+                  padding: EdgeInsets.zero,
                     physics:  NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: _listWidget.length,
