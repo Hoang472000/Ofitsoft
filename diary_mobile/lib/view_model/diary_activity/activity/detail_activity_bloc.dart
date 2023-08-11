@@ -106,7 +106,7 @@ class DetailActivityBloc
     ));
 
     listArea.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
@@ -138,7 +138,7 @@ class DetailActivityBloc
     ));
 
     listVT.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
@@ -148,7 +148,7 @@ class DetailActivityBloc
     ));
 
     listCC.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
@@ -157,18 +157,20 @@ class DetailActivityBloc
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
-    emitter(state.copyWith(          formStatus: const InitialFormStatus(),
+    emitter(state.copyWith(
+        formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
         listWidgetArea: listArea));
   }
 
-  void _initViewDetail(Emitter<DetailActivityState> emitter) {
+  void _initViewDetail(Emitter<DetailActivityState> emitter, int id) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
+    List<InputRegisterModel> listYield = [];
     list.add(InputRegisterModel<Activity, Activity>(
         title: "Tên công việc",
         isCompulsory: true,
@@ -226,13 +228,14 @@ class DetailActivityBloc
     ));
 
     listArea.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
       listValue: state.listUnitArea,
       typeInputEnum: TypeInputEnum.dmucItem,
+      controller: state.donViController,
     ));
     listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
         title: "Vật tư liên quan",
@@ -256,7 +259,7 @@ class DetailActivityBloc
     ));
 
     listVT.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
@@ -266,7 +269,7 @@ class DetailActivityBloc
     ));
 
     listCC.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
@@ -274,18 +277,42 @@ class DetailActivityBloc
       listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
-    emitter(state.copyWith(          formStatus: const InitialFormStatus(),
+    if (id == 20) {
+      listYield.add(InputRegisterModel(
+        title: "Sản lượng",
+        isCompulsory: false,
+        type: TypeInputRegister.Non,
+        typeInput: TextInputType.number,
+        controller: state.yieldController,
+        maxLengthTextInput: 10,
+        image: ImageAsset.imageBudget,
+      ));
+
+      listYield.add(InputRegisterModel(
+        title: "Đơn vị",
+        isCompulsory: false,
+        type: TypeInputRegister.Non,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listUnitYield,
+        typeInputEnum: TypeInputEnum.dmucItem,
+      ));
+    }
+    emitter(state.copyWith(
+        formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
-        listWidgetArea: listArea));
+        listWidgetArea: listArea,
+        listWidgetYield: listYield));
   }
 
-  void _changeViewEdit(Emitter<DetailActivityState> emitter) {
+  void _changeViewEdit(Emitter<DetailActivityState> emitter, int id) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
+    List<InputRegisterModel> listYield = [];
     print("HoangCV: state.listMaterial: ${state.listMaterial.length}");
     list.add(InputRegisterModel<Activity, Activity>(
         title: "Tên công việc",
@@ -348,7 +375,7 @@ class DetailActivityBloc
     ));
     if (state.indexDonViArea != -1) {
       listArea.add(InputRegisterModel<Unit, Unit>(
-        title: "Đơn vị:",
+        title: "Đơn vị",
         isCompulsory: false,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
@@ -359,7 +386,7 @@ class DetailActivityBloc
       ));
     } else {
       listArea.add(InputRegisterModel<Unit, Unit>(
-        title: "Đơn vị:",
+        title: "Đơn vị",
         isCompulsory: false,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
@@ -391,7 +418,7 @@ class DetailActivityBloc
     ));
 
     listVT.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: true,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -401,7 +428,7 @@ class DetailActivityBloc
     ));
 
     listCC.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: true,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -409,23 +436,46 @@ class DetailActivityBloc
       listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
+    if (id == 20) {
+      listYield.add(InputRegisterModel(
+        title: "Sản lượng",
+        isCompulsory: false,
+        type: TypeInputRegister.TextField,
+        typeInput: TextInputType.number,
+        controller: state.yieldController,
+        maxLengthTextInput: 10,
+        image: ImageAsset.imageBudget,
+      ));
 
+      listYield.add(InputRegisterModel(
+        title: "Đơn vị",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listUnitYield,
+        typeInputEnum: TypeInputEnum.dmucItem,
+      ));
+    }
     emitter(state.copyWith(
         formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
-        listWidgetArea: listArea));
+        listWidgetArea: listArea,
+        listWidgetYield: listYield
+    ));
   }
 
-  void _getDetailActivity(GetDetailActivityEvent event, Emitter<DetailActivityState> emitter) async {
-    if(event.resetView){
+  void _getDetailActivity(GetDetailActivityEvent event,
+      Emitter<DetailActivityState> emitter) async {
+    if (event.resetView) {
       emitter(state.copyWith(
           isShowProgress: true,
           formStatus: const InitialFormStatus(),
           listVatTuAdd: [],
           listCongCuAdd: []));
-    }else{
+    } else {
       emitter(state.copyWith(
           isShowProgress: true,
           formStatus: const InitialFormStatus(),
@@ -437,27 +487,35 @@ class DetailActivityBloc
     }
     final detailActivity = event.activityDiary;
     final copiedActivityDiary = ActivityDiary.copy(detailActivity);
-    print("HoangCV: copiedActivityDiary: ${copiedActivityDiary.material.length}  : detailActivity.description: ${detailActivity.description}");
+    print(
+        "HoangCV: copiedActivityDiary: ${copiedActivityDiary.material.length}  : detailActivity.description: ${detailActivity.description}");
     final listActivity = await DiaryDB.instance.getListActivity();
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
     final sharedPreferences = await SharedPreferences.getInstance();
     final listCopiesVTAdd = <MaterialEntity>[];
-    listCopiesVTAdd.addAll(detailActivity.material.map((material) => MaterialEntity.copy(material)));
+    listCopiesVTAdd.addAll(detailActivity.material
+        .map((material) => MaterialEntity.copy(material)));
     final listCopiesCCAdd = <Tool>[];
     listCopiesCCAdd.addAll(detailActivity.tool.map((tool) => Tool.copy(tool)));
     final categoryIdUnitArea =
         sharedPreferences.getInt(SharedPreferencesKey.unitArea) ?? -1;
     final categoryIdUnitAmount =
         sharedPreferences.getInt(SharedPreferencesKey.unitAmount) ?? -1;
+    final categoryIdUnitYield =
+        sharedPreferences.getInt(SharedPreferencesKey.unitYield) ?? -1;
     final listUnitArea = await DiaryDB.instance.getListUnit(categoryIdUnitArea);
     final listUnitAmount =
         await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
-    _initViewDetail(emitter);
+    final listUnitYield =
+        await DiaryDB.instance.getListUnit(categoryIdUnitYield);
+    _initViewDetail(emitter, detailActivity.activityId ?? -1);
     int index = listActivity
         .indexWhere((element) => element.id == detailActivity.activityId);
     int indexArea = listUnitArea
         .indexWhere((element) => element.id == detailActivity.actionAreaUnitId);
+/*    int indexYield = listUnitYield
+        .indexWhere((element) => element.id == detailActivity.actionAreaUnitId);*/
     double imageWidth = state.imageWidth;
     double imageHeight = state.imageHeight;
     if (detailActivity.media.length < 2) {
@@ -483,20 +541,26 @@ class DetailActivityBloc
         listUnitArea: listUnitArea,
         listVatTuAdd: listCopiesVTAdd,
         listCongCuAdd: listCopiesCCAdd,
+        listUnitYield: listUnitYield,
         listImage: detailActivity.media,
         moTaController: TextEditingController(text: detailActivity.description),
         nameController: TextEditingController(text: listActivity[index].name),
         peopleController: TextEditingController(),
         areaController:
-            TextEditingController(text: "${detailActivity.actionArea??''}"),
+            TextEditingController(text: "${detailActivity.actionArea ?? ''}"),
         donViController:
             TextEditingController(text: "${detailActivity.actionAreaUnitName}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(detailActivity.actionTime ?? "")),
         endTimeController: TextEditingController(
             text: Utils.formatDate(detailActivity.actionTime ?? "")),
+        yieldController:
+            TextEditingController(text: "${detailActivity.actionArea ?? ''}"),
+        yieldUnitController:
+            TextEditingController(text: "${detailActivity.actionAreaUnitName}"),
         indexActivity: index,
         indexDonViArea: indexArea,
+        indexYieldUnit: -1,
         imageWidth: imageWidth,
         imageHeight: imageHeight));
     for (int i = 0; i < state.listWidget.length; i++) {
@@ -523,7 +587,7 @@ class DetailActivityBloc
       if (state.listWidgetArea[i].title.compareTo("Diện tích") == 0) {
         state.listWidgetArea[i].controller = state.areaController;
       }
-      if (state.listWidgetArea[i].title.compareTo("Đơn vị:") == 0) {
+      if (state.listWidgetArea[i].title.compareTo("Đơn vị") == 0) {
         state.listWidgetArea[i].controller = state.donViController;
       }
     }
@@ -535,26 +599,29 @@ class DetailActivityBloc
     }
     for (int i = 0; i < state.listWidgetCC.length; i++) {
       if (state.listWidgetCC[i].title.compareTo("Công cụ") == 0) {
-       // state.listWidgetCC[i].controller = state.areaController;
+        // state.listWidgetCC[i].controller = state.areaController;
         //state.listWidget[i].valueSelected = state.listActivity[index];
       }
     }
     print(
         "HoangCV: listWidgetArea run way: ${index} : ${listActivity[index].name}");
     emitter(state.copyWith(
-        listWidget: state.listWidget, listWidgetArea: state.listWidgetArea, listWidgetCC: state.listWidgetCC,
-    listWidgetVT: state.listWidgetVT));
+        listWidget: state.listWidget,
+        listWidgetArea: state.listWidgetArea,
+        listWidgetCC: state.listWidgetCC,
+        listWidgetVT: state.listWidgetVT));
   }
 
   FutureOr<void> _changeEditActivity(
       ChangeEditActivityEvent event, Emitter<DetailActivityState> emit) async {
-    _changeViewEdit(emit);
+    _changeViewEdit(emit, state.detailActivity!.activityId ?? -1);
   }
 
   FutureOr<void> _changeDetailActivity(ChangeDetailActivityEvent event,
       Emitter<DetailActivityState> emit) async {
     //_changeViewDetail(emit);
-    add(GetDetailActivityEvent(state.copiedActivityDiary?? ActivityDiary(), resetView: true));
+    add(GetDetailActivityEvent(state.copiedActivityDiary ?? ActivityDiary(),
+        resetView: true));
   }
 
   Future<FutureOr<void>> _onSelectValue(
@@ -623,6 +690,31 @@ class DetailActivityBloc
                 text: event.list[event.index].valueSelected.name),
             indexActivity: result,
           ));
+          if (event.list[event.index].listValue[result].id == 20) {
+            List<InputRegisterModel> listYield = [];
+            listYield.add(InputRegisterModel(
+              title: "Sản lượng",
+              isCompulsory: false,
+              type: TypeInputRegister.TextField,
+              typeInput: TextInputType.number,
+              controller: state.yieldController,
+              maxLengthTextInput: 10,
+              image: ImageAsset.imageBudget,
+            ));
+
+            listYield.add(InputRegisterModel(
+              title: "Đơn vị",
+              isCompulsory: false,
+              type: TypeInputRegister.Select,
+              icon: Icons.arrow_drop_down,
+              positionSelected: -1,
+              listValue: state.listUnitYield,
+              typeInputEnum: TypeInputEnum.dmucItem,
+            ));
+            emit(state.copyWith(listWidgetYield: listYield));
+          } else {
+            emit(state.copyWith(listWidgetYield: []));
+          }
         }
         if (event.list[event.index].title.compareTo("Chi tiết công việc") ==
             0) {
@@ -692,8 +784,7 @@ class DetailActivityBloc
       UpdateActivityEvent event, Emitter<DetailActivityState> emit) async {
     print("HoangCV: state.indexActivity: ${state.indexActivity}");
     emit(state.copyWith(
-      isShowProgress: true, formStatus: const InitialFormStatus()
-    ));
+        isShowProgress: true, formStatus: const InitialFormStatus()));
     List<InputRegisterModel> list = List.from(state.listWidget);
     List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
@@ -705,7 +796,8 @@ class DetailActivityBloc
       validate = false;
       listArea[1].error = "Vui lòng nhập diện tích";
     }*/
-    else if (state.areaController!.text.isNotEmpty && double.parse(state.areaController!.text) > 0 &&
+    else if (state.areaController!.text.isNotEmpty &&
+        double.parse(state.areaController!.text) > 0 &&
         state.listWidgetArea[1].valueSelected == null) {
       validate = false;
       state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
@@ -751,13 +843,18 @@ class DetailActivityBloc
 
   FutureOr<void> _back(BackEvent event, Emitter<DetailActivityState> emit) {
     emit(state.copyWith(
-        isShowProgress: false, formStatus: const InitialFormStatus(), listVatTuAdd: [],
+        isShowProgress: false,
+        formStatus: const InitialFormStatus(),
+        listVatTuAdd: [],
         listCongCuAdd: []));
-    print("HoangCV: state.copiedActivityDiary!.material: ${state.copiedActivityDiary!.material.length} : ${state.listVatTuAdd.length}");
-    print("HoangCV: event.listMtl.length: ${event.listMtl.length} : ${event.listTool.length}");
+    print(
+        "HoangCV: state.copiedActivityDiary!.material: ${state.copiedActivityDiary!.material.length} : ${state.listVatTuAdd.length}");
+    print(
+        "HoangCV: event.listMtl.length: ${event.listMtl.length} : ${event.listTool.length}");
     state.copiedActivityDiary!.material = event.listMtl;
     state.copiedActivityDiary!.tool = event.listTool;
-    var copiesActivity = ActivityDiary.copy(state.detailActivity ?? ActivityDiary());
+    var copiesActivity =
+        ActivityDiary.copy(state.detailActivity ?? ActivityDiary());
     copiesActivity.tool = event.listTool;
     copiesActivity.material = event.listMtl;
     emit(state.copyWith(
@@ -768,7 +865,6 @@ class DetailActivityBloc
     ));
     print("HoangCV:1111 : ${state.detailActivity!.material.length}");
   }
-
 }
 
 class DetailActivityEvent extends BlocEvent {
@@ -798,7 +894,9 @@ class BackEvent extends DetailActivityEvent {
   ActivityDiary activityDiary;
   List<MaterialEntity> listMtl;
   List<Tool> listTool;
+
   BackEvent(this.activityDiary, this.listTool, this.listMtl);
+
   @override
   List<Object?> get props => [activityDiary, listTool, listMtl];
 }
@@ -883,7 +981,11 @@ class DetailActivityState extends BlocState {
         listWidgetArea,
         areaController,
         indexDonViArea,
-    copiedActivityDiary,
+        copiedActivityDiary,
+        listWidgetYield,
+        listUnitYield,
+        yieldController,
+        indexYieldUnit,
       ];
   final ActivityDiary? detailActivity;
   final ActivityDiary? copiedActivityDiary;
@@ -910,9 +1012,14 @@ class DetailActivityState extends BlocState {
   TextEditingController? startTimeController = TextEditingController();
   TextEditingController? endTimeController = TextEditingController();
   TextEditingController? areaController = TextEditingController();
+  TextEditingController? yieldController = TextEditingController();
+  TextEditingController? yieldUnitController = TextEditingController();
+  List<InputRegisterModel> listWidgetYield;
+  final List<Unit> listUnitYield;
   bool isEdit;
   int indexActivity;
   int indexDonViArea;
+  int indexYieldUnit;
   double imageWidth;
   double imageHeight;
 
@@ -947,6 +1054,11 @@ class DetailActivityState extends BlocState {
     this.imageHeight = 100,
     this.indexActivity = 0,
     this.indexDonViArea = 0,
+    this.yieldController,
+    this.yieldUnitController,
+    this.listUnitYield = const [],
+    this.listWidgetYield = const [],
+    this.indexYieldUnit = 0,
   });
 
   DetailActivityState copyWith({
@@ -975,9 +1087,14 @@ class DetailActivityState extends BlocState {
     TextEditingController? startTimeController,
     TextEditingController? endTimeController,
     TextEditingController? areaController,
+    TextEditingController? yieldController,
+    TextEditingController? yieldUnitController,
+    List<InputRegisterModel>? listWidgetYield,
+    List<Unit>? listUnitYield,
     bool? isEdit,
     int? indexActivity,
     int? indexDonViArea,
+    int? indexYieldUnit,
     double? imageWidth,
     double? imageHeight,
   }) {
@@ -1012,6 +1129,11 @@ class DetailActivityState extends BlocState {
       imageHeight: imageHeight ?? this.imageHeight,
       indexActivity: indexActivity ?? this.indexActivity,
       indexDonViArea: indexDonViArea ?? this.indexDonViArea,
+      listUnitYield: listUnitYield ?? this.listUnitYield,
+      yieldUnitController: yieldUnitController ?? this.yieldUnitController,
+      listWidgetYield: listWidgetYield ?? this.listWidgetYield,
+      yieldController: yieldController ?? this.yieldController,
+      indexYieldUnit: indexYieldUnit ?? this.indexYieldUnit,
     );
   }
 }

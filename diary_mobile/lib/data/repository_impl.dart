@@ -82,6 +82,7 @@ class RepositoryImpl extends Repository {
       getListActivities();
       getListMaterials();
       getListUnits(10);
+      getListUnits(9);
       getListUnits(8);
       getListTools();
     }
@@ -203,7 +204,8 @@ class RepositoryImpl extends Repository {
       List<Unit> list = List.from(objectResult.response)
           .map((json) => Unit.fromJson(json))
           .toList();
-      sharedPreferences.setInt(id == 8 ? SharedPreferencesKey.unitArea : SharedPreferencesKey.unitAmount, list[0].categoryId ?? -1);
+
+      sharedPreferences.setInt(id == 8 ? SharedPreferencesKey.unitArea : id == 9 ?SharedPreferencesKey.unitYield: SharedPreferencesKey.unitAmount, list[0].categoryId ?? -1);
       DiaryDB.instance.insertListUnit(list);
       return list;
     }
@@ -307,7 +309,7 @@ class RepositoryImpl extends Repository {
 
   @override
   Future<Diary> getInfoDiary(int id) async{
-    final sharedPreferences = await SharedPreferences.getInstance();
+ /*   final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
@@ -317,6 +319,7 @@ class RepositoryImpl extends Repository {
     print("HoangCV: getInfoDiary response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00 || objectResult.message == "Successfully") {
       Diary list = Diary.fromJson(objectResult.response);
+      DiaryDB.instance.insertListDiary([list]);
       return list;
     }
     else {
@@ -325,8 +328,9 @@ class RepositoryImpl extends Repository {
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
       );
-    }
-    return FakeRepositoryImpl().getInfoDiary(id);
+    }*/
+    List<Diary> list = await DiaryDB.instance.getInfoDiary(id);
+    return list.first;
   }
 
   @override
@@ -342,6 +346,7 @@ class RepositoryImpl extends Repository {
     print("HoangCV: getUserInfo response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00) {
       UserInfo list = UserInfo.fromJson(objectResult.response);
+      DiaryDB.instance.createOrUpdateUser(list);
       return list;
     }
     else {
@@ -351,7 +356,8 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getUserInfo();
+    List<UserInfo> list = await DiaryDB.instance.getUserEntity(userId);
+    return list.first;
   }
 
   @override

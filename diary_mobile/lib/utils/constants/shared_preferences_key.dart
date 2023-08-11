@@ -24,6 +24,7 @@ class SharedPreferencesKey {
   //
   static String unitArea= "unit_area";
   static String unitAmount= "unit_amount";
+  static String unitYield= "unit_yield";
   static String group= "group";
   static String imageProfile= "image";
 }

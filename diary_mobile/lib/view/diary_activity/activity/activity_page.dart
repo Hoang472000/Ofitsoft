@@ -65,7 +65,23 @@ class _ActivityPageState extends State<ActivityPage> {
             return FloatingActionButton(
               backgroundColor: AppColor.green99,
               child: Icon(Icons.add),
-              onPressed: () async {
+              onPressed: (widget.diary.status??'').compareTo("done") == 0 ||
+                  (widget.diary.status??'').compareTo("cancelled") == 0 ?
+              () {
+                if((widget.diary.status??'').compareTo("done") == 0 ) {
+                  DiaLogManager.displayDialog(context,
+                      "Nhật ký đã hoàn thành","Bạn không thể thêm mới hoạt động",
+                          (){Navigator.pop(context);}, () {},
+                      "",S.of(context).close_dialog);
+                }
+                if((widget.diary.status??'').compareTo("done") == 0 ) {
+                  DiaLogManager.displayDialog(context,
+                      "Nhật ký đã đóng","Bạn không thể thêm mới hoạt động",
+                          (){Navigator.pop(context);}, () {},
+                      "",S.of(context).close_dialog);
+                }
+              }
+                  : () async {
                 var result = widget.action.compareTo("activity") == 0
                     ? await Navigator.of(context)
                         .push(AddActivityPage.route(widget.seasonFarmId, widget.diary))
@@ -125,7 +141,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                   var result = await Navigator.push(
                                       context,
                                       DetailActivityPage.route(
-                                          state.listDiaryActivity[index]));
+                                          state.listDiaryActivity[index], widget.diary));
                                   if (result != null && result[0]) {
                                     contextBloc.read<ActivityBloc>().add(
                                         GetListActivityEvent(
@@ -194,16 +210,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                                     margin:
                                                         const EdgeInsets.only(
                                                             bottom: 5, top: 5),
-                                                    child: /*Text(
-                                                "Thời gian thực hiện: ${state.listDiaryActivity[index].actionTime}",
-                                                style: StyleBkav
-                                                    .textStyleFW400(
-                                                    AppColor.gray57,
-                                                    14),
-                                                maxLines: 1,
-                                                overflow:
-                                                TextOverflow.ellipsis,
-                                              )*/
+                                                    child:
                                                         RichText(
                                                       text: Utils.convertText(
                                                           "Thời gian thực hiện: ",
@@ -301,7 +308,9 @@ class _ActivityPageState extends State<ActivityPage> {
                                       SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: IconButton(
+                                        child: (widget.diary.status??'').compareTo("done") == 0 ||
+                                            (widget.diary.status??'').compareTo("cancelled") == 0 ?
+                                        Container(): IconButton(
                                           padding: EdgeInsets.only(
                                               left: 16, right: 4),
                                           icon: const Image(

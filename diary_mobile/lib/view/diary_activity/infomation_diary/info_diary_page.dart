@@ -56,21 +56,21 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageTree),
                         CardTile(
                             label: "Diện tích",
-                            value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnit}",
+                            value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnitName}",
                             image: ImageAsset.imageManagement),
                         state.detailDiary!.amount == -1 ?
                         Container() :
                         CardTileDouble(
                             label1: "Số lượng ban đầu",
                             value1:  "${state.detailDiary!.amount == -1 ? '' : (state.detailDiary!.amount??0).toInt()}",
-                            value2: "${state.detailDiary!.amountUnit}",
+                            value2: "${state.detailDiary!.amountUnitName}",
                             image: ImageAsset.imageBudget),
                         state.detailDiary!.yieldEstimate == -1 ?
                         Container() :
                         CardTileDouble(
                             label1: "Sản lượng ước tính",
                             value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : (state.detailDiary!.yieldEstimate??0).toInt()}",
-                            value2: "${state.detailDiary!.yieldEstimateUnit}",
+                            value2: "${state.detailDiary!.yieldEstimateUnitName}",
                             image: ImageAsset.imageBudget),
                         CardTile(
                             label: "Ngày bắt đầu",

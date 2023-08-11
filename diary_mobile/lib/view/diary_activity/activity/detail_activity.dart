@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
@@ -21,17 +22,19 @@ import '../../../utils/widgets/input/container_input_widget.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class DetailActivityPage extends StatefulWidget {
-  DetailActivityPage({super.key, required this.activityDiary});
+  DetailActivityPage({super.key, required this.activityDiary, required this.diary});
 
   final ActivityDiary activityDiary;
+  final Diary diary;
 
   @override
   _DetailActivityPageState createState() => _DetailActivityPageState();
 
-  static Route route(ActivityDiary activityDiary) {
+  static Route route(ActivityDiary activityDiary, Diary diary) {
     return Utils.pageRouteBuilder(
         DetailActivityPage(
           activityDiary: activityDiary,
+            diary: diary
         ),
         true);
   }
@@ -161,7 +164,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                           ? Row(
                               children: [
                                 Expanded(
-                                    flex: 8,
+                                    //flex: 8,
                                     child: ContainerInputWidget(
                                       contextParent: context,
                                       inputRegisterModel: state.listWidgetArea[0],
@@ -193,7 +196,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                   width: 8,
                                 ),
                                 Expanded(
-                                    flex: 5,
+                                    //flex: 5,
                                     child: ContainerInputWidget(
                                       contextParent: context,
                                       inputRegisterModel: state.listWidgetArea[1],
@@ -211,6 +214,61 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                     )),
                               ],
                             )
+                          : const SizedBox(),
+                      state.listWidgetYield.isNotEmpty
+                          ? Row(
+                        children: [
+                          Expanded(
+                              //flex: 8,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetYield[0],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext.read<DetailActivityBloc>().add(
+                                      OnSelectValueEvent(
+                                          state.listWidgetYield,
+                                          0,
+                                          context));
+                                },
+                                onChangeText: (text) {
+                                  blocContext.read<DetailActivityBloc>().add(
+                                      SaveValueTextFieldEvent(text,
+                                          state.listWidgetYield[0], 0));
+                                },
+                                onSubmittedText: (text) {
+                                  print(
+                                      "HoangCV: onSubmittedText: ${text}");
+                                },
+                                onEditingComplete: (text) {
+                                  print(
+                                      "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
+                                  blocContext.read<DetailActivityBloc>().add(
+                                      SaveValueTextFieldEvent(text,
+                                          state.listWidgetYield[0], 0));
+                                },
+                              )),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                              //flex: 5,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetYield[1],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext.read<DetailActivityBloc>().add(
+                                      OnSelectValueEvent(
+                                          state.listWidgetYield,
+                                          1,
+                                          context));
+                                },
+                                onChangeText: (text) {},
+                                onEditingComplete: (text) {},
+                              )),
+                        ],
+                      )
                           : const SizedBox(),
                       itemAccount(context,
                           text: "Danh sách vật tư, công cụ",
@@ -521,7 +579,23 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                               child: Expanded(
                                 child: BkavButton(
                                     text: "Sửa hoạt động",
-                                    onPressed: () {
+                                    onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
+                                        (widget.diary.status??'').compareTo("cancelled") == 0)?
+                                        () {
+                                      if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                        DiaLogManager.displayDialog(context,
+                                            "Nhật ký đã hoàn thành","Bạn không thể sửa hoạt động",
+                                                (){Navigator.pop(context);}, () {},
+                                            "",S.of(context).close_dialog);
+                                      }
+                                      if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                        DiaLogManager.displayDialog(context,
+                                            "Nhật ký đã đóng","Bạn không thể sửa hoạt động",
+                                                (){Navigator.pop(context);}, () {},
+                                            "",S.of(context).close_dialog);
+                                      }
+                                    }
+                                        :() {
                                       setState(() {
                                         edit = !edit;
                                         //state.listWidget.clear();

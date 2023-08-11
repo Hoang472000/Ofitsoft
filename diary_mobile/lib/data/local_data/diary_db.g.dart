@@ -14,40 +14,28 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _seasonIdMeta =
       const VerificationMeta('seasonId');
   @override
   late final GeneratedColumn<int> seasonId = GeneratedColumn<int>(
       'season_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _seasonFarmIdMeta =
-      const VerificationMeta('seasonFarmId');
-  @override
-  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
-      'season_farm_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _activityMeta =
-      const VerificationMeta('activity');
-  @override
-  late final GeneratedColumn<String> activity = GeneratedColumn<String>(
-      'activity', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _farmIdMeta = const VerificationMeta('farmId');
   @override
   late final GeneratedColumn<int> farmId = GeneratedColumn<int>(
       'farm_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _farmMeta = const VerificationMeta('farm');
+  static const VerificationMeta _farmNameMeta =
+      const VerificationMeta('farmName');
   @override
-  late final GeneratedColumn<String> farm = GeneratedColumn<String>(
-      'farm', aliasedName, true,
+  late final GeneratedColumn<String> farmName = GeneratedColumn<String>(
+      'farm_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _activityIdMeta =
-      const VerificationMeta('activityId');
-  @override
-  late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
-      'activity_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _productNameMeta =
       const VerificationMeta('productName');
   @override
@@ -66,45 +54,63 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> productId = GeneratedColumn<int>(
       'product_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _userMeta = const VerificationMeta('user');
+  static const VerificationMeta _cropIdMeta = const VerificationMeta('cropId');
   @override
-  late final GeneratedColumn<String> user = GeneratedColumn<String>(
-      'user', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _actionTimeMeta =
-      const VerificationMeta('actionTime');
-  @override
-  late final GeneratedColumn<String> actionTime = GeneratedColumn<String>(
-      'action_time', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _actionAreaMeta =
-      const VerificationMeta('actionArea');
-  @override
-  late final GeneratedColumn<double> actionArea = GeneratedColumn<double>(
-      'action_area', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _actionAreaUnitIdMeta =
-      const VerificationMeta('actionAreaUnitId');
-  @override
-  late final GeneratedColumn<int> actionAreaUnitId = GeneratedColumn<int>(
-      'action_area_unit_id', aliasedName, true,
+  late final GeneratedColumn<int> cropId = GeneratedColumn<int>(
+      'crop_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
+  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
   @override
-  late final GeneratedColumn<String> description = GeneratedColumn<String>(
-      'description', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
+      'amount', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _amountUnitIdMeta =
+      const VerificationMeta('amountUnitId');
   @override
-  late final GeneratedColumn<String> name = GeneratedColumn<String>(
-      'name', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _cropMeta = const VerificationMeta('crop');
+  late final GeneratedColumn<int> amountUnitId = GeneratedColumn<int>(
+      'amount_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _amountUnitNameMeta =
+      const VerificationMeta('amountUnitName');
   @override
-  late final GeneratedColumn<String> crop = GeneratedColumn<String>(
-      'crop', aliasedName, true,
+  late final GeneratedColumn<String> amountUnitName = GeneratedColumn<String>(
+      'amount_unit_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _areaMeta = const VerificationMeta('area');
+  @override
+  late final GeneratedColumn<double> area = GeneratedColumn<double>(
+      'area', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _areaUnitIdMeta =
+      const VerificationMeta('areaUnitId');
+  @override
+  late final GeneratedColumn<int> areaUnitId = GeneratedColumn<int>(
+      'area_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _areaUnitNameMeta =
+      const VerificationMeta('areaUnitName');
+  @override
+  late final GeneratedColumn<String> areaUnitName = GeneratedColumn<String>(
+      'area_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _yieldEstimateMeta =
+      const VerificationMeta('yieldEstimate');
+  @override
+  late final GeneratedColumn<double> yieldEstimate = GeneratedColumn<double>(
+      'yield_estimate', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _yieldEstimateUnitIdMeta =
+      const VerificationMeta('yieldEstimateUnitId');
+  @override
+  late final GeneratedColumn<int> yieldEstimateUnitId = GeneratedColumn<int>(
+      'yield_estimate_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _yieldEstimateUnitNameMeta =
+      const VerificationMeta('yieldEstimateUnitName');
+  @override
+  late final GeneratedColumn<String> yieldEstimateUnitName =
+      GeneratedColumn<String>('yield_estimate_unit_name', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _startDateMeta =
       const VerificationMeta('startDate');
   @override
@@ -122,117 +128,57 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<String> status = GeneratedColumn<String>(
       'status', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _amountMeta = const VerificationMeta('amount');
+  static const VerificationMeta _statusNameMeta =
+      const VerificationMeta('statusName');
   @override
-  late final GeneratedColumn<double> amount = GeneratedColumn<double>(
-      'amount', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _amountUnitIdMeta =
-      const VerificationMeta('amountUnitId');
-  @override
-  late final GeneratedColumn<int> amountUnitId = GeneratedColumn<int>(
-      'amount_unit_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _amountUnitMeta =
-      const VerificationMeta('amountUnit');
-  @override
-  late final GeneratedColumn<String> amountUnit = GeneratedColumn<String>(
-      'amount_unit', aliasedName, true,
+  late final GeneratedColumn<String> statusName = GeneratedColumn<String>(
+      'status_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _areaMeta = const VerificationMeta('area');
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
   @override
-  late final GeneratedColumn<double> area = GeneratedColumn<double>(
-      'area', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _areaUnitIdMeta =
-      const VerificationMeta('areaUnitId');
-  @override
-  late final GeneratedColumn<int> areaUnitId = GeneratedColumn<int>(
-      'area_unit_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _areaUnitMeta =
-      const VerificationMeta('areaUnit');
-  @override
-  late final GeneratedColumn<String> areaUnit = GeneratedColumn<String>(
-      'area_unit', aliasedName, true,
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _farmAreaMeta =
-      const VerificationMeta('farmArea');
-  @override
-  late final GeneratedColumn<double> farmArea = GeneratedColumn<double>(
-      'farm_area', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _farmAreaUnitIdMeta =
-      const VerificationMeta('farmAreaUnitId');
-  @override
-  late final GeneratedColumn<int> farmAreaUnitId = GeneratedColumn<int>(
-      'farm_area_unit_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _farmAreaUnitMeta =
-      const VerificationMeta('farmAreaUnit');
-  @override
-  late final GeneratedColumn<String> farmAreaUnit = GeneratedColumn<String>(
-      'farm_area_unit', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _yieldEstimateMeta =
-      const VerificationMeta('yieldEstimate');
-  @override
-  late final GeneratedColumn<double> yieldEstimate = GeneratedColumn<double>(
-      'yield_estimate', aliasedName, true,
-      type: DriftSqlType.double, requiredDuringInsert: false);
-  static const VerificationMeta _yieldEstimateUnitIdMeta =
-      const VerificationMeta('yieldEstimateUnitId');
-  @override
-  late final GeneratedColumn<int> yieldEstimateUnitId = GeneratedColumn<int>(
-      'yield_estimate_unit_id', aliasedName, true,
-      type: DriftSqlType.int, requiredDuringInsert: false);
-  static const VerificationMeta _yieldEstimateUnitMeta =
-      const VerificationMeta('yieldEstimateUnit');
-  @override
-  late final GeneratedColumn<String> yieldEstimateUnit =
-      GeneratedColumn<String>('yield_estimate_unit', aliasedName, true,
-          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _farmerNameMeta =
       const VerificationMeta('farmerName');
   @override
   late final GeneratedColumn<String> farmerName = GeneratedColumn<String>(
       'farmer_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerIdMeta =
+      const VerificationMeta('farmerId');
+  @override
+  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
+      'farmer_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        name,
         seasonId,
-        seasonFarmId,
-        activity,
         farmId,
-        farm,
-        activityId,
+        farmName,
         productName,
         cropName,
         productId,
-        user,
-        actionTime,
-        actionArea,
-        actionAreaUnitId,
-        description,
-        name,
-        crop,
+        cropId,
+        amount,
+        amountUnitId,
+        amountUnitName,
+        area,
+        areaUnitId,
+        areaUnitName,
+        yieldEstimate,
+        yieldEstimateUnitId,
+        yieldEstimateUnitName,
         startDate,
         endDate,
         status,
-        amount,
-        amountUnitId,
-        amountUnit,
-        area,
-        areaUnitId,
-        areaUnit,
-        farmArea,
-        farmAreaUnitId,
-        farmAreaUnit,
-        yieldEstimate,
-        yieldEstimateUnitId,
-        yieldEstimateUnit,
-        farmerName
+        statusName,
+        description,
+        farmerName,
+        farmerId
       ];
   @override
   String get aliasedName => _alias ?? 'diary';
@@ -246,33 +192,21 @@ class $DiaryTableTable extends DiaryTable
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
     if (data.containsKey('season_id')) {
       context.handle(_seasonIdMeta,
           seasonId.isAcceptableOrUnknown(data['season_id']!, _seasonIdMeta));
-    }
-    if (data.containsKey('season_farm_id')) {
-      context.handle(
-          _seasonFarmIdMeta,
-          seasonFarmId.isAcceptableOrUnknown(
-              data['season_farm_id']!, _seasonFarmIdMeta));
-    }
-    if (data.containsKey('activity')) {
-      context.handle(_activityMeta,
-          activity.isAcceptableOrUnknown(data['activity']!, _activityMeta));
     }
     if (data.containsKey('farm_id')) {
       context.handle(_farmIdMeta,
           farmId.isAcceptableOrUnknown(data['farm_id']!, _farmIdMeta));
     }
-    if (data.containsKey('farm')) {
-      context.handle(
-          _farmMeta, farm.isAcceptableOrUnknown(data['farm']!, _farmMeta));
-    }
-    if (data.containsKey('activity_id')) {
-      context.handle(
-          _activityIdMeta,
-          activityId.isAcceptableOrUnknown(
-              data['activity_id']!, _activityIdMeta));
+    if (data.containsKey('farm_name')) {
+      context.handle(_farmNameMeta,
+          farmName.isAcceptableOrUnknown(data['farm_name']!, _farmNameMeta));
     }
     if (data.containsKey('product_name')) {
       context.handle(
@@ -288,53 +222,9 @@ class $DiaryTableTable extends DiaryTable
       context.handle(_productIdMeta,
           productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
     }
-    if (data.containsKey('user')) {
-      context.handle(
-          _userMeta, user.isAcceptableOrUnknown(data['user']!, _userMeta));
-    }
-    if (data.containsKey('action_time')) {
-      context.handle(
-          _actionTimeMeta,
-          actionTime.isAcceptableOrUnknown(
-              data['action_time']!, _actionTimeMeta));
-    }
-    if (data.containsKey('action_area')) {
-      context.handle(
-          _actionAreaMeta,
-          actionArea.isAcceptableOrUnknown(
-              data['action_area']!, _actionAreaMeta));
-    }
-    if (data.containsKey('action_area_unit_id')) {
-      context.handle(
-          _actionAreaUnitIdMeta,
-          actionAreaUnitId.isAcceptableOrUnknown(
-              data['action_area_unit_id']!, _actionAreaUnitIdMeta));
-    }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
-    }
-    if (data.containsKey('crop')) {
-      context.handle(
-          _cropMeta, crop.isAcceptableOrUnknown(data['crop']!, _cropMeta));
-    }
-    if (data.containsKey('start_date')) {
-      context.handle(_startDateMeta,
-          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
-    }
-    if (data.containsKey('end_date')) {
-      context.handle(_endDateMeta,
-          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
-    }
-    if (data.containsKey('status')) {
-      context.handle(_statusMeta,
-          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    if (data.containsKey('crop_id')) {
+      context.handle(_cropIdMeta,
+          cropId.isAcceptableOrUnknown(data['crop_id']!, _cropIdMeta));
     }
     if (data.containsKey('amount')) {
       context.handle(_amountMeta,
@@ -346,11 +236,11 @@ class $DiaryTableTable extends DiaryTable
           amountUnitId.isAcceptableOrUnknown(
               data['amount_unit_id']!, _amountUnitIdMeta));
     }
-    if (data.containsKey('amount_unit')) {
+    if (data.containsKey('amount_unit_name')) {
       context.handle(
-          _amountUnitMeta,
-          amountUnit.isAcceptableOrUnknown(
-              data['amount_unit']!, _amountUnitMeta));
+          _amountUnitNameMeta,
+          amountUnitName.isAcceptableOrUnknown(
+              data['amount_unit_name']!, _amountUnitNameMeta));
     }
     if (data.containsKey('area')) {
       context.handle(
@@ -362,25 +252,11 @@ class $DiaryTableTable extends DiaryTable
           areaUnitId.isAcceptableOrUnknown(
               data['area_unit_id']!, _areaUnitIdMeta));
     }
-    if (data.containsKey('area_unit')) {
-      context.handle(_areaUnitMeta,
-          areaUnit.isAcceptableOrUnknown(data['area_unit']!, _areaUnitMeta));
-    }
-    if (data.containsKey('farm_area')) {
-      context.handle(_farmAreaMeta,
-          farmArea.isAcceptableOrUnknown(data['farm_area']!, _farmAreaMeta));
-    }
-    if (data.containsKey('farm_area_unit_id')) {
+    if (data.containsKey('area_unit_name')) {
       context.handle(
-          _farmAreaUnitIdMeta,
-          farmAreaUnitId.isAcceptableOrUnknown(
-              data['farm_area_unit_id']!, _farmAreaUnitIdMeta));
-    }
-    if (data.containsKey('farm_area_unit')) {
-      context.handle(
-          _farmAreaUnitMeta,
-          farmAreaUnit.isAcceptableOrUnknown(
-              data['farm_area_unit']!, _farmAreaUnitMeta));
+          _areaUnitNameMeta,
+          areaUnitName.isAcceptableOrUnknown(
+              data['area_unit_name']!, _areaUnitNameMeta));
     }
     if (data.containsKey('yield_estimate')) {
       context.handle(
@@ -394,17 +270,45 @@ class $DiaryTableTable extends DiaryTable
           yieldEstimateUnitId.isAcceptableOrUnknown(
               data['yield_estimate_unit_id']!, _yieldEstimateUnitIdMeta));
     }
-    if (data.containsKey('yield_estimate_unit')) {
+    if (data.containsKey('yield_estimate_unit_name')) {
       context.handle(
-          _yieldEstimateUnitMeta,
-          yieldEstimateUnit.isAcceptableOrUnknown(
-              data['yield_estimate_unit']!, _yieldEstimateUnitMeta));
+          _yieldEstimateUnitNameMeta,
+          yieldEstimateUnitName.isAcceptableOrUnknown(
+              data['yield_estimate_unit_name']!, _yieldEstimateUnitNameMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('status_name')) {
+      context.handle(
+          _statusNameMeta,
+          statusName.isAcceptableOrUnknown(
+              data['status_name']!, _statusNameMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     }
     if (data.containsKey('farmer_name')) {
       context.handle(
           _farmerNameMeta,
           farmerName.isAcceptableOrUnknown(
               data['farmer_name']!, _farmerNameMeta));
+    }
+    if (data.containsKey('farmer_id')) {
+      context.handle(_farmerIdMeta,
+          farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta));
     }
     return context;
   }
@@ -417,28 +321,16 @@ class $DiaryTableTable extends DiaryTable
     return Diary(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
-      seasonId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}season_id']),
-      seasonFarmId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
-      activity: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}activity']),
-      activityId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}activity_id']),
-      actionTime: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}action_time']),
-      actionArea: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}action_area']),
-      actionAreaUnitId: attachedDatabase.typeMapping.read(
-          DriftSqlType.int, data['${effectivePrefix}action_area_unit_id']),
-      description: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}description']),
       name: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      seasonId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_id']),
       farmId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
-      crop: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}crop']),
+      farmName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farm_name']),
+      cropId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}crop_id']),
       productName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
       cropName: attachedDatabase.typeMapping
@@ -447,38 +339,37 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
       area: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}area']),
-      areaUnit: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}area_unit']),
       areaUnitId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}area_unit_id']),
+      areaUnitName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area_unit_name']),
       amount: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}amount']),
       amountUnitId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}amount_unit_id']),
-      amountUnit: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}amount_unit']),
-      startDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}start_date']),
-      endDate: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}end_date']),
-      status: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      amountUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}amount_unit_name']),
       yieldEstimate: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}yield_estimate']),
       yieldEstimateUnitId: attachedDatabase.typeMapping.read(
           DriftSqlType.int, data['${effectivePrefix}yield_estimate_unit_id']),
-      yieldEstimateUnit: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}yield_estimate_unit']),
-      farm: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}farm']),
+      yieldEstimateUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}yield_estimate_unit_name']),
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}end_date']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      statusName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status_name']),
       farmerName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}farmer_name']),
-      farmArea: attachedDatabase.typeMapping
-          .read(DriftSqlType.double, data['${effectivePrefix}farm_area']),
-      farmAreaUnit: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}farm_area_unit']),
-      farmAreaUnitId: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}farm_area_unit_id']),
+      farmerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farmer_id']),
     );
   }
 
@@ -490,249 +381,195 @@ class $DiaryTableTable extends DiaryTable
 
 class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> id;
+  final Value<String?> name;
   final Value<int?> seasonId;
-  final Value<int?> seasonFarmId;
-  final Value<String?> activity;
   final Value<int?> farmId;
-  final Value<String?> farm;
-  final Value<int?> activityId;
+  final Value<String?> farmName;
   final Value<String?> productName;
   final Value<String?> cropName;
   final Value<int?> productId;
-  final Value<String?> user;
-  final Value<String?> actionTime;
-  final Value<double?> actionArea;
-  final Value<int?> actionAreaUnitId;
-  final Value<String?> description;
-  final Value<String?> name;
-  final Value<String?> crop;
+  final Value<int?> cropId;
+  final Value<double?> amount;
+  final Value<int?> amountUnitId;
+  final Value<String?> amountUnitName;
+  final Value<double?> area;
+  final Value<int?> areaUnitId;
+  final Value<String?> areaUnitName;
+  final Value<double?> yieldEstimate;
+  final Value<int?> yieldEstimateUnitId;
+  final Value<String?> yieldEstimateUnitName;
   final Value<String?> startDate;
   final Value<String?> endDate;
   final Value<String?> status;
-  final Value<double?> amount;
-  final Value<int?> amountUnitId;
-  final Value<String?> amountUnit;
-  final Value<double?> area;
-  final Value<int?> areaUnitId;
-  final Value<String?> areaUnit;
-  final Value<double?> farmArea;
-  final Value<int?> farmAreaUnitId;
-  final Value<String?> farmAreaUnit;
-  final Value<double?> yieldEstimate;
-  final Value<int?> yieldEstimateUnitId;
-  final Value<String?> yieldEstimateUnit;
+  final Value<String?> statusName;
+  final Value<String?> description;
   final Value<String?> farmerName;
+  final Value<int?> farmerId;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
-    this.seasonFarmId = const Value.absent(),
-    this.activity = const Value.absent(),
     this.farmId = const Value.absent(),
-    this.farm = const Value.absent(),
-    this.activityId = const Value.absent(),
+    this.farmName = const Value.absent(),
     this.productName = const Value.absent(),
     this.cropName = const Value.absent(),
     this.productId = const Value.absent(),
-    this.user = const Value.absent(),
-    this.actionTime = const Value.absent(),
-    this.actionArea = const Value.absent(),
-    this.actionAreaUnitId = const Value.absent(),
-    this.description = const Value.absent(),
-    this.name = const Value.absent(),
-    this.crop = const Value.absent(),
+    this.cropId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.amountUnitId = const Value.absent(),
+    this.amountUnitName = const Value.absent(),
+    this.area = const Value.absent(),
+    this.areaUnitId = const Value.absent(),
+    this.areaUnitName = const Value.absent(),
+    this.yieldEstimate = const Value.absent(),
+    this.yieldEstimateUnitId = const Value.absent(),
+    this.yieldEstimateUnitName = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.status = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.amountUnitId = const Value.absent(),
-    this.amountUnit = const Value.absent(),
-    this.area = const Value.absent(),
-    this.areaUnitId = const Value.absent(),
-    this.areaUnit = const Value.absent(),
-    this.farmArea = const Value.absent(),
-    this.farmAreaUnitId = const Value.absent(),
-    this.farmAreaUnit = const Value.absent(),
-    this.yieldEstimate = const Value.absent(),
-    this.yieldEstimateUnitId = const Value.absent(),
-    this.yieldEstimateUnit = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
+    this.farmerId = const Value.absent(),
   });
   DiaryTableCompanion.insert({
     this.id = const Value.absent(),
+    this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
-    this.seasonFarmId = const Value.absent(),
-    this.activity = const Value.absent(),
     this.farmId = const Value.absent(),
-    this.farm = const Value.absent(),
-    this.activityId = const Value.absent(),
+    this.farmName = const Value.absent(),
     this.productName = const Value.absent(),
     this.cropName = const Value.absent(),
     this.productId = const Value.absent(),
-    this.user = const Value.absent(),
-    this.actionTime = const Value.absent(),
-    this.actionArea = const Value.absent(),
-    this.actionAreaUnitId = const Value.absent(),
-    this.description = const Value.absent(),
-    this.name = const Value.absent(),
-    this.crop = const Value.absent(),
+    this.cropId = const Value.absent(),
+    this.amount = const Value.absent(),
+    this.amountUnitId = const Value.absent(),
+    this.amountUnitName = const Value.absent(),
+    this.area = const Value.absent(),
+    this.areaUnitId = const Value.absent(),
+    this.areaUnitName = const Value.absent(),
+    this.yieldEstimate = const Value.absent(),
+    this.yieldEstimateUnitId = const Value.absent(),
+    this.yieldEstimateUnitName = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.status = const Value.absent(),
-    this.amount = const Value.absent(),
-    this.amountUnitId = const Value.absent(),
-    this.amountUnit = const Value.absent(),
-    this.area = const Value.absent(),
-    this.areaUnitId = const Value.absent(),
-    this.areaUnit = const Value.absent(),
-    this.farmArea = const Value.absent(),
-    this.farmAreaUnitId = const Value.absent(),
-    this.farmAreaUnit = const Value.absent(),
-    this.yieldEstimate = const Value.absent(),
-    this.yieldEstimateUnitId = const Value.absent(),
-    this.yieldEstimateUnit = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
+    this.farmerId = const Value.absent(),
   });
   static Insertable<Diary> custom({
     Expression<int>? id,
+    Expression<String>? name,
     Expression<int>? seasonId,
-    Expression<int>? seasonFarmId,
-    Expression<String>? activity,
     Expression<int>? farmId,
-    Expression<String>? farm,
-    Expression<int>? activityId,
+    Expression<String>? farmName,
     Expression<String>? productName,
     Expression<String>? cropName,
     Expression<int>? productId,
-    Expression<String>? user,
-    Expression<String>? actionTime,
-    Expression<double>? actionArea,
-    Expression<int>? actionAreaUnitId,
-    Expression<String>? description,
-    Expression<String>? name,
-    Expression<String>? crop,
+    Expression<int>? cropId,
+    Expression<double>? amount,
+    Expression<int>? amountUnitId,
+    Expression<String>? amountUnitName,
+    Expression<double>? area,
+    Expression<int>? areaUnitId,
+    Expression<String>? areaUnitName,
+    Expression<double>? yieldEstimate,
+    Expression<int>? yieldEstimateUnitId,
+    Expression<String>? yieldEstimateUnitName,
     Expression<String>? startDate,
     Expression<String>? endDate,
     Expression<String>? status,
-    Expression<double>? amount,
-    Expression<int>? amountUnitId,
-    Expression<String>? amountUnit,
-    Expression<double>? area,
-    Expression<int>? areaUnitId,
-    Expression<String>? areaUnit,
-    Expression<double>? farmArea,
-    Expression<int>? farmAreaUnitId,
-    Expression<String>? farmAreaUnit,
-    Expression<double>? yieldEstimate,
-    Expression<int>? yieldEstimateUnitId,
-    Expression<String>? yieldEstimateUnit,
+    Expression<String>? statusName,
+    Expression<String>? description,
     Expression<String>? farmerName,
+    Expression<int>? farmerId,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (name != null) 'name': name,
       if (seasonId != null) 'season_id': seasonId,
-      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
-      if (activity != null) 'activity': activity,
       if (farmId != null) 'farm_id': farmId,
-      if (farm != null) 'farm': farm,
-      if (activityId != null) 'activity_id': activityId,
+      if (farmName != null) 'farm_name': farmName,
       if (productName != null) 'product_name': productName,
       if (cropName != null) 'crop_name': cropName,
       if (productId != null) 'product_id': productId,
-      if (user != null) 'user': user,
-      if (actionTime != null) 'action_time': actionTime,
-      if (actionArea != null) 'action_area': actionArea,
-      if (actionAreaUnitId != null) 'action_area_unit_id': actionAreaUnitId,
-      if (description != null) 'description': description,
-      if (name != null) 'name': name,
-      if (crop != null) 'crop': crop,
-      if (startDate != null) 'start_date': startDate,
-      if (endDate != null) 'end_date': endDate,
-      if (status != null) 'status': status,
+      if (cropId != null) 'crop_id': cropId,
       if (amount != null) 'amount': amount,
       if (amountUnitId != null) 'amount_unit_id': amountUnitId,
-      if (amountUnit != null) 'amount_unit': amountUnit,
+      if (amountUnitName != null) 'amount_unit_name': amountUnitName,
       if (area != null) 'area': area,
       if (areaUnitId != null) 'area_unit_id': areaUnitId,
-      if (areaUnit != null) 'area_unit': areaUnit,
-      if (farmArea != null) 'farm_area': farmArea,
-      if (farmAreaUnitId != null) 'farm_area_unit_id': farmAreaUnitId,
-      if (farmAreaUnit != null) 'farm_area_unit': farmAreaUnit,
+      if (areaUnitName != null) 'area_unit_name': areaUnitName,
       if (yieldEstimate != null) 'yield_estimate': yieldEstimate,
       if (yieldEstimateUnitId != null)
         'yield_estimate_unit_id': yieldEstimateUnitId,
-      if (yieldEstimateUnit != null) 'yield_estimate_unit': yieldEstimateUnit,
+      if (yieldEstimateUnitName != null)
+        'yield_estimate_unit_name': yieldEstimateUnitName,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (status != null) 'status': status,
+      if (statusName != null) 'status_name': statusName,
+      if (description != null) 'description': description,
       if (farmerName != null) 'farmer_name': farmerName,
+      if (farmerId != null) 'farmer_id': farmerId,
     });
   }
 
   DiaryTableCompanion copyWith(
       {Value<int?>? id,
+      Value<String?>? name,
       Value<int?>? seasonId,
-      Value<int?>? seasonFarmId,
-      Value<String?>? activity,
       Value<int?>? farmId,
-      Value<String?>? farm,
-      Value<int?>? activityId,
+      Value<String?>? farmName,
       Value<String?>? productName,
       Value<String?>? cropName,
       Value<int?>? productId,
-      Value<String?>? user,
-      Value<String?>? actionTime,
-      Value<double?>? actionArea,
-      Value<int?>? actionAreaUnitId,
-      Value<String?>? description,
-      Value<String?>? name,
-      Value<String?>? crop,
+      Value<int?>? cropId,
+      Value<double?>? amount,
+      Value<int?>? amountUnitId,
+      Value<String?>? amountUnitName,
+      Value<double?>? area,
+      Value<int?>? areaUnitId,
+      Value<String?>? areaUnitName,
+      Value<double?>? yieldEstimate,
+      Value<int?>? yieldEstimateUnitId,
+      Value<String?>? yieldEstimateUnitName,
       Value<String?>? startDate,
       Value<String?>? endDate,
       Value<String?>? status,
-      Value<double?>? amount,
-      Value<int?>? amountUnitId,
-      Value<String?>? amountUnit,
-      Value<double?>? area,
-      Value<int?>? areaUnitId,
-      Value<String?>? areaUnit,
-      Value<double?>? farmArea,
-      Value<int?>? farmAreaUnitId,
-      Value<String?>? farmAreaUnit,
-      Value<double?>? yieldEstimate,
-      Value<int?>? yieldEstimateUnitId,
-      Value<String?>? yieldEstimateUnit,
-      Value<String?>? farmerName}) {
+      Value<String?>? statusName,
+      Value<String?>? description,
+      Value<String?>? farmerName,
+      Value<int?>? farmerId}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
+      name: name ?? this.name,
       seasonId: seasonId ?? this.seasonId,
-      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
-      activity: activity ?? this.activity,
       farmId: farmId ?? this.farmId,
-      farm: farm ?? this.farm,
-      activityId: activityId ?? this.activityId,
+      farmName: farmName ?? this.farmName,
       productName: productName ?? this.productName,
       cropName: cropName ?? this.cropName,
       productId: productId ?? this.productId,
-      user: user ?? this.user,
-      actionTime: actionTime ?? this.actionTime,
-      actionArea: actionArea ?? this.actionArea,
-      actionAreaUnitId: actionAreaUnitId ?? this.actionAreaUnitId,
-      description: description ?? this.description,
-      name: name ?? this.name,
-      crop: crop ?? this.crop,
+      cropId: cropId ?? this.cropId,
+      amount: amount ?? this.amount,
+      amountUnitId: amountUnitId ?? this.amountUnitId,
+      amountUnitName: amountUnitName ?? this.amountUnitName,
+      area: area ?? this.area,
+      areaUnitId: areaUnitId ?? this.areaUnitId,
+      areaUnitName: areaUnitName ?? this.areaUnitName,
+      yieldEstimate: yieldEstimate ?? this.yieldEstimate,
+      yieldEstimateUnitId: yieldEstimateUnitId ?? this.yieldEstimateUnitId,
+      yieldEstimateUnitName:
+          yieldEstimateUnitName ?? this.yieldEstimateUnitName,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       status: status ?? this.status,
-      amount: amount ?? this.amount,
-      amountUnitId: amountUnitId ?? this.amountUnitId,
-      amountUnit: amountUnit ?? this.amountUnit,
-      area: area ?? this.area,
-      areaUnitId: areaUnitId ?? this.areaUnitId,
-      areaUnit: areaUnit ?? this.areaUnit,
-      farmArea: farmArea ?? this.farmArea,
-      farmAreaUnitId: farmAreaUnitId ?? this.farmAreaUnitId,
-      farmAreaUnit: farmAreaUnit ?? this.farmAreaUnit,
-      yieldEstimate: yieldEstimate ?? this.yieldEstimate,
-      yieldEstimateUnitId: yieldEstimateUnitId ?? this.yieldEstimateUnitId,
-      yieldEstimateUnit: yieldEstimateUnit ?? this.yieldEstimateUnit,
+      statusName: statusName ?? this.statusName,
+      description: description ?? this.description,
       farmerName: farmerName ?? this.farmerName,
+      farmerId: farmerId ?? this.farmerId,
     );
   }
 
@@ -742,23 +579,17 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
     if (seasonId.present) {
       map['season_id'] = Variable<int>(seasonId.value);
-    }
-    if (seasonFarmId.present) {
-      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
-    }
-    if (activity.present) {
-      map['activity'] = Variable<String>(activity.value);
     }
     if (farmId.present) {
       map['farm_id'] = Variable<int>(farmId.value);
     }
-    if (farm.present) {
-      map['farm'] = Variable<String>(farm.value);
-    }
-    if (activityId.present) {
-      map['activity_id'] = Variable<int>(activityId.value);
+    if (farmName.present) {
+      map['farm_name'] = Variable<String>(farmName.value);
     }
     if (productName.present) {
       map['product_name'] = Variable<String>(productName.value);
@@ -769,26 +600,36 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (productId.present) {
       map['product_id'] = Variable<int>(productId.value);
     }
-    if (user.present) {
-      map['user'] = Variable<String>(user.value);
+    if (cropId.present) {
+      map['crop_id'] = Variable<int>(cropId.value);
     }
-    if (actionTime.present) {
-      map['action_time'] = Variable<String>(actionTime.value);
+    if (amount.present) {
+      map['amount'] = Variable<double>(amount.value);
     }
-    if (actionArea.present) {
-      map['action_area'] = Variable<double>(actionArea.value);
+    if (amountUnitId.present) {
+      map['amount_unit_id'] = Variable<int>(amountUnitId.value);
     }
-    if (actionAreaUnitId.present) {
-      map['action_area_unit_id'] = Variable<int>(actionAreaUnitId.value);
+    if (amountUnitName.present) {
+      map['amount_unit_name'] = Variable<String>(amountUnitName.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String>(description.value);
+    if (area.present) {
+      map['area'] = Variable<double>(area.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
+    if (areaUnitId.present) {
+      map['area_unit_id'] = Variable<int>(areaUnitId.value);
     }
-    if (crop.present) {
-      map['crop'] = Variable<String>(crop.value);
+    if (areaUnitName.present) {
+      map['area_unit_name'] = Variable<String>(areaUnitName.value);
+    }
+    if (yieldEstimate.present) {
+      map['yield_estimate'] = Variable<double>(yieldEstimate.value);
+    }
+    if (yieldEstimateUnitId.present) {
+      map['yield_estimate_unit_id'] = Variable<int>(yieldEstimateUnitId.value);
+    }
+    if (yieldEstimateUnitName.present) {
+      map['yield_estimate_unit_name'] =
+          Variable<String>(yieldEstimateUnitName.value);
     }
     if (startDate.present) {
       map['start_date'] = Variable<String>(startDate.value);
@@ -799,44 +640,17 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (status.present) {
       map['status'] = Variable<String>(status.value);
     }
-    if (amount.present) {
-      map['amount'] = Variable<double>(amount.value);
+    if (statusName.present) {
+      map['status_name'] = Variable<String>(statusName.value);
     }
-    if (amountUnitId.present) {
-      map['amount_unit_id'] = Variable<int>(amountUnitId.value);
-    }
-    if (amountUnit.present) {
-      map['amount_unit'] = Variable<String>(amountUnit.value);
-    }
-    if (area.present) {
-      map['area'] = Variable<double>(area.value);
-    }
-    if (areaUnitId.present) {
-      map['area_unit_id'] = Variable<int>(areaUnitId.value);
-    }
-    if (areaUnit.present) {
-      map['area_unit'] = Variable<String>(areaUnit.value);
-    }
-    if (farmArea.present) {
-      map['farm_area'] = Variable<double>(farmArea.value);
-    }
-    if (farmAreaUnitId.present) {
-      map['farm_area_unit_id'] = Variable<int>(farmAreaUnitId.value);
-    }
-    if (farmAreaUnit.present) {
-      map['farm_area_unit'] = Variable<String>(farmAreaUnit.value);
-    }
-    if (yieldEstimate.present) {
-      map['yield_estimate'] = Variable<double>(yieldEstimate.value);
-    }
-    if (yieldEstimateUnitId.present) {
-      map['yield_estimate_unit_id'] = Variable<int>(yieldEstimateUnitId.value);
-    }
-    if (yieldEstimateUnit.present) {
-      map['yield_estimate_unit'] = Variable<String>(yieldEstimateUnit.value);
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
     }
     if (farmerName.present) {
       map['farmer_name'] = Variable<String>(farmerName.value);
+    }
+    if (farmerId.present) {
+      map['farmer_id'] = Variable<int>(farmerId.value);
     }
     return map;
   }
@@ -845,38 +659,30 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   String toString() {
     return (StringBuffer('DiaryTableCompanion(')
           ..write('id: $id, ')
+          ..write('name: $name, ')
           ..write('seasonId: $seasonId, ')
-          ..write('seasonFarmId: $seasonFarmId, ')
-          ..write('activity: $activity, ')
           ..write('farmId: $farmId, ')
-          ..write('farm: $farm, ')
-          ..write('activityId: $activityId, ')
+          ..write('farmName: $farmName, ')
           ..write('productName: $productName, ')
           ..write('cropName: $cropName, ')
           ..write('productId: $productId, ')
-          ..write('user: $user, ')
-          ..write('actionTime: $actionTime, ')
-          ..write('actionArea: $actionArea, ')
-          ..write('actionAreaUnitId: $actionAreaUnitId, ')
-          ..write('description: $description, ')
-          ..write('name: $name, ')
-          ..write('crop: $crop, ')
+          ..write('cropId: $cropId, ')
+          ..write('amount: $amount, ')
+          ..write('amountUnitId: $amountUnitId, ')
+          ..write('amountUnitName: $amountUnitName, ')
+          ..write('area: $area, ')
+          ..write('areaUnitId: $areaUnitId, ')
+          ..write('areaUnitName: $areaUnitName, ')
+          ..write('yieldEstimate: $yieldEstimate, ')
+          ..write('yieldEstimateUnitId: $yieldEstimateUnitId, ')
+          ..write('yieldEstimateUnitName: $yieldEstimateUnitName, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('status: $status, ')
-          ..write('amount: $amount, ')
-          ..write('amountUnitId: $amountUnitId, ')
-          ..write('amountUnit: $amountUnit, ')
-          ..write('area: $area, ')
-          ..write('areaUnitId: $areaUnitId, ')
-          ..write('areaUnit: $areaUnit, ')
-          ..write('farmArea: $farmArea, ')
-          ..write('farmAreaUnitId: $farmAreaUnitId, ')
-          ..write('farmAreaUnit: $farmAreaUnit, ')
-          ..write('yieldEstimate: $yieldEstimate, ')
-          ..write('yieldEstimateUnitId: $yieldEstimateUnitId, ')
-          ..write('yieldEstimateUnit: $yieldEstimateUnit, ')
-          ..write('farmerName: $farmerName')
+          ..write('statusName: $statusName, ')
+          ..write('description: $description, ')
+          ..write('farmerName: $farmerName, ')
+          ..write('farmerId: $farmerId')
           ..write(')'))
         .toString();
   }

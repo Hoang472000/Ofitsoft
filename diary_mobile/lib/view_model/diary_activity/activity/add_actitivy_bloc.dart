@@ -46,7 +46,8 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-    print("HoangCV:state.listUnitArea: ${state.listUnitArea.length} : ${state.indexArea}  ");
+    print(
+        "HoangCV:state.listUnitArea: ${state.listUnitArea.length} : ${state.indexArea}  ");
     list.add(InputRegisterModel<Activity, Activity>(
         title: "Tên công việc",
         isCompulsory: true,
@@ -94,7 +95,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listArea.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -126,7 +127,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listVT.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -136,7 +137,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listCC.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -148,7 +149,8 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetCC: listCC,
-        listWidgetArea: listArea, formStatus: const InitialFormStatus()));
+        listWidgetArea: listArea,
+        formStatus: const InitialFormStatus()));
   }
 
   void _changeViewEdit(Emitter<AddActivityState> emitter) {
@@ -205,7 +207,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listArea.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: false,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -236,7 +238,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listVT.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: true,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -246,7 +248,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     ));
 
     listCC.add(InputRegisterModel(
-      title: "Đơn vị:",
+      title: "Đơn vị",
       isCompulsory: true,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
@@ -280,32 +282,36 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         sharedPreferences.getInt(SharedPreferencesKey.unitArea) ?? -1;
     final categoryIdUnitAmount =
         sharedPreferences.getInt(SharedPreferencesKey.unitAmount) ?? -1;
+    final categoryIdUnitYield =
+        sharedPreferences.getInt(SharedPreferencesKey.unitYield) ?? -1;
     final listUnitArea = await DiaryDB.instance.getListUnit(categoryIdUnitArea);
     final listUnitAmount =
         await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
+    final listUnitYield =
+        await DiaryDB.instance.getListUnit(categoryIdUnitYield);
     listUnitArea.forEach((element) {
       print("HoangCV: indexArea:`11 ${element.toJson()}");
     });
     int indexAreaUnit = listUnitArea
-        .indexWhere((element) => element.id == event.diary.farmAreaUnitId);
-    print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.farmAreaUnitId}");
+        .indexWhere((element) => element.id == event.diary.areaUnitId);
+    print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId}");
     emitter(state.copyWith(
-      isShowProgress: false, formStatus: const InitialFormStatus(),
+      isShowProgress: false,
+      formStatus: const InitialFormStatus(),
       // detailActivity: detailActivity,
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
       listUnitAmount: listUnitAmount,
       listUnitArea: listUnitArea,
+      listUnitYield: listUnitYield,
       indexArea: indexAreaUnit,
       seasonId: event.seasonId,
       startTimeController:
           TextEditingController(text: DateTime.now().toString().split('.')[0]),
-      areaController: TextEditingController(text: "${event.diary.farmArea??0}"),
+      areaController: TextEditingController(text: "${event.diary.area ?? 0}"),
       moTaController: TextEditingController(),
-      // listVatTuAdd: detailActivity.material,
-      // listCongCuAdd: detailActivity.tool,
-      // listImage: detailActivity.media,
+      yieldController: TextEditingController(),
 /*        moTaController: TextEditingController(text: detailActivity.description),
         nameController: TextEditingController(text: listActivity[index].name),
         peopleController: TextEditingController(),
@@ -397,6 +403,31 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
               nameController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
               indexActivity: result));
+          if (event.list[event.index].listValue[result].id == 20) {
+            List<InputRegisterModel> listYield = [];
+            listYield.add(InputRegisterModel(
+              title: "Sản lượng",
+              isCompulsory: false,
+              type: TypeInputRegister.TextField,
+              typeInput: TextInputType.number,
+              controller: state.yieldController,
+              maxLengthTextInput: 10,
+              image: ImageAsset.imageBudget,
+            ));
+
+            listYield.add(InputRegisterModel(
+              title: "Đơn vị",
+              isCompulsory: false,
+              type: TypeInputRegister.Select,
+              icon: Icons.arrow_drop_down,
+              positionSelected: -1,
+              listValue: state.listUnitYield,
+              typeInputEnum: TypeInputEnum.dmucItem,
+            ));
+            emit(state.copyWith(listWidgetYield: listYield));
+          } else {
+            emit(state.copyWith(listWidgetYield: []));
+          }
         }
         if (event.list[event.index].title.compareTo("Chi tiết công việc") ==
             0) {
@@ -437,16 +468,21 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       imageHeight = 100;
     }
     emit(state.copyWith(
-        listImage: list, imageWidth: imageWidth, imageHeight: imageHeight, formStatus: const InitialFormStatus()));
+        listImage: list,
+        imageWidth: imageWidth,
+        imageHeight: imageHeight,
+        formStatus: const InitialFormStatus()));
   }
 
   FutureOr<void> _addActivityDiary(
       AddActivityDiaryEvent event, Emitter<AddActivityState> emit) async {
     print("HoangCV: state.indexActivity: ${state.indexActivity}");
+    if(state.listWidgetYield.isNotEmpty) {
+      state.listWidgetYield[0].error = null;
+      state.listWidgetYield[1].error = null;
+    }
     emit(state.copyWith(
-      isShowProgress: true
-        , formStatus: const InitialFormStatus()
-    ));
+        isShowProgress: true, formStatus: const InitialFormStatus()));
     List<InputRegisterModel> list = List.from(state.listWidget);
     List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
@@ -462,6 +498,13 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         state.listWidgetArea[1].valueSelected == null) {
       validate = false;
       state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
+    } else if (state.listActivity[state.indexActivity].id  == 20 && state.yieldController!.text.isEmpty) {
+      validate = false;
+      state.listWidgetYield[0].error = "Vui lòng nhập sản lượng";
+    } else if (state.listActivity[state.indexActivity].id == 20 && state.yieldController!.text.isNotEmpty &&
+        state.listWidgetYield[1].valueSelected == null) {
+      validate = false;
+      state.listWidgetYield[1].error = "Vui lòng chọn đơn vị";
     }
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
@@ -513,6 +556,10 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     } else if (event.inputRegisterModel.title.compareTo("Diện tích") == 0) {
       emit(state.copyWith(
           areaController: TextEditingController(text: event.text)));
+    } else if (event.inputRegisterModel.title.compareTo("Sản lượng") == 0) {
+      event.inputRegisterModel.error = null;
+      emit(state.copyWith(
+          yieldController: TextEditingController(text: event.text)));
     }
   }
 }
@@ -631,6 +678,9 @@ class AddActivityState extends BlocState {
         indexActivity,
         indexArea,
         seasonId,
+        listWidgetYield,
+        listUnitYield,
+        yieldController,
       ];
   final Diary? detailActivity;
   final List<MaterialEntity> listMaterial;
@@ -657,43 +707,50 @@ class AddActivityState extends BlocState {
   TextEditingController? startTimeController = TextEditingController();
   TextEditingController? endTimeController = TextEditingController();
   TextEditingController? areaController = TextEditingController();
+  TextEditingController? yieldController = TextEditingController();
+  List<InputRegisterModel> listWidgetYield;
+  final List<Unit> listUnitYield;
   bool isEdit;
   int indexActivity;
   int indexArea;
   double imageWidth;
   double imageHeight;
 
-  AddActivityState(
-      {this.detailActivity,
-      this.seasonId = -1,
-      this.formStatus = const InitialFormStatus(),
-      this.isShowProgress = true,
-      this.listMaterial = const [],
-      this.listTool = const [],
-      this.listUnitArea = const [],
-      this.listUnitAmount = const [],
-      this.listWidgetArea = const [],
-      this.listActivity = const [],
-      this.listCongCuAdd = const [],
-      this.listVatTuAdd = const [],
-      this.listWidget = const [],
-      this.listWidgetVT = const [],
-      this.listWidgetCC = const [],
-      this.listImage = const [],
-      this.nameController,
-      this.soCayController,
-      this.soLuongController,
-      this.moTaController,
-      this.donViController,
-      this.peopleController,
-      this.startTimeController,
-      this.endTimeController,
-      this.areaController,
-      this.isEdit = false,
-      this.imageWidth = 130,
-      this.imageHeight = 100,
-      this.indexActivity = -1,
-      this.indexArea = -1});
+  AddActivityState({
+    this.detailActivity,
+    this.seasonId = -1,
+    this.formStatus = const InitialFormStatus(),
+    this.isShowProgress = true,
+    this.listMaterial = const [],
+    this.listTool = const [],
+    this.listUnitArea = const [],
+    this.listUnitAmount = const [],
+    this.listWidgetArea = const [],
+    this.listActivity = const [],
+    this.listCongCuAdd = const [],
+    this.listVatTuAdd = const [],
+    this.listWidget = const [],
+    this.listWidgetVT = const [],
+    this.listWidgetCC = const [],
+    this.listImage = const [],
+    this.nameController,
+    this.soCayController,
+    this.soLuongController,
+    this.moTaController,
+    this.donViController,
+    this.peopleController,
+    this.startTimeController,
+    this.endTimeController,
+    this.areaController,
+    this.isEdit = false,
+    this.imageWidth = 130,
+    this.imageHeight = 100,
+    this.indexActivity = -1,
+    this.indexArea = -1,
+    this.yieldController,
+    this.listUnitYield = const [],
+    this.listWidgetYield = const [],
+  });
 
   AddActivityState copyWith({
     Diary? detailActivity,
@@ -721,6 +778,9 @@ class AddActivityState extends BlocState {
     TextEditingController? startTimeController,
     TextEditingController? endTimeController,
     TextEditingController? areaController,
+    TextEditingController? yieldController,
+    List<InputRegisterModel>? listWidgetYield,
+    List<Unit>? listUnitYield,
     bool? isEdit,
     int? indexActivity,
     int? indexArea,
@@ -728,34 +788,38 @@ class AddActivityState extends BlocState {
     double? imageHeight,
   }) {
     return AddActivityState(
-        detailActivity: detailActivity ?? this.detailActivity,
-        formStatus: formStatus ?? this.formStatus,
-        isShowProgress: isShowProgress ?? this.isShowProgress,
-        listMaterial: listMaterial ?? this.listMaterial,
-        listTool: listTool ?? this.listTool,
-        listUnitArea: listUnitArea ?? this.listUnitArea,
-        listUnitAmount: listUnitAmount ?? this.listUnitAmount,
-        seasonId: seasonId ?? this.seasonId,
-        listActivity: listActivity ?? this.listActivity,
-        listWidget: listWidget ?? this.listWidget,
-        listWidgetVT: listWidgetVT ?? this.listWidgetVT,
-        listWidgetCC: listWidgetCC ?? this.listWidgetCC,
-        listWidgetArea: listWidgetArea ?? this.listWidgetArea,
-        listImage: listImage ?? this.listImage,
-        listVatTuAdd: listVatTuAdd ?? this.listVatTuAdd,
-        listCongCuAdd: listCongCuAdd ?? this.listCongCuAdd,
-        nameController: nameController ?? this.nameController,
-        soCayController: soCayController ?? this.soCayController,
-        soLuongController: soLuongController ?? this.soLuongController,
-        moTaController: moTaController ?? this.moTaController,
-        donViController: donViController ?? this.donViController,
-        peopleController: peopleController ?? this.peopleController,
-        startTimeController: startTimeController ?? this.startTimeController,
-        endTimeController: endTimeController ?? this.endTimeController,
-        areaController: areaController ?? this.areaController,
-        isEdit: isEdit ?? this.isEdit,
-        imageWidth: imageWidth ?? this.imageWidth,
-        imageHeight: imageHeight ?? this.imageHeight,
-        indexActivity: indexActivity ?? this.indexActivity);
+      detailActivity: detailActivity ?? this.detailActivity,
+      formStatus: formStatus ?? this.formStatus,
+      isShowProgress: isShowProgress ?? this.isShowProgress,
+      listMaterial: listMaterial ?? this.listMaterial,
+      listTool: listTool ?? this.listTool,
+      listUnitArea: listUnitArea ?? this.listUnitArea,
+      listUnitAmount: listUnitAmount ?? this.listUnitAmount,
+      seasonId: seasonId ?? this.seasonId,
+      listActivity: listActivity ?? this.listActivity,
+      listWidget: listWidget ?? this.listWidget,
+      listWidgetVT: listWidgetVT ?? this.listWidgetVT,
+      listWidgetCC: listWidgetCC ?? this.listWidgetCC,
+      listWidgetArea: listWidgetArea ?? this.listWidgetArea,
+      listImage: listImage ?? this.listImage,
+      listVatTuAdd: listVatTuAdd ?? this.listVatTuAdd,
+      listCongCuAdd: listCongCuAdd ?? this.listCongCuAdd,
+      nameController: nameController ?? this.nameController,
+      soCayController: soCayController ?? this.soCayController,
+      soLuongController: soLuongController ?? this.soLuongController,
+      moTaController: moTaController ?? this.moTaController,
+      donViController: donViController ?? this.donViController,
+      peopleController: peopleController ?? this.peopleController,
+      startTimeController: startTimeController ?? this.startTimeController,
+      endTimeController: endTimeController ?? this.endTimeController,
+      areaController: areaController ?? this.areaController,
+      isEdit: isEdit ?? this.isEdit,
+      imageWidth: imageWidth ?? this.imageWidth,
+      imageHeight: imageHeight ?? this.imageHeight,
+      indexActivity: indexActivity ?? this.indexActivity,
+      listUnitYield: listUnitYield ?? this.listUnitYield,
+      listWidgetYield: listWidgetYield ?? this.listWidgetYield,
+      yieldController: yieldController ?? this.yieldController,
+    );
   }
 }

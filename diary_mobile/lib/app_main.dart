@@ -175,8 +175,9 @@ class _AIBookState extends State<_AIBookView> {
           return BlocListener<AuthenticationBloc, AuthenticationState>(
               listener: (context, state) async {
                 SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
-                String token = sharedPreferences.getString(SharedPreferencesKey.accessToken) ?? "";
+                String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
                 bool isKeepLogin= sharedPreferences.getBool(SharedPreferencesKey.isRemember) ?? true;
+                print("HoangCV: check login : ${token}");
                 switch (state.status) {
                   case AuthenticationStatus.authenticated:
                     _navigator.pushAndRemoveUntil<void>(
@@ -184,7 +185,7 @@ class _AIBookState extends State<_AIBookView> {
                     break;
                     //case mất mạng
                   case AuthenticationStatus.unauthenticated:
-                    if(token.isNotEmpty && isKeepLogin && await Utils.checkInternetConnection()== false){
+                    if(token.isNotEmpty && await Utils.checkInternetConnection()== false){
                       _navigator.pushAndRemoveUntil<void>(
                           await HomePage.route(), (route) => false);
                     }else {

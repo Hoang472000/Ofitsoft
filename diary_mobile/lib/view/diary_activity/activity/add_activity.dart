@@ -127,7 +127,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         ? Row(
                             children: [
                               Expanded(
-                                  flex: 8,
+                                  flex: 7,
                                   child: ContainerInputWidget(
                                     contextParent: context,
                                     inputRegisterModel: state.listWidgetArea[0],
@@ -160,7 +160,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                 width: 8,
                               ),
                               Expanded(
-                                  flex: 5,
+                                  flex: 6,
                                   child: ContainerInputWidget(
                                     contextParent: context,
                                     inputRegisterModel: state.listWidgetArea[1],
@@ -177,6 +177,61 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                   )),
                             ],
                           )
+                        : const SizedBox(),
+                    state.listWidgetYield.isNotEmpty
+                        ? Row(
+                      children: [
+                        Expanded(
+                            flex: 7,
+                            child: ContainerInputWidget(
+                              contextParent: context,
+                              inputRegisterModel: state.listWidgetYield[0],
+                              onClick: () {
+                                setState(() {});
+                                blocContext.read<AddActivityBloc>().add(
+                                    OnSelectValueEvent(
+                                        state.listWidgetYield,
+                                        0,
+                                        context));
+                              },
+                              onChangeText: (text) {
+                                blocContext.read<AddActivityBloc>().add(
+                                    SaveValueTextFieldEvent(text,
+                                        state.listWidgetYield[0], 0));
+                              },
+                              onSubmittedText: (text) {
+                                print(
+                                    "HoangCV: onSubmittedText: ${text}");
+                              },
+                              onEditingComplete: (text) {
+                                print(
+                                    "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
+                                blocContext.read<AddActivityBloc>().add(
+                                    SaveValueTextFieldEvent(text,
+                                        state.listWidgetYield[0], 0));
+                              },
+                            )),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                            flex: 6,
+                            child: ContainerInputWidget(
+                              contextParent: context,
+                              inputRegisterModel: state.listWidgetYield[1],
+                              onClick: () {
+                                setState(() {});
+                                blocContext.read<AddActivityBloc>().add(
+                                    OnSelectValueEvent(
+                                        state.listWidgetYield,
+                                        1,
+                                        context));
+                              },
+                              onChangeText: (text) {},
+                              onEditingComplete: (text) {},
+                            )),
+                      ],
+                    )
                         : const SizedBox(),
                     itemAccount(context,
                         text: "Danh sách vật tư, công cụ",

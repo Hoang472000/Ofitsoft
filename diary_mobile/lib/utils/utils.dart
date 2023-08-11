@@ -151,6 +151,7 @@ class Utils {
 
   //Bkav Nhungltk: check dieu kien mang
   static Future<bool> checkInternetConnection() async {
+    print("HoangCV: check connect: ${await NetworkCheckConnect.status}");
     return await NetworkCheckConnect.status;
   }
 

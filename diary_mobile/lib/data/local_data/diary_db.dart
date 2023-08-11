@@ -50,6 +50,10 @@ class DiaryDB extends _$DiaryDB {
   Future<List<Diary>> getListDiary() async {
     return await select(diaryTable).get();
   }
+  Future<List<Diary>> getInfoDiary(int id) async {
+    return (select(diaryTable)..where((tbl) => tbl.id.equals(id)))
+        .get();
+  }
 
   ///Thêm, sửa, xóa, lấy Activity Diary
   Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
