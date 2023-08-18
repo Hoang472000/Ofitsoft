@@ -178,6 +178,9 @@ class ImageAsset {
   static const String imageFarmerProfile = "${iMages}farmer.png";
   static const String imageSex = "${iMages}sex.png";
   static const String imageCollaboration = "${iMages}collaboration.png";
+  static const String imageVideoCamera = "${iMages}video_camera.png";
+  static const String imageVideo = "${iMages}image_video.png";
+  static const String imageYoutube = "${iMages}youtube.png";
 
   //activity_image
   static const String imageActGardenVentilation = "${iMages}act_garden_ventilation.png";

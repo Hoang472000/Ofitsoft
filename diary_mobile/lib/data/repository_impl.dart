@@ -334,6 +334,32 @@ class RepositoryImpl extends Repository {
   }
 
   @override
+  Future<void> getUpdateDiary(int id) async{
+       final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.getInfoDiary}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getInfoDiary response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.message == "Successfully") {
+      Diary list = Diary.fromJson(objectResult.response);
+      DiaryDB.instance.insertListDiary([list]);
+      //return list;
+    }
+   /* else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }*/
+    // List<Diary> list = await DiaryDB.instance.getInfoDiary(id);
+   // return list.first;
+  }
+
+  @override
   Future<UserInfo> getUserInfo() async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
@@ -377,11 +403,12 @@ class RepositoryImpl extends Repository {
       print("HoangCV: addActivityDiary not network");
       ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
       DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
-      DiaLogManager.showDialogHTTPError(
+      DiaryDB.instance.insertListActivityDiary([diary]);
+    /*  DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
-      );
+      );*/
     }
     else{
       DiaLogManager.showDialogHTTPError(
@@ -426,13 +453,15 @@ class RepositoryImpl extends Repository {
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
 
-    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
-
-      DiaLogManager.showDialogHTTPError(
+    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK} : id: $id");
+    if (objectResult.responseCode == StatusConst.code00) {
+      DiaryDB.instance.removeActivityDiary(id);
+    }
+/*      DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
-      );
+      );*/
     return objectResult;
   }
 

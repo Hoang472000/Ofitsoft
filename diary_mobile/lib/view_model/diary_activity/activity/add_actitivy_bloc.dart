@@ -298,7 +298,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
-      // detailActivity: detailActivity,
+       detailActivity: event.diary,
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
@@ -312,6 +312,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       areaController: TextEditingController(text: "${event.diary.area ?? 0}"),
       moTaController: TextEditingController(),
       yieldController: TextEditingController(),
+      areaMax: (event.diary.area ?? 0.0) * double.parse('${listUnitArea[indexAreaUnit].convert}'),
 /*        moTaController: TextEditingController(text: detailActivity.description),
         nameController: TextEditingController(text: listActivity[index].name),
         peopleController: TextEditingController(),
@@ -325,9 +326,10 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     _initViewAdd(emitter);
     state.listWidgetArea[1].valueSelected = state.listUnitArea[indexAreaUnit];
     state.listWidgetArea[1].positionSelected = indexAreaUnit;
-    emit(state.copyWith(listWidgetArea: state.listWidgetArea));
+    emit(state.copyWith(listWidgetArea: state.listWidgetArea, indexArea: indexAreaUnit,       isShowProgress: false,));
 
     emitter(state.copyWith(listWidget: state.listWidget));
+    print("state.indexArea: ${state.indexArea} : $indexAreaUnit : ${state.indexActivity} : ${state.detailActivity?.areaUnitId}");
   }
 
   FutureOr<void> _changeEditActivity(
@@ -429,6 +431,18 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
             emit(state.copyWith(listWidgetYield: []));
           }
         }
+        if (event.list[event.index].title.compareTo("Đơn vị") == 0) {
+          print("state.indexArea222: ${state.indexArea} : ${state.indexActivity} : ${state.listWidgetArea[1].positionSelected}");
+          if((double.parse(state.areaController!.text.isNotEmpty ? state.areaController!.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
+            state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
+          } else{
+            state.listWidgetArea[0].error = null;
+          }
+          emit(state.copyWith(
+              donViController: TextEditingController(
+                  text: event.list[event.index].valueSelected.name),
+              indexArea: result));
+        }
         if (event.list[event.index].title.compareTo("Chi tiết công việc") ==
             0) {
           emit(state.copyWith(
@@ -448,6 +462,9 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       AddOrDeleteImageEvent event, Emitter<AddActivityState> emit) async {
     print("HoangCV: event. image: ${event.listImage.length}");
     List<ImageEntity> list = List.from(state.listImage);
+    event.listImage.forEach((element) {
+      print("HoangCV: event. fileContent: ${element.fileName} : ${element.filePath}");
+    });
     if (event.index == -1) {
       list.addAll(event.listImage);
     } else {
@@ -476,7 +493,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
   FutureOr<void> _addActivityDiary(
       AddActivityDiaryEvent event, Emitter<AddActivityState> emit) async {
-    print("HoangCV: state.indexActivity: ${state.indexActivity}");
+    print("HoangCV: state.indexActivity: ${state.indexActivity} : ${state.yieldController!.text.isEmpty}");
     if(state.listWidgetYield.isNotEmpty) {
       state.listWidgetYield[0].error = null;
       state.listWidgetYield[1].error = null;
@@ -489,22 +506,36 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     if (state.indexActivity == -1) {
       validate = false;
       state.listWidget[0].error = "Vui lòng chọn tên công việc";
-    }
-    /*else if(state.areaController!.text.isEmpty){
+    } else if(state.areaController!.text.isEmpty){
       validate = false;
-      listArea[1].error = "Vui lòng nhập diện tích";
-    }*/
-    else if (state.areaController!.text.isNotEmpty &&
-        state.listWidgetArea[1].valueSelected == null) {
+      state.listWidgetArea[0].error = "Vui lòng nhập diện tích";
+    }else if(state.areaController!.text.isNotEmpty && double.parse(state.areaController!.text)<=0){
+      validate = false;
+      state.listWidgetArea[0].error = "Vui lòng nhập diện tích > 0";
+    } else if (state.areaController!.text.isNotEmpty && state.listWidgetArea[1].valueSelected == null) {
       validate = false;
       state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
-    } else if (state.listActivity[state.indexActivity].id  == 20 && state.yieldController!.text.isEmpty) {
-      validate = false;
-      state.listWidgetYield[0].error = "Vui lòng nhập sản lượng";
-    } else if (state.listActivity[state.indexActivity].id == 20 && state.yieldController!.text.isNotEmpty &&
-        state.listWidgetYield[1].valueSelected == null) {
-      validate = false;
-      state.listWidgetYield[1].error = "Vui lòng chọn đơn vị";
+    } else if(state.areaController!.text.isNotEmpty && state.listWidgetArea[1].valueSelected != null){
+      if((double.parse(state.areaController!.text.isNotEmpty ? state.areaController!.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
+        validate = false;
+        state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
+      } else{
+        state.listWidgetArea[0].error = null;
+      }
+    }
+    if(validate) {
+      if ((state.listActivity[state.indexActivity].harvesting ?? false) &&
+          state.yieldController!.text.isEmpty) {
+        print("HoangCV: state.yieldController!.text.isEmpty");
+        validate = false;
+        state.listWidgetYield[0].error = "Vui lòng nhập sản lượng";
+      } else
+      if ((state.listActivity[state.indexActivity].harvesting ?? false) &&
+          state.yieldController!.text.isNotEmpty &&
+          state.listWidgetYield[1].valueSelected == null) {
+        validate = false;
+        state.listWidgetYield[1].error = "Vui lòng chọn đơn vị";
+      }
     }
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
@@ -523,6 +554,12 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         actionAreaUnitId: /*state.listWidgetArea[1].valueSelected != null ? */
             state.listWidgetArea[1].valueSelected?.id,
         actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name,
+        harvesting: state.listActivity[state.indexActivity].harvesting,
+        amount: state.yieldController!.text.isNotEmpty
+            ? double.parse(state.yieldController!.text)
+            : null,
+        amountUnitId: state.listWidgetYield.isNotEmpty ? state.listWidgetYield[1].valueSelected?.id : null,
+        amountUnitName: state.listWidgetYield.isNotEmpty ? state.listWidgetYield[1].valueSelected?.name : null,
         description: state.moTaController!.text,
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,
@@ -533,7 +570,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       if (objectResult.responseCode == StatusConst.code00) {
         //_changeViewEdit(emit);
       }
-      if (objectResult.responseCode == StatusConst.code00) {
+      if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code06) {
         //_changeViewEdit(emit);
         emit(state.copyWith(
             isShowProgress: false,
@@ -549,13 +586,19 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<AddActivityState> emit) {
-    print("HoangCV: bug: ${event.text}");
+    print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
           moTaController: TextEditingController(text: event.text)));
     } else if (event.inputRegisterModel.title.compareTo("Diện tích") == 0) {
+      print("state.indexArea222: ${state.indexArea} : ${state.indexActivity} : ${state.listWidgetArea[1].positionSelected}");
+      if((double.parse(event.text.isNotEmpty ? event.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
+        state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
+      } else{
+        state.listWidgetArea[0].error = null;
+      }
       emit(state.copyWith(
-          areaController: TextEditingController(text: event.text)));
+          areaController: TextEditingController(text: event.text), listWidgetArea: state.listWidgetArea));
     } else if (event.inputRegisterModel.title.compareTo("Sản lượng") == 0) {
       event.inputRegisterModel.error = null;
       emit(state.copyWith(
@@ -681,6 +724,7 @@ class AddActivityState extends BlocState {
         listWidgetYield,
         listUnitYield,
         yieldController,
+    areaMax,
       ];
   final Diary? detailActivity;
   final List<MaterialEntity> listMaterial;
@@ -711,10 +755,11 @@ class AddActivityState extends BlocState {
   List<InputRegisterModel> listWidgetYield;
   final List<Unit> listUnitYield;
   bool isEdit;
-  int indexActivity;
-  int indexArea;
+  final int indexActivity;
+  final int indexArea;
   double imageWidth;
   double imageHeight;
+  final double areaMax;
 
   AddActivityState({
     this.detailActivity,
@@ -750,6 +795,7 @@ class AddActivityState extends BlocState {
     this.yieldController,
     this.listUnitYield = const [],
     this.listWidgetYield = const [],
+    this.areaMax = 0,
   });
 
   AddActivityState copyWith({
@@ -786,6 +832,7 @@ class AddActivityState extends BlocState {
     int? indexArea,
     double? imageWidth,
     double? imageHeight,
+    double? areaMax,
   }) {
     return AddActivityState(
       detailActivity: detailActivity ?? this.detailActivity,
@@ -820,6 +867,7 @@ class AddActivityState extends BlocState {
       listUnitYield: listUnitYield ?? this.listUnitYield,
       listWidgetYield: listWidgetYield ?? this.listWidgetYield,
       yieldController: yieldController ?? this.yieldController,
+        areaMax: areaMax ?? this.areaMax,
     );
   }
 }

@@ -15,6 +15,7 @@ class Unit implements Insertable<Unit>{
   int? diaryFarmerId;
   int? toolId;
   double? quantity;
+  double? convert;
   int? unitId;
   String? mediaContent;
 
@@ -31,6 +32,7 @@ class Unit implements Insertable<Unit>{
         this.toolId,
         this.quantity,
         this.unitId,
+        this.convert,
         this.mediaContent});
 
   factory Unit.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class Unit implements Insertable<Unit>{
       toolId: json['tool_id'] ?? -1,
       quantity: json['quantity'] ?? 0,
       unitId: json['unit_id'] ?? -1,
+      convert: json['convert'] ?? 0,
       mediaContent: json['media_content'] ?? '',
     );
   }
@@ -65,6 +68,7 @@ class Unit implements Insertable<Unit>{
     data['tool_id'] = toolId;
     data['quantity'] = quantity;
     data['unit_id'] = unitId;
+    data['convert'] = convert;
     data['media_content'] = mediaContent;
     return data;
   }
@@ -84,6 +88,7 @@ class Unit implements Insertable<Unit>{
         toolId: Value(toolId),
         quantity: Value(quantity),
         mediaContent: Value(mediaContent),
+        convert: Value(convert),
         unitId: Value(unitId))
         .toColumns(nullToAbsent);
   }

@@ -56,7 +56,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ActivityBloc(context.read<Repository>())
-        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action)),
+        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false)),
       child: Scaffold(
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -88,7 +88,7 @@ class _ActivityPageState extends State<ActivityPage> {
                     : await Navigator.of(context).push(AddMonitorPage.route());
                 if (result != null && result[0]) {
                   contextBloc.read<ActivityBloc>().add(
-                      GetListActivityEvent(widget.seasonFarmId, widget.action));
+                      GetListActivityEvent(widget.seasonFarmId, widget.action, result[1]));
                 }
               },
             );
@@ -122,7 +122,7 @@ class _ActivityPageState extends State<ActivityPage> {
               : RefreshIndicator(
                   onRefresh: () async {
                     blocContext.read<ActivityBloc>().add(GetListActivityEvent(
-                        widget.seasonFarmId, widget.action));
+                        widget.seasonFarmId, widget.action, false));
                   },
                   child: SingleChildScrollView(
                     //physics: const NeverScrollableScrollPhysics(),
@@ -146,7 +146,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     contextBloc.read<ActivityBloc>().add(
                                         GetListActivityEvent(
                                             widget.seasonFarmId,
-                                            widget.action));
+                                            widget.action, result[1]));
                                   }
                                 } else {
                                   var result = await Navigator.push(
@@ -157,7 +157,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                     contextBloc.read<ActivityBloc>().add(
                                         GetListActivityEvent(
                                             widget.seasonFarmId,
-                                            widget.action));
+                                            widget.action, false));
                                   }
                                 }
                               },
@@ -308,7 +308,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                       SizedBox(
                                         height: 50,
                                         width: 50,
-                                        child: (widget.diary.status??'').compareTo("done") == 0 ||
+                                        child: /*(state.listDiaryActivity[index].harvesting ?? false) || */(widget.diary.status??'').compareTo("done") == 0 ||
                                             (widget.diary.status??'').compareTo("cancelled") == 0 ?
                                         Container(): IconButton(
                                           padding: EdgeInsets.only(

@@ -19,15 +19,12 @@ class ActivityDiary implements Insertable<ActivityDiary>{
   double? actionArea;
   int? actionAreaUnitId;
   String? actionAreaUnitName;
+  double? amount;
+  int? amountUnitId;
+  String? amountUnitName;
+  bool? harvesting;
   String? description;
   bool? isShow;
-  // api chua co
-  String? name;
-  String? byName;
-  String? startTime;
-  String? endTime;
-  int? status;
-  //
   List<Tool> tool;
   List<MaterialEntity> material;
   List<ImageEntity> media;
@@ -43,17 +40,14 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     this.actionArea,
     this.actionAreaUnitId,
     this.actionAreaUnitName,
+    this.harvesting,
+    this.amount,
+    this.amountUnitId,
+    this.amountUnitName,
     this.description,
     this.activityName,
     this.seasonFarm,
     this.isShow,
-
-    this.name,
-    this.byName,
-    this.startTime,
-    this.endTime,
-    this.status,
-
     this.tool = const [],
     this.material = const [],
     this.media = const [],
@@ -74,11 +68,10 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       actionAreaUnitName: json['action_area_unit_name'] ?? '',
       description: (json['description']??'').toString().replaceAll(RegExp(r'<\/?p>'),'') ?? '',
       activityName: json['activity_name'] ?? '',
-      name: json['name'] ?? "",
-      byName: json['by_name'] ?? "",
-      startTime: json['start_time'] ?? "",
-      endTime: json['end_time'] ?? "",
-      status: json['status'] ?? -1,
+      harvesting: json['harvesting'] ?? false,
+      amount: json['amount'] ?? -1,
+      amountUnitId: json['amount_unit_id'] ?? -1,
+      amountUnitName: json['amount_unit_name'] ?? "",
       isShow: json['is_Shown'],
 
       tool: json['diary_tool_ids'] != null ? (json['diary_tool_ids'] as List<dynamic>).map((itemJson) => Tool.fromJson(itemJson)).toList() : [],
@@ -117,15 +110,13 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     data['action_area'] = actionArea;
     data['action_area_unit_id'] = actionAreaUnitId;
     data['action_area_unit_name'] = actionAreaUnitName;
+    data['harvesting'] = harvesting;
+    data['amount'] = amount;
+    data['amount_unit_id'] = amountUnitId;
+    data['amount_unit_name'] = amountUnitName;
     data['description'] = description;
     data['activity_name'] = activityName;
     data['is_shown'] = isShow;
-
-    data['name'] = name;
-    data['by_name'] = byName;
-    data['start_time'] = startTime;
-    data['end_time'] = endTime;
-    data['status'] = status;
 
     List<Map> listTool= [];
     for (int i = 0; i < (tool??[]).length; i++) {
@@ -157,11 +148,10 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         description = other.description,
         activityName = other.activityName,
         isShow = other.isShow,
-        name = other.name,
-        byName = other.byName,
-        startTime = other.startTime,
-        endTime = other.endTime,
-        status = other.status,
+        harvesting = other.harvesting,
+        amount = other.amount,
+        amountUnitId = other.amountUnitId,
+        amountUnitName = other.amountUnitName,
         tool = List.of(other.tool??[]), // Tạo bản sao của danh sách tool
         material = List.of(other.material??[]), // Tạo bản sao của danh sách material
         media = List.of(other.media??[]); // Tạo bản sao của danh sách media
@@ -178,11 +168,10 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         actionAreaUnitName: Value(actionAreaUnitName),
         description: Value(description),
         activityName: Value(activityName),
-        name: Value(name),
-        byName: Value(byName),
-        startTime: Value(startTime),
-        endTime: Value(endTime),
-        status: Value(status),
+        harvesting: Value(harvesting),
+        amount: Value(amount),
+        amountUnitId: Value(amountUnitId),
+        amountUnitName: Value(amountUnitName),
 /*        tool: Value(tool),
         status: Value(status),
         stringTool: Value(stringTool),*/

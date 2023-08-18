@@ -18,12 +18,10 @@ class ActivityDiaryTable extends Table {
   TextColumn get actionAreaUnitName => text().nullable()();
   TextColumn get description => text().nullable()();
   BoolColumn get isShow => boolean().nullable()();
-
-  TextColumn get name => text().nullable()();
-  TextColumn get byName => text().nullable()();
-  TextColumn get startTime => text().nullable()();
-  TextColumn get endTime => text().nullable()();
-  IntColumn get status => integer().nullable()();
+  IntColumn get amountUnitId => integer().nullable()();
+  TextColumn get amountUnitName => text().nullable()();
+  RealColumn get amount => real().nullable()();
+  BoolColumn get harvesting => boolean().nullable()();
 
   TextColumn get stringTool => text().nullable()();
   TextColumn get stringMaterial => text().nullable()();

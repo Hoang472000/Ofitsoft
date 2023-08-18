@@ -17,6 +17,7 @@ class Activity implements Insertable<Activity> {
   int? quantity;
   String? unitId;
   String? mediaContent;
+  bool? harvesting;
   Activity(
       {this.id,
       this.name,
@@ -27,10 +28,11 @@ class Activity implements Insertable<Activity> {
       this.image,
       this.isActive,
       this.diaryFarmerId,
-this.toolId,
+      this.toolId,
       this.quantity,
       this.unitId,
-      this.mediaContent});
+      this.mediaContent,
+      this.harvesting});
 
   factory Activity.fromJson(Map<String, dynamic> json) {
     return Activity(
@@ -47,6 +49,7 @@ this.toolId,
       quantity: json['quantity'] ?? 0,
       unitId: json['unit_id'] ?? '',
       mediaContent: json['media_content'] ?? '',
+      harvesting: json['harvesting'] ?? false,
     );
   }
 
@@ -65,6 +68,7 @@ this.toolId,
     data['quantity'] = quantity;
     data['unit_id'] = unitId;
     data['media_content'] = mediaContent;
+    data['harvesting'] = harvesting;
     return data;
   }
 
@@ -84,6 +88,7 @@ this.toolId,
         toolId: Value(toolId),
         quantity: Value(quantity),
         mediaContent: Value(mediaContent),
+        harvesting: Value(harvesting),
         unitId: Value(unitId))
         .toColumns(nullToAbsent);
   }

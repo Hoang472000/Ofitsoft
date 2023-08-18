@@ -251,8 +251,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Đăng nhập bằng vân tay"),
         "forgot_password":
             MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
-        "from_camera": MessageLookupByLibrary.simpleMessage("Từ Camera"),
-        "from_library": MessageLookupByLibrary.simpleMessage("Từ Bộ sưu tập"),
+        "from_camera": MessageLookupByLibrary.simpleMessage("Chụp ảnh"),
+        "from_library": MessageLookupByLibrary.simpleMessage("Bộ sưu tập"),
         "google": MessageLookupByLibrary.simpleMessage(" Google"),
         "hello": MessageLookupByLibrary.simpleMessage("Chào mừng "),
         "hi": MessageLookupByLibrary.simpleMessage("Xin chào!"),

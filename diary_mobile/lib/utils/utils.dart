@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:diary_mobile/data/remote_data/network_processor/network_check_connect.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -778,37 +779,82 @@ class Utils {
     return pathImageSelect;
   }
 
-  static Future<List<ImageEntity>> getImagePicker(ImageSource imageSource, {bool multiSelect = true}) async {
-    List<XFile> selectedImages = [];
+  static Future<List<ImageEntity>> getImagePicker(ImageSource imageSource, {bool multiSelect = true, String type = "camera"}) async {
+    List<XFile> selectedMedias = [];
     List<ImageEntity> listItemImage = [];
     final ImagePicker imagePicker = ImagePicker();
     if (imageSource == ImageSource.gallery && multiSelect) {
-      selectedImages =
-      await imagePicker.pickMultiImage(maxWidth: 512, maxHeight: 512);
-    } else {
+      selectedMedias =
+      await imagePicker.pickMultipleMedia(/*maxWidth: 512, maxHeight: 512*/);
+    } else if (imageSource == ImageSource.camera && type == "camera"){
+      print("HoangCV: camera: $type");
       XFile? xFile = await imagePicker.pickImage(
         source: imageSource,
-        maxWidth: 512,
-        maxHeight: 512,
+/*        maxWidth: 512,
+        maxHeight: 512,*/
       );
       if (xFile != null) {
-        selectedImages.add(xFile);
+        selectedMedias.add(xFile);
+      }
+    } else{
+      XFile? xFile = await imagePicker.pickVideo(source: imageSource);
+      if (xFile != null) {
+        selectedMedias.add(xFile);
       }
     }
-    if (selectedImages.isNotEmpty) {
-      for (var imageFile in selectedImages) {
-        File image = File(imageFile.path);
+    if (selectedMedias.isNotEmpty) {
+      for (var file in selectedMedias) {
+        File media = File(file.path);
+
+          // Get the app's document directory path
+          Directory appDocDir = await getApplicationDocumentsDirectory();
+          String appDocPath = appDocDir.path;
+
+          // Get the original file name and sanitize it
+          String originalFileName = media.path.split('/').last;
+          String sanitizedFileName = originalFileName.replaceAll(' ', '_');
+
+          // Create a new path for the copied file
+          String newPath = '$appDocPath/$sanitizedFileName';
+
+          // Copy the file to the new path
+          File newFile = await media.copy(newPath);
+
+        final mimeType = newFile.path.split('/').last.split('.').last;
+        print("HoangCV: mimeType: $mimeType");
         ImageEntity imageEntity = ImageEntity(
-            fileImage: image,
-            fileName: image.path.split('/').last.split('.').first,
-            fileContent: base64Encode(image.readAsBytesSync().toList()),
-            fileExtension: image.path.split('/').last.split('.').last);
+            fileImage: newFile,
+            fileName: newFile.path.split('/').last.split('.').first,
+            fileContent: base64Encode(newFile.readAsBytesSync().toList()),
+            fileExtension: newFile.path.split('/').last.split('.').last,
+        contentView: type == "video" || mimeType == "mp4" ? await extractImageFromVideo(newFile.path) : base64Encode(newFile.readAsBytesSync().toList()),
+            type: type == "video" || mimeType == "mp4" ? "video" : "camera");
         listItemImage.add(imageEntity);
       }
     }
     return listItemImage;
   }
 
+  static Future<String?> extractImageFromVideo(String videoPath) async {
+    final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+
+    print("HoangCV: videoPath: ${videoPath}");
+    final String outputPath =
+    videoPath.replaceAll('.mp4', '_thumbnail.jpg').replaceAll(' ', "_");
+    print("HoangCV: outputPath: ${outputPath}");
+
+    final int resultCode = await _flutterFFmpeg.execute(
+        '-i ${videoPath} -ss 00:00:01.000 -vframes 1 $outputPath');
+
+    if (resultCode == 0) {
+      final Uint8List thumbnailBytes = File(outputPath).readAsBytesSync();
+      final String base64Image = base64Encode(thumbnailBytes);
+      print("HoangCV: base64Image: ${outputPath} : ${base64Image}");
+      File(outputPath).deleteSync(); // Delete the temporary image file
+      return base64Image;
+    }
+    return null;
+  }
   static Future<String> cropImage(String imagePath) async {
     String path = "";
     CroppedFile? croppedFile = await ImageCropper().cropImage(

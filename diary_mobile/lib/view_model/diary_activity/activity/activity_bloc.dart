@@ -31,10 +31,13 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         isShowProgress: true,
         formStatus: const InitialFormStatus(),
         seasonFarmId: event.id));
-    print("HoangCV: runtime1 :");
+    print("HoangCV: runtime1 :event harvesting : ${event.harvesting}");
     if (event.action.compareTo("activity") == 0) {
       final listDiaryActivity = await repository.getListActivityDiary(event.id);
-      print("HoangCV: runtime2  :");
+      listDiaryActivity.forEach((element) {
+        print("HoangCV: runtime2  element id: ${element.id}");
+      });
+
       emitter(state.copyWith(
           isShowProgress: false, listDiaryActivity: listDiaryActivity));
     } else {
@@ -43,6 +46,9 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
       emitter(state.copyWith(
           isShowProgress: false, listDiaryMonitor: listDiaryMonitor));
+    }
+    if(event.harvesting) {
+      repository.getUpdateDiary(event.id);
     }
     //DiaryDB.instance.getListDiary();
   }
@@ -54,7 +60,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
       add(GetListActivityEvent(
-          state.seasonFarmId ?? 0, event.action));
+          state.seasonFarmId ?? 0, event.action, false));
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: objectResult.message)));
@@ -74,11 +80,12 @@ class ActivityEvent extends BlocEvent {
 class GetListActivityEvent extends ActivityEvent {
   final int id;
   final String action;
+  final bool harvesting;
 
-  GetListActivityEvent(this.id, this.action);
+  GetListActivityEvent(this.id, this.action, this.harvesting);
 
   @override
-  List<Object?> get props => [id, action];
+  List<Object?> get props => [id, action, harvesting];
 }
 
 class RemoveActivityEvent extends ActivityEvent {

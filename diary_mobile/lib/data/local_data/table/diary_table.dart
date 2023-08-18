@@ -25,6 +25,10 @@ class DiaryTable extends Table {
   RealColumn get yieldEstimate => real().nullable()();
   IntColumn get yieldEstimateUnitId => integer().nullable()();
   TextColumn get yieldEstimateUnitName => text().nullable()();
+  RealColumn get yieldReal => real().nullable()();
+  IntColumn get yieldRealUnitId => integer().nullable()();
+  TextColumn get yieldRealUnitName => text().nullable()();
+  BoolColumn get harvesting => boolean().nullable()();
   TextColumn get startDate => text().nullable()();
   TextColumn get endDate => text().nullable()();
   TextColumn get status => text().nullable()();

@@ -14,6 +14,8 @@ class ImageEntity {
   File? fileImage;
   int? diaryFarmerId;
   String? type;
+  String? contentView;
+  String? filePath;
 
   ImageEntity(
       {this.imageGuid,
@@ -22,7 +24,7 @@ class ImageEntity {
         this.fileName,
         this.fileContent,
         this.fileImage,
-        this.fileExtension, this.diaryFarmerId, this.type});
+        this.fileExtension, this.diaryFarmerId, this.type, this.filePath, this.contentView});
 
 /*  static Future<File?> base64ToFile(String? base64String, String fileName) async {
     if (base64String == null) return null;
@@ -66,6 +68,8 @@ class ImageEntity {
       fileContent: json['media_content'] ?? '',
       diaryFarmerId: json['diary_farmer_id'] ?? -1,
       type: json['type'] ?? '',
+      filePath: json['filePath'],
+      contentView: json['media_content'],
       fileImage: fileImage,
     );
   }
@@ -81,6 +85,8 @@ class ImageEntity {
       'isMain': isMain,
       'fileName': fileName,
       'fileExtension': fileExtension,
+      'filePath': filePath,
+      'contentView': contentView,
     };
   }
 

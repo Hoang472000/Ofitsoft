@@ -27,6 +27,10 @@ class Diary implements Insertable<Diary> {
   double? yieldEstimate;
   int? yieldEstimateUnitId;
   String? yieldEstimateUnitName;
+  double? yieldReal;
+  int? yieldRealUnitId;
+  String? yieldRealUnitName;
+  bool? harvesting;
   String? startDate;
   String? endDate;
   String? description;
@@ -54,6 +58,10 @@ class Diary implements Insertable<Diary> {
     this.yieldEstimate,
     this.yieldEstimateUnitId,
     this.yieldEstimateUnitName,
+    this.yieldReal,
+    this.yieldRealUnitId,
+    this.yieldRealUnitName,
+    this.harvesting,
     this.startDate,
     this.endDate,
     this.description,
@@ -70,7 +78,7 @@ class Diary implements Insertable<Diary> {
       seasonId: json['season_id'] ?? -1,
       farmName: json['farm_name'] ?? '',
       farmId: json['farm_id'] ?? -1,
-      cropId: json['crop_id'] ?? "",
+      cropId: json['crop_id'] ?? -1,
       cropName: json['crop_name'] ?? "",
       productId: json['product_id'] ?? -1,
       productName: json['product_name'] ?? "",
@@ -83,6 +91,10 @@ class Diary implements Insertable<Diary> {
       yieldEstimateUnitId: json['yield_estimate_unit_id'] ?? -1,
       yieldEstimateUnitName: json['yield_estimate_unit_name'] ?? '',
       yieldEstimate: json['yield_estimate'] ?? -1,
+      harvesting: json["harvesting"] ?? false,
+      yieldReal: json["yield_real"] ?? -1,
+      yieldRealUnitId: json["yield_real_unit_id"] ?? -1,
+      yieldRealUnitName: json["yield_real_unit_name"] ?? '',
       startDate: json['start_date'] ?? "",
       endDate: json['end_date'] ?? "",
       description: json['description'] ?? '',
@@ -113,6 +125,10 @@ class Diary implements Insertable<Diary> {
     data['yield_estimate'] = yieldEstimate;
     data['yield_estimate_unit_name'] = yieldEstimateUnitName;
     data['yield_estimate_unit_id'] = yieldEstimateUnitId;
+    data['yield_real'] = yieldReal;
+    data['yield_real_unit_name'] = yieldRealUnitName;
+    data['yield_real_unit_id'] = yieldRealUnitId;
+    data['harvesting'] = harvesting;
     data['description'] = description;
     data['start_time'] = startDate;
     data['end_time'] = endDate;
@@ -143,6 +159,10 @@ class Diary implements Insertable<Diary> {
       yieldEstimateUnitId: Value(yieldEstimateUnitId),
       yieldEstimateUnitName: Value(yieldEstimateUnitName),
       yieldEstimate: Value(yieldEstimate),
+      yieldRealUnitId: Value(yieldRealUnitId),
+      yieldRealUnitName: Value(yieldRealUnitName),
+      yieldReal: Value(yieldReal),
+      harvesting: Value(harvesting),
       startDate: Value(startDate),
       endDate: Value(endDate),
       status: Value(status),

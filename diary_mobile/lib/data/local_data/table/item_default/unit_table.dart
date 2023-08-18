@@ -17,6 +17,7 @@ class UnitTable extends Table {
   IntColumn get diaryFarmerId => integer().nullable()();
   IntColumn get toolId => integer().nullable()();
   RealColumn get quantity => real().nullable()();
+  RealColumn get convert => real().nullable()();
   IntColumn get unitId => integer().nullable()();
   TextColumn get mediaContent => text().nullable()();
   @override

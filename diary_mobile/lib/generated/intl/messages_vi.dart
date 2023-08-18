@@ -245,8 +245,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Xác thực vân tay"),
         "fingerprint_login":
             MessageLookupByLibrary.simpleMessage("Đăng nhập bằng vân tay"),
-        "from_camera": MessageLookupByLibrary.simpleMessage("Từ Camera"),
-        "from_library": MessageLookupByLibrary.simpleMessage("Từ Bộ sưu tập"),
+        "from_camera": MessageLookupByLibrary.simpleMessage("Chụp ảnh"),
+        "from_library": MessageLookupByLibrary.simpleMessage("Bộ sưu tập"),
         "google": MessageLookupByLibrary.simpleMessage(" Google"),
         "hello": MessageLookupByLibrary.simpleMessage("Chào mừng "),
         "hi": MessageLookupByLibrary.simpleMessage("Xin chào!"),
@@ -390,7 +390,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "<b style=\'font-weight:500\'>Số điện thoại: </b>"),
         "phone_unable_to_empty": MessageLookupByLibrary.simpleMessage(
             "Số điện thoại không được trống"),
-        "pick_a_photo": MessageLookupByLibrary.simpleMessage("Chọn ảnh"),
+        "pick_a_photo": MessageLookupByLibrary.simpleMessage("Chọn ảnh/video"),
         "please_enter_info_search": MessageLookupByLibrary.simpleMessage(
             "Vui lòng nhập thông tin tìm kiếm"),
         "please_re": MessageLookupByLibrary.simpleMessage(

@@ -634,4 +634,10 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement changePassword
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> getUpdateDiary(int id) {
+    // TODO: implement getUpdateDiary
+    throw UnimplementedError();
+  }
 }

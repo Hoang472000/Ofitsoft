@@ -80,10 +80,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
             DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                 () {
               Get.back();
-              Navigator.pop(context, [true]);
+              Navigator.pop(context, [true, state.listActivity[state.indexActivity].harvesting]);
             }, () {
-              Get.back();
-              Navigator.pop(context, [true]);
+/*              Get.back();
+              Navigator.pop(context, [true]);*/
             }, '', S.of(context).close_dialog, dismissible: false);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
@@ -145,12 +145,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                               state.listWidgetArea[0], 0));
                                     },
                                     onSubmittedText: (text) {
-                                      print(
-                                          "HoangCV: onSubmittedText: ${text}");
                                     },
                                     onEditingComplete: (text) {
-                                      print(
-                                          "HoangCV: onEditingComplete: ${text} : ${state.listWidgetArea[0].controller}");
                                       blocContext.read<AddActivityBloc>().add(
                                           SaveValueTextFieldEvent(text,
                                               state.listWidgetArea[0], 0));
@@ -200,12 +196,8 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                         state.listWidgetYield[0], 0));
                               },
                               onSubmittedText: (text) {
-                                print(
-                                    "HoangCV: onSubmittedText: ${text}");
                               },
                               onEditingComplete: (text) {
-                                print(
-                                    "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
                                 blocContext.read<AddActivityBloc>().add(
                                     SaveValueTextFieldEvent(text,
                                         state.listWidgetYield[0], 0));
@@ -255,28 +247,35 @@ class _AddActivityPageState extends State<AddActivityPage> {
                           scrollDirection: Axis.horizontal,
                           itemCount: state.listImage.length,
                           itemBuilder: (context, index) {
+                            print("HoangCV: type: ${state.listImage[index].type}");
                             return Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: Stack(
                                 alignment: Alignment.center,
                                 children: [
-                                  state.listImage[index].fileImage != null
-                                      ? Image.file(
-                                          state.listImage[index].fileImage!,
-                                          height: state.imageHeight,
-                                          //width: 100,
-                                          width: state.imageWidth,
-                                          fit: BoxFit.cover,
-                                        )
-                                      : Image.memory(
+                                  Image.memory(
                                           gaplessPlayback: true,
                                           base64Decode(state.listImage[index]
-                                                  .fileContent ??
+                                                  .contentView ??
                                               ""),
                                           height: state.imageHeight,
                                           width: state.imageWidth,
                                           fit: BoxFit.cover,
                                         ),
+                                  Visibility(
+                                    visible: state.listImage[index].type == "video",
+                                    child: Positioned.fill(
+                                      child: IconButton(
+                                          onPressed: () {},
+                                          icon: SizedBox(
+                                            height: state.imageWidth/4,
+                                            child: Image(
+                                              image:
+                                              AssetImage(ImageAsset.imageYoutube),
+                                            ),
+                                          )),
+                                    ),
+                                  ),
                                   Positioned(
                                     top: -5,
                                     right: -10,
@@ -288,17 +287,17 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                               S
                                                   .of(context)
                                                   .you_sure_want_delete_image,
-                                              () async {
-                                            Get.back();
-                                            setState(() {
-                                              blocContext
-                                                  .read<AddActivityBloc>()
-                                                  .add(AddOrDeleteImageEvent(
+                                                  () async {
+                                                Get.back();
+                                                setState(() {
+                                                  blocContext
+                                                      .read<AddActivityBloc>()
+                                                      .add(AddOrDeleteImageEvent(
                                                       state.listImage,
                                                       index,
                                                       context));
-                                            });
-                                          }, () {
+                                                });
+                                              }, () {
                                             Get.back();
                                           }, S.of(context).cancel,
                                               S.of(context).agree);
@@ -307,7 +306,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                           height: 25,
                                           child: Image(
                                             image:
-                                                AssetImage(ImageAsset.imageBin),
+                                            AssetImage(ImageAsset.imageBin),
                                             //width: 40,
                                             fit: BoxFit.contain,
                                           ),
@@ -461,7 +460,47 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                   }
                                                 });
                                               },
-                                            )
+                                            ),
+                                            GestureDetector(
+                                              child: Column(
+                                                children: [
+                                                  const Image(
+                                                    image: AssetImage(
+                                                        ImageAsset.imageYoutube),
+                                                    width: 40,
+                                                    fit: BoxFit.contain,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 2,
+                                                  ),
+                                                  Text(
+                                                    "Quay video",
+                                                    style: StyleBkav
+                                                        .textStyleFW500(
+                                                        AppColor.black22,
+                                                        14),
+                                                  )
+                                                ],
+                                              ),
+                                              onTap: () async {
+                                                Get.back();
+                                                List<ImageEntity> list =
+                                                await Utils.getImagePicker(
+                                                    ImageSource.camera, type: "video");
+                                                setState(() {
+                                                  if (list.length > 0) {
+                                                    blocContext
+                                                        .read<AddActivityBloc>()
+                                                        .add(
+                                                        AddOrDeleteImageEvent(
+                                                            list,
+                                                            -1,
+                                                            context));
+                                                  }
+                                                });
+                                                //HoangCV pick camera
+                                              },
+                                            ),
                                           ],
                                         ),
                                       ),

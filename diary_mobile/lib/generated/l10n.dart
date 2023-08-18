@@ -2210,20 +2210,20 @@ class S {
     );
   }
 
-  /// `Từ Camera`
+  /// `Chụp ảnh`
   String get from_camera {
     return Intl.message(
-      'Từ Camera',
+      'Chụp ảnh',
       name: 'from_camera',
       desc: '',
       args: [],
     );
   }
 
-  /// `Từ Bộ sưu tập`
+  /// `Bộ sưu tập`
   String get from_library {
     return Intl.message(
-      'Từ Bộ sưu tập',
+      'Bộ sưu tập',
       name: 'from_library',
       desc: '',
       args: [],

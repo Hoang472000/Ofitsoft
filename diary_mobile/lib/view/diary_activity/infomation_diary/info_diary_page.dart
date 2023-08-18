@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,14 +64,21 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                         Container() :
                         CardTileDouble(
                             label1: "Số lượng ban đầu",
-                            value1:  "${state.detailDiary!.amount == -1 ? '' : (state.detailDiary!.amount??0).toInt()}",
+                            value1:  "${state.detailDiary!.amount == -1 ? '' : state.detailDiary!.amount??0}",
                             value2: "${state.detailDiary!.amountUnitName}",
+                            image: ImageAsset.imageBudget),
+                        state.detailDiary!.yieldReal == -1 ?
+                        Container() :
+                        CardTileDouble(
+                            label1: "Sản lượng thu hoạch",
+                            value1:  "${state.detailDiary!.yieldReal == -1 ? '' : state.detailDiary!.yieldReal??0}",
+                            value2: "${state.detailDiary!.yieldRealUnitName}",
                             image: ImageAsset.imageBudget),
                         state.detailDiary!.yieldEstimate == -1 ?
                         Container() :
                         CardTileDouble(
                             label1: "Sản lượng ước tính",
-                            value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : (state.detailDiary!.yieldEstimate??0).toInt()}",
+                            value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : state.detailDiary!.yieldEstimate??0}",
                             value2: "${state.detailDiary!.yieldEstimateUnitName}",
                             image: ImageAsset.imageBudget),
                         CardTile(
@@ -127,11 +136,6 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(4),
-                  /*padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    color: AppColor.gray1.withOpacity(0.4),
-                  ),*/
                   child: Text(
                     value,
                     style: StyleBkav.textStyleFW400(AppColor.black22, 16),
@@ -171,53 +175,22 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     label1,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                    style: StyleBkav.textStyleFW400(AppColor.black22, 16),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(4),
-         /*         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    color: AppColor.gray1.withOpacity(0.4),
-                  ),*/
-                  child: Text(
-                    value1,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 14),
-                  ),
-                )
+                RichText(
+                    overflow: TextOverflow.clip,
+                    text: TextSpan(
+                      text: "$value1 ",
+                      style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                      children:  <TextSpan>[
+                        TextSpan(
+                          text: value2,
+                          style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                        )
+                      ],
+                    )),
               ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(4),
-                    child: Text(
-                      "ĐVT",
-                      style: StyleBkav.textStyleFW400(AppColor.black22, 14),
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(4),
-           /*         padding: EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(8)),
-                      color: AppColor.gray1.withOpacity(0.4),
-                    ),*/
-                    child: Text(
-                      value2,
-                      style: StyleBkav.textStyleFW400(AppColor.black22, 14),
-                    ),
-                  )
-                ],
-              ),
             ),
           ),
         ],

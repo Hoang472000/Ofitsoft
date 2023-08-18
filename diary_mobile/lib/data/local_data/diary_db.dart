@@ -74,11 +74,10 @@ class DiaryDB extends _$DiaryDB {
           actionAreaUnitName: Value(entry.actionAreaUnitName),
           description: Value(entry.description),
           activityName: Value(entry.activityName),
-          name: Value(entry.name),
-          byName: Value(entry.byName),
-          startTime: Value(entry.startTime),
-          endTime: Value(entry.endTime),
-          status: Value(entry.status),
+          harvesting: Value(entry.harvesting),
+          amount: Value(entry.amount),
+          amountUnitId: Value(entry.amountUnitId),
+          amountUnitName: Value(entry.amountUnitName),
           stringTool: Value(entry.convertToolsListToJson()),
           stringMaterial: Value(entry.convertMaterialsListToJson()),
           stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
@@ -107,11 +106,10 @@ class DiaryDB extends _$DiaryDB {
         'action_area_unit_name': queriedEntry.actionAreaUnitName,
         'description': queriedEntry.description,
         'activity_name': queriedEntry.activityName,
-        'name': queriedEntry.name,
-        'by_name': queriedEntry.byName,
-        'start_time': queriedEntry.startTime,
-        'end_time': queriedEntry.endTime,
-        'status': queriedEntry.status,
+        'harvesting': queriedEntry.harvesting,
+        'amount': queriedEntry.amount,
+        'amount_unit_id': queriedEntry.amountUnitId,
+        'amount_unit_name': queriedEntry.amountUnitName,
         'is_Shown': queriedEntry.isShow,
         'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
         'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),
@@ -120,6 +118,10 @@ class DiaryDB extends _$DiaryDB {
       diaryEntriesList.add(diaryEntry);
     }
      return diaryEntriesList;
+  }
+
+  Future<void> removeActivityDiary(int id) async {
+    await (delete(activityDiaryTable)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   ///Thêm, sửa, xóa, lấy Activity Diary no network
@@ -142,11 +144,10 @@ class DiaryDB extends _$DiaryDB {
           actionAreaUnitName: Value(entry.actionAreaUnitName),
           description: Value(entry.description),
           activityName: Value(entry.activityName),
-          name: Value(entry.name),
-          byName: Value(entry.byName),
-          startTime: Value(entry.startTime),
-          endTime: Value(entry.endTime),
-          status: Value(entry.status),
+          harvesting: Value(entry.harvesting),
+          amount: Value(entry.amount),
+          amountUnitId: Value(entry.amountUnitId),
+          amountUnitName: Value(entry.amountUnitName),
           stringTool: Value(entry.convertToolsListToJson()),
           stringMaterial: Value(entry.convertMaterialsListToJson()),
           stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
@@ -176,11 +177,10 @@ class DiaryDB extends _$DiaryDB {
         'action_area_unit_name': queriedEntry.actionAreaUnitName,
         'description': queriedEntry.description,
         'activity_name': queriedEntry.activityName,
-        'name': queriedEntry.name,
-        'by_name': queriedEntry.byName,
-        'start_time': queriedEntry.startTime,
-        'end_time': queriedEntry.endTime,
-        'status': queriedEntry.status,
+        'harvesting': queriedEntry.harvesting,
+        'amount': queriedEntry.amount,
+        'amount_unit_id': queriedEntry.amountUnitId,
+        'amount_unit_name': queriedEntry.amountUnitName,
         'is_Shown': queriedEntry.isShow,
         'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
         'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),

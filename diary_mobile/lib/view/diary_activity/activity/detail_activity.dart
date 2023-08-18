@@ -62,7 +62,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => DetailActivityBloc(context.read<Repository>())
-        ..add(GetDetailActivityEvent(widget.activityDiary)),
+        ..add(GetDetailActivityEvent(widget.activityDiary, widget.diary)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -110,10 +110,10 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
             DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                 () {
               Get.back();
-              Navigator.pop(context, [true]);
+              Navigator.pop(context, [true, state.listActivity[state.indexActivity].harvesting]);
             }, () {
-              Get.back();
-              Navigator.pop(context, [true]);
+      /*        Get.back();
+              Navigator.pop(context, [true]);*/
             }, '', S.of(context).close_dialog, dismissible: false);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
@@ -302,23 +302,29 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
-                                    state.listImage[index].fileImage != null
-                                        ? Image.file(
-                                            state.listImage[index].fileImage!,
-                                            height: state.imageHeight,
-                                            //width: 100,
-                                            width: state.imageWidth,
-                                            fit: BoxFit.cover,
-                                          )
-                                        : Image.memory(
-                                            gaplessPlayback: true,
-                                            base64Decode(state.listImage[index]
-                                                    .fileContent ??
-                                                ""),
-                                            height: state.imageHeight,
-                                            width: state.imageWidth,
-                                            fit: BoxFit.cover,
-                                          ),
+                                    Image.memory(
+                                      gaplessPlayback: true,
+                                      base64Decode(state.listImage[index]
+                                          .contentView ??
+                                          ""),
+                                      height: state.imageHeight,
+                                      width: state.imageWidth,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    Visibility(
+                                      visible: state.listImage[index].type == "video",
+                                      child: Positioned.fill(
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: SizedBox(
+                                              height: state.imageWidth/4,
+                                              child: Image(
+                                                image:
+                                                AssetImage(ImageAsset.imageYoutube),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
                                     Visibility(
                                       visible: edit,
                                       child: Positioned(
@@ -521,7 +527,47 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                       }
                                                     });
                                                   },
-                                                )
+                                                ),
+                                                GestureDetector(
+                                                  child: Column(
+                                                    children: [
+                                                      const Image(
+                                                        image: AssetImage(
+                                                            ImageAsset.imageYoutube),
+                                                        width: 40,
+                                                        fit: BoxFit.contain,
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 2,
+                                                      ),
+                                                      Text(
+                                                        "Quay video",
+                                                        style: StyleBkav
+                                                            .textStyleFW500(
+                                                            AppColor.black22,
+                                                            14),
+                                                      )
+                                                    ],
+                                                  ),
+                                                  onTap: () async {
+                                                    Get.back();
+                                                    List<ImageEntity> list =
+                                                    await Utils.getImagePicker(
+                                                        ImageSource.camera, type: "video");
+                                                    setState(() {
+                                                      if (list.length > 0) {
+                                                        blocContext
+                                                            .read<DetailActivityBloc>()
+                                                            .add(
+                                                            AddOrDeleteImageEvent(
+                                                                list,
+                                                                -1,
+                                                                context));
+                                                      }
+                                                    });
+                                                    //HoangCV pick camera
+                                                  },
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -623,7 +669,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                       });
                                       blocContext
                                           .read<DetailActivityBloc>()
-                                          .add(GetDetailActivityEvent(widget.activityDiary, resetView: true));
+                                          .add(GetDetailActivityEvent(widget.activityDiary, widget.diary, resetView: true));
                                     }),
                               ),
                             ),

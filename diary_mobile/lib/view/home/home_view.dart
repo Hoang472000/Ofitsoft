@@ -10,6 +10,7 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/dialog_manager.dart';
 import '../../view_model/home_bloc.dart';
+import '../report/add_report_view.dart';
 import '../setting/contact/contact_page.dart';
 
 class HomeView extends StatelessWidget {
@@ -75,7 +76,9 @@ class HomeView extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          DiaLogManager.showDialogDevelopingFeature();
+                          //DiaLogManager.showDialogDevelopingFeature();
+                          Navigator.of(context)
+                              .push(AddReportViewPage.route());
                         },
                         child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 15),
