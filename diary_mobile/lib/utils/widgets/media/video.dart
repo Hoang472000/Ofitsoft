@@ -62,9 +62,11 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
     );*/
     return Scaffold(
       backgroundColor: AppColor.background,
-      body: Chewie(
-        controller: _chewieController,
-    )
+      body: SafeArea(
+        child: Chewie(
+          controller: _chewieController,
+    ),
+      )
     );
   }
 

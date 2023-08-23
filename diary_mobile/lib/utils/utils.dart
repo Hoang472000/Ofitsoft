@@ -828,9 +828,8 @@ class Utils {
   static Future<String?> extractImageFromVideo(String videoPath) async {
     final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
-    print("HoangCV: videoPath: ${videoPath}");
-    final String outputPath =
-    videoPath.replaceAll('.mp4', '_thumbnail.jpg').replaceAll(' ', "_");
+    final String videoExtension = videoPath.split('.').last.toLowerCase();
+    final String outputPath = videoPath.replaceAll('.$videoExtension', '_thumbnail.jpg').replaceAll(' ', "_");
     print("HoangCV: outputPath: ${outputPath}");
 
     final int resultCode = await _flutterFFmpeg.execute(

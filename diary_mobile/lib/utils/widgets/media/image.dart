@@ -31,13 +31,15 @@ class _ImagePlayerWidgetState extends State<ImagePlayerWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColor.background,
-        body: Center(
-          child: Image.memory(
-            gaplessPlayback: true,
-            base64Decode(widget.base64Image),
+        body: SafeArea(
+          child: Center(
+            child: Image.memory(
+              gaplessPlayback: true,
+              base64Decode(widget.base64Image),
 /*          height: state.imageHeight,
-            width: state.imageWidth,*/
-            fit: BoxFit.cover,
+              width: state.imageWidth,*/
+              fit: BoxFit.cover,
+            ),
           ),
         ),
     );
