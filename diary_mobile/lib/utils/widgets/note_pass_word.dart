@@ -17,14 +17,14 @@ class NotePassWord extends StatelessWidget {
           children: [
             Text(
               S.of(context).note,
-              style: StyleBkav.textStyleFW700(AppColor.main, 14),
+              style: StyleOfit.textStyleFW700(AppColor.main, 14),
             ),
             const SizedBox(
               height: 10,
             ),
             Text(
               S.of(context).pass_have,
-              style: StyleBkav.textStyleFW400(AppColor.gray70, 12),
+              style: StyleOfit.textStyleFW400(AppColor.gray70, 12),
             ),
             const SizedBox(
               height: 8,
@@ -42,11 +42,11 @@ class NotePassWord extends StatelessWidget {
                       overflow: TextOverflow.clip,
                       text: TextSpan(
                         text: S.of(context).pass_have_length,
-                        style: StyleBkav.textStyleFW400(AppColor.gray70, 12),
+                        style: StyleOfit.textStyleFW400(AppColor.gray70, 12),
                         children:  <TextSpan>[
                           TextSpan(
                             text: S.of(context).pass_have_length_8,
-                            style:  StyleBkav.textStyleFW700(AppColor.gray70, 12),
+                            style:  StyleOfit.textStyleFW700(AppColor.gray70, 12),
                           )
                         ],
                       )),
@@ -69,7 +69,7 @@ class NotePassWord extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         text: S.of(context).pass_have_not_contain_space,
-                        style: StyleBkav.textStyleFW700(AppColor.gray70, 12),
+                        style: StyleOfit.textStyleFW700(AppColor.gray70, 12),
                       )),
                 )
               ],
@@ -89,11 +89,11 @@ class NotePassWord extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       text: TextSpan(
                         text: S.of(context).pass_have_have,
-                        style: StyleBkav.textStyleFW700(AppColor.gray70, 12),
+                        style: StyleOfit.textStyleFW700(AppColor.gray70, 12),
                         children:  <TextSpan>[
                           TextSpan(
                             text: S.of(context).pass_have_special,
-                            style:  StyleBkav.textStyleFW400(AppColor.gray70, 12),
+                            style:  StyleOfit.textStyleFW400(AppColor.gray70, 12),
                           )
                         ],
                       )),
@@ -105,7 +105,7 @@ class NotePassWord extends StatelessWidget {
             ),
             Text(
               S.of(context).pass_have_vd,
-              style: StyleBkav.textStyleFW400(AppColor.gray70, 12),
+              style: StyleOfit.textStyleFW400(AppColor.gray70, 12),
             ),
           ],
         ));

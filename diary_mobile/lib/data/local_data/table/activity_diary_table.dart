@@ -23,6 +23,17 @@ class ActivityDiaryTable extends Table {
   RealColumn get amount => real().nullable()();
   BoolColumn get harvesting => boolean().nullable()();
 
+  IntColumn get productId => integer().nullable()();
+  TextColumn get productName => text().nullable()();
+  IntColumn get companyId => integer().nullable()();
+  TextColumn get companyName => text().nullable()();
+  RealColumn get quantity => real().nullable()();
+  IntColumn get quantityUnitId => integer().nullable()();
+  TextColumn get quantityUnitName => text().nullable()();
+  RealColumn get unitPrice => real().nullable()();
+  RealColumn get total => real().nullable()();
+  TextColumn get buyer => text().nullable()();
+
   TextColumn get stringTool => text().nullable()();
   TextColumn get stringMaterial => text().nullable()();
   TextColumn get stringMedia => text().nullable()();

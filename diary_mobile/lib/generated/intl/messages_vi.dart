@@ -320,12 +320,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Không có kết quả phù hợp với"),
         "note": MessageLookupByLibrary.simpleMessage("Lưu ý"),
         "note_change_password": MessageLookupByLibrary.simpleMessage(
-            " <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Ví dụ: Bkav0722, AI@Books</a>"),
+            " <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Ví dụ: Ofit0722, Diary@Note</a>"),
         "notify_label": MessageLookupByLibrary.simpleMessage("Thông báo"),
         "number_format_type":
             MessageLookupByLibrary.simpleMessage("Định dạng Số"),
         "number_money": MessageLookupByLibrary.simpleMessage("Số tiền:"),
-        "of_bkav": MessageLookupByLibrary.simpleMessage("của công ty Bkav"),
+        "of_ofit": MessageLookupByLibrary.simpleMessage("của công ty Ofitsoft"),
         "one_part_payment":
             MessageLookupByLibrary.simpleMessage("Thanh toán 1 phần: "),
         "org_type":

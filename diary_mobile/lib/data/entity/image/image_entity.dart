@@ -78,8 +78,8 @@ class ImageEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': imageGuid,
-      'media_content': fileContent,
       'type': type,
+      'media_content': fileContent,
       'diary_farmer_id': diaryFarmerId,
       'imageUrl': imageUrl,
       'isMain': isMain,

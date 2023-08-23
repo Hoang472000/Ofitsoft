@@ -26,13 +26,13 @@ class _NotifyViewState extends State<NotifyView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.background,
-      appBar: BkavAppBar(
+      appBar: OfitAppBar(
         context,
         centerTitle: true,
         showDefaultBackButton: false,
         title: Text(
           "Danh sách thông báo",
-          style: StyleBkav.textStyleFW700(Colors.white, 20),
+          style: StyleOfit.textStyleFW700(Colors.white, 20),
         ),
         backgroundColor: AppColor.main,
         actions: [],
@@ -63,7 +63,7 @@ class _NotifyViewState extends State<NotifyView> {
               height: 10.0,
             ),
             Expanded(
-                child: Center(child:Text("Tính năng hiện tại đang phát triển", style: StyleBkav.textStyleFW400(AppColor.black22, 18),))),
+                child: Center(child:Text("Tính năng hiện tại đang phát triển", style: StyleOfit.textStyleFW400(AppColor.black22, 18),))),
           ],
         ),
       ),

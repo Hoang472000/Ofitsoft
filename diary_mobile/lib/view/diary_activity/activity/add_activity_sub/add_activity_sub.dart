@@ -121,13 +121,13 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
         child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: AppColor.background,
-          appBar: BkavAppBar(
+          appBar: OfitAppBar(
             context,
             centerTitle: true,
             showDefaultBackButton: true,
             title: Text(
               !widget.isEdit ? "Chi tiết vật tư/công cụ" : "Thêm mới vật tư/công cụ",
-              style: StyleBkav.textStyleFW700(Colors.white, 20),
+              style: StyleOfit.textStyleFW700(Colors.white, 20),
             ),
             backgroundColor: AppColor.main,
             actions: [],
@@ -160,7 +160,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   children: [
                                     Text(
                                       "Danh sách vật tư",
-                                      style: StyleBkav.textStyleFW500(
+                                      style: StyleOfit.textStyleFW500(
                                           AppColor.main, 16),
                                     ),
                                   ],
@@ -246,7 +246,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                            padding: const EdgeInsets.only(top: 0),
                                            child: Text(
                                              "Thêm vật tư",
-                                             style: StyleBkav.textStyleUnderline500(
+                                             style: StyleOfit.textStyleUnderline500(
                                                  AppColor.main, 16),
                                            ),
                                          )
@@ -406,7 +406,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                   children: [
                                     Text(
                                       "Danh sách công cụ",
-                                      style: StyleBkav.textStyleFW500(
+                                      style: StyleOfit.textStyleFW500(
                                           AppColor.main, 16),
                                     ),
                                   ],
@@ -491,7 +491,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                                             padding: EdgeInsets.only(top: 0),
                                             child: Text(
                                               "Thêm công cụ",
-                                              style: StyleBkav.textStyleUnderline500(
+                                              style: StyleOfit.textStyleUnderline500(
                                                   AppColor.main, 16),
                                             ),
                                           )
@@ -640,7 +640,7 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
-                            child: BkavButton(
+                            child: OfitButton(
                               text: "Tiếp tục",
                               onPressed: () async {
                                 //widget.listVatTuAdd.addAll(widget.listCongCuAdd);

@@ -55,13 +55,13 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Chi tiết giám sát",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
@@ -262,7 +262,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                                                     bottom: 8),
                                                 child: Text(
                                                     S.of(context).pick_a_photo,
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW700(
                                                         Colors.white, 18)),
                                               ),
@@ -303,7 +303,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                                                     ),
                                                     Text(
                                                       S.of(context).from_camera,
-                                                      style: StyleBkav
+                                                      style: StyleOfit
                                                           .textStyleFW500(
                                                           AppColor.black22,
                                                           14),
@@ -349,7 +349,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                                                       S
                                                           .of(context)
                                                           .from_library,
-                                                      style: StyleBkav
+                                                      style: StyleOfit
                                                           .textStyleFW500(
                                                           AppColor.black22,
                                                           14),
@@ -418,7 +418,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                               ),
                               Text(
                                 "Chụp ảnh",
-                                style: StyleBkav.textStyleFW500(
+                                style: StyleOfit.textStyleFW500(
                                     AppColor.gray57, 16),
                               )
                             ],
@@ -434,7 +434,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                           Visibility(
                             visible: !edit,
                             child: Expanded(
-                              child: BkavButton(
+                              child: OfitButton(
                                   text: "Sửa hoạt động",
                                   onPressed: () {
                                     setState(() {
@@ -456,7 +456,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                           Visibility(
                             visible: edit,
                             child: Expanded(
-                              child: BkavButton(
+                              child: OfitButton(
                                   text: "Hủy",
                                   onPressed: () {
                                     setState(() {
@@ -477,7 +477,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                           Visibility(
                             visible: edit,
                             child: Expanded(
-                              child: BkavButton(
+                              child: OfitButton(
                                   text: "Lưu",
                                   onPressed: () {
                                     /// luu goi api
@@ -538,7 +538,7 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                     child: SizedBox(
                       child: Text(
                         text,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                       ),
                     ),
                   ),

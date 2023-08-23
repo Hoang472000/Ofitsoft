@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'color.dart';
 
-class StyleBkav {
+class StyleOfit {
 
   static TextStyle textStyleUnderline500(Color? color, double? size,
       {TextOverflow? overflow, double? height}) {
@@ -117,7 +117,6 @@ class StyleBkav {
             overflow: TextOverflow.ellipsis));
   }
 
-  //Bkav Nhungltk
   static TextStyle textGrey400({Color? colors}) {
     return GoogleFonts.roboto(
         textStyle: TextStyle(
@@ -280,7 +279,6 @@ class StyleBkav {
       );
   }
 
-  //Bkav ToanTDd add
   static TextStyle textStyleBlackS14W600() {
     return GoogleFonts.roboto(
         textStyle: TextStyle(

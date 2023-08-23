@@ -36,7 +36,7 @@ class Validator {
     return "";
   }
 
-  //Bkav TungDV
+  //
   static String errorValidate(String content){
     if(content == ""){
       return "Lý do từ chối không được để trống";

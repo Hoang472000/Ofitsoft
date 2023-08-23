@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Logger {
 
-  static const String _tag = "dealer_bkavpro";
+  static const String _tag = "ofitsoft_diary";
 
   static const bool _isDebug = true;
 

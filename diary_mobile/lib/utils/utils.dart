@@ -25,7 +25,7 @@ import 'logger.dart';
 
 class Utils {
 
-  ///Bkav TungDV check check man hinh ngang doc de fix loi tai tho tren ios
+  ///check check man hinh ngang doc de fix loi tai tho tren ios
   static Widget bkavCheckOrientation(BuildContext context, Widget child) {
     return MediaQuery.of(context).orientation == Orientation.portrait
         ? Container(child: child)
@@ -35,7 +35,7 @@ class Utils {
           );
   }
 
-  ///Bkav HoangLD : hiệu ứng chuyển giữa các page khác nhau
+  ///hiệu ứng chuyển giữa các page khác nhau
   static Route pageRouteBuilder(Widget widget, bool transitions) {
     if (transitions) {
       return PageRouteBuilder(
@@ -80,7 +80,7 @@ class Utils {
     await Directory(firstPath).create(recursive: true);
     File file2 = File(filePathAndName);
     file2.writeAsBytesSync(response.bodyBytes);
-    Logger.loggerDebug("Bkav HoangCV:onImageSave: $filePathAndName ");
+    Logger.loggerDebug("HoangCV:onImageSave: $filePathAndName ");
     SharedPreferences sharePreferences= await SharedPreferences.getInstance();
     sharePreferences.setString(SharedPreferencesKey.imageSelected, filePathAndName);
   }
@@ -150,7 +150,7 @@ class Utils {
     return timeTemp2[0] + " | " + timeTemp[0].split('-').reversed.join('-');
   }
 
-  //Bkav Nhungltk: check dieu kien mang
+  //check dieu kien mang
   static Future<bool> checkInternetConnection() async {
     print("HoangCV: check connect: ${await NetworkCheckConnect.status}");
     return await NetworkCheckConnect.status;
@@ -317,7 +317,7 @@ class Utils {
       }
     }
   }
-  ///Bkav Nhungltk: cap nhat avatar
+  ///cap nhat avatar
   static formatText(data) {
     var str = data;
     str = str.replaceAll(RegExp(r"(\à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)"), 'a');
@@ -394,7 +394,7 @@ class Utils {
         size: size ?? 16, color: color ?? Theme.of(context).primaryColor);
   }
 
-  static String formatCurrency(String text) {
+/*  static String formatCurrency(String text) {
     if (text.length > 2) {
       var value = text;
       value = value.replaceAll(RegExp(r'\D'), '');
@@ -403,8 +403,21 @@ class Utils {
     }
     return text.replaceAll(
         RegExp(r'\D'), ''); // nhập không phải là số thì xóa hết
-  }
+  }*/
+  static String formatCurrency(String text) {
+    if (text.contains('.')) {
+      var parts = text.split('.');
+      var integerPart = parts[0];
+      var decimalPart = parts[1];
 
+      integerPart = integerPart.replaceAll(RegExp(r'\D'), '');
+      integerPart = integerPart.replaceAll(RegExp(r'\B(?=(\d{3})+(?!\d))'), ',');
+
+      return '$integerPart.$decimalPart';
+    } else {
+      return text.replaceAll(RegExp(r'\D'), '');
+    }
+  }
   static String convertNumber(double number){
     var formatter = NumberFormat('#,###,###');
     var result = formatter.format(number);
@@ -483,7 +496,7 @@ class Utils {
     'Không sử dụng': false,
   };
 
-  ///Bkav Nhungltk: so luong item
+  ///so luong item
   static String sumAmountSlip(int amountSunSlip, String item) {
     String sumAmuntSlip = item;
     List<String> list = sumAmuntSlip.split(" ");
@@ -506,18 +519,18 @@ class Utils {
      if (textContain.toLowerCase().contains(name[i].toLowerCase())) {
        listTextSpan.add(TextSpan(
            text: "${name[i]} ",
-           style: StyleBkav.textStyleFW700(AppColor.main, 14,
+           style: StyleOfit.textStyleFW700(AppColor.main, 14,
                overflow: TextOverflow.visible)));
      } else {
        listTextSpan.add(TextSpan(
            text: "${name[i]} ",
-           style: StyleBkav.textStyleFW400(Colors.black, 14,
+           style: StyleOfit.textStyleFW400(Colors.black, 14,
                overflow: TextOverflow.visible)));
      }
    }
    return TextSpan(children: listTextSpan);
  }
-  //Bkav ToanTDd
+
   static Color colorFromHex(String code) {
     var str = code.substring(1, 7);
     var bigint = int.parse(str, radix: 16);
@@ -566,12 +579,12 @@ class Utils {
       {bool isMoney = false, BuildContext? buildContext}) {
     return TextSpan(children: [
       TextSpan(
-          text: title, style: StyleBkav.textStyleFW400(AppColor.gray57, size)),
-      TextSpan(text: value, style: StyleBkav.textStyleFW400(color, size)),
+          text: title, style: StyleOfit.textStyleFW400(AppColor.gray57, size)),
+      TextSpan(text: value, style: StyleOfit.textStyleFW400(color, size)),
       if (isMoney = true && buildContext != null)
         TextSpan(
             text: " ${S.of(buildContext!).vnd}",
-            style: StyleBkav.textStyleFW400(AppColor.gray57, 12))
+            style: StyleOfit.textStyleFW400(AppColor.gray57, 12))
     ]);
   }
 
@@ -593,51 +606,14 @@ class Utils {
                     Text(
                       Utils.sumAmountSlip(amount, S.of(context).sum_amount_slip)
                           .toUpperCase(),
-                      style: StyleBkav.textStyleFW600(
+                      style: StyleOfit.textStyleFW600(
                         AppColor.gray57,
                         14,
                       ),
                     ),
-                    /*   Text(
-                                                  "${state.listSalesSlip.totalIntoMoney ?? 0} ${S.of(context).vnd}",
-                                                  style: const TextStyle(
-                                                      color: AppColor.blueE8,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 14),
-                                                )*/
                   ],
                 ),
               ),
-            ///DatNVh bo chon tat ca
-            /*  Visibility(
-                visible: select > 0 && !selectAll,
-                child: Padding(
-                  padding: const EdgeInsets.only(bottom: 20),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      InkWell(
-                        onTap: ontapAll,
-                          child: !selectAll? Icon(Icons.check_box_outline_blank,color: AppColor.main,size: 20):Icon(Icons.check_box_outlined,color: AppColor.main,size: 20)),
-                      SizedBox(width: 10,),
-                      Text(
-                      "Chon tat ca phieu ".toUpperCase(),
-                        style: StyleBkav.textStyleFW600(
-                          AppColor.gray57,
-                          14,
-                        ),
-                      ),
-                      /*   Text(
-                                                    "${state.listSalesSlip.totalIntoMoney ?? 0} ${S.of(context).vnd}",
-                                                    style: const TextStyle(
-                                                        color: AppColor.blueE8,
-                                                        fontWeight: FontWeight.w600,
-                                                        fontSize: 14),
-                                                  )*/
-                    ],
-                  ),
-                ),
-              ),*/
               Visibility(
                 visible: select > 0,
                 child: Row(
@@ -650,18 +626,11 @@ class Utils {
                     Text(
                       Utils.sumAmountSlip(select, S.of(context).select_amount_slip)
                           .toUpperCase(),
-                      style: StyleBkav.textStyleFW600(
+                      style: StyleOfit.textStyleFW600(
                         AppColor.gray57,
                         14,
                       ),
                     ),
-                    /*   Text(
-                                                  "${state.listSalesSlip.totalIntoMoney ?? 0} ${S.of(context).vnd}",
-                                                  style: const TextStyle(
-                                                      color: AppColor.blueE8,
-                                                      fontWeight: FontWeight.w600,
-                                                      fontSize: 14),
-                                                )*/
                   ],
                 ),
               ),
@@ -683,7 +652,7 @@ class Utils {
                                 Expanded(
                                   child: Text(
                                     S.of(context).paid,
-                                    style: StyleBkav.textStyleFW600(
+                                    style: StyleOfit.textStyleFW600(
                                       AppColor.gray57,
                                       14,
                                     ),
@@ -707,7 +676,7 @@ class Utils {
                           Expanded(
                             child: Text(
                               S.of(context).unpaid,
-                              style: StyleBkav.textStyleFW600(
+                              style: StyleOfit.textStyleFW600(
                                 AppColor.gray57,
                                 14,
                               ),
@@ -730,7 +699,7 @@ class Utils {
                           Expanded(
                             child: Text(
                               S.of(context).partial_payment,
-                              style: StyleBkav.textStyleFW600(
+                              style: StyleOfit.textStyleFW600(
                                 AppColor.gray57,
                                 14,
                               ),
@@ -751,7 +720,7 @@ class Utils {
 
   static Future<String> getImage(
       BuildContext context, ImageSource imageSource) async {
-    //Bkav HoangLD ImagePicker() ham nay phai chay tren may thuc ios moi lay duoc anh con hien tai tren may ao ios 14+ thi khong dung duoc
+    //ImagePicker() ham nay phai chay tren may thuc ios moi lay duoc anh con hien tai tren may ao ios 14+ thi khong dung duoc
     final pickedFile = await ImagePicker().pickImage(source: imageSource);
     String pathImageSelect = "";
     if (pickedFile != null) {
@@ -760,7 +729,7 @@ class Utils {
       } else {
         Directory directory = await getApplicationDocumentsDirectory();
         final String path = directory.path;
-        // Bkav HanhNTHe: Lưu ảnh vào rồi mới cắt
+        //Lưu ảnh vào rồi mới cắt
         final File newImage =
         await File(pickedFile.path).copy('$path/temp_avatar.png');
         pathImageSelect = await cropImage(newImage.path);
@@ -827,8 +796,9 @@ class Utils {
             fileName: newFile.path.split('/').last.split('.').first,
             fileContent: base64Encode(newFile.readAsBytesSync().toList()),
             fileExtension: newFile.path.split('/').last.split('.').last,
+        filePath: newFile.path,
         contentView: type == "video" || mimeType == "mp4" ? await extractImageFromVideo(newFile.path) : base64Encode(newFile.readAsBytesSync().toList()),
-            type: type == "video" || mimeType == "mp4" ? "video" : "camera");
+            type: type == "video" || mimeType == "mp4" ? "2" : "1");
         listItemImage.add(imageEntity);
       }
     }
@@ -890,7 +860,7 @@ class Utils {
   }
 }
 
-/// Bkav HanhNTHe: remove scroll glow
+///remove scroll glow
 class BkavBehavior extends ScrollBehavior {
   @override
   Widget buildViewportChrome(

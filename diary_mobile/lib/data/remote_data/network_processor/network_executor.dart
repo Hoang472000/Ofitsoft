@@ -55,7 +55,7 @@ class NetworkExecutor{
             onError: (error, handler) async {
               final prefspre = await SharedPreferences.getInstance();
 /*              Logger.loggerDebug(
-                  "Bkav Nhungltk call api ${route.body.commandType} error ${error.response
+                  "call api ${route.body.commandType} error ${error.response
                       ?.statusCode} isRemember ${prefspre
                       .getBool(SharedPreferencesKey.isRemember)}");*/
               bool isRemember =
@@ -63,7 +63,7 @@ class NetworkExecutor{
               String refreshToken =
                   prefspre.getString(SharedPreferencesKey.refreshToken) ?? "";
 /*              Logger.loggerDebug(
-                  "Bkav Nhungltk call api ${route.body.commandType} error ${error.response?.statusCode} isRemember $isRemember");*/
+                  "call api ${route.body.commandType} error ${error.response?.statusCode} isRemember $isRemember");*/
           // duy tri dang nhap, khong hoat dong do server dang tra ve status code = 200 khi token het han
               print("HoangCV: ${route.path} bug: ${error.toString()} : ${error.message}  : ${error.response} ");
           if (error.response != null) {
@@ -174,11 +174,11 @@ class NetworkExecutor{
           if (dioError.type == DioExceptionType.badResponse) {
             ///may chu phan hoi nhung co trang thai khong chinh xac (404,503...)
 /*            Logger.loggerDebug(
-                "Bkav Nhungltk call api ${route.body.commandType} request DioError response: ${dioError.response}");*/
+                "call api ${route.body.commandType} request DioError response: ${dioError.response}");*/
           } else if (dioError.type == DioExceptionType.cancel) {
-/*            Logger.loggerDebug("Bkav Nhungltk call api ${route.body.commandType} request DioError cancel");*/
+/*            Logger.loggerDebug("call api ${route.body.commandType} request DioError cancel");*/
           } else {
-/*            Logger.loggerDebug("Bkav Nhungltk call api ${route.body.commandType} request DioError other: ${dioError.error?? ""}");*/
+/*            Logger.loggerDebug("call api ${route.body.commandType} request DioError other: ${dioError.error?? ""}");*/
           }
           objectResult= ObjectResult(1, "Unknown error", dioError.message??"", "08", false, true);
         }

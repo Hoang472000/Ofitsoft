@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +21,7 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/text_form_input_ai_book.dart';
 import '../../view_model/account/login_bloc.dart';
+import '../diary_activity/activity/add_activity.dart';
 import '../forget_password/forget_password_page.dart';
 import '../home/home_page.dart';
 import '../setting/contact/contact_page.dart';
@@ -172,7 +174,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
             // await FirebaseAuth.instance.signOut();
           } else if (formStatus is SubmissionSuccess) {
             Logger.loggerDebug(
-                "Bkav DucLQ state.isChangePassWordFirstTime ${state.isChangePassWordFirstTime}");
+                "state.isChangePassWordFirstTime ${state.isChangePassWordFirstTime}");
             // if(!state.isChangePassWordFirstTime){
             //   Navigator.of(context).pushAndRemoveUntil<void>(
             //       ChangePassWordPage.route(true,state.password), (route) => false);
@@ -236,13 +238,6 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       child: Column(
         children: [
           Image(image: AssetImage(ImageAsset.imageOfitsoftText), height: 150,),
-          // const SizedBox(
-          //   height: 16,
-          // ),
-          // Text(
-          //   S.of(context).label_login,
-          //   style: StyleBkav.textStyleFW400(AppColor.gray69, 16),
-          // ),
           SizedBox(
             height: 32,
           ),
@@ -251,7 +246,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
     );
   }
 
-  //Bkav Nhungltk: thong bao loi dang nhap
+  //thong bao loi dang nhap
   Widget _notifiLoginError() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
       final formStatus = state.formStatus;
@@ -262,7 +257,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
           alignment: Alignment.topCenter,
           child: Text(
             errorLogin,
-            style: StyleBkav.textStyleFW700(AppColor.redE1, 14),
+            style: StyleOfit.textStyleFW700(AppColor.redE1, 14),
           ),
         );
       }
@@ -283,7 +278,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       }
       return Focus(
         child: Container(
-            margin: const EdgeInsets.only(top: 48), //Bkav Nhungltk
+            margin: const EdgeInsets.only(top: 48),
             child: TextFormFieldInputAiBook(
               S.of(context).label_user_name,
               _inputUsernameController,
@@ -360,10 +355,10 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 ),
               ),
             )
-          : BkavButton(
+          : OfitButton(
               text: S.of(context).button_login,
               onPressed: () {
-                //Bkav Nhungltk: auto focus vao truong du lieu trong tu tren xuong duoi
+                //auto focus vao truong du lieu trong tu tren xuong duoi
                 if (_inputUsernameController.text.isEmpty) {
                   _focusNodeName.requestFocus();
                 } else {
@@ -414,7 +409,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
             ),
             Flexible(
               child: Text("Hỗ trợ",
-                  style: StyleBkav.textStyleFW700(AppColor.yellowFF, 16,
+                  style: StyleOfit.textStyleFW700(AppColor.yellowFF, 16,
                       overflow: TextOverflow.visible)),
             )
           ],
@@ -464,7 +459,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
             Flexible(
               flex: 1,
               child: TextButton(
-                //Bkav Nhungltk: diem diem giao dien
+                //diem diem giao dien
                 style: TextButton.styleFrom(
                   primary: AppColor.blueE8,
                   padding: EdgeInsets.zero,
@@ -477,7 +472,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                           _inputUsernameController.text));
                 },
                 child: Text(S.of(context).forgot_password + " ?",
-                    style: StyleBkav.textStyleFW600(AppColor.back09, 14,
+                    style: StyleOfit.textStyleFW600(AppColor.back09, 14,
                         overflow: TextOverflow.visible)),
               ),
             ),

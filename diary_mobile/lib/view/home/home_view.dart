@@ -21,13 +21,13 @@ class HomeView extends StatelessWidget {
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: false,
           title: Text(
             "Trang chủ",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [
@@ -58,12 +58,12 @@ class HomeView extends StatelessWidget {
                             padding: const EdgeInsets.all(16.0),
                             child: Text(
                               "OFITSOFT xin chào",
-                              style: StyleBkav.textStyleFW600(Colors.orange, 16),
+                              style: StyleOfit.textStyleFW600(Colors.orange, 16),
                             ),
                           ),
                           Text(
                             "Chúc bạn một ngày làm việc vui vẻ",
-                            style: StyleBkav.textStyleFW400(Colors.black, 14),
+                            style: StyleOfit.textStyleFW400(Colors.black, 14),
                           ),
                         ],
                       );
@@ -103,7 +103,7 @@ class HomeView extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
                                     "Trồng trọt",
-                                    style: StyleBkav.textStyleFW600(
+                                    style: StyleOfit.textStyleFW600(
                                         Colors.white, 18),
                                   ),
                                 ),
@@ -140,7 +140,7 @@ class HomeView extends StatelessWidget {
                                   child: Text(
                                     "Hỗ trợ hỏi đáp",
                                     style:
-                                        StyleBkav.textStyleFW600(Colors.white, 18),
+                                        StyleOfit.textStyleFW600(Colors.white, 18),
                                   ),
                                 ),
                               ],

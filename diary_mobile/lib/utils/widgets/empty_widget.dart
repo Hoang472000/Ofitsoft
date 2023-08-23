@@ -23,7 +23,7 @@ class EmptyWidget extends StatelessWidget {
             ),
             Text(
               S.of(context).empty,
-              style: StyleBkav.textStyleFW400(
+              style: StyleOfit.textStyleFW400(
                   AppColor.black22, 18),
             )
           ],

@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../generated/l10n.dart';
@@ -9,7 +10,7 @@ import '../../resource/style.dart';
 import '../logger.dart';
 import '../utils.dart';
 
-/// Bkav DucLQ custom 1 o nhat text
+///custom 1 o nhat text
 class TextFormFieldInput extends StatefulWidget {
   final String _label;
   final TextEditingController _textEditingController;
@@ -21,14 +22,15 @@ class TextFormFieldInput extends StatefulWidget {
   final Function(bool) checkPass;
   final bool changePass;
   final bool?
-      isNotValidStart; // HanhNTHe: xac dinh xem truong thong tin co bat buoc hay khong
+      isNotValidStart; // xac dinh xem truong thong tin co bat buoc hay khong
   final bool? isPhone;
+  final bool? isNumber;
   final bool? isFromEnterInfo;
-  final bool? isTime; // hanhNTHe: xac dinh truong chon thoi gian
-  final bool? isNotEdit; // bkav HanhNTHe: xac dinh xem duoc sua hay khong
+  final bool? isTime; // xac dinh truong chon thoi gian
+  final bool? isNotEdit; // xac dinh xem duoc sua hay khong
   final bool? isNotPass;
-   final bool? noBorder; // Bkav HoangCV: set noBorder
-  final bool? underLine; // Bkav HoangCV: dung underLine thay cho OutLine
+   final bool? noBorder; // set noBorder
+  final bool? underLine; // dung underLine thay cho OutLine
   final Function(String)? onChangeCallBack;
   final bool? isChangeCallBack;
 
@@ -44,6 +46,7 @@ class TextFormFieldInput extends StatefulWidget {
       {Key? key,
       this.isNotValidStart,
       this.isPhone,
+      this.isNumber,
       this.isFromEnterInfo,
       this.isTime, this.isNotEdit,
       this.isNotPass, this.noBorder, this.underLine,
@@ -63,7 +66,6 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
   bool hideError = false;
   bool onTap = true;
 
-  //Bkav Nhungltk
   bool _hasFocus = false;
 
   // HanhNTHe add
@@ -115,28 +117,30 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
     super.dispose();
   }
 
-  /// Bkav DucLQ show icon * mau do
+  ///show icon * mau do
   void showAsterrick(bool show) {
     setState(() {
       _showAsterisk = show;
     });
   }
 
-  //Bkav Nhungltk: hien thi thong bao text null
+  //hien thi thong bao text null
   void textIsNotEmplty(bool textIsNotEmpty) {
     setState(() {
       _validatorTextIsEmpty = !textIsNotEmpty;
     });
   }
 
-  /// Bkav DucLQ ham nay de tao lai deco
+  ///ham nay de tao lai deco
   InputDecoration createInputDecoration() {
     return InputDecoration(
         fillColor: const Color(0xFFFFFFFF),
+        counterText: "",
         filled: true,
         contentPadding:
-        widget.noBorder== false?
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0):             const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0.0),
+        widget.noBorder == false?
+            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0):
+        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
         focusedBorder: widget.underLine==false?OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
             borderSide: const BorderSide(color: Color(0xFF08B7DD), width: 1.0)):UnderlineInputBorder(
@@ -171,14 +175,14 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                         ? widget.errorValidate
                         : null)
                 : null,
-        label: (_showAsterisk /*Bkav Nhungltk && (_notEmpty*/ ||
+        label: (_showAsterisk /*&& (_notEmpty*/ ||
                 _textIsNotEmpty) /*)*/
             ? Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Flexible(
                     child: Text(widget._label,
-                        style: StyleBkav.textStyleFW400(
+                        style: StyleOfit.textStyleFW400(
                             _hasFocus || _textIsNotEmpty
                                 ? AppColor.black22
                                 : AppColor.labelInputText,
@@ -190,7 +194,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                       ? Flexible(
                           child: Text(" *",
                               style:
-                                  StyleBkav.textStyleFW400(AppColor.redDD, 16)),
+                                  StyleOfit.textStyleFW400(AppColor.redDD, 16)),
                         )
                       : Container()
                 ],
@@ -200,23 +204,23 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                     text: TextSpan(children: [
                       TextSpan(
                           text: widget._label,
-                          style: StyleBkav.textStyleFW400(
+                          style: StyleOfit.textStyleFW400(
                               AppColor.labelInputText, 14)),
                       TextSpan(
                           text: "*",
-                          style: StyleBkav.textStyleFW400(AppColor.redDD, 16)),
+                          style: StyleOfit.textStyleFW400(AppColor.redDD, 16)),
                     ]),
                     textScaleFactor: MediaQuery.of(context).textScaleFactor,
                   )
                 : Text(widget._label,
                     style:
-                        StyleBkav.textStyleFW400(AppColor.labelInputText, 14)),
+                        StyleOfit.textStyleFW400(AppColor.labelInputText, 14)),
         suffixIcon: widget.isNotEdit ?? false || widget.noBorder == true
             ? null
             : widget.isTime != null && _showDeleteText && _hasFocus
                 ? IconButton(
                     color: AppColor.black22,
-                    //Bkav HanhNTHe: open lich
+                    //open lich
                     icon: SvgPicture.asset(
                       IconAsset.icLich,
                       width: 16,
@@ -250,7 +254,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                                       child: IconButton(
                                         color: AppColor.black22,
                                         icon:
-                                            //Bkav Nhungltk: fix loi fucus bi mau xanh
+                                            //fix loi fucus bi mau xanh
                                             const Icon(
                                           Icons.clear,
                                           color: AppColor.main,
@@ -265,7 +269,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                                     ))
                               ])
                         : null
-                    : _showDeleteText && _hasFocus //Bkav Nhungltk
+                    : _showDeleteText && _hasFocus //
                         ? Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween, // added line
@@ -291,7 +295,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                                       ),
                                       onPressed: () {
                                         widget._textEditingController.clear();
-                                        //Bkav Nhungltk
+                                        //
                                         _textIsNotEmpty = false;
                                         showDeleteText(false);
                                       },
@@ -299,7 +303,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                                   )),
                               IconButton(
                                 color: AppColor.black22,
-                                //Bkav Nhungltk: fix loi fucus bi mau xanh
+                                //fix loi fucus bi mau xanh
                                 icon: _obscureText
                                     ? const Icon(
                                         Icons.remove_red_eye,
@@ -321,7 +325,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                           )
                         : IconButton(
                             color: AppColor.black22,
-                            //Bkav Nhungltk: fix loi fucus bi mau xanh
+                            //fix loi fucus bi mau xanh
                             icon: _obscureText
                                 ? const Icon(
                                     Icons.remove_red_eye,
@@ -341,7 +345,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                           )));
   }
 
-  ///Bkav DucLQ ham nay de show Icon delete
+  ///ham nay de show Icon delete
   void showDeleteText(bool show) {
     setState(() {
       Logger.loggerDebug("show Delete $show");
@@ -365,8 +369,11 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
           },
           textInputAction: TextInputAction.next,
           focusNode: widget._focusNode,
+          maxLength: TextInputType.number != null ? 12 : null,
+          maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds ,
           keyboardType:
-              widget.isPhone != null ? TextInputType.phone : TextInputType.text,
+              widget.isPhone != null ? TextInputType.phone :
+              widget.isNumber != null ? TextInputType.number : TextInputType.text,
           controller: widget._textEditingController,
           decoration: createInputDecoration(),
           obscureText: widget._isTypePassword ? _obscureText : false,
@@ -378,14 +385,14 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                     widget.onChangeCallBack!(text),
                   },
                 showDeleteText((text.isNotEmpty)),
-                if ((text.isNotEmpty /*Bkav Nhungltk && _isTypePassword*/) !=
+                if ((text.isNotEmpty /*&& _isTypePassword*/) !=
                     _showDeleteText)
                   {
                     if (!text.isNotEmpty)
                       {
-                        //Bkav HoangCV: check dieu kien khi text null
+                        //check dieu kien khi text null
                         _textIsNotEmpty = false,
-                      } // Bkav HoangCV: check khi co text trong form thi ko hien thong bao nhap text
+                      } //check khi co text trong form thi ko hien thong bao nhap text
                     else
                       {
                         textIsNotEmplty(true),
@@ -429,7 +436,6 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
           }),
       onFocusChange: (hasFocus) async {
         showAsterrick(hasFocus);
-        //Bkav Nhungltk:
         setState(() {
           _hasFocus = hasFocus;
           if (hasFocus == false) {

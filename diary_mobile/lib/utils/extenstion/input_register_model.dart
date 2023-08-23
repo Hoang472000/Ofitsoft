@@ -47,6 +47,8 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
   bool isOnlySelectDay;// Chỉ lựa chọn ngày cho thanh toán hoá đơn
   bool isRemoveSign; // chỉ cho phép nhận số và chữ. bỏ kí tự đặc biệt
   bool isAlwaysCap;
+  bool noBorder;
+  bool noUnder;
 //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   InputRegisterModel({
@@ -79,7 +81,9 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
     this.hintText = '',
     this.textCapitalization,
     this.isAlwaysCap=false,
-    this.image=''
+    this.image='',
+    this.noBorder = false,
+    this.noUnder = false,
   });
 
   InputRegisterModel copyWith({

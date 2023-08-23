@@ -14,11 +14,11 @@ import 'entity/setting/user_info.dart';
 
 
 
-/// Bkav DucLQ cac trang thai xac thuc cua tai khoan
+/// cac trang thai xac thuc cua tai khoan
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 ///
-/// Bkav HoangLD cac trang thai khi lay mat khau dang nhap tai khoan bang biometric
+/// cac trang thai khi lay mat khau dang nhap tai khoan bang biometric
 enum GetPasswordBiometricStatus { successful, failure, moreThan3, none }
 
 ///

@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ),
                           Text(
                             S.of(context).home_label,
-                            style: StyleBkav.textStyleFW500(Colors.grey, 10,
+                            style: StyleOfit.textStyleFW500(Colors.grey, 10,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           const SizedBox(
@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           ),
                           Text(
                             "Nhật ký",
-                            style: StyleBkav.textStyleFW500(Colors.grey, 10,
+                            style: StyleOfit.textStyleFW500(Colors.grey, 10,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           const SizedBox(
@@ -187,7 +187,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         ),
                         Text(
                           "Quét mã",
-                          style: StyleBkav.textStyleFW500(Colors.grey, 10,
+                          style: StyleOfit.textStyleFW500(Colors.grey, 10,
                               overflow: TextOverflow.ellipsis),
                         ),
                         const SizedBox(
@@ -218,7 +218,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ),
                             Text(
                               S.of(context).notify_label,
-                              style: StyleBkav.textStyleFW500(Colors.grey, 10,
+                              style: StyleOfit.textStyleFW500(Colors.grey, 10,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             const SizedBox(
@@ -249,7 +249,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             ),
                             Text(
                               S.of(context).setting,
-                              style: StyleBkav.textStyleFW500(Colors.grey, 10,
+                              style: StyleOfit.textStyleFW500(Colors.grey, 10,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             const SizedBox(

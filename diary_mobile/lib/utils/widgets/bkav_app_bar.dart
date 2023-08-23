@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 
-///Bkav TungDV: custom lại Appbar dùng chung cho cả App
-class BkavAppBar extends AppBar {
+///custom lại Appbar dùng chung cho cả App
+class OfitAppBar extends AppBar {
   final BuildContext context;
 
   static Widget defaultBackButton(BuildContext context, Color color) {
@@ -27,7 +27,7 @@ class BkavAppBar extends AppBar {
     );
   }
 
-  BkavAppBar(
+  OfitAppBar(
       this.context, {
         required bool showDefaultBackButton,
         bool hasBottom=false,

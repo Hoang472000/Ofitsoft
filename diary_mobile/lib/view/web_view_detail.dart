@@ -60,13 +60,13 @@ class WebViewDetailState extends State<WebViewDetail> {
           //   javascriptMode: JavascriptMode.unrestricted,
           //
           //   onPageStarted: (url) {
-          //     Logger.loggerDebug("Bkav DucLQ startLoad");
+          //     Logger.loggerDebug("startLoad");
           //     setState(() {
           //       loadingPercentage = 0;
           //     });
           //   },
           //   onProgress: (progress) {
-          //     Logger.loggerDebug("Bkav DucLQ loading  $progress");
+          //     Logger.loggerDebug("loading  $progress");
           //     setState(() {
           //       loadingPercentage = progress;
           //     });

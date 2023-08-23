@@ -45,13 +45,13 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
         create: (context) => AccountInformationBloc(context.read<Repository>()),
         child: Scaffold(
             //backgroundColor: AppColor.background,
-            appBar: BkavAppBar(
+            appBar: OfitAppBar(
               context,
               showDefaultBackButton: true,
               centerTitle: true,
               title: Text(
                 "Thông tin tài khoản",
-                style: StyleBkav.textStyleFW700(AppColor.whiteF2, 20),
+                style: StyleOfit.textStyleFW700(AppColor.whiteF2, 20),
               ),
               elevation: 0.0,
               //hasBottom: true,
@@ -145,19 +145,6 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                               width: 40,
                                               fit: BoxFit.contain,
                                             ),
-                                            /*const SizedBox(
-                                            height: 2,
-                                          ),
-                                          Text(
-                                            S
-                                                .of(context)
-                                                .from_camera,
-                                            style: StyleBkav
-                                                .textStyleFW500(
-                                                AppColor
-                                                    .black22,
-                                                14),
-                                          )*/
                                           ],
                                         ),
                                         onTap: () async {
@@ -185,19 +172,6 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                               width: 40,
                                               fit: BoxFit.contain,
                                             ),
-                                            /*  const SizedBox(
-                                            height: 2,
-                                          ),
-                                          Text(
-                                            S
-                                                .of(context)
-                                                .from_library,
-                                            style: StyleBkav
-                                                .textStyleFW500(
-                                                AppColor
-                                                    .black22,
-                                                14),
-                                          )*/
                                           ],
                                         ),
                                         onTap: () async {
@@ -277,7 +251,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                 Visibility(
                                   visible: !edit,
                                   child: Expanded(
-                                    child: BkavButton(
+                                    child: OfitButton(
                                         text: "Thay đổi thông tin",
                                         onPressed: () {
                                           setState(() {
@@ -295,7 +269,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   visible: edit,
                                   child: Expanded(
                                     child:
-                                        BkavButton(text: "Hủy", onPressed: () {
+                                        OfitButton(text: "Hủy", onPressed: () {
                                           setState(() {
                                             edit = !edit;
                                           });
@@ -312,7 +286,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                   visible: edit,
                                   child: Expanded(
                                     child:
-                                        BkavButton(text: "Lưu", onPressed: () {
+                                        OfitButton(text: "Lưu", onPressed: () {
                                           /*setState(() {
                                             edit = !edit;
                                           });*/

@@ -13,7 +13,7 @@ import '../../view_model/navigation_service.dart';
 import '../logger.dart';
 import '../utils.dart';
 import 'dashed_circle.dart';
-///Bkav TungDV Class chứa các dialog dùng chung cho app
+///Class chứa các dialog dùng chung cho app
 class DiaLogManager {
   static Future<void> displayDialog(
       BuildContext context,
@@ -66,7 +66,7 @@ class DiaLogManager {
               child: Text(
                 title,
                 textAlign: TextAlign.center,
-                style: StyleBkav.textStyleBlack16NotOverflow(),
+                style: StyleOfit.textStyleBlack16NotOverflow(),
               ),
             ),
             Padding(
@@ -76,7 +76,7 @@ class DiaLogManager {
                     : Text(
                   content,
                   textAlign: TextAlign.center,
-                  style: StyleBkav.textStyleBlack14NotOverflow(),
+                  style: StyleOfit.textStyleBlack14NotOverflow(),
                 )),
             const Divider(
               color: AppColor.gray300,
@@ -98,7 +98,7 @@ class DiaLogManager {
                           child: Center(
                               child: Text(cancel,
                                   textAlign: TextAlign.center,
-                                  style: StyleBkav.textStyleFW700(
+                                  style: StyleOfit.textStyleFW700(
                                       AppColor.gray500, 15)))),
                     ),
                   )
@@ -114,7 +114,7 @@ class DiaLogManager {
                           child: Center(
                               child: Text(access,
                                   textAlign: TextAlign.center,
-                                  style: StyleBkav.textStyleFW700(
+                                  style: StyleOfit.textStyleFW700(
                                       AppColor.main, 14,
                                       fontWeight: FontWeight.w600)))),
                     ),
@@ -194,7 +194,7 @@ class DiaLogManager {
               child: Text(
                 S.of(context).complete_dialog,
                 textAlign: TextAlign.center,
-                style: StyleBkav.textStyleBlack14NotOverflow(),
+                style: StyleOfit.textStyleBlack14NotOverflow(),
               ),
             ),
           ],
@@ -252,7 +252,7 @@ class DiaLogManager {
               child: Text(
                 S.of(context).error_dialog_fingerprint,
                 textAlign: TextAlign.center,
-                style: StyleBkav.textStyleBlack14NotOverflow(),
+                style: StyleOfit.textStyleBlack14NotOverflow(),
               ),
             ),
           ],
@@ -365,12 +365,12 @@ class DiaLogManager {
         Logger.loggerDebug("transformWord: $refNo");
         listTextSpan.add(TextSpan(
             text: "$refNo ",
-            style: StyleBkav.textStyleFW700(AppColor.blueE8, 14,
+            style: StyleOfit.textStyleFW700(AppColor.blueE8, 14,
                 overflow: TextOverflow.visible)));
       } else {
         listTextSpan.add(TextSpan(
             text: "${name[i]} ",
-            style: StyleBkav.textStyleFW400(Colors.black, 14,
+            style: StyleOfit.textStyleFW400(Colors.black, 14,
                 overflow: TextOverflow.visible)));
       }
     }

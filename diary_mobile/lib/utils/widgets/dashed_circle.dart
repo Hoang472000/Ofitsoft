@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-//Bakv Nhungltk: progress bar timer count down
+//progress bar timer count down
 class CircularBorder extends StatelessWidget {
   final double size;
   final double width;

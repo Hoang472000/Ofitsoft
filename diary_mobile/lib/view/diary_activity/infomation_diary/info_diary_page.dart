@@ -130,7 +130,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     label,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
                   ),
                 ),
                 Container(
@@ -138,7 +138,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     value,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -175,18 +175,18 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     label1,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                   ),
                 ),
                 RichText(
                     overflow: TextOverflow.clip,
                     text: TextSpan(
                       text: "$value1 ",
-                      style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                      style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                       children:  <TextSpan>[
                         TextSpan(
                           text: value2,
-                          style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                          style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                         )
                       ],
                     )),

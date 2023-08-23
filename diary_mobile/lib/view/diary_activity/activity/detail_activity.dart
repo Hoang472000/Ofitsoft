@@ -66,13 +66,13 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Chi tiết hoạt động",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
@@ -312,7 +312,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                       fit: BoxFit.cover,
                                     ),
                                     Visibility(
-                                      visible: state.listImage[index].type == "video",
+                                      visible: state.listImage[index].type == "2",
                                       child: Positioned.fill(
                                         child: IconButton(
                                             onPressed: () {},
@@ -410,7 +410,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                       bottom: 8),
                                                   child: Text(
                                                       S.of(context).pick_a_photo,
-                                                      style: StyleBkav
+                                                      style: StyleOfit
                                                           .textStyleFW700(
                                                               Colors.white, 18)),
                                                 ),
@@ -451,7 +451,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                       ),
                                                       Text(
                                                         S.of(context).from_camera,
-                                                        style: StyleBkav
+                                                        style: StyleOfit
                                                             .textStyleFW500(
                                                                 AppColor.black22,
                                                                 14),
@@ -497,7 +497,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                         S
                                                             .of(context)
                                                             .from_library,
-                                                        style: StyleBkav
+                                                        style: StyleOfit
                                                             .textStyleFW500(
                                                                 AppColor.black22,
                                                                 14),
@@ -505,7 +505,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                     ],
                                                   ),
                                                   onTap: () async {
-                                                    //Bkav DucLQ TODO: Tam tat tinh nang nay
+                                                    //TODO: Tam tat tinh nang nay
                                                     Get.back();
 
                                                     //HoangCV: chup anh
@@ -542,7 +542,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                       ),
                                                       Text(
                                                         "Quay video",
-                                                        style: StyleBkav
+                                                        style: StyleOfit
                                                             .textStyleFW500(
                                                             AppColor.black22,
                                                             14),
@@ -607,7 +607,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                 ),
                                 Text(
                                   "Chụp ảnh",
-                                  style: StyleBkav.textStyleFW500(
+                                  style: StyleOfit.textStyleFW500(
                                       AppColor.gray57, 16),
                                 )
                               ],
@@ -623,7 +623,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                             Visibility(
                               visible: !edit,
                               child: Expanded(
-                                child: BkavButton(
+                                child: OfitButton(
                                     text: "Sửa hoạt động",
                                     onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
                                         (widget.diary.status??'').compareTo("cancelled") == 0)?
@@ -661,7 +661,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                             Visibility(
                               visible: edit,
                               child: Expanded(
-                                child: BkavButton(
+                                child: OfitButton(
                                     text: "Hủy",
                                     onPressed: () {
                                       setState(() {
@@ -681,7 +681,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                             Visibility(
                               visible: edit,
                               child: Expanded(
-                                child: BkavButton(
+                                child: OfitButton(
                                     text: "Lưu",
                                     onPressed: () {
                                       /// luu goi api
@@ -740,7 +740,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                     child: SizedBox(
                       child: Text(
                         text,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                       ),
                     ),
                   ),

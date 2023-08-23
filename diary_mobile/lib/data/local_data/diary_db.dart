@@ -80,7 +80,17 @@ class DiaryDB extends _$DiaryDB {
           amountUnitName: Value(entry.amountUnitName),
           stringTool: Value(entry.convertToolsListToJson()),
           stringMaterial: Value(entry.convertMaterialsListToJson()),
-          stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
+          stringMedia: Value(entry.convertMediasListToJson()),
+          productId: Value(entry.productId),
+          productName: Value(entry.productName),
+          companyId: Value(entry.companyId),
+          companyName: Value(entry.companyName),
+          quantity: Value(entry.quantity),
+          quantityUnitId: Value(entry.quantityUnitId),
+          quantityUnitName: Value(entry.quantityUnitName),
+          unitPrice: Value(entry.unitPrice),
+          total: Value(entry.total),
+          buyer: Value(entry.buyer),// Chuyển đổi thành chuỗi JSON
         );
         print("HoangCV: stringTool: ${entryCompanion.stringTool}");
         batch.insertAllOnConflictUpdate(activityDiaryTable, [entryCompanion]);
@@ -114,6 +124,16 @@ class DiaryDB extends _$DiaryDB {
         'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
         'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),
         'diary_media_ids': jsonDecode(queriedEntry.stringMedia??'[]'),
+        'product_id': queriedEntry.productId,
+        'product_name': queriedEntry.productName,
+        'company_id': queriedEntry.companyId,
+        'company_name': queriedEntry.companyName,
+        'quantity': queriedEntry.quantity,
+        'quantity_unit_id': queriedEntry.quantityUnitId,
+        'quantity_unit_name': queriedEntry.quantityUnitName,
+        'unit_price': queriedEntry.unitPrice,
+        'total': queriedEntry.total,
+        'buyer': queriedEntry.buyer,
       });
       diaryEntriesList.add(diaryEntry);
     }
@@ -150,7 +170,17 @@ class DiaryDB extends _$DiaryDB {
           amountUnitName: Value(entry.amountUnitName),
           stringTool: Value(entry.convertToolsListToJson()),
           stringMaterial: Value(entry.convertMaterialsListToJson()),
-          stringMedia: Value(entry.convertMediasListToJson()), // Chuyển đổi thành chuỗi JSON
+          stringMedia: Value(entry.convertMediasListToJson()),
+          productId: Value(entry.productId),
+          productName: Value(entry.productName),
+          companyId: Value(entry.companyId),
+          companyName: Value(entry.companyName),
+          quantity: Value(entry.quantity),
+          quantityUnitId: Value(entry.quantityUnitId),
+          quantityUnitName: Value(entry.quantityUnitName),
+          unitPrice: Value(entry.unitPrice),
+          total: Value(entry.total),
+          buyer: Value(entry.buyer),/// Chuyển đổi thành chuỗi JSON
         );
         print("HoangCV: stringTool: ${entryCompanion.stringTool}");
         batch.insertAllOnConflictUpdate(actDiaryNoNetworkTable, [entryCompanion]);
@@ -185,6 +215,16 @@ class DiaryDB extends _$DiaryDB {
         'diary_tool_ids': jsonDecode(queriedEntry.stringTool??'[]'),
         'diary_material_ids': jsonDecode(queriedEntry.stringMaterial??'[]'),
         'diary_media_ids': jsonDecode(queriedEntry.stringMedia??'[]'),
+        'product_id': queriedEntry.productId,
+        'product_name': queriedEntry.productName,
+        'company_id': queriedEntry.companyId,
+        'company_name': queriedEntry.companyName,
+        'quantity': queriedEntry.quantity,
+        'quantity_unit_id': queriedEntry.quantityUnitId,
+        'quantity_unit_name': queriedEntry.quantityUnitName,
+        'unit_price': queriedEntry.unitPrice,
+        'total': queriedEntry.total,
+        'buyer': queriedEntry.buyer,
       });
       diaryEntriesList.add(diaryEntry);
     }

@@ -65,13 +65,13 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BkavAppBar(context,
+      appBar: OfitAppBar(context,
           centerTitle: true,
           hasBottom: true,
           showDefaultBackButton: true,
           title: Text(
             "Thông tin nhật ký",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
           bottom: TabBar(

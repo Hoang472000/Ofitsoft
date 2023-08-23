@@ -128,13 +128,13 @@ class _AddDiaryViewState extends State<AddDiaryView> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Thêm mới nhật ký",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
           leading: TextButton(
@@ -173,7 +173,7 @@ class _AddDiaryViewState extends State<AddDiaryView> {
                         Padding(
                           padding:
                           const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                          child: BkavButton(
+                          child: OfitButton(
                             text: "Hoàn thành",
                             onPressed: () async {},
                             color: AppColor.main,

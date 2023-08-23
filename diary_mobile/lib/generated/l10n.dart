@@ -760,10 +760,10 @@ class S {
     );
   }
 
-  /// ` <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#$%^&*) </li></ul><a>Ví dụ: Bkav0722, AI@Books</a>`
+  /// ` <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#$%^&*) </li></ul><a>Ví dụ: Ofit0722, Diary@Note</a>`
   String get note_change_password {
     return Intl.message(
-      ' <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Ví dụ: Bkav0722, AI@Books</a>',
+      ' <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Ví dụ: Ofit0722, Diary@Note</a>',
       name: 'note_change_password',
       desc: '',
       args: [],
@@ -1520,11 +1520,11 @@ class S {
     );
   }
 
-  /// `của công ty Bkav`
-  String get of_bkav {
+  /// `của công ty OfitSoft`
+  String get of_ofit {
     return Intl.message(
-      'của công ty Bkav',
-      name: 'of_bkav',
+      'của công ty OfitSoft',
+      name: 'of_ofit',
       desc: '',
       args: [],
     );
@@ -3620,10 +3620,10 @@ class S {
     );
   }
 
-  /// `Bạn chưa tick chọn Đồng ý với các Điều khoản Dịch vụ và Chính sách về Quyền riêng tư của công ty Bkav.`
+  /// `Bạn chưa tick chọn Đồng ý với các Điều khoản Dịch vụ và Chính sách về Quyền riêng tư của công ty OFITSOFT.`
   String get check_box_agree {
     return Intl.message(
-      'Bạn chưa tick chọn Đồng ý với các Điều khoản Dịch vụ và Chính sách về Quyền riêng tư của công ty Bkav.',
+      'Bạn chưa tick chọn Đồng ý với các Điều khoản Dịch vụ và Chính sách về Quyền riêng tư của công ty OFITSOFT.',
       name: 'check_box_agree',
       desc: '',
       args: [],

@@ -181,6 +181,7 @@ class ImageAsset {
   static const String imageVideoCamera = "${iMages}video_camera.png";
   static const String imageVideo = "${iMages}image_video.png";
   static const String imageYoutube = "${iMages}youtube.png";
+  static const String imageCompany = "${iMages}company.png";
 
   //activity_image
   static const String imageActGardenVentilation = "${iMages}act_garden_ventilation.png";

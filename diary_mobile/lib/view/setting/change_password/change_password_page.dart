@@ -72,14 +72,14 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
             },
             child: Scaffold(
               backgroundColor: AppColor.background,
-                appBar: BkavAppBar(
+                appBar: OfitAppBar(
                   context,
                   centerTitle: true,
                   showDefaultBackButton: true,
                   backgroundColor: AppColor.main,
                   title: Text(
                     S.of(context).change_password,
-                    style: StyleBkav.textStyleFW700(Colors.white, 20),
+                    style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
                 ),
                 body: BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
@@ -253,7 +253,7 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                                           margin: const EdgeInsets.only(top: 80),
                                           width: 180,
                                           child:onchangePassCon==onchangePassNew&&onchangePassOld!=onchangePassNew&&onchangePassNew.isNotEmpty&&onchangePassOld.length>=8&&validatePassFail?.errorPassNew==""
-                                              ? BkavButton(
+                                              ? OfitButton(
                                             text: S.of(context).agree,
                                             onPressed: () async {
                                               String passCurrent =
@@ -309,7 +309,7 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                                             },
                                             color: AppColor.main,
                                           )
-                                              : BkavButton(
+                                              : OfitButton(
                                             text: S.of(context).agree,
                                             onPressed: () {
                                               context

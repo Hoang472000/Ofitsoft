@@ -149,13 +149,13 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: AppColor.background,
-      appBar: BkavAppBar(
+      appBar: OfitAppBar(
         context,
         centerTitle: true,
         showDefaultBackButton: true,
         title: Text(
           "Thêm mới giám sát",
-          style: StyleBkav.textStyleFW700(Colors.white, 20),
+          style: StyleOfit.textStyleFW700(Colors.white, 20),
         ),
         backgroundColor: AppColor.main,
         actions: [],
@@ -300,7 +300,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                               S
                                                   .of(context)
                                                   .pick_a_photo,
-                                              style: StyleBkav
+                                              style: StyleOfit
                                                   .textStyleFW700(
                                                   Colors.white,
                                                   18)),
@@ -342,7 +342,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                                 S
                                                     .of(context)
                                                     .from_camera,
-                                                style: StyleBkav
+                                                style: StyleOfit
                                                     .textStyleFW500(
                                                     AppColor
                                                         .black22,
@@ -380,7 +380,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                                 S
                                                     .of(context)
                                                     .from_library,
-                                                style: StyleBkav
+                                                style: StyleOfit
                                                     .textStyleFW500(
                                                     AppColor
                                                         .black22,
@@ -443,7 +443,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                         ),
                         Text(
                           "Chụp ảnh",
-                          style: StyleBkav.textStyleFW500(
+                          style: StyleOfit.textStyleFW500(
                               AppColor.gray57, 16),
                         )
                       ],
@@ -453,7 +453,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                 Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: BkavButton(
+                  child: OfitButton(
                     text: "Hoàn thành",
                     onPressed: () async {},
                     color: AppColor.main,
@@ -549,7 +549,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                       child: Text(
                         text,
                         style:
-                        StyleBkav.textStyleFW400(AppColor.black22, 16),
+                        StyleOfit.textStyleFW400(AppColor.black22, 16),
                       ),
                     ),
                   ),

@@ -147,7 +147,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                           .toString()
                                           .length <
                                       50
-                                  ? listDataSearch(controller.text)[index]?.image!='' ? 70 : itemHeight
+                                  ? !(listDataSearch(controller.text)[index] is String) && listDataSearch(controller.text)[index]?.image!='' ? 70 : itemHeight
                                   : Extension()
                                               .getValueDisplay(listDataSearch(
                                                   controller.text)[index])
@@ -162,7 +162,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                                 children: [
                                   Expanded(
                                     child: Row(
-                                      children: [(listDataSearch(controller.text)[index].image!=null && listDataSearch(controller.text)[index].image !='') ?
+                                      children: [(!(listDataSearch(controller.text)[index] is String) && listDataSearch(controller.text)[index].image!=null && listDataSearch(controller.text)[index].image !='') ?
                                         Flexible(
                                             flex: 1,child: Image.memory(gaplessPlayback: true,
                                           base64Decode(listDataSearch(controller.text)[index]?.image ?? ""),
@@ -269,7 +269,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                 enabled: _list.length != 0,
                 focusNode: focusNode,
                 controller: controller,
-                style: StyleBkav.textStyleFW400(AppColor.black22, 18),
+                style: StyleOfit.textStyleFW400(AppColor.black22, 18),
                 decoration: InputDecoration(
                   disabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(

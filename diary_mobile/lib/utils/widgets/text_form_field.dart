@@ -115,19 +115,19 @@ class _BkavTextFormFieldState extends State<BkavTextFormField>{
         border: widget.noBorder==false?border(Color(0xFFBDBDBD)):const UnderlineInputBorder(),
         label: !widget.noteNotEmpty? Text(
           widget.label,
-          style: StyleBkav.textStyleFW400(AppColor.gray9F, 12),
+          style: StyleOfit.textStyleFW400(AppColor.gray9F, 12),
         ):
         Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Flexible(
               child: Text(widget.label,
-                  style: StyleBkav.textStyleFW400(AppColor.gray9F, 12)),
+                  style: StyleOfit.textStyleFW400(AppColor.gray9F, 12)),
             ),
             Flexible(
               child: Text("*",
                   style:
-                  StyleBkav.textStyleFW400(AppColor.redDD, 16)),
+                  StyleOfit.textStyleFW400(AppColor.redDD, 16)),
             )
           ],
         ),

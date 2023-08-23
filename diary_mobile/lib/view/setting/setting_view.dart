@@ -64,14 +64,14 @@ class _SettingViewState extends State<SettingView> {
         return false;
       },
       child: Scaffold(
-          appBar: BkavAppBar(
+          appBar: OfitAppBar(
             context,
             centerTitle: true,
             //backgroundColor: Colors.white,
             showDefaultBackButton: false,
             title: Text(
               S.of(context).setting,
-              style: StyleBkav.textStyleFW700(Colors.white, 20),
+              style: StyleOfit.textStyleFW700(Colors.white, 20),
             ),
            // hasBottom: true,
           ),
@@ -115,7 +115,7 @@ class _SettingViewState extends State<SettingView> {
                                 child: RichText(
                                     text: TextSpan(
                                         text: fullName,
-                                        style: StyleBkav.textStyleFW700(
+                                        style: StyleOfit.textStyleFW700(
                                             Colors.black, 18,
                                             overflow: TextOverflow.visible)))),
                           ),
@@ -123,7 +123,7 @@ class _SettingViewState extends State<SettingView> {
                               child: RichText(
                                   text: TextSpan(
                                       text: group,
-                                      style: StyleBkav.textStyleFW400(
+                                      style: StyleOfit.textStyleFW400(
                                           Colors.black, 14,
                                           overflow: TextOverflow.visible)))),
                         ],
@@ -181,7 +181,7 @@ class _SettingViewState extends State<SettingView> {
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                  child: BkavButton(
+                  child: OfitButton(
                     text: S.of(context).logout,
                     onPressed: () async {
                       DiaLogManager.displayDialog(context, "Đăng xuất", "Bạn có chắc chắn muốn đăng xuất?\nTất cả thông tin đăng nhập và dữ liệu đã lưu trữ sẽ bị xóa.\nBấm \'Đồng ý\' để đăng xuất.",
@@ -227,7 +227,7 @@ class _SettingViewState extends State<SettingView> {
                           child: Text(
                             text,
                             style:
-                                StyleBkav.textStyleFW400(AppColor.black22, 16),
+                                StyleOfit.textStyleFW400(AppColor.black22, 16),
                           )),
                     ),
                   ),

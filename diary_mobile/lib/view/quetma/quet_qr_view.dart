@@ -64,14 +64,14 @@ class _QRCodeViewState extends State<QRCodeView> {
         create: (context) =>
             BarcodeBloc(context),
         child: Scaffold(
-                appBar: BkavAppBar(
+                appBar: OfitAppBar(
                   context,
                   centerTitle: true,
                   showDefaultBackButton: true,
                   backgroundColor: AppColor.main,
                   title: Text(
                     S.of(context).code_scan,
-                    style: StyleBkav.textStyleFW700(Colors.white, 20),
+                    style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
                 ),
                 body: BlocConsumer<BarcodeBloc, BarcodeState>(
@@ -134,7 +134,7 @@ class _QRCodeViewState extends State<QRCodeView> {
                                   horizontal: 100, vertical: 100),
                               width: 50,
                               height: 48,
-                              child: BkavButton(
+                              child: OfitButton(
                                 color: AppColor.main,
                                 text: "Quét mã",
                                 onPressed: () {
@@ -264,7 +264,7 @@ class _QRCodeViewState extends State<QRCodeView> {
           child: Center(
               child: Text(
                 content,
-                style: StyleBkav.textStyleFW500(color, 16),
+                style: StyleOfit.textStyleFW500(color, 16),
               )),
         ));
   }

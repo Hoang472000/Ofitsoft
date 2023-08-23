@@ -77,13 +77,13 @@ class _AddMonitorSubPageState extends State<AddMonitorSubPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Thêm mới giám sát",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
@@ -109,7 +109,7 @@ class _AddMonitorSubPageState extends State<AddMonitorSubPage> {
                   Padding(
                     padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    child: BkavButton(
+                    child: OfitButton(
                       text: "Tiếp tục",
                       onPressed: () async {
                         Navigator.pop(context);

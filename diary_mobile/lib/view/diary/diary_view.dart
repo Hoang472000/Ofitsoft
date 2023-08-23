@@ -8,7 +8,9 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../view_model/diary/list_diary_bloc.dart';
+import '../diary_activity/activity_writeby/add_activity_writeby.dart';
 import 'detail_diary/detail_diary_page.dart';
+import 'item_diary/item_diary.dart';
 
 class DiaryView extends StatefulWidget {
   const DiaryView({super.key});
@@ -49,13 +51,13 @@ class _DiaryViewState extends State<DiaryView> {
           ListDiaryBloc(context.read<Repository>())..add(GetListDiaryEvent()),
       child: Scaffold(
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: false,
           title: Text(
             "Danh sách nhật ký",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
           actions: [],
@@ -87,144 +89,103 @@ class _DiaryViewState extends State<DiaryView> {
                     const Divider(
                       height: 10.0,
                     ),
+                    Visibility(
+                      visible: (state.amountSelected > 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          InkWell(
+                            onTap: (){
+                              blocContext.read<ListDiaryBloc>().add(
+                                  AddChooseAllDiary(state.amountSelected == state.lengthDiary));
+                            },
+                            child: Row(
+                              children: [
+                                SizedBox(width: 5,),
+                                IconButton(
+                                    onPressed: () {
+                                    },
+                                    icon: state.amountSelected == state.lengthDiary
+                                        ? const Icon(
+                                      Icons.check_box_outlined,
+                                      color: AppColor.main,
+                                      size: 20,
+                                    )
+                                        : const Icon(
+                                      Icons.check_box_outline_blank,
+                                      color: AppColor.main,
+                                      size: 20,
+                                    ),
+                                    padding: EdgeInsets.zero),
+                                Text(state.amountSelected == state.lengthDiary ? "Bỏ chọn tất cả" : "Chọn tất cả",
+                                    style: StyleOfit.textStyleFW500(AppColor.gray57, 14)),
+                              ],
+                            ),
+                          ),
+                          InkWell(
+                            onTap: () async{
+                               blocContext.read<ListDiaryBloc>().add(
+                                  GetListDiarySelected(context));
+                            },
+                            child: Row(
+                              children: [
+                                Text("Thêm nhiều", style: StyleOfit.textStyleFW500(AppColor.gray57, 14)),
+                                IconButton(
+                                    onPressed: () {
+                                    },
+                                    icon: const Icon(
+                                      Icons.edit_note_outlined,
+                                      color: AppColor.main,
+                                      size: 30,
+                                    ),
+                                    padding: EdgeInsets.zero),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Expanded(
                         child: ListView.builder(
                       itemCount: state.listDate.length,
-                      itemBuilder: (context, index) {
-                        String monthAndYear = state.listDate[index];
-                        List<Diary> tasksForMonthAndYear =
+                      itemBuilder: (context, indexParent) {
+                        String monthAndYear = state.listDate[indexParent];
+    /*                    List<Diary> tasksForMonthAndYear =
                             getTasksForMonthAndYear(
-                                monthAndYear, state.listDiary);
+                                monthAndYear, state.listDiary);*/
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  /*   Image(
-                                    image: AssetImage(ImageAsset.imageCalendarPick),
-                                    width: 40,
-                                    fit: BoxFit.contain,
-                                  ),*/
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      monthAndYear,
-                                      style: StyleBkav.textStyleFW500(
-                                          AppColor.gray57, 20),
-                                    ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    monthAndYear,
+                                    style: StyleOfit.textStyleFW500(
+                                        AppColor.gray57, 20),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                             ListView.builder(
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
-                              itemCount: tasksForMonthAndYear.length,
+                              itemCount: state.listDiary[indexParent].length,
                               itemBuilder: (context, index) {
-                                Diary diary = tasksForMonthAndYear[index];
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context,
-                                        DetailDiaryPage.route(diary.id ?? -1, diary));
-                                  },
-                                  child: Container(
-                                    padding: const EdgeInsets.only(
-                                        top: 8, bottom: 8, left: 24, right: 16),
-                                    margin: const EdgeInsets.only(
-                                        left: 20, right: 16, top: 4, bottom: 4),
-                                    decoration: BoxDecoration(
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: AppColor.gray57,
-                                            blurRadius: 1,
-                                            offset: Offset(0, 0),
-                                          ),
-                                        ],
-                                        borderRadius: BorderRadius.circular(8),
-                                        color: Colors.white),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0, bottom: 8),
-                                                child: Text(
-                                                  Utils.formatTime(
-                                                      tasksForMonthAndYear[
-                                                                  index]
-                                                              .startDate ??
-                                                          ""),
-                                                  style:
-                                                      StyleBkav.textStyleFW400(
-                                                          AppColor.black22, 14),
-                                                ),
-                                              ),
-                                              Text(
-                                                  tasksForMonthAndYear[index]
-                                                      .name
-                                                      .toString(),
-                                                  style:
-                                                      StyleBkav.textStyleFW500(
-                                                          AppColor.main, 16),
-                                                  maxLines: 3,
-                                                  overflow:
-                                                      TextOverflow.visible),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0, bottom: 8),
-                                                child: RichText(
-                                                  text: Utils.convertText(
-                                                      "Cây trồng: ",
-                                                      "${tasksForMonthAndYear[index].cropName}",
-                                                      AppColor.blue15,
-                                                      14),
-                                                  maxLines: 3,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    bottom: 8),
-                                                child: RichText(
-                                                  text: Utils.convertText(
-                                                      "Thực hiện: ",
-                                                      "${tasksForMonthAndYear[index].farmerName}",
-                                                      AppColor.blue15,
-                                                      12),
-                                                  maxLines: 3,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        Image(
-                                          image: AssetImage(
-                                              ImageAsset.imageOfitsoftText),
-                                          width: 75,
-                                          fit: BoxFit.contain,
-                                        ),
-                                        //Icon(tasksForMonthAndYear[index].icon, color: AppColor.main,),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                                    /*ListTile(
-                                  title: Text(task.name),
-                                  subtitle: Text(
-                                      '${task.date.day}/${task.date.month}/${task.date.year}'),
-                                )*/
-                                    ;
+                                return ItemDiary(diary: state.listDiary[indexParent][index],
+                                amountSelected: state.amountSelected,
+                                isChoose: state.listSelected[indexParent][index],
+                                callbackChooseItem: (isChoose, diary)  {
+                                  setState(() {
+                                    //selectAll=false;
+                                  });
+                                  blocContext.read<ListDiaryBloc>().add(
+                                      AddChooseDiary(
+                                          indexParent, index, !isChoose, diary));
+                                });
                               },
                             ),
                             Padding(

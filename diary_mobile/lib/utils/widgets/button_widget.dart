@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 
-class BkavButton extends StatelessWidget {
+class OfitButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final VoidCallback? onLongPressed;
   final Color? color;
   final bool? isEnterMore;
 
-  const BkavButton(
+  const OfitButton(
       {Key? key,
       required this.text,
       required this.onPressed,
@@ -57,7 +57,7 @@ class BkavButton extends StatelessWidget {
             alignment: Alignment.center,
             child: Text(
               text,
-              style: StyleBkav.textStyleFW700(isEnterMore != null ?  AppColor.main: null, 16),
+              style: StyleOfit.textStyleFW700(isEnterMore != null ?  AppColor.main: null, 16),
             ),
           ),
         ),

@@ -25,6 +25,20 @@ class ActivityDiary implements Insertable<ActivityDiary>{
   bool? harvesting;
   String? description;
   bool? isShow;
+
+  //mua ban
+  int? productId;
+  String? productName;
+  int? companyId;
+  String? companyName;
+  double? quantity;
+  int? quantityUnitId;
+  String? quantityUnitName;
+  double? unitPrice;
+  double? total;
+  String? buyer;
+  //mua ban
+
   List<Tool> tool;
   List<MaterialEntity> material;
   List<ImageEntity> media;
@@ -53,7 +67,18 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     this.media = const [],
     this.stringTool,
     this.stringMedia,
-    this.stringMaterial
+    this.stringMaterial,
+    //mua ban
+    this.productId,
+    this.productName,
+    this.companyId,
+    this.companyName,
+    this.quantity,
+    this.quantityUnitId,
+    this.quantityUnitName,
+    this.unitPrice,
+    this.total,
+    this.buyer,
   });
 
   factory ActivityDiary.fromJson(Map<String, dynamic> json) {
@@ -80,6 +105,17 @@ class ActivityDiary implements Insertable<ActivityDiary>{
       stringTool: jsonEncode(json['diary_tool_ids']) ?? '[]',
       stringMedia: jsonEncode(json['diary_media_ids']) ?? '[]',
       stringMaterial: jsonEncode(json['diary_material_ids']) ?? '[]',
+      //mua ban
+      productId: json['product_id'] ??  -1,
+      productName: json['product_name'] ?? '',
+      companyId: json['company_id'] ?? -1,
+      companyName: json['company_name'] ?? '',
+      quantity: json['quantity'],
+      quantityUnitId: json['quantity_unit_id'],
+      quantityUnitName: json['quantity_unit_name'],
+      unitPrice: json['unitPrice'],
+      total: json['total'],
+      buyer: json['buyer'],
     );
   }
 
@@ -133,6 +169,16 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     data['diary_tool_ids'] = listTool;
     data['diary_material_ids'] = listMaterial;
     data['diary_media_ids'] = listImage;
+    //mua ban
+    data['product_id'] = productId;
+    data['product_name'] = productName;
+    data['company_id'] = companyId;
+    data['company_name'] = companyName;
+    data['quantity'] = quantity;
+    data['quantity_unit_id'] = quantityUnitId;
+    data['quantity_unit_name'] = quantityUnitName;
+    data['unitPrice'] = unitPrice;
+    data['total'] = total;
     return data;
   }
 
@@ -154,7 +200,17 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         amountUnitName = other.amountUnitName,
         tool = List.of(other.tool??[]), // Tạo bản sao của danh sách tool
         material = List.of(other.material??[]), // Tạo bản sao của danh sách material
-        media = List.of(other.media??[]); // Tạo bản sao của danh sách media
+        media = List.of(other.media??[]), // Tạo bản sao của danh sách media
+        productId = other.productId,
+        productName = other.productName,
+        companyId = other.companyId,
+        companyName = other.companyName,
+        quantity = other.quantity,
+        quantityUnitId = other.quantityUnitId,
+        quantityUnitName = other.quantityUnitName,
+        unitPrice = other.unitPrice,
+        total = other.total,
+        buyer = other.buyer;
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -172,6 +228,16 @@ class ActivityDiary implements Insertable<ActivityDiary>{
         amount: Value(amount),
         amountUnitId: Value(amountUnitId),
         amountUnitName: Value(amountUnitName),
+        productId: Value(productId),
+        productName: Value(productName),
+        companyId: Value(companyId),
+        companyName: Value(companyName),
+        quantity: Value(quantity),
+        quantityUnitId: Value(quantityUnitId),
+        quantityUnitName: Value(quantityUnitName),
+        unitPrice: Value(unitPrice),
+        total: Value(total),
+        buyer: Value(buyer),
 /*        tool: Value(tool),
         status: Value(status),
         stringTool: Value(stringTool),*/

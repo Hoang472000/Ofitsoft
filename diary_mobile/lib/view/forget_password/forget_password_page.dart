@@ -114,7 +114,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
           backgroundColor: AppColor.background,
-          appBar: BkavAppBar(
+          appBar: OfitAppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
                 statusBarColor: Colors.transparent,
                 statusBarIconBrightness: Brightness.light,
@@ -142,7 +142,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             backgroundColor: AppColor.background,
             title: Text(
               S.of(context).forgot_password,
-              style: StyleBkav.textStyleFW700(Colors.white, 20),
+              style: StyleOfit.textStyleFW700(Colors.white, 20),
             ),
           ),
           body: Utils.bkavCheckOrientation(
@@ -302,12 +302,12 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                     },
                     child: Text(
                       S.of(context).text_button_send,
-                      style: StyleBkav.textStyleFW700(AppColor.main, 14),
+                      style: StyleOfit.textStyleFW700(AppColor.main, 14),
                     ))
                 : RichText(
                     text: TextSpan(
                     text: S.of(context).text_send_to_email,
-                    style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                     children: <TextSpan>[
                       TextSpan(
                         text: email.isNotEmpty
@@ -321,11 +321,11 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                     email.indexOf("@"),
                                     "*" * (email.indexOf("@") ~/ 2 + 1)))
                             : "*******@gmail.com",
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                       ),
                       TextSpan(
                         text: S.of(context).text_check_emal,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                       ),
                       seconds == 0
                           ? TextSpan(
@@ -341,7 +341,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                   }
                                 },
                               style:
-                                  StyleBkav.textStyleFW700(AppColor.main, 14),
+                                  StyleOfit.textStyleFW700(AppColor.main, 14),
                             )
                           : TextSpan(
                               text:
@@ -351,7 +351,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                                   null;
                                 },
                               style:
-                                  StyleBkav.textStyleFW700(AppColor.gray70, 14),
+                                  StyleOfit.textStyleFW700(AppColor.gray70, 14),
                             )
                     ],
                   )),
@@ -503,7 +503,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
             SizedBox(
                 width: 150,
                 child: isEnabled
-                    ? BkavButton(
+                    ? OfitButton(
                         text: S.of(context).text_button_save,
                         onPressed: () async {
                           String username = _inputUserNameController.text;
@@ -552,7 +552,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                         },
                         color: AppColor.main,
                       )
-                    : BkavButton(
+                    : OfitButton(
                         text: S.of(context).text_button_save, onPressed: null)),
           ],
         );

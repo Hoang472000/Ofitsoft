@@ -30,13 +30,13 @@ class _ContactPageState extends State<ContactPage> {
       },
       child: Scaffold(
           backgroundColor: AppColor.background,
-          appBar: BkavAppBar(
+          appBar: OfitAppBar(
             context,
             showDefaultBackButton: true,
             centerTitle: true,
             title: Text(
               "Liên hệ",
-              style: StyleBkav.textStyleFW700(AppColor.whiteF2, 20),
+              style: StyleOfit.textStyleFW700(AppColor.whiteF2, 20),
             ),
             //backgroundColor: Colors.transparent,
             elevation: 0.0,
@@ -81,7 +81,7 @@ class _ContactPageState extends State<ContactPage> {
                           child: Text(
                             "Hỗ trợ hỏi đáp 24/7",
                             style:
-                            StyleBkav.textStyleFW600(Colors.white, 18),
+                            StyleOfit.textStyleFW600(Colors.white, 18),
                           ),
                         ),
                           ],
@@ -135,7 +135,7 @@ class _ContactPageState extends State<ContactPage> {
                                                   padding: const EdgeInsets.only(top: 10.0),
                                                   child: Text(
                                                     "Liên hệ kỹ thuật:",
-                                                    style: StyleBkav.textStyleFW400(
+                                                    style: StyleOfit.textStyleFW400(
                                                         AppColor.main, 15),
                                                   ),
                                                 ),
@@ -145,7 +145,7 @@ class _ContactPageState extends State<ContactPage> {
                                                       bottom: 10),
                                                   child: Text(
                                                     "0989426911",
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor.black22,
                                                         15),
@@ -171,7 +171,7 @@ class _ContactPageState extends State<ContactPage> {
                                                   padding: const EdgeInsets.only(top: 10.0),
                                                   child: Text(
                                                     "Đăng ký dịch vụ:",
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor.main,
                                                         15),
@@ -185,7 +185,7 @@ class _ContactPageState extends State<ContactPage> {
                                                       bottom: 10),
                                                   child: Text(
                                                     "1900 54 54 14",
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor
                                                             .black22,
@@ -214,7 +214,7 @@ class _ContactPageState extends State<ContactPage> {
                                                   padding: const EdgeInsets.only(top: 10.0),
                                                   child: Text(
                                                     "Fax:",
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor.main,
                                                         15),
@@ -228,7 +228,7 @@ class _ContactPageState extends State<ContactPage> {
                                                       bottom: 18),
                                                   child: Text(
                                                       "+84 24 560 5552",
-                                                      style: StyleBkav
+                                                      style: StyleOfit
                                                           .textStyleFW400(
                                                           AppColor
                                                               .black22,
@@ -271,7 +271,7 @@ class _ContactPageState extends State<ContactPage> {
                                               left: 16),
                                           child: Text(
                                               "ofitsoft@gmail.com",
-                                              style: StyleBkav.textStyleFW400(
+                                              style: StyleOfit.textStyleFW400(
                                                   AppColor.black22, 15, overflow: TextOverflow.visible)
                                           ),
                                         ),

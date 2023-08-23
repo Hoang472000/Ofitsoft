@@ -63,7 +63,7 @@ class ContainerInputWidget extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 8, bottom: 8),
+          padding: /*inputRegisterModel.noBorder ? EdgeInsets.zero:*/ EdgeInsets.only(top: 8, bottom: 8),
           child: GestureDetector(
             onTap: () {
               switch (inputRegisterModel.type) {
@@ -124,7 +124,7 @@ class ContainerInputWidget extends StatelessWidget {
                           color: inputRegisterModel.error != null
                               ? Colors.red
                               // chỗ này kiểm tra xem nó là dạng togle thì không show viền boder
-                              : inputRegisterModel.type == TypeInputRegister.Tolge
+                              : inputRegisterModel.type == TypeInputRegister.Tolge || inputRegisterModel.noBorder
                                   ? Colors.transparent
                                   : Color(0xFFB2B8BB),
                           width: 1.5,
@@ -138,7 +138,7 @@ class ContainerInputWidget extends StatelessWidget {
                         primary: false,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.all(6),
+                            padding: inputRegisterModel.noBorder ? EdgeInsets.zero : const EdgeInsets.all(6),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -148,14 +148,14 @@ class ContainerInputWidget extends StatelessWidget {
                                   child: Text(
                                     '${inputRegisterModel.title}',
                                     style: TextStyle(
-                                            color: Color(0xFFB2B8BB),
+                                            color: AppColor.gray57,
                                             fontSize: 14)
                                         .merge(titleStyle),
                                   ),
                                 ) : Text(
                                   '${inputRegisterModel.title}',
                                   style: TextStyle(
-                                      color: Color(0xFFB2B8BB),
+                                      color: AppColor.gray57,
                                       fontSize: 14)
                                       .merge(titleStyle),
                                 ),
@@ -170,7 +170,7 @@ class ContainerInputWidget extends StatelessWidget {
                                       )
                                     : Container(),
                                 SizedBox(
-                                  width: 16,
+                                  width: 4,
                                 ),
                                 Expanded(
                                   flex: 3,
@@ -256,7 +256,7 @@ class ContainerInputWidget extends StatelessWidget {
                       // cho phép wrap text
                       child: Text(
                           inputRegisterModel.listMutiChoice![index].description ?? "",
-                          style: StyleBkav.textStyleFW400(AppColor.black22, 14)),
+                          style: StyleOfit.textStyleFW400(AppColor.black22, 14)),
                     ),
                   ],
                 ),
@@ -365,10 +365,13 @@ class ContainerInputWidget extends StatelessWidget {
                       fontSize: 14),
                   decoration: InputDecoration(
                       contentPadding:
-                          EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+                          EdgeInsets.only(top: inputRegisterModel.noBorder ? 0 : 6,bottom: inputRegisterModel.noBorder ? 0 : 6,
+                              left: inputRegisterModel.noBorder ? 20 : 0, right: inputRegisterModel.noBorder ? 0 : 0),
                       isDense: true,
                       hintText: inputRegisterModel.hintText,
-                      border: InputBorder.none,
+                      border: inputRegisterModel.noUnder ? UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ): InputBorder.none,
                       counterText: ''),
                   minLines: 1,
                   maxLines: 5,
@@ -448,14 +451,13 @@ class ContainerInputWidget extends StatelessWidget {
             ),
             inputRegisterModel.icon != null
                 ? Padding(
-                    padding: EdgeInsets.only(left: 8),
-                    child: Transform.rotate(
-                      angle: inputRegisterModel.rotateIcon ? 180 * pi / 180 : 0,
-                      child: Utils.iconCustom(
-                          icon: inputRegisterModel.icon,
-                          context: contextParent,
-                          size: 30),
-                    ),
+                    padding: EdgeInsets.zero,
+                    child: Icon(inputRegisterModel.icon, /*fontFamily: fontIconApp*/
+                        size: 30 ?? 16, color: color ?? Theme.of(context).primaryColor)
+              /*Utils.iconCustom(
+                        icon: inputRegisterModel.icon,
+                        context: contextParent,
+                        size: 30),*/
                   )
                 : Container()
           ],

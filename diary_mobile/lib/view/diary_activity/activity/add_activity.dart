@@ -19,6 +19,8 @@ import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
+import '../../../utils/widgets/media/image.dart';
+import '../../../utils/widgets/media/video.dart';
 import '../../../view_model/diary_activity/activity/add_actitivy_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
@@ -56,13 +58,13 @@ class _AddActivityPageState extends State<AddActivityPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Thêm hoạt động",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
@@ -241,7 +243,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     }),
                     SizedBox(
                       height:
-                          state.listImage.isNotEmpty ? state.imageHeight : 0,
+                          state.listImage.isNotEmpty ? state.imageHeight + 50 : 0,
                       child: ListView.builder(
                           shrinkWrap: true,
                           scrollDirection: Axis.horizontal,
@@ -250,68 +252,90 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             print("HoangCV: type: ${state.listImage[index].type}");
                             return Padding(
                               padding: const EdgeInsets.only(right: 8.0),
-                              child: Stack(
-                                alignment: Alignment.center,
+                              child: Column(
                                 children: [
-                                  Image.memory(
-                                          gaplessPlayback: true,
-                                          base64Decode(state.listImage[index]
-                                                  .contentView ??
-                                              ""),
-                                          height: state.imageHeight,
-                                          width: state.imageWidth,
-                                          fit: BoxFit.cover,
-                                        ),
-                                  Visibility(
-                                    visible: state.listImage[index].type == "video",
-                                    child: Positioned.fill(
-                                      child: IconButton(
-                                          onPressed: () {},
-                                          icon: SizedBox(
-                                            height: state.imageWidth/4,
-                                            child: Image(
-                                              image:
-                                              AssetImage(ImageAsset.imageYoutube),
-                                            ),
-                                          )),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: -5,
-                                    right: -10,
-                                    child: IconButton(
-                                        onPressed: () async {
-                                          DiaLogManager.displayDialog(
+                                  Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      Container(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            state.listImage[index].type != "2" ?
+                                            Navigator.push(
                                               context,
-                                              "",
-                                              S
-                                                  .of(context)
-                                                  .you_sure_want_delete_image,
-                                                  () async {
-                                                Get.back();
-                                                setState(() {
-                                                  blocContext
-                                                      .read<AddActivityBloc>()
-                                                      .add(AddOrDeleteImageEvent(
-                                                      state.listImage,
-                                                      index,
-                                                      context));
-                                                });
-                                              }, () {
-                                            Get.back();
-                                          }, S.of(context).cancel,
-                                              S.of(context).agree);
-                                        },
-                                        icon: const SizedBox(
-                                          height: 25,
-                                          child: Image(
-                                            image:
-                                            AssetImage(ImageAsset.imageBin),
-                                            //width: 40,
-                                            fit: BoxFit.contain,
-                                          ),
-                                        )),
+                                              MaterialPageRoute(
+                                                builder: (context) => ImagePlayerWidget(state.listImage[index]
+                                                    .contentView ?? ''),
+                                              ),
+                                            ) : null;
+                                          },
+                                          child: Image.memory(
+                                                  gaplessPlayback: true,
+                                                  base64Decode(state.listImage[index]
+                                                          .contentView ??
+                                                      ""),
+                                                  height: state.imageHeight,
+                                                  width: state.imageWidth,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: state.listImage[index].type == "2",
+                                        child: Positioned(
+                                          child: IconButton(
+                                              onPressed: () {
+                                                print("HoangCV: state.listImage[index].filePath: ${state.listImage[index].filePath}");
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => VideoPlayerWidget(state.listImage[index].filePath??''),
+                                                  ),
+                                                );
+                                              },
+                                              icon: Transform.scale(
+                                                scale: (state.imageWidth/4)/30,
+                                                child: Image(
+                                                  image:
+                                                  AssetImage(ImageAsset.imageYoutube),
+                                                ),
+                                              )),
+                                        ),
+                                      ),
+                                    ],
                                   ),
+                                  IconButton(
+                                      onPressed: () async {
+                                        DiaLogManager.displayDialog(
+                                            context,
+                                            "",
+                                            S
+                                                .of(context)
+                                                .you_sure_want_delete_image,
+                                                () async {
+                                              Get.back();
+                                              setState(() {
+                                                blocContext
+                                                    .read<AddActivityBloc>()
+                                                    .add(AddOrDeleteImageEvent(
+                                                    state.listImage,
+                                                    index,
+                                                    context));
+                                              });
+                                            }, () {
+                                          Get.back();
+                                        }, S.of(context).cancel,
+                                            S.of(context).agree);
+                                      },
+                                      icon: const SizedBox(
+                                        height: 25,
+                                        child: Image(
+                                          image:
+                                          AssetImage(ImageAsset.imageBin),
+                                          //width: 40,
+                                          fit: BoxFit.contain,
+                                        ),
+                                      ))
                                 ],
                               ),
                             );
@@ -358,12 +382,12 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                               child: Text(
                                                   S.of(context).pick_a_photo,
                                                   style:
-                                                      StyleBkav.textStyleFW700(
+                                                      StyleOfit.textStyleFW700(
                                                           Colors.white, 18)),
                                             ),
                                             IconButton(
                                               icon: const Icon(
-                                                Icons.clear,
+                                                Icons.image_outlined,
                                                 color: Colors.white,
                                                 size: 20.0,
                                               ),
@@ -396,7 +420,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                   ),
                                                   Text(
                                                     S.of(context).from_camera,
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW500(
                                                             AppColor.black22,
                                                             14),
@@ -436,7 +460,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                   ),
                                                   Text(
                                                     S.of(context).from_library,
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW500(
                                                             AppColor.black22,
                                                             14),
@@ -475,7 +499,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                                   ),
                                                   Text(
                                                     "Quay video",
-                                                    style: StyleBkav
+                                                    style: StyleOfit
                                                         .textStyleFW500(
                                                         AppColor.black22,
                                                         14),
@@ -540,7 +564,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                             Text(
                               "Chụp ảnh",
                               style:
-                                  StyleBkav.textStyleFW500(AppColor.gray57, 16),
+                                  StyleOfit.textStyleFW500(AppColor.gray57, 16),
                             )
                           ],
                         ),
@@ -549,7 +573,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
-                      child: BkavButton(
+                      child: OfitButton(
                           text: "Hoàn Thành",
                           onPressed: () {
                             blocContext
@@ -602,7 +626,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                     child: SizedBox(
                       child: Text(
                         text,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                       ),
                     ),
                   ),

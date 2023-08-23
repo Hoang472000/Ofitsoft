@@ -63,13 +63,13 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
-        appBar: BkavAppBar(
+        appBar: OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
             "Báo cáo đánh giá",
-            style: StyleBkav.textStyleFW700(Colors.white, 20),
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
@@ -649,7 +649,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               text,
               textAlign: TextAlign.left,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 16),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 16),
               maxLines: 2,
             ),
           ),
@@ -676,7 +676,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       padding: const EdgeInsets.only(bottom: 0, top: 0, left: 0),
       child: Text(
         text,
-        style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+        style: StyleOfit.textStyleFW700(AppColor.black22, 14),
         textAlign: TextAlign.left,
         maxLines: 2,
       ),
@@ -708,7 +708,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         child: Text(
           title,
           textAlign: TextAlign.left,
-          style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+          style: StyleOfit.textStyleFW400(AppColor.black22, 14),
           maxLines: 3,
         ),
       ),
@@ -724,7 +724,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             children: [
               TextSpan(
                 text: title,
-                style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               ),
               const WidgetSpan(
                 child: Padding(
@@ -758,7 +758,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       padding: const EdgeInsets.only(bottom: 8, top: 8, left: 0),
       child: Text(
         "P02-06",
-        style: StyleBkav.textStyleFW400(AppColor.black22, 16),
+        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
         textAlign: TextAlign.left,
         maxLines: 2,
       ),
@@ -776,7 +776,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Ngày thanh tra",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 2,
             ),
           ),
@@ -820,7 +820,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Tên nông dân",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
             ),
           ),
           TextField(
@@ -837,7 +837,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Mã nông hộ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
             ),
           ),
           TextField(
@@ -863,7 +863,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Thanh tra viên nội bộ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 3,
             ),
           ),
@@ -891,7 +891,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Hình thức chuyến kiểm soát nội bộ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 3,
             ),
           ),
@@ -952,7 +952,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Thẻ thành viên ICS",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 3,
             ),
           ),
@@ -1005,7 +1005,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Phiếu biên nhận bán sản phẩm",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 3,
             ),
           ),
@@ -1061,7 +1061,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Tài liệu tóm tắt yêu cầu của Tiêu chuẩn hữu cơ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1114,7 +1114,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Sổ tay nông hộ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1180,7 +1180,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Người nông dân có hiểu những yếu tố cơ bản của nông nghiệp hữu cơ không?",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 3,
             ),
           ),
@@ -1359,7 +1359,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Người nông dân có lưu trữ/ để dành phân bón trong nhà không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1424,7 +1424,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Người nông dân có lưu trữ/ để dành thuốc trừ sâu/trừ cỏ trong nhà không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1489,7 +1489,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có bình phun thuốc trừ sâu ở nhà không? ",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1570,7 +1570,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Thu hoạch",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW700(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1624,7 +1624,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Vận chuyển sau thu hoạch",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1650,7 +1650,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                             child: Text(
                               "Từ nương/ ruộng về nhà máy",
                               textAlign: TextAlign.center,
-                              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                               maxLines: 6,
                             ),
                           ),
@@ -1704,7 +1704,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                             child: Text(
                               "Từ nhà đến nha máy",
                               textAlign: TextAlign.center,
-                              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                               maxLines: 6,
                             ),
                           ),
@@ -1772,7 +1772,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có sử dụng bao đựng phân bón cũ để vận chuyển sản phẩm không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 6,
                       ),
                     ),
@@ -1851,7 +1851,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Người nông dân có cả nương sản phẩm hữu cơ và nương sản phẩm chuyển đổi không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -1928,7 +1928,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Tên nương/ ruộng",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1937,7 +1937,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "ở đội nào? Gần nhà ai",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1946,7 +1946,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Đánh giá rủi ro (cao, trung bình, thấp)",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1955,7 +1955,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Diện tích canh tác (m2)",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -1978,7 +1978,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Ước tính sản lượng sản phẩm (kg) 1 năm Annual yeild estimation",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 5,
                       ),
                     ),
@@ -1997,7 +1997,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                         child: Text(
                           "Số công hái sản phẩm",
                           textAlign: TextAlign.center,
-                          style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                          style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                           maxLines: 5,
                         ),
                       ),      Padding(
@@ -2005,7 +2005,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                         child: Text(
                           "Lượng sản phẩm",
                           textAlign: TextAlign.center,
-                          style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                          style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                           maxLines: 5,
                         ),
                       ),
@@ -2153,7 +2153,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có dấu hiệu sử dụng phân ủ cho sản phẩm không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2219,7 +2219,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Rủi ro xói mòn đất?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2300,7 +2300,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Vườn cây canh tác cạnh vườn cây trồng khác?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2366,7 +2366,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Vưởn cây nằm bên dưới, bên cạnh câu trồng khác có sử dụng phân bón thuốc trừ sâu không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2432,7 +2432,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có vườn cây nào bên cạnh được trồng mới không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2516,7 +2516,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có dấu hiệu dùng bón phân hóa học cho cây trồng không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2600,7 +2600,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có dấu hiệu sâu hại trên nương sản phẩm không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2666,7 +2666,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có dấu hiệu sử dụng thuốc trừ sâu không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2732,7 +2732,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       child: Text(
                         "Có dấu hiệu sử dụng thuốc trừ cỏ không?",
                         textAlign: TextAlign.center,
-                        style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                         maxLines: 8,
                       ),
                     ),
@@ -2900,7 +2900,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Điều kiện",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -2909,7 +2909,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Hạn cuối cùng",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -2918,7 +2918,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Tình hình thực hiện",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -2993,7 +2993,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "${i+1}. ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
             ),
           ),),
           Flexible(
@@ -3041,7 +3041,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Thanh tra kiểm soát  nội bộ",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3050,7 +3050,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Người nông dân",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3120,7 +3120,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Mức độ rủi ro",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3129,7 +3129,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Tình trạng",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3138,7 +3138,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Situation",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3160,7 +3160,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Cao",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3169,7 +3169,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Nương sản phẩm trồng gần và bên dưới ruộng lúa, ruộng ngô có sử dụng phân bón thuốc sâu thường xuyên",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3178,7 +3178,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Organic field near/under  rice/corn which use chemical frequently",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3200,7 +3200,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Trung bình",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3209,7 +3209,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Nương sản phẩm gần hoặc bên cạnh, bên trên ruộng lúa, ngô có sử dụng phân bón, thuốc sâu không thường xuyên hoặc rất ít sử dụng",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3218,7 +3218,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Medium: organic field near/beside rice/corn which use chemical unfrequently or rarelly",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3240,7 +3240,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Thấp",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW700(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3249,7 +3249,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Nương sản phẩm nằm tách biệt hoàn toàn với các khu vực trồng lúa, ngô",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3258,7 +3258,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             child: Text(
               "Organic field which is separated from convetional rice/corn",
               textAlign: TextAlign.center,
-              style: StyleBkav.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
               maxLines: 5,
             ),
           ),
@@ -3295,11 +3295,11 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             text: TextSpan(children: [
               TextSpan(
                   text: "Báo cáo thanh tra nội bộ nông hộ- thực địa và tại nhà.\t\t\t\t\t\t",
-                style: StyleBkav.textStyleFW400(AppColor.black22, 12),
+                style: StyleOfit.textStyleFW400(AppColor.black22, 12),
               ),
               TextSpan(
                   text: "Hiệu chỉnh: 06/2020",
-                style: StyleBkav.textStyleFW400(AppColor.black22, 12),
+                style: StyleOfit.textStyleFW400(AppColor.black22, 12),
               ),
             ]),
             textScaleFactor: MediaQuery.of(context).textScaleFactor,

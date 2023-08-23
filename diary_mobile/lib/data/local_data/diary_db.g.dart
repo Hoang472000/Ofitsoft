@@ -2646,6 +2646,64 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _companyIdMeta =
+      const VerificationMeta('companyId');
+  @override
+  late final GeneratedColumn<int> companyId = GeneratedColumn<int>(
+      'company_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _companyNameMeta =
+      const VerificationMeta('companyName');
+  @override
+  late final GeneratedColumn<String> companyName = GeneratedColumn<String>(
+      'company_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _totalMeta = const VerificationMeta('total');
+  @override
+  late final GeneratedColumn<double> total = GeneratedColumn<double>(
+      'total', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _buyerMeta = const VerificationMeta('buyer');
+  @override
+  late final GeneratedColumn<String> buyer = GeneratedColumn<String>(
+      'buyer', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _stringToolMeta =
       const VerificationMeta('stringTool');
   @override
@@ -2681,6 +2739,16 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
         amountUnitName,
         amount,
         harvesting,
+        productId,
+        productName,
+        companyId,
+        companyName,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        unitPrice,
+        total,
+        buyer,
         stringTool,
         stringMaterial,
         stringMedia
@@ -2777,6 +2845,54 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           harvesting.isAcceptableOrUnknown(
               data['harvesting']!, _harvestingMeta));
     }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('company_id')) {
+      context.handle(_companyIdMeta,
+          companyId.isAcceptableOrUnknown(data['company_id']!, _companyIdMeta));
+    }
+    if (data.containsKey('company_name')) {
+      context.handle(
+          _companyNameMeta,
+          companyName.isAcceptableOrUnknown(
+              data['company_name']!, _companyNameMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('total')) {
+      context.handle(
+          _totalMeta, total.isAcceptableOrUnknown(data['total']!, _totalMeta));
+    }
+    if (data.containsKey('buyer')) {
+      context.handle(
+          _buyerMeta, buyer.isAcceptableOrUnknown(data['buyer']!, _buyerMeta));
+    }
     if (data.containsKey('string_tool')) {
       context.handle(
           _stringToolMeta,
@@ -2840,6 +2956,26 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
           .read(DriftSqlType.string, data['${effectivePrefix}string_media']),
       stringMaterial: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}string_material']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      companyId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}company_id']),
+      companyName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}company_name']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      total: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}total']),
+      buyer: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}buyer']),
     );
   }
 
@@ -2865,6 +3001,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
   final Value<String?> amountUnitName;
   final Value<double?> amount;
   final Value<bool?> harvesting;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<int?> companyId;
+  final Value<String?> companyName;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<double?> unitPrice;
+  final Value<double?> total;
+  final Value<String?> buyer;
   final Value<String?> stringTool;
   final Value<String?> stringMaterial;
   final Value<String?> stringMedia;
@@ -2884,6 +3030,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     this.amountUnitName = const Value.absent(),
     this.amount = const Value.absent(),
     this.harvesting = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.companyId = const Value.absent(),
+    this.companyName = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.total = const Value.absent(),
+    this.buyer = const Value.absent(),
     this.stringTool = const Value.absent(),
     this.stringMaterial = const Value.absent(),
     this.stringMedia = const Value.absent(),
@@ -2904,6 +3060,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     this.amountUnitName = const Value.absent(),
     this.amount = const Value.absent(),
     this.harvesting = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.companyId = const Value.absent(),
+    this.companyName = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.total = const Value.absent(),
+    this.buyer = const Value.absent(),
     this.stringTool = const Value.absent(),
     this.stringMaterial = const Value.absent(),
     this.stringMedia = const Value.absent(),
@@ -2924,6 +3090,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     Expression<String>? amountUnitName,
     Expression<double>? amount,
     Expression<bool>? harvesting,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<int>? companyId,
+    Expression<String>? companyName,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<double>? unitPrice,
+    Expression<double>? total,
+    Expression<String>? buyer,
     Expression<String>? stringTool,
     Expression<String>? stringMaterial,
     Expression<String>? stringMedia,
@@ -2945,6 +3121,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       if (amountUnitName != null) 'amount_unit_name': amountUnitName,
       if (amount != null) 'amount': amount,
       if (harvesting != null) 'harvesting': harvesting,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (companyId != null) 'company_id': companyId,
+      if (companyName != null) 'company_name': companyName,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (total != null) 'total': total,
+      if (buyer != null) 'buyer': buyer,
       if (stringTool != null) 'string_tool': stringTool,
       if (stringMaterial != null) 'string_material': stringMaterial,
       if (stringMedia != null) 'string_media': stringMedia,
@@ -2967,6 +3153,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       Value<String?>? amountUnitName,
       Value<double?>? amount,
       Value<bool?>? harvesting,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<int?>? companyId,
+      Value<String?>? companyName,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<double?>? unitPrice,
+      Value<double?>? total,
+      Value<String?>? buyer,
       Value<String?>? stringTool,
       Value<String?>? stringMaterial,
       Value<String?>? stringMedia}) {
@@ -2986,6 +3182,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
       amountUnitName: amountUnitName ?? this.amountUnitName,
       amount: amount ?? this.amount,
       harvesting: harvesting ?? this.harvesting,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      companyId: companyId ?? this.companyId,
+      companyName: companyName ?? this.companyName,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      total: total ?? this.total,
+      buyer: buyer ?? this.buyer,
       stringTool: stringTool ?? this.stringTool,
       stringMaterial: stringMaterial ?? this.stringMaterial,
       stringMedia: stringMedia ?? this.stringMedia,
@@ -3040,6 +3246,36 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
     if (harvesting.present) {
       map['harvesting'] = Variable<bool>(harvesting.value);
     }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (companyId.present) {
+      map['company_id'] = Variable<int>(companyId.value);
+    }
+    if (companyName.present) {
+      map['company_name'] = Variable<String>(companyName.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (total.present) {
+      map['total'] = Variable<double>(total.value);
+    }
+    if (buyer.present) {
+      map['buyer'] = Variable<String>(buyer.value);
+    }
     if (stringTool.present) {
       map['string_tool'] = Variable<String>(stringTool.value);
     }
@@ -3070,6 +3306,16 @@ class ActivityDiaryTableCompanion extends UpdateCompanion<ActivityDiary> {
           ..write('amountUnitName: $amountUnitName, ')
           ..write('amount: $amount, ')
           ..write('harvesting: $harvesting, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('companyId: $companyId, ')
+          ..write('companyName: $companyName, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('total: $total, ')
+          ..write('buyer: $buyer, ')
           ..write('stringTool: $stringTool, ')
           ..write('stringMaterial: $stringMaterial, ')
           ..write('stringMedia: $stringMedia')
@@ -4043,6 +4289,64 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
   late final GeneratedColumn<String> stringMedia = GeneratedColumn<String>(
       'string_media', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _companyIdMeta =
+      const VerificationMeta('companyId');
+  @override
+  late final GeneratedColumn<int> companyId = GeneratedColumn<int>(
+      'company_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _companyNameMeta =
+      const VerificationMeta('companyName');
+  @override
+  late final GeneratedColumn<String> companyName = GeneratedColumn<String>(
+      'company_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _totalMeta = const VerificationMeta('total');
+  @override
+  late final GeneratedColumn<double> total = GeneratedColumn<double>(
+      'total', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _buyerMeta = const VerificationMeta('buyer');
+  @override
+  late final GeneratedColumn<String> buyer = GeneratedColumn<String>(
+      'buyer', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         api,
@@ -4063,7 +4367,17 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
         harvesting,
         stringTool,
         stringMaterial,
-        stringMedia
+        stringMedia,
+        productId,
+        productName,
+        companyId,
+        companyName,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        unitPrice,
+        total,
+        buyer
       ];
   @override
   String get aliasedName => _alias ?? 'activity_diary_no_network';
@@ -4179,6 +4493,54 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
           stringMedia.isAcceptableOrUnknown(
               data['string_media']!, _stringMediaMeta));
     }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('company_id')) {
+      context.handle(_companyIdMeta,
+          companyId.isAcceptableOrUnknown(data['company_id']!, _companyIdMeta));
+    }
+    if (data.containsKey('company_name')) {
+      context.handle(
+          _companyNameMeta,
+          companyName.isAcceptableOrUnknown(
+              data['company_name']!, _companyNameMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('total')) {
+      context.handle(
+          _totalMeta, total.isAcceptableOrUnknown(data['total']!, _totalMeta));
+    }
+    if (data.containsKey('buyer')) {
+      context.handle(
+          _buyerMeta, buyer.isAcceptableOrUnknown(data['buyer']!, _buyerMeta));
+    }
     return context;
   }
 
@@ -4226,6 +4588,26 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
           .read(DriftSqlType.string, data['${effectivePrefix}string_media']),
       stringMaterial: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}string_material']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      companyId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}company_id']),
+      companyName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}company_name']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      total: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}total']),
+      buyer: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}buyer']),
     );
   }
 
@@ -4256,6 +4638,16 @@ class ActDiaryNoNetworkTableCompanion
   final Value<String?> stringTool;
   final Value<String?> stringMaterial;
   final Value<String?> stringMedia;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<int?> companyId;
+  final Value<String?> companyName;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<double?> unitPrice;
+  final Value<double?> total;
+  final Value<String?> buyer;
   const ActDiaryNoNetworkTableCompanion({
     this.api = const Value.absent(),
     this.id = const Value.absent(),
@@ -4276,6 +4668,16 @@ class ActDiaryNoNetworkTableCompanion
     this.stringTool = const Value.absent(),
     this.stringMaterial = const Value.absent(),
     this.stringMedia = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.companyId = const Value.absent(),
+    this.companyName = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.total = const Value.absent(),
+    this.buyer = const Value.absent(),
   });
   ActDiaryNoNetworkTableCompanion.insert({
     this.api = const Value.absent(),
@@ -4297,6 +4699,16 @@ class ActDiaryNoNetworkTableCompanion
     this.stringTool = const Value.absent(),
     this.stringMaterial = const Value.absent(),
     this.stringMedia = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.companyId = const Value.absent(),
+    this.companyName = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.total = const Value.absent(),
+    this.buyer = const Value.absent(),
   });
   static Insertable<ActDiaryNoNetwork> custom({
     Expression<String>? api,
@@ -4318,6 +4730,16 @@ class ActDiaryNoNetworkTableCompanion
     Expression<String>? stringTool,
     Expression<String>? stringMaterial,
     Expression<String>? stringMedia,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<int>? companyId,
+    Expression<String>? companyName,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<double>? unitPrice,
+    Expression<double>? total,
+    Expression<String>? buyer,
   }) {
     return RawValuesInsertable({
       if (api != null) 'api': api,
@@ -4340,6 +4762,16 @@ class ActDiaryNoNetworkTableCompanion
       if (stringTool != null) 'string_tool': stringTool,
       if (stringMaterial != null) 'string_material': stringMaterial,
       if (stringMedia != null) 'string_media': stringMedia,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (companyId != null) 'company_id': companyId,
+      if (companyName != null) 'company_name': companyName,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (total != null) 'total': total,
+      if (buyer != null) 'buyer': buyer,
     });
   }
 
@@ -4362,7 +4794,17 @@ class ActDiaryNoNetworkTableCompanion
       Value<bool?>? harvesting,
       Value<String?>? stringTool,
       Value<String?>? stringMaterial,
-      Value<String?>? stringMedia}) {
+      Value<String?>? stringMedia,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<int?>? companyId,
+      Value<String?>? companyName,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<double?>? unitPrice,
+      Value<double?>? total,
+      Value<String?>? buyer}) {
     return ActDiaryNoNetworkTableCompanion(
       api: api ?? this.api,
       id: id ?? this.id,
@@ -4383,6 +4825,16 @@ class ActDiaryNoNetworkTableCompanion
       stringTool: stringTool ?? this.stringTool,
       stringMaterial: stringMaterial ?? this.stringMaterial,
       stringMedia: stringMedia ?? this.stringMedia,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      companyId: companyId ?? this.companyId,
+      companyName: companyName ?? this.companyName,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      total: total ?? this.total,
+      buyer: buyer ?? this.buyer,
     );
   }
 
@@ -4446,6 +4898,36 @@ class ActDiaryNoNetworkTableCompanion
     if (stringMedia.present) {
       map['string_media'] = Variable<String>(stringMedia.value);
     }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (companyId.present) {
+      map['company_id'] = Variable<int>(companyId.value);
+    }
+    if (companyName.present) {
+      map['company_name'] = Variable<String>(companyName.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (total.present) {
+      map['total'] = Variable<double>(total.value);
+    }
+    if (buyer.present) {
+      map['buyer'] = Variable<String>(buyer.value);
+    }
     return map;
   }
 
@@ -4470,7 +4952,17 @@ class ActDiaryNoNetworkTableCompanion
           ..write('harvesting: $harvesting, ')
           ..write('stringTool: $stringTool, ')
           ..write('stringMaterial: $stringMaterial, ')
-          ..write('stringMedia: $stringMedia')
+          ..write('stringMedia: $stringMedia, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('companyId: $companyId, ')
+          ..write('companyName: $companyName, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('total: $total, ')
+          ..write('buyer: $buyer')
           ..write(')'))
         .toString();
   }

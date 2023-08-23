@@ -8,7 +8,7 @@ import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../logger.dart';
 
-/// Bkav DucLQ custom 1 o nhat text
+///custom 1 o nhat text
 class TextFormFieldInputAiBook extends StatefulWidget {
   final String _label;
   final TextEditingController _textEditingController;
@@ -20,11 +20,11 @@ class TextFormFieldInputAiBook extends StatefulWidget {
   final bool changePass;
   final bool redBoder;
   final bool?
-      isNotValidStart; // HanhNTHe: xac dinh xem truong thong tin co bat buoc hay khong
+      isNotValidStart; //xac dinh xem truong thong tin co bat buoc hay khong
   final bool? isPhone;
   final bool? isFromEnterInfo;
-  final bool? isTime; // hanhNTHe: xac dinh truong chon thoi gian
-  final bool? isNotEdit; // bkav HanhNTHe: xac dinh xem duoc sua hay khong
+  final bool? isTime; //ac dinh truong chon thoi gian
+  final bool? isNotEdit; //xac dinh xem duoc sua hay khong
   final bool? isNotPass;
   final bool? isEnable;
   final TextInputType? keyboardType;
@@ -209,9 +209,9 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
         //             style:
         //                 StyleBkav.textStyleFW400(AppColor.labelInputText, 15)),
         labelText:" ${widget._label}",
-        labelStyle:  widget.redBoder?StyleBkav.textStyleFW400(AppColor.main, 14):StyleBkav.textStyleFW400(AppColor.gray11, 14),
+        labelStyle:  widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14):StyleOfit.textStyleFW400(AppColor.gray11, 14),
         hintText: " ${widget._label}",
-        hintStyle:  widget.redBoder?StyleBkav.textStyleFW400(AppColor.main, 14):StyleBkav.textStyleFW400(AppColor.gray1, 14),
+        hintStyle:  widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14):StyleOfit.textStyleFW400(AppColor.gray1, 14),
         suffixIcon: widget.isNotEdit ?? false
             ? null
             : widget.isTime != null && _showDeleteText && _hasFocus
@@ -359,7 +359,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
     }
     return Focus(
       child: TextFormField(
-        style: widget.redBoder?StyleBkav.textStyleFW400(AppColor.main, 14,height: 1.2):StyleBkav.textStyleFW400(Colors.black, 14,height: 1.2),
+        style: widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14,height: 1.2):StyleOfit.textStyleFW400(Colors.black, 14,height: 1.2),
         enabled: widget.isEnable,
           readOnly: widget.isNotEdit ?? false,
           onTap: () {
