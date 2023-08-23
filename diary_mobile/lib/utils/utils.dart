@@ -797,12 +797,32 @@ class Utils {
             fileContent: base64Encode(newFile.readAsBytesSync().toList()),
             fileExtension: newFile.path.split('/').last.split('.').last,
         filePath: newFile.path,
-        contentView: type == "video" || mimeType == "mp4" ? await extractImageFromVideo(newFile.path) : base64Encode(newFile.readAsBytesSync().toList()),
-            type: type == "video" || mimeType == "mp4" ? "2" : "1");
+        contentView: type == "video" || isVideoFormat(mimeType) ? await extractImageFromVideo(newFile.path) : base64Encode(newFile.readAsBytesSync().toList()),
+            type: type == "video" || isVideoFormat(mimeType) ? "2" : "1");
         listItemImage.add(imageEntity);
       }
     }
     return listItemImage;
+  }
+
+  static bool isVideoFormat(String fileExtension) {
+    // List of common video file extensions for iOS and Android
+    List<String> iosVideoFormats = [
+      'mov',
+      'mp4',
+      'm4v',
+      // Add other iOS video file extensions if needed
+    ];
+
+    List<String> androidVideoFormats = [
+      'mp4',
+      '3gp',
+      'avi',
+      'hevc',
+      // Add other Android video file extensions if needed
+    ];
+
+    return iosVideoFormats.contains(fileExtension.toLowerCase()) || androidVideoFormats.contains(fileExtension.toLowerCase());
   }
 
   static Future<String?> extractImageFromVideo(String videoPath) async {
