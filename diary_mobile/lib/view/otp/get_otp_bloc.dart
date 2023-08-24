@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../utils/forget_password_status.dart';
+import '../../utils/status/forget_password_status.dart';
 import '../../utils/logger.dart';
 import '../../view_model/bloc_event.dart';
 import '../../view_model/bloc_state.dart';

@@ -4,17 +4,17 @@ import '../../../data/entity/diary/diary.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/utils.dart';
-import '../detail_diary/detail_diary_page.dart';
+import '../../utils.dart';
+import '../../../view/diary/detail_diary/detail_diary_page.dart';
 
 ///Bkav Nhungltk: item diary
-class ItemActivity extends StatefulWidget {
+class ItemActivitySelect extends StatefulWidget {
   final ActivityDiary diary;
   final int amountSelected; // xac dinh xem item co dang duoc chon khong
   final bool isChoose; // xac dinh xem item co dang duoc chon khong
   final Function(bool, ActivityDiary) callbackChooseItem;
 
-  const ItemActivity(
+  const ItemActivitySelect(
       {Key? key,
       required this.diary,
       required this.amountSelected,
@@ -23,10 +23,10 @@ class ItemActivity extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ItemActivityState();
+  State<StatefulWidget> createState() => _ItemActivitySelectState();
 }
 
-class _ItemActivityState extends State<ItemActivity> {
+class _ItemActivitySelectState extends State<ItemActivitySelect> {
   bool isExpansion = false;
   bool isCheckBox = false;
 
@@ -126,6 +126,20 @@ class _ItemActivityState extends State<ItemActivity> {
                       child: Container(
                           alignment: Alignment.centerLeft,
                           margin: const EdgeInsets.only(top: 5),
+                          child: RichText(
+                            text: Utils.convertText(
+                                "Diện tích: ",
+                                "${widget.diary.actionArea ?? ''} ${widget.diary.actionAreaUnitName}",
+                                AppColor.blue15,
+                                14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ),
+                    SizedBox(
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(top: 10),
                           child: RichText(
                             text: Utils.convertText(
                                 "Sản lượng thu hoạch: ",

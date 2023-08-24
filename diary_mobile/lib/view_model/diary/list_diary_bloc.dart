@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/entity/diary/diary.dart';
 
 import '../../data/repository.dart';
-import '../../utils/form_submission_status.dart';
+import '../../utils/status/form_submission_status.dart';
 import '../../utils/utils.dart';
 import '../../view/diary_activity/activity_writeby/add_activity_writeby.dart';
 import '../bloc_event.dart';
@@ -20,6 +20,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     on<AddChooseDiary>(_addChooseDiary);
     on<AddChooseAllDiary>(_addChooseAllDiary);
     on<GetListDiarySelected>(_getListDiarySelected);
+    on<SearchListDiaryEvent>(_searchListDiary);
 /*    add(GetListDiaryEvent());*/
   }
 
@@ -58,6 +59,10 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
         listDate: distinctMonthsAndYears,
         listSelected: listSelected,
         lengthDiary: listDiary.length,
+        listSearchDiary: list,
+        listSearchSelected: listSelected,
+        listSearchDate: distinctMonthsAndYears,
+        lengthSearchDiary: listDiary.length,
         amountSelected: 0));
   }
 
@@ -139,6 +144,51 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     }
     emit(state.copyWith(isShowProgress: false, listDiarySelected: listSelected));
   }
+
+  FutureOr<void> _searchListDiary(SearchListDiaryEvent event, Emitter<ListDiaryState> emit) {
+    List<List<Diary>> list = state.listSearchDiary;
+    List<String> listDate = state.listSearchDate;
+    List<List<Diary>> searchResults = List.generate(list.length, (index) => []);
+    for (int i = 0; i < list.length; i++) {
+      List<Diary> searchSection = [];
+      for (int j = 0; j < list[i].length; j++) {
+        Diary item = list[i][j];
+        if ((item.name ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
+            (item.cropName ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
+            (item.farmerName ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
+            (Utils.formatTime(item.startDate ?? "")).toLowerCase().contains(event.textSearch.toLowerCase())) {
+          searchSection.add(item);
+        }
+      }
+      searchResults[i] = searchSection; // Lưu kết quả tìm kiếm cho danh sách con tại vị trí tương ứng
+    }
+    searchResults.removeWhere((element) => element.isEmpty);
+    int totalSublistItems = 0;
+    for (int i = 0; i < searchResults.length; i++) {
+      totalSublistItems += searchResults[i].length; // Cộng tổng số phần tử con
+    }
+    List<List<bool>> searchBoolResult = List.generate(
+      searchResults.length,
+          (index) => List.generate(searchResults[index].length, (innerIndex) => false),
+    );
+    searchBoolResult.removeWhere((element) => element.isEmpty);
+    List<String> newListDate = [];
+    for (var element in searchResults) {
+      for (var item in element) {
+        DateTime dateTime = Utils.formatStringToDate(item.startDate ?? "");
+        String monthAndYear = '${dateTime.month}/${dateTime.year}';
+        //String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
+        if (!newListDate.contains(monthAndYear)) {
+          newListDate.add(monthAndYear);
+        }
+      }
+    }
+    print("HoangCV: newListDate: ${searchBoolResult.toString()}");
+
+    newListDate.removeWhere((element) => element.isEmpty);
+    print("HoangCV: newListDate: ${newListDate.toString()}");
+    emit(state.copyWith(listDiary: searchResults, listSelected: searchBoolResult, listDate: newListDate, lengthDiary: totalSublistItems, amountSelected: 0));
+  }
 }
 
 class ListDiaryEvent extends BlocEvent {
@@ -180,6 +230,15 @@ class GetListDiarySelected extends ListDiaryEvent {
   List<Object?> get props => [context];
 }
 
+class SearchListDiaryEvent extends ListDiaryEvent {
+  SearchListDiaryEvent(this.textSearch);
+
+  final String textSearch;
+
+  @override
+  List<Object?> get props => [textSearch];
+}
+
 class ListDiaryState extends BlocState {
   @override
   List<Object?> get props => [
@@ -191,36 +250,51 @@ class ListDiaryState extends BlocState {
         amountSelected,
         lengthDiary,
         listDiarySelected,
+        listSearchDiary,
+        listSearchSelected,
+        listSearchDate,
+        lengthSearchDiary,
       ];
   final List<List<Diary>> listDiary;
+  final List<List<Diary>> listSearchDiary;
   final List<Diary> listDiarySelected;
+  final List<String> listSearchDate;
   final List<String> listDate;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final List<List<bool>> listSelected;
+  final List<List<bool>> listSearchSelected;
   final int amountSelected;
   final int lengthDiary;
+  final int lengthSearchDiary;
 
-  ListDiaryState({
-    this.listDiarySelected = const [],
-    this.listDiary = const [],
-    this.listDate = const [],
-    this.formStatus = const InitialFormStatus(),
-    this.isShowProgress = true,
-    this.listSelected = const [],
-    this.amountSelected = 0,
-    this.lengthDiary = -1,
-  });
+  ListDiaryState(
+      {this.listDiarySelected = const [],
+      this.listSearchDiary = const [],
+      this.listDiary = const [],
+      this.listSearchSelected = const [],
+      this.listDate = const [],
+      this.listSearchDate = const [],
+      this.formStatus = const InitialFormStatus(),
+      this.isShowProgress = true,
+      this.listSelected = const [],
+      this.amountSelected = 0,
+      this.lengthDiary = -1,
+      this.lengthSearchDiary = -1});
 
   ListDiaryState copyWith({
     List<List<Diary>>? listDiary,
+    List<List<Diary>>? listSearchDiary,
     List<String>? listDate,
+    List<String>? listSearchDate,
     List<Diary>? listDiarySelected,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<List<bool>>? listSelected,
+    List<List<bool>>? listSearchSelected,
     int? amountSelected,
     int? lengthDiary,
+    int? lengthSearchDiary,
   }) {
     return ListDiaryState(
       listDiary: listDiary ?? this.listDiary,
@@ -231,6 +305,10 @@ class ListDiaryState extends BlocState {
       amountSelected: amountSelected ?? this.amountSelected,
       lengthDiary: lengthDiary ?? this.lengthDiary,
       listDiarySelected: listDiarySelected ?? this.listDiarySelected,
+      listSearchDiary: listSearchDiary ?? this.listSearchDiary,
+      listSearchSelected: listSearchSelected ?? this.listSearchSelected,
+      listSearchDate: listSearchDate ?? this.listSearchDate,
+      lengthSearchDiary: lengthSearchDiary ?? this.lengthSearchDiary,
     );
   }
 }

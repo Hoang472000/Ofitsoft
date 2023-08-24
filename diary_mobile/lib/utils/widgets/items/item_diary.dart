@@ -3,8 +3,8 @@ import '../../../data/entity/diary/diary.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/utils.dart';
-import '../detail_diary/detail_diary_page.dart';
+import '../../utils.dart';
+import '../../../view/diary/detail_diary/detail_diary_page.dart';
 
 ///item diary
 class ItemDiary extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -11,7 +11,7 @@ import '../../data/remote_data/object_model/object_result.dart';
 import '../../data/repository.dart';
 import '../../generated/l10n.dart';
 import '../../utils/constants/shared_preferences_key.dart';
-import '../../utils/form_submission_status.dart';
+import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';

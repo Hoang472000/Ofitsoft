@@ -2,9 +2,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../generated/l10n.dart';
-import '../../resource/color.dart';
-import '../../resource/style.dart';
+import '../../../generated/l10n.dart';
+import '../../../resource/color.dart';
+import '../../../resource/style.dart';
 
 class BkavTextFormField extends StatefulWidget{
   final TextEditingController textEditingController;

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../generated/l10n.dart';
 import '../../utils/constants/shared_preferences_key.dart';
-import '../../utils/forget_password_status.dart';
+import '../../utils/status/forget_password_status.dart';
 import '../../utils/validator.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';

@@ -7,7 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../../utils/form_submission_status.dart';
+import '../../utils/status/form_submission_status.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 

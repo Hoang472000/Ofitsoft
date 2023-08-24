@@ -1,6 +1,6 @@
 
 
-import '../../../utils/constans/api_const.dart';
+import '../../../utils/constants/api_const.dart';
 import '../network_processor/http_method.dart';
 import '../object_model/object_command_data.dart';
 

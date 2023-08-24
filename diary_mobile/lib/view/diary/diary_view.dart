@@ -10,7 +10,7 @@ import '../../utils/widgets/bkav_app_bar.dart';
 import '../../view_model/diary/list_diary_bloc.dart';
 import '../diary_activity/activity_writeby/add_activity_writeby.dart';
 import 'detail_diary/detail_diary_page.dart';
-import 'item_diary/item_diary.dart';
+import '../../utils/widgets/items/item_diary.dart';
 
 class DiaryView extends StatefulWidget {
   const DiaryView({super.key});
@@ -77,6 +77,8 @@ class _DiaryViewState extends State<DiaryView> {
                             setState(() {
                               searchString = value.toLowerCase();
                             });
+                            blocContext.read<ListDiaryBloc>().add(
+                                SearchListDiaryEvent(value));
                           }
                         },
                         decoration: const InputDecoration(
@@ -104,6 +106,8 @@ class _DiaryViewState extends State<DiaryView> {
                                 SizedBox(width: 5,),
                                 IconButton(
                                     onPressed: () {
+                                      blocContext.read<ListDiaryBloc>().add(
+                                          AddChooseAllDiary(state.amountSelected == state.lengthDiary));
                                     },
                                     icon: state.amountSelected == state.lengthDiary
                                         ? const Icon(
@@ -132,6 +136,8 @@ class _DiaryViewState extends State<DiaryView> {
                                 Text("Thêm nhiều", style: StyleOfit.textStyleFW500(AppColor.gray57, 14)),
                                 IconButton(
                                     onPressed: () {
+                                      blocContext.read<ListDiaryBloc>().add(
+                                          GetListDiarySelected(context));
                                     },
                                     icon: const Icon(
                                       Icons.edit_note_outlined,
@@ -208,19 +214,6 @@ class _DiaryViewState extends State<DiaryView> {
             }),
       ),
     );
-  }
-
-  List<Diary> getTasksForMonthAndYear(String monthAndYear, List<Diary> list) {
-    List<Diary> tasksForMonthAndYear = [];
-    list.sort((a, b) => (b.startDate ?? "").compareTo((a.startDate ?? "")));
-    for (var task in list) {
-      DateTime dateTime = Utils.formatStringToDate(task.startDate ?? "");
-      String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
-      if (taskMonthAndYear == monthAndYear) {
-        tasksForMonthAndYear.add(task);
-      }
-    }
-    return tasksForMonthAndYear;
   }
 }
 

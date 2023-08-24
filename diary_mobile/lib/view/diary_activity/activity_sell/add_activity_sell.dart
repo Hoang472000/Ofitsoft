@@ -7,13 +7,13 @@ import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/form_submission_status.dart';
+import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../utils/widgets/text_form_input.dart';
+import '../../../utils/widgets/input/text_form_input.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/add_activity_sell_bloc.dart';
 
 class AddActivitySellPage extends StatefulWidget {

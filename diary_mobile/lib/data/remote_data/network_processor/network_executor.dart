@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../utils/constans/api_parameter_const.dart';
+import '../../../utils/constants/api_parameter_const.dart';
 import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/logger.dart';
 import '../../local_data/diary_db.dart';

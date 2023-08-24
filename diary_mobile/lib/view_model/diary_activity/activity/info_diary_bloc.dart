@@ -8,7 +8,7 @@ import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
 import '../../../data/repository.dart';
-import '../../../utils/form_submission_status.dart';
+import '../../../utils/status/form_submission_status.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 

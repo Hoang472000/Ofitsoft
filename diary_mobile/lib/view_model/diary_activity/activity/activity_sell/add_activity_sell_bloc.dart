@@ -4,7 +4,7 @@ import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,7 +20,7 @@ import '../../../../utils/constants/shared_preferences_key.dart';
 import '../../../../utils/extenstion/extenstions.dart';
 import '../../../../utils/extenstion/input_register_model.dart';
 import '../../../../utils/extenstion/service_info_extension.dart';
-import '../../../../utils/form_submission_status.dart';
+import '../../../../utils/status/form_submission_status.dart';
 import '../../../../utils/utils.dart';
 import '../../../bloc_event.dart';
 import '../../../bloc_state.dart';
@@ -146,6 +146,16 @@ class AddActivitySellBloc
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
     int indexYield = listUnitYield.indexWhere(
         (element) => element.id == event.activityDiary[0].amountUnitId);
+    double amountYield = 0;
+    for (int i = 0; i < event.activityDiary.length; i++) {
+      amountYield += ((event.activityDiary[i].amount ?? 0) *
+          (listUnitYield[listUnitYield.indexWhere((element) =>
+                      element.id == event.activityDiary[i].amountUnitId)]
+                  .convert ??
+              0));
+    }
+    double convert = (listUnitYield[0].convert??0)/(listUnitYield[indexYield].convert??0);
+    print("HoangCV: amountYield: ${amountYield} : $convert");
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
@@ -166,7 +176,7 @@ class AddActivitySellBloc
       moTaController: TextEditingController(),
       donViController: TextEditingController(
           text: "${event.activityDiary[0].amountUnitName}"),
-      soLuongController: TextEditingController(text: "${event.activityDiary[0].amount}"),
+      soLuongController: TextEditingController(text: "${amountYield * convert}"),
       donGiaController: TextEditingController(text: ''),
     ));
     _initViewAdd(emitter);
@@ -213,6 +223,10 @@ class AddActivitySellBloc
           hasSearch: event.list[event.index].hasSearch ?? false);
       if (result != -1) {
         //   setState(() {
+        double convert = 0;
+        if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
+          convert = event.list[event.index].valueSelected.convert;
+        }
         event.list[event.index].positionSelected = result;
         event.list[event.index].valueDefault = null;
         event.list[event.index].valueSelected =
@@ -231,9 +245,19 @@ class AddActivitySellBloc
           ));
         }
         if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
+          print("HoangCV: dơn vị : ${convert} : ${(double.parse(state.soLuongController!.text) * convert)/(event.list[event.index].valueSelected.convert)}}");
+          double inputValue = double.parse(state.soLuongController!.text);
+          double conversionFactor = convert;
+          double selectedValue = event.list[event.index].valueSelected.convert;
+          double result = (inputValue * conversionFactor) / selectedValue;
+          String formattedResult = formatNumber(result);
           emit(state.copyWith(
               donViController: TextEditingController(
-                  text: event.list[event.index].valueSelected.name)));
+                  text: event.list[event.index].valueSelected.name),
+          soLuongController: TextEditingController(
+            text: "$formattedResult"
+          )));
+          state.listWidgetArea[0].controller = state.soLuongController;
         }
         if (event.list[event.index].title.compareTo("Người bán") == 0) {
           emit(state.copyWith(
@@ -241,6 +265,19 @@ class AddActivitySellBloc
           ));
         }
       }
+    }
+  }
+
+  String formatNumber(double number) {
+    String formatted = number.toStringAsFixed(3);
+    if (formatted.contains('.') && formatted.endsWith('000')) {
+      return formatted.substring(0, formatted.length - 4); // Loại bỏ số 0 thừa
+    } else if (formatted.endsWith('00')) {
+      return formatted.substring(0, formatted.length - 2); // Loại bỏ 2 số 0 thừa
+    } else if (formatted.endsWith('0')) {
+      return formatted.substring(0, formatted.length - 1); // Loại bỏ 1 số 0 thừa
+    } else {
+      return formatted; // Giữ nguyên nếu không có số 0 thừa
     }
   }
 

@@ -6,14 +6,14 @@ import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:diary_mobile/view/diary_activity/activity_sell/add_activity_sell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/entity/diary/diary.dart';
 import '../../../../data/repository.dart';
-import '../../../../utils/form_submission_status.dart';
+import '../../../../utils/status/form_submission_status.dart';
 import '../../../bloc_event.dart';
 import '../../../bloc_state.dart';
 

@@ -10,7 +10,7 @@ import '../../../data/entity/diary/diary.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/constans/name_icon.dart';
+import '../../../utils/constants/name_icon.dart';
 import '../../../utils/extenstion/extenstions.dart';
 import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';

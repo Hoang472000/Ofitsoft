@@ -12,7 +12,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/activity_select_bloc.dart';
-import '../../diary/item_diary/item_activity.dart';
+import '../../../utils/widgets/items/item_activity_select.dart';
 
 class ActivitySelectPage extends StatefulWidget {
   const ActivitySelectPage(
@@ -121,6 +121,8 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
                                   SizedBox(width: 5,),
                                   IconButton(
                                       onPressed: () {
+                                        blocContext.read<ActivitySelectBloc>().add(
+                                            AddChooseAllDiary(state.amountSelected == state.listDiaryActivity.length));
                                       },
                                       icon: state.amountSelected == state.listDiaryActivity.length
                                           ? const Icon(
@@ -169,7 +171,7 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
                         ListView.builder(
                           itemCount: state.listDiaryActivity.length,
                           itemBuilder: (BuildContext contextBloc, int index) {
-                            return ItemActivity(diary: state.listDiaryActivity[index],
+                            return ItemActivitySelect(diary: state.listDiaryActivity[index],
                               amountSelected: state.amountSelected,
                               isChoose: state.listSelected[index],
                               callbackChooseItem: (isChoose, diary)  {

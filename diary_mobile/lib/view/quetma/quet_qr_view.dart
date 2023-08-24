@@ -8,7 +8,7 @@ import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../generated/l10n.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
-import '../../utils/form_submission_status.dart';
+import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';

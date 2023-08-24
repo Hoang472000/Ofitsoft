@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +12,7 @@ import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/extenstion/extenstions.dart';
 import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';
-import '../../../utils/form_submission_status.dart';
+import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';

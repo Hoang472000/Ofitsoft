@@ -5,8 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
-import '../../../utils/change_password_status.dart';
-import '../../../utils/constans/status_const.dart';
+import '../../../utils/status/change_password_status.dart';
+import '../../../utils/constants/status_const.dart';
 import '../../../utils/validator.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';

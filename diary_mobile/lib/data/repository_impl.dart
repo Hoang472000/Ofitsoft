@@ -10,8 +10,8 @@ import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_executor.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
-import 'package:diary_mobile/utils/constans/api_const.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/api_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -492,7 +492,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListMonitorDiary(id);
+    return DiaryDB.instance.getListMonitorDiary();
   }
 
   @override

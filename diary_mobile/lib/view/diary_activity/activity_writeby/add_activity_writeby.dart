@@ -13,14 +13,14 @@ import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/form_submission_status.dart';
+import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../utils/widgets/media/image.dart';
-import '../../../utils/widgets/media/video.dart';
+import '../../../utils/widgets/media/image_widget.dart';
+import '../../../utils/widgets/media/video_widget.dart';
 import '../../../view_model/diary_activity/activity/add_activity_writeby_bloc.dart';
 import '../activity/add_activity_sub/add_activity_sub.dart';
 

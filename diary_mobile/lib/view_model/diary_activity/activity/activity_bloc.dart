@@ -5,14 +5,14 @@ import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/utils/constans/status_const.dart';
+import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
 import '../../../data/repository.dart';
-import '../../../utils/form_submission_status.dart';
+import '../../../utils/status/form_submission_status.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
@@ -34,15 +34,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     print("HoangCV: runtime1 :event harvesting : ${event.harvesting}");
     if (event.action.compareTo("activity") == 0) {
       final listDiaryActivity = await repository.getListActivityDiary(event.id);
-      listDiaryActivity.forEach((element) {
-        print("HoangCV: runtime2  element id: ${element.id}");
-      });
-
       emitter(state.copyWith(
           isShowProgress: false, listDiaryActivity: listDiaryActivity));
     } else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
-      print("HoangCV: runtime3  :");
+
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
       emitter(state.copyWith(
           isShowProgress: false, listDiaryMonitor: listDiaryMonitor));

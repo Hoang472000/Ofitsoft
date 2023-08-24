@@ -1,40 +1,35 @@
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../../generated/l10n.dart';
-import '../../resource/assets.dart';
-import '../../resource/color.dart';
-import '../../resource/style.dart';
-import '../logger.dart';
-import '../utils.dart';
+import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
+import '../../../resource/color.dart';
+import '../../../resource/style.dart';
+import '../../logger.dart';
 
 ///custom 1 o nhat text
-class TextFormFieldInput extends StatefulWidget {
+class TextFormFieldInputAiBook extends StatefulWidget {
   final String _label;
   final TextEditingController _textEditingController;
   final bool _isTypePassword;
-
   final bool _errorValidate;
   final FocusNode _focusNode;
   final String errorValidate;
   final Function(bool) checkPass;
   final bool changePass;
+  final bool redBoder;
   final bool?
-      isNotValidStart; // xac dinh xem truong thong tin co bat buoc hay khong
+      isNotValidStart; //xac dinh xem truong thong tin co bat buoc hay khong
   final bool? isPhone;
-  final bool? isNumber;
   final bool? isFromEnterInfo;
-  final bool? isTime; // xac dinh truong chon thoi gian
-  final bool? isNotEdit; // xac dinh xem duoc sua hay khong
+  final bool? isTime; //ac dinh truong chon thoi gian
+  final bool? isNotEdit; //xac dinh xem duoc sua hay khong
   final bool? isNotPass;
-   final bool? noBorder; // set noBorder
-  final bool? underLine; // dung underLine thay cho OutLine
-  final Function(String)? onChangeCallBack;
-  final bool? isChangeCallBack;
+  final bool? isEnable;
+  final TextInputType? keyboardType;
 
-  const TextFormFieldInput(
+  const TextFormFieldInputAiBook(
       this._label,
       this._textEditingController,
       this._isTypePassword,
@@ -43,21 +38,20 @@ class TextFormFieldInput extends StatefulWidget {
       this.errorValidate,
       this.checkPass,
       this.changePass,
+      this.redBoder,
       {Key? key,
       this.isNotValidStart,
       this.isPhone,
-      this.isNumber,
       this.isFromEnterInfo,
       this.isTime, this.isNotEdit,
-      this.isNotPass, this.noBorder, this.underLine,
-      this.onChangeCallBack, this.isChangeCallBack})
+      this.isNotPass,this.isEnable,  this.keyboardType})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _TextFormFieldInputState();
 }
 
-class _TextFormFieldInputState extends State<TextFormFieldInput> {
+class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
   bool _showDeleteText = true;
   bool _obscureText = true;
   bool _showAsterisk = false;
@@ -66,6 +60,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
   bool hideError = false;
   bool onTap = true;
 
+  //Bkav Nhungltk
   bool _hasFocus = false;
 
   // HanhNTHe add
@@ -117,37 +112,36 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
     super.dispose();
   }
 
-  ///show icon * mau do
+  /// Bkav DucLQ show icon * mau do
   void showAsterrick(bool show) {
     setState(() {
       _showAsterisk = show;
     });
   }
 
-  //hien thi thong bao text null
+  //Bkav Nhungltk: hien thi thong bao text null
   void textIsNotEmplty(bool textIsNotEmpty) {
     setState(() {
       _validatorTextIsEmpty = !textIsNotEmpty;
     });
   }
 
-  ///ham nay de tao lai deco
+  /// Bkav DucLQ ham nay de tao lai deco
   InputDecoration createInputDecoration() {
     return InputDecoration(
-        fillColor: const Color(0xFFFFFFFF),
-        counterText: "",
+        fillColor: Colors.white,
         filled: true,
         contentPadding:
-        widget.noBorder == false?
-            const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0):
-        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-        focusedBorder: widget.underLine==false?OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF08B7DD), width: 1.0)):UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF08B7DD)),
+            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 20.0),
+        enabledBorder:  OutlineInputBorder(
+          borderRadius: BorderRadius.circular(40),
+          borderSide:widget.redBoder?const BorderSide(color: AppColor.main, width: 1.0): const BorderSide(color: AppColor.gray1, width: 1.0),
         ),
-        border: widget.noBorder== false?OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(40),
+            borderSide: const BorderSide(color: AppColor.main, width: 1.0)),
+        border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(40),
             borderSide: BorderSide(
                 color: widget.isNotEdit ?? false
                     ? AppColor.redDD
@@ -157,11 +151,9 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                                 (widget.isNotValidStart != null &&
                                     !widget.isNotValidStart!))
                         ? AppColor.redDD
-                        : const Color(0xFFBDBDBD) ,
-                width: 1.0)) : widget.underLine==true?UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        ): InputBorder.none,
-        errorText: widget.isNotEdit ?? false//
+                        : const Color(0xFFBDBDBD) /*Bkav Nhungltk*/,
+                width: 1.0)),
+ /*       errorText: widget.isNotEdit ?? false//
             ? widget.errorValidate
             : (widget.isNotValidStart == null ||
                     (widget.isNotValidStart != null &&
@@ -169,58 +161,63 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                 ? (widget.changePass == true &&
                         _validatorTextIsEmpty &&
                         !hideError && !(widget.isNotPass ?? false)
-                    ? "${widget._label} ${S.of(context).not_emty}"
+                    // ? "${widget._label} ${S.of(context).not_emty}"
+                      ? S.of(context).pass_empty
                     : (widget._errorValidate || _validatorTextIsEmpty) &&
                             !hideError
                         ? widget.errorValidate
                         : null)
-                : null,
-        label: (_showAsterisk /*&& (_notEmpty*/ ||
-                _textIsNotEmpty) /*)*/
-            ? Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Flexible(
-                    child: Text(widget._label,
-                        style: StyleOfit.textStyleFW400(
-                            _hasFocus || _textIsNotEmpty
-                                ? AppColor.black22
-                                : AppColor.labelInputText,
-                            16)),
-                  ),
-                  widget.isNotValidStart == null ||
-                          (widget.isNotValidStart != null &&
-                              !widget.isNotValidStart!)
-                      ? Flexible(
-                          child: Text(" *",
-                              style:
-                                  StyleOfit.textStyleFW400(AppColor.redDD, 16)),
-                        )
-                      : Container()
-                ],
-              )
-            : (widget.isNotValidStart != null && !widget.isNotValidStart!)
-                ? RichText(
-                    text: TextSpan(children: [
-                      TextSpan(
-                          text: widget._label,
-                          style: StyleOfit.textStyleFW400(
-                              AppColor.labelInputText, 14)),
-                      TextSpan(
-                          text: "*",
-                          style: StyleOfit.textStyleFW400(AppColor.redDD, 16)),
-                    ]),
-                    textScaleFactor: MediaQuery.of(context).textScaleFactor,
-                  )
-                : Text(widget._label,
-                    style:
-                        StyleOfit.textStyleFW400(AppColor.labelInputText, 14)),
-        suffixIcon: widget.isNotEdit ?? false || widget.noBorder == true
+                : null,*/
+        // label: (_showAsterisk /*Bkav Nhungltk && (_notEmpty*/ ||
+        //         _textIsNotEmpty) /*)*/
+        //     ? Row(
+        //         mainAxisSize: MainAxisSize.min,
+        //         children: <Widget>[
+        //           Flexible(
+        //             child: Text(widget._label,
+        //                 style: StyleBkav.textStyleFW400(
+        //                     _hasFocus || _textIsNotEmpty
+        //                         ? AppColor.black22
+        //                         : AppColor.labelInputText,
+        //                     0)),
+        //           ),
+        //           widget.isNotValidStart == null ||
+        //                   (widget.isNotValidStart != null &&
+        //                       !widget.isNotValidStart!)
+        //               ? Flexible(
+        //                   child: Text("*",
+        //                       style:
+        //                           StyleBkav.textStyleFW400(AppColor.redDD, 0)),
+        //                 )
+        //               : Container()
+        //         ],
+        //       )
+        //     : (widget.isNotValidStart != null && !widget.isNotValidStart!)
+        //         ? RichText(
+        //             text: TextSpan(children: [
+        //               TextSpan(
+        //                   text: widget._label,
+        //                   style: StyleBkav.textStyleFW400(
+        //                       AppColor.labelInputText, 14)),
+        //               TextSpan(
+        //                   text: "*",
+        //                   style: StyleBkav.textStyleFW400(AppColor.redDD, 16)),
+        //             ]),
+        //             textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        //           )
+        //         : Text(widget._label,
+        //             style:
+        //                 StyleBkav.textStyleFW400(AppColor.labelInputText, 15)),
+        labelText:" ${widget._label}",
+        labelStyle:  widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14):StyleOfit.textStyleFW400(AppColor.gray11, 14),
+        hintText: " ${widget._label}",
+        hintStyle:  widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14):StyleOfit.textStyleFW400(AppColor.gray1, 14),
+        suffixIcon: widget.isNotEdit ?? false
             ? null
             : widget.isTime != null && _showDeleteText && _hasFocus
                 ? IconButton(
                     color: AppColor.black22,
-                    //open lich
+                    //Bkav HanhNTHe: open lich
                     icon: SvgPicture.asset(
                       IconAsset.icLich,
                       width: 16,
@@ -235,81 +232,83 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                   )
                 : (!widget._isTypePassword
                     ? _showDeleteText && _hasFocus
-                        ? Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.center, // added line
-                            mainAxisSize: MainAxisSize.min, // added line
-                            children: <Widget>[
-                                Container(
-                                    width: 24,
-                                    height: 24,
-                                    decoration: const BoxDecoration(
-                                      // image: DecorationImage(
-                                      //     image: AssetImage(
-                                      //         IconAsset.backgroundClear),
-                                      //     fit: BoxFit.cover),
-                                    ),
-                                    child: Transform.scale(
-                                      scale: 2,
-                                      child: IconButton(
-                                        color: AppColor.black22,
-                                        icon:
-                                            //fix loi fucus bi mau xanh
-                                            const Icon(
-                                          Icons.clear,
-                                          color: AppColor.main,
-                                          size: 8,
-                                        ),
-                                        onPressed: () {
-                                          widget._textEditingController.clear();
-                                          _textIsNotEmpty = false;
-                                          showDeleteText(false);
-                                        },
-                                      ),
-                                    ))
-                              ])
+                        ?
+                          // Row(
+                          //   mainAxisAlignment:
+                          //       MainAxisAlignment.center, // added line
+                          //   mainAxisSize: MainAxisSize.min, // added line
+                          //   children: <Widget>[
+                          //       Container(
+                          //           width: 24,
+                          //           height: 24,
+                          //           decoration: const BoxDecoration(
+                          //             // image: DecorationImage(
+                          //             //     image: AssetImage(
+                          //             //         IconAsset.backgroundClear),
+                          //             //     fit: BoxFit.cover),
+                          //           ),
+                          //           child: Transform.scale(
+                          //             scale: 2,
+                          //             child: IconButton(
+                          //               color: AppColor.black22,
+                          //               icon:
+                          //                   //Bkav Nhungltk: fix loi fucus bi mau xanh
+                          //                   const Icon(
+                          //                 Icons.clear,
+                          //                 color: AppColor.black22,
+                          //                 size: 8,
+                          //               ),
+                          //               onPressed: () {
+                          //                 widget._textEditingController.clear();
+                          //                 _textIsNotEmpty = false;
+                          //                 showDeleteText(false);
+                          //               },
+                          //             ),
+                          //           ))
+                          //     ])
+                        null
                         : null
-                    : _showDeleteText && _hasFocus //
+                    : _showDeleteText && _hasFocus //Bkav Nhungltk
                         ? Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween, // added line
                             mainAxisSize: MainAxisSize.min, // added line
                             children: <Widget>[
-                              Container(
-                                  width: 24,
-                                  height: 24,
-                                  decoration: const BoxDecoration(
-                                    // image: DecorationImage(
-                                    //     image: AssetImage(
-                                    //         IconAsset.backgroundClear),
-                                    //     fit: BoxFit.cover),
-                                  ),
-                                  child: Transform.scale(
-                                    scale: 2,
-                                    child: IconButton(
-                                      color: AppColor.black22,
-                                      icon: const Icon(
-                                        Icons.clear,
-                                        color: AppColor.main,
-                                        size: 8,
-                                      ),
-                                      onPressed: () {
-                                        widget._textEditingController.clear();
-                                        //
-                                        _textIsNotEmpty = false;
-                                        showDeleteText(false);
-                                      },
-                                    ),
-                                  )),
+                              // Container(
+                              //     width: 24,
+                              //     height: 24,
+                              //     decoration: const BoxDecoration(
+                              //       // image: DecorationImage(
+                              //       //     image: AssetImage(
+                              //       //         IconAsset.backgroundClear),
+                              //       //     fit: BoxFit.cover),
+                              //     ),
+                              //     child: Transform.scale(
+                              //       scale: 2,
+                              //       child: IconButton(
+                              //         color: AppColor.black22,
+                              //         icon: const Icon(
+                              //           Icons.clear,
+                              //           color: AppColor.black22,
+                              //           size: 8,
+                              //         ),
+                              //         onPressed: () {
+                              //           widget._textEditingController.clear();
+                              //           //Bkav Nhungltk
+                              //           _textIsNotEmpty = false;
+                              //           showDeleteText(false);
+                              //         },
+                              //       ),
+                              //     )),
                               IconButton(
                                 color: AppColor.black22,
-                                //fix loi fucus bi mau xanh
+                                //Bkav Nhungltk: fix loi fucus bi mau xanh
                                 icon: _obscureText
-                                    ? const Icon(
-                                        Icons.remove_red_eye,
-                                        color: AppColor.main,
-                                        size: 16,
-                                      )
+                                    ? SvgPicture.asset(
+                                  IconAsset.eyeOn,
+                                  width: 16,
+                                  height: 16,
+                                )
                                     : SvgPicture.asset(
                                         IconAsset.eyeOff,
                                         width: 16,
@@ -325,13 +324,13 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                           )
                         : IconButton(
                             color: AppColor.black22,
-                            //fix loi fucus bi mau xanh
+                            //Bkav Nhungltk: fix loi fucus bi mau xanh
                             icon: _obscureText
-                                ? const Icon(
-                                    Icons.remove_red_eye,
-                                    color: AppColor.main,
-                                    size: 16,
-                                  )
+                                ? SvgPicture.asset(
+                              IconAsset.eyeOn,
+                              width: 16,
+                              height: 16,
+                            )
                                 : SvgPicture.asset(
                                     IconAsset.eyeOff,
                                     width: 16,
@@ -345,7 +344,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
                           )));
   }
 
-  ///ham nay de show Icon delete
+  ///Bkav DucLQ ham nay de show Icon delete
   void showDeleteText(bool show) {
     setState(() {
       Logger.loggerDebug("show Delete $show");
@@ -360,6 +359,8 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
     }
     return Focus(
       child: TextFormField(
+        style: widget.redBoder?StyleOfit.textStyleFW400(AppColor.main, 14,height: 1.2):StyleOfit.textStyleFW400(Colors.black, 14,height: 1.2),
+        enabled: widget.isEnable,
           readOnly: widget.isNotEdit ?? false,
           onTap: () {
             setState(() {
@@ -369,30 +370,24 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
           },
           textInputAction: TextInputAction.next,
           focusNode: widget._focusNode,
-          maxLength: TextInputType.number != null ? 12 : null,
-          maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds ,
           keyboardType:
-              widget.isPhone != null ? TextInputType.phone :
-              widget.isNumber != null ? TextInputType.number : TextInputType.text,
+              widget.keyboardType,
           controller: widget._textEditingController,
           decoration: createInputDecoration(),
           obscureText: widget._isTypePassword ? _obscureText : false,
+          cursorColor: AppColor.main,
+          cursorHeight: 20,
           obscuringCharacter: "*",
-          textAlign: widget.noBorder==true? TextAlign.right : TextAlign.start ,
           onChanged: (text) => {
-                if (widget.isChangeCallBack == true)
-                  {
-                    widget.onChangeCallBack!(text),
-                  },
                 showDeleteText((text.isNotEmpty)),
-                if ((text.isNotEmpty /*&& _isTypePassword*/) !=
+                if ((text.isNotEmpty /*Bkav Nhungltk && _isTypePassword*/) !=
                     _showDeleteText)
                   {
                     if (!text.isNotEmpty)
                       {
-                        //check dieu kien khi text null
+                        //Bkav HoangCV: check dieu kien khi text null
                         _textIsNotEmpty = false,
-                      } //check khi co text trong form thi ko hien thong bao nhap text
+                      } // Bkav HoangCV: check khi co text trong form thi ko hien thong bao nhap text
                     else
                       {
                         textIsNotEmplty(true),
@@ -436,13 +431,14 @@ class _TextFormFieldInputState extends State<TextFormFieldInput> {
           }),
       onFocusChange: (hasFocus) async {
         showAsterrick(hasFocus);
+        //Bkav Nhungltk:
         setState(() {
           _hasFocus = hasFocus;
           if (hasFocus == false) {
             hideError = false;
           }
         });
-        if (hasFocus == false && widget.changePass == true) {
+        if (hasFocus == false) {
           onLostFocus(widget._textEditingController.text, true);
         }
       },

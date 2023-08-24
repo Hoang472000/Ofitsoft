@@ -6,13 +6,13 @@ import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
-import '../../../utils/change_password_status.dart';
+import '../../../utils/status/change_password_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog_manager.dart';
 import '../../../utils/widgets/note_pass_word.dart';
-import '../../../utils/widgets/text_form_input.dart';
+import '../../../utils/widgets/input/text_form_input.dart';
 import '../../../view_model/setting/change_password/change_password_bloc.dart';
 import '../../login/login_page.dart';
 
