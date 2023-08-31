@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
@@ -77,4 +78,10 @@ abstract class Repository {
   Future<ObjectResult> updateActivityDiary(ActivityDiary diary);
 
   Future<ObjectResult> removeActivityDiary(int id);
+
+  Future<ObjectResult> addManyActivityDiary(ActivityDiary diary);
+
+  Future<List<ActivityTransaction>> getListActivityTransaction(int id);
+
+  Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction);
 }

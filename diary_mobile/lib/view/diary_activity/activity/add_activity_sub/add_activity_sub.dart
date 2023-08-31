@@ -16,6 +16,7 @@ import '../../../../utils/extenstion/service_info_extension.dart';
 import '../../../../utils/utils.dart';
 import '../../../../utils/widgets/bkav_app_bar.dart';
 import '../../../../utils/widgets/button_widget.dart';
+import '../../../../utils/widgets/dialog/toast_widget.dart';
 import '../../../../utils/widgets/input/container_input_widget.dart';
 import '../../../../view_model/diary/list_diary_bloc.dart';
 
@@ -752,13 +753,13 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
   Future<void> onSelectValue(
       InputRegisterModel inputRegisterModel, BuildContext context) async {
     int result;
-/*    if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucTinh && dMucTinhResponse.tinh == null) {
-      Toast.showLongTop("Không có danh mục tỉnh");
+    if(inputRegisterModel.title == "Vật tư liên quan" && inputRegisterModel.listValue.isEmpty) {
+      Toast.showLongTop("Không có vật tư liên quan");
       return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucHuyen && dMucHuyenResponse.dmucHuyenTPS == null) {
-      Toast.showLongTop("Không có danh mục huyện");
+    }else if(inputRegisterModel.title == "Công cụ sử dụng" && inputRegisterModel.listValue.isEmpty) {
+      Toast.showLongTop("Không có công cụ sử dụng");
       return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucXa && dMucXaResponse.dmucXaTPS == null) {
+    }/*else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucXa && dMucXaResponse.dmucXaTPS == null) {
       Toast.showLongTop("Không có danh mục xã");
       return;
     }*/

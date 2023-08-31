@@ -20,6 +20,8 @@ class ActivityTable extends Table {
   TextColumn get unitId => text().nullable()();
   TextColumn get mediaContent => text().nullable()();
   BoolColumn get harvesting => boolean().nullable()();
+  TextColumn get stringToolIds => text().nullable()();
+  TextColumn get stringMaterialIds => text().nullable()();
   @override
   Set<Column>? get primaryKey => {id};
 }

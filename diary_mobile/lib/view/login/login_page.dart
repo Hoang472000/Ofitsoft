@@ -386,6 +386,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
       onTap: () {
         //Navigator.push(context, ContactPage.route());
         Utils.launchPhoneUrl('0989426911');
+        //Navigator.of(context).push(LessonScreen.route());
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),

@@ -1,13 +1,18 @@
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/generated/l10n.dart';
+import 'package:diary_mobile/resource/assets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../data/entity/activity/activity_diary.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
 import '../../../data/repository.dart';
+import '../../../utils/constants/shared_preferences_key.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
@@ -17,18 +22,83 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
 
   DetailDiaryBloc(this.repository) : super(DetailDiaryState()) {
     on<GetDetailDiaryEvent>(_getDetailDiary);
-
   }
 
   void _getDetailDiary(
       GetDetailDiaryEvent event, Emitter<DetailDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final detailDiary = await repository.getInfoDiary(event.id);
-    print("HoangCV: detailDiary: ${detailDiary.name}");
-    emitter(state.copyWith(
-        isShowProgress: false,
-        detailDiary: detailDiary
-    ));
+    print("HoangCV: all. ${event.updateHarvesting} : ${event.listTransaction.isNotEmpty} : ${event.list.isNotEmpty}");
+    if (event.updateHarvesting && event.listTransaction.isEmpty) {
+      final detailDiary = await repository.getInfoDiary(event.id);
+      emitter(state.copyWith(
+          isShowProgress: false,
+          detailDiary: detailDiary,
+          listActivityDiary: event.list));
+      print("HoangCV: update activity harvesting. ${event.updateHarvesting} : ${event.listTransaction.length} : ${event.list.length}");
+    } else if (!event.updateHarvesting && event.list.isNotEmpty) {
+      print("HoangCV: update list activity canh tac. ${event.list.length}");
+      emitter(
+          state.copyWith(isShowProgress: false, listActivityDiary: event.list));
+    } else if(event.updateHarvesting && event.listTransaction.isNotEmpty){
+      print("HoangCV: update activity sell ${event.listTransaction.length}");
+      emitter(
+          state.copyWith(isShowProgress: false, listActivityTransaction: event.listTransaction));
+    }else {
+      final detailDiary = await repository.getInfoDiary(event.id);
+      final listActivityDiary = await repository.getListActivityDiary(event.id);
+      final listActivityTransaction = await repository.getListActivityTransaction(event.id);
+      final sharedPreferences = await SharedPreferences.getInstance();
+      List<String>? roleStringList =
+          sharedPreferences.getStringList(SharedPreferencesKey.role);
+      List<int> roleList =
+          roleStringList?.map((roleString) => int.parse(roleString)).toList() ??
+              [];
+      print("HoangCV: role: ${roleList[0]} : ${roleList[0]}");
+      List<ActivityFarm> list = [];
+      if (roleList.isNotEmpty && roleList[0] == 1) {
+        list.add(ActivityFarm(
+            id: 1,
+            nameActivity: "HOẠT ĐỘNG CANH TÁC",
+            iconActivity: ImageAsset.imageActivityFarm));
+        list.add(ActivityFarm(
+            id: 2,
+            nameActivity: "HOẠT ĐỘNG THU HOẠCH",
+            iconActivity: ImageAsset.imagePlantCrop));
+        list.add(ActivityFarm(
+            id: 3,
+            nameActivity: "HOẠT ĐỘNG MUA BÁN",
+            iconActivity: ImageAsset.imageSelling));
+      }
+      if (roleList.isNotEmpty && roleList[1] == 1) {
+        list.add(ActivityFarm(
+            id: 4,
+            nameActivity: "HOẠT ĐỘNG GIÁM SÁT",
+            iconActivity: ImageAsset.imageSpyware));
+        list.add(ActivityFarm(
+            id: 5,
+            nameActivity: "BÁO CÁO ĐÁNH GIÁ THỰC ĐỊA",
+            iconActivity: ImageAsset.imageDisaster));
+      }
+/*    list.add(ActivityFarm(
+        nameActivity: "Hoạt động thu hoạch",
+        iconActivity: ImageAsset.imagePlantCrop));
+    list.add(ActivityFarm(
+        nameActivity: "Hoạt động mua bán",
+        iconActivity: ImageAsset.imageBudget));
+    list.add(ActivityFarm(
+        nameActivity: "Hoạt động giám sát",
+        iconActivity: ImageAsset.imageSpyware));
+    list.add(ActivityFarm(
+        nameActivity: "Báo cáo đánh giá thực địa",
+        iconActivity: ImageAsset.imageDisaster));*/
+      print("HoangCV: detailDiary: ${detailDiary.name}");
+      emitter(state.copyWith(
+          isShowProgress: false,
+          detailDiary: detailDiary,
+          listActivityFarm: list,
+          listActivityTransaction: listActivityTransaction,
+          listActivityDiary: listActivityDiary));
+    }
   }
 }
 
@@ -39,7 +109,12 @@ class DetailDiaryEvent extends BlocEvent {
 
 class GetDetailDiaryEvent extends DetailDiaryEvent {
   int id;
-  GetDetailDiaryEvent(this.id);
+  bool updateHarvesting;
+  List<ActivityDiary> list;
+  List<ActivityTransaction> listTransaction;
+
+  GetDetailDiaryEvent(this.id,
+      {this.updateHarvesting = false, this.list = const [], this.listTransaction = const []});
 }
 
 class UpdateAvatarEvent extends DetailDiaryEvent {
@@ -50,19 +125,25 @@ class UpdateAvatarEvent extends DetailDiaryEvent {
 class DetailDiaryState extends BlocState {
   @override
   List<Object?> get props => [
-    detailDiary,
-    formStatus,
-    isShowProgress,
-    listMaterial,
-    listTool,
-    listUnit,
-    listActivity
-  ];
+        detailDiary,
+        formStatus,
+        isShowProgress,
+        listMaterial,
+        listTool,
+        listUnit,
+        listActivity,
+        listActivityFarm,
+        listActivityDiary,
+        listActivityTransaction,
+      ];
   final Diary? detailDiary;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
   final List<Unit> listUnit;
   final List<Activity>? listActivity;
+  final List<ActivityDiary> listActivityDiary;
+  final List<ActivityTransaction> listActivityTransaction;
+  final List<ActivityFarm> listActivityFarm;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
 
@@ -74,25 +155,44 @@ class DetailDiaryState extends BlocState {
     this.listTool = const [],
     this.listUnit = const [],
     this.listActivity = const [],
+    this.listActivityFarm = const [],
+    this.listActivityDiary = const [],
+    this.listActivityTransaction = const [],
   });
 
-  DetailDiaryState copyWith({
-    Diary? detailDiary,
-    FormSubmissionStatus? formStatus,
-    bool? isShowProgress,
-    List<MaterialEntity>? listMaterial,
-    List<Tool>? listTool,
-    List<Unit>? listUnit,
-    List<Activity>? listActivity,
-  }) {
+  DetailDiaryState copyWith(
+      {Diary? detailDiary,
+      FormSubmissionStatus? formStatus,
+      bool? isShowProgress,
+      List<MaterialEntity>? listMaterial,
+      List<Tool>? listTool,
+      List<Unit>? listUnit,
+      List<Activity>? listActivity,
+      List<ActivityDiary>? listActivityDiary,
+      List<ActivityTransaction>? listActivityTransaction,
+      List<ActivityFarm>? listActivityFarm}) {
     return DetailDiaryState(
-      detailDiary: detailDiary ?? this.detailDiary,
-      formStatus: formStatus ?? this.formStatus,
-      isShowProgress: isShowProgress ?? this.isShowProgress,
-      listMaterial: listMaterial ?? this.listMaterial,
-      listTool: listTool ?? this.listTool,
-      listUnit: listUnit ?? this.listUnit,
-      listActivity: listActivity ?? this.listActivity,
-    );
+        detailDiary: detailDiary ?? this.detailDiary,
+        formStatus: formStatus ?? this.formStatus,
+        isShowProgress: isShowProgress ?? this.isShowProgress,
+        listMaterial: listMaterial ?? this.listMaterial,
+        listTool: listTool ?? this.listTool,
+        listUnit: listUnit ?? this.listUnit,
+        listActivity: listActivity ?? this.listActivity,
+        listActivityFarm: listActivityFarm ?? this.listActivityFarm,
+        listActivityTransaction:
+            listActivityTransaction ?? this.listActivityTransaction,
+        listActivityDiary: listActivityDiary ?? this.listActivityDiary);
   }
+}
+
+class ActivityFarm {
+  final int id;
+  final String nameActivity;
+  final String iconActivity;
+
+  ActivityFarm(
+      {required this.id,
+      required this.nameActivity,
+      required this.iconActivity});
 }

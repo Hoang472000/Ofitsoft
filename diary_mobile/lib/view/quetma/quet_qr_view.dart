@@ -13,7 +13,7 @@ import '../../utils/logger.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
-import '../../utils/widgets/dialog_manager.dart';
+import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../view_model/quetma/quet_qr_bloc.dart';
 enum ScanType { barcode, qrcode }
 class QRCodeView extends StatefulWidget {

@@ -74,11 +74,11 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
-          bottom: TabBar(
-              /*     indicator: BoxDecoration(
+         /* bottom: TabBar(
+              *//*     indicator: BoxDecoration(
                   borderRadius: BorderRadius.circular(50), // Creates border
                   color: Colors.white),
-              labelColor: AppColor.main,*/
+              labelColor: AppColor.main,*//*
               controller: _tabController,
               tabs: const <Tab>[
                 Tab(
@@ -104,8 +104,11 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
                       fit: BoxFit.contain,
                     ),
                     text: "Thông tin chung")
-              ])),
-      body: TabBarView(
+              ])*/),
+      body: InfoDiaryPage(
+        id: widget.seasonFarmId,
+        diary: widget.diary,
+      )/*TabBarView(
         controller: _tabController,
         children: <Widget>[
           ActivityPage(
@@ -122,7 +125,7 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
             id: widget.seasonFarmId,
           )
         ],
-      ),
+      ),*/
     );
   }
 }

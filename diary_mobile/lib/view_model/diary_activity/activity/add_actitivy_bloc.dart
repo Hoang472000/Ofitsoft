@@ -30,8 +30,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
   AddActivityBloc(this.repository) : super(AddActivityState()) {
     on<InitAddActivityEvent>(_initAddActivity);
-    on<ChangeEditActivityEvent>(_changeEditActivity);
-    on<ChangeDetailActivityEvent>(_changeDetailActivity);
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
     on<AddActivityDiaryEvent>(_addActivityDiary);
@@ -56,6 +54,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         positionSelected: -1,
         listValue: state.listActivity,
         typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
         image: ImageAsset.imageActivityFarm));
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
@@ -153,117 +152,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         formStatus: const InitialFormStatus()));
   }
 
-  void _changeViewEdit(Emitter<AddActivityState> emitter) {
-    List<InputRegisterModel> list = [];
-    List<InputRegisterModel> listCC = [];
-    List<InputRegisterModel> listVT = [];
-    List<InputRegisterModel> listArea = [];
-    print("HoangCV: state.listMaterial: ${state.listMaterial.length}");
-    list.add(InputRegisterModel<Activity, Activity>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: state.indexActivity,
-        listValue: state.listActivity,
-        valueSelected: state.listActivity[state.indexActivity],
-        typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageActivityFarm));
-    list.add(InputRegisterModel(
-        title: "Chi tiết công việc",
-        isCompulsory: false,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.TextField,
-        typeInput: TextInputType.text,
-        controller: state.moTaController,
-        image: ImageAsset.imageFile));
-
-    list.add(InputRegisterModel<String, DateTime>(
-        title: "Thời gian thực hiện",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: Utils.stringToDateHour(state.startTimeController!.text),
-        image: ImageAsset.imageCalendarBegin,
-        icon: Icons.calendar_today));
-
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: Utils.stringToDate(state.endTimeController!.text),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
-
-    listArea.add(InputRegisterModel(
-      title: "Diện tích",
-      isCompulsory: false,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.number,
-      controller: state.areaController,
-      maxLengthTextInput: 10,
-      image: ImageAsset.imageManagement,
-    ));
-
-    listArea.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitArea,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    listVT.add(InputRegisterModel(
-        title: "Vật tư liên quan",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        listValue: state.listMaterial,
-        image: ImageAsset.imageGardening));
-
-    listCC.add(InputRegisterModel<Tool, Tool>(
-      title: "Công cụ sử dụng",
-      isCompulsory: true,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      typeInputEnum: TypeInputEnum.dmucItem,
-      listValue: state.listTool,
-      image: ImageAsset.imageTools,
-    ));
-
-    listVT.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: true,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    listCC.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: true,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    emitter(state.copyWith(
-        listWidget: list,
-        listWidgetVT: listVT,
-        listWidgetCC: listCC,
-        listWidgetArea: listArea));
-  }
-
   void _initAddActivity(
       InitAddActivityEvent event, Emitter<AddActivityState> emitter) async {
     emitter(state.copyWith(
@@ -289,9 +177,9 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
     final listUnitYield =
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
-    listUnitArea.forEach((element) {
-      print("HoangCV: indexArea:`11 ${element.toJson()}");
-    });
+/*    listActivity.forEach((element) {
+      print("HoangCV: indexArea:`11 ${element.toolIds} : ${element.materialIds}");
+    });*/
     int indexAreaUnit = listUnitArea
         .indexWhere((element) => element.id == event.diary.areaUnitId);
     print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId}");
@@ -302,6 +190,8 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
+      listMaterialAll: listMaterial,
+      listToolAll: listTool,
       listUnitAmount: listUnitAmount,
       listUnitArea: listUnitArea,
       listUnitYield: listUnitYield,
@@ -330,16 +220,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
     emitter(state.copyWith(listWidget: state.listWidget));
     print("state.indexArea: ${state.indexArea} : $indexAreaUnit : ${state.indexActivity} : ${state.detailActivity?.areaUnitId}");
-  }
-
-  FutureOr<void> _changeEditActivity(
-      ChangeEditActivityEvent event, Emitter<AddActivityState> emit) async {
-    _changeViewEdit(emit);
-  }
-
-  FutureOr<void> _changeDetailActivity(
-      ChangeDetailActivityEvent event, Emitter<AddActivityState> emit) async {
-    // _changeViewDetail(emit);
   }
 
   Future<FutureOr<void>> _onSelectValue(
@@ -430,6 +310,18 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
           } else {
             emit(state.copyWith(listWidgetYield: []));
           }
+          List<int> tool = event.list[event.index].valueSelected.toolIds;
+          List<int> material = event.list[event.index].valueSelected.materialIds;
+          final listTool = <Tool>[];
+          listTool.addAll(state.listToolAll.map((tool) => Tool.copy(tool)));
+          final listMaterial = <MaterialEntity>[];
+          listMaterial.addAll(state.listMaterialAll.map((material) => MaterialEntity.copy(material)));
+          listTool.removeWhere((element) => !tool.contains(element.id));
+          listMaterial.removeWhere((element) => !material.contains(element.id));
+          emit(state.copyWith(listMaterial: listMaterial, listTool: listTool));
+          state.listWidgetVT[0].listValue= listMaterial;
+          state.listWidgetCC[0].listValue= listTool;
+          print("HoangCV: state.listMaterial: ${listMaterial.length} : ${listTool.length} : ${state.listWidgetVT[0].listValue.length}");
         }
         if (event.list[event.index].title.compareTo("Đơn vị") == 0) {
           print("state.indexArea222: ${state.indexArea} : ${state.indexActivity} : ${state.listWidgetArea[1].positionSelected}");
@@ -626,9 +518,6 @@ class ChangeEditActivityEvent extends AddActivityEvent {
   ChangeEditActivityEvent();
 }
 
-class ChangeDetailActivityEvent extends AddActivityEvent {
-  ChangeDetailActivityEvent();
-}
 
 class OnSelectValueEvent extends AddActivityEvent {
   List<InputRegisterModel> list;
@@ -724,11 +613,15 @@ class AddActivityState extends BlocState {
         listWidgetYield,
         listUnitYield,
         yieldController,
-    areaMax,
+        areaMax,
+        listMaterialAll,
+        listToolAll,
       ];
   final Diary? detailActivity;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
+  final List<MaterialEntity> listMaterialAll;
+  final List<Tool> listToolAll;
   final List<Unit> listUnitArea;
   final List<Unit> listUnitAmount;
   final List<Activity> listActivity;
@@ -768,6 +661,8 @@ class AddActivityState extends BlocState {
     this.isShowProgress = true,
     this.listMaterial = const [],
     this.listTool = const [],
+    this.listMaterialAll = const [],
+    this.listToolAll = const [],
     this.listUnitArea = const [],
     this.listUnitAmount = const [],
     this.listWidgetArea = const [],
@@ -805,6 +700,8 @@ class AddActivityState extends BlocState {
     int? seasonId,
     List<MaterialEntity>? listMaterial,
     List<Tool>? listTool,
+    List<MaterialEntity>? listMaterialAll,
+    List<Tool>? listToolAll,
     List<Unit>? listUnitArea,
     List<Unit>? listUnitAmount,
     List<Activity>? listActivity,
@@ -840,6 +737,8 @@ class AddActivityState extends BlocState {
       isShowProgress: isShowProgress ?? this.isShowProgress,
       listMaterial: listMaterial ?? this.listMaterial,
       listTool: listTool ?? this.listTool,
+      listMaterialAll: listMaterialAll ?? this.listMaterialAll,
+      listToolAll: listToolAll ?? this.listToolAll,
       listUnitArea: listUnitArea ?? this.listUnitArea,
       listUnitAmount: listUnitAmount ?? this.listUnitAmount,
       seasonId: seasonId ?? this.seasonId,
@@ -867,7 +766,7 @@ class AddActivityState extends BlocState {
       listUnitYield: listUnitYield ?? this.listUnitYield,
       listWidgetYield: listWidgetYield ?? this.listWidgetYield,
       yieldController: yieldController ?? this.yieldController,
-        areaMax: areaMax ?? this.areaMax,
+      areaMax: areaMax ?? this.areaMax,
     );
   }
 }

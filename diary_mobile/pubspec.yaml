@@ -61,6 +61,9 @@ dependencies:
   video_player:
   chewie:
   auto_orientation:
+  flutter_animate:
+  audioplayers:
+  fluttertoast:
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'dart:ffi';
 
 import 'package:diary_mobile/resource/assets.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:diary_mobile/utils/widgets/items/item_card_activity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/entity/diary/diary.dart';
@@ -9,18 +9,21 @@ import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../view_model/diary/list_diary_bloc.dart';
+import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
+import '../activity/activity_page.dart';
+import '../activity/activity_transaction_page.dart';
 
 class InfoDiaryPage extends StatefulWidget {
-  const InfoDiaryPage({super.key, required this.id});
+  const InfoDiaryPage({super.key, required this.id, required this.diary});
   final int id;
+  final Diary diary;
 
   @override
   _InfoDiaryPageState createState() => _InfoDiaryPageState();
 
-  static Route route(int id) {
-    return Utils.pageRouteBuilder(InfoDiaryPage(id: id,), true);
+  static Route route(int id, Diary diary) {
+    return Utils.pageRouteBuilder(InfoDiaryPage(id: id,diary: diary,), true);
   }
 }
 
@@ -35,15 +38,75 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
         backgroundColor: AppColor.background,
         body: BlocBuilder<DetailDiaryBloc, DetailDiaryState>(
             builder: (blocContext, state) {
-              return Container(
+              return state.isShowProgress ?
+              const Center(
+                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+              : Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: SingleChildScrollView(
-                    physics: const NeverScrollableScrollPhysics(),
+                    //physics: const NeverScrollableScrollPhysics(),
                     child: state.detailDiary !=null ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        CardTile(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                          child: GridView.builder(
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8.0,
+                                mainAxisSpacing: 12.0,
+                              ),
+                                itemCount: state.listActivityFarm.length,
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemBuilder: (context, index) {
+                                  return ItemCardActivity(
+                                      name: state
+                                          .listActivityFarm[index].nameActivity,
+                                      icon: state
+                                          .listActivityFarm[index].iconActivity,
+                                      onTap: () async{
+                                        if(state.listActivityFarm[index].id == 1){
+                                          var result = await Navigator.push(context,
+                                              ActivityPage.route("activity",
+                                                 widget.id, widget.diary,state
+                                                    .listActivityFarm[index], state.listActivityDiary));
+                                          if(result != null && result[1].isNotEmpty){
+                                            print("HoangCV: call back : ");
+                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], list: result[1]));
+                                          }
+                                        } else if(state.listActivityFarm[index].id == 2){
+                                          var result = await Navigator.push(context,
+                                              ActivityPage.route("harvesting",
+                                                widget.id, widget.diary,state
+                                                    .listActivityFarm[index], state.listActivityDiary));
+                                          if(result != null && result[0]){
+                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], list: result[1]));
+                                          }
+                                        } else if(state.listActivityFarm[index].id == 3){
+                                          var result = await Navigator.push(context,
+                                              ActivityTransactionPage.route("sell",
+                                                widget.id, widget.diary,state
+                                                    .listActivityFarm[index], state.listActivityTransaction, state.listActivityDiary));
+                                          if(result != null && result[0]){
+                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
+                                          }
+                                        } else if(state.listActivityFarm[index].id == 4){
+                                          Navigator.push(context,
+                                              ActivityPage.route("monitor",
+                                                widget.id, widget.diary,state
+                                                    .listActivityFarm[index], state.listActivityDiary));
+                                        } else if(state.listActivityFarm[index].id == 5){
+                                          Navigator.push(context,
+                                              ActivityPage.route("report",
+                                                widget.id, widget.diary,state
+                                                    .listActivityFarm[index], state.listActivityDiary));
+                                        }
+                                      });
+                                }),
+                        ),
+                          CardTile(
                             label: "Tên nhật ký",
                             value: "${state.detailDiary!.name}",
                         image: ImageAsset.imageDiary),

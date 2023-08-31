@@ -122,7 +122,7 @@ class ContainerInputWidget extends StatelessWidget {
                     decoration: BoxDecoration(
                         border: Border.all(
                           color: inputRegisterModel.error != null
-                              ? Colors.red
+                              ? !inputRegisterModel.noUnder ? Colors.red : Colors.transparent
                               // chỗ này kiểm tra xem nó là dạng togle thì không show viền boder
                               : inputRegisterModel.type == TypeInputRegister.Tolge || inputRegisterModel.noBorder
                                   ? Colors.transparent
@@ -138,7 +138,7 @@ class ContainerInputWidget extends StatelessWidget {
                         primary: false,
                         children: [
                           Padding(
-                            padding: inputRegisterModel.noBorder ? EdgeInsets.zero : const EdgeInsets.all(6),
+                            padding: inputRegisterModel.noBorder ? const EdgeInsets.only(bottom: 12, ) : const EdgeInsets.all(6),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -206,24 +206,39 @@ class ContainerInputWidget extends StatelessWidget {
             ),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            inputRegisterModel.image != "" ? SizedBox(width: 44,) : SizedBox(),
-            Expanded(
-              child: Text(
-                "${inputRegisterModel.error ?? ""}",
+        inputRegisterModel.noUnder ? Positioned.fill(
+          top: -30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                inputRegisterModel.error ?? "",
                 style: TextStyle(
                     color: Colors.red,
                     backgroundColor: Colors.white,
                     fontSize: 12),
               ),
-            ),
-            SizedBox(
-              width: 20,
-            )
-          ],
+            ],
+          ),
         )
+            :Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                inputRegisterModel.image != "" ? SizedBox(width: 44,) : SizedBox(),
+                Expanded(
+                  child: Text(
+                    "${inputRegisterModel.error ?? ""}",
+                    style: TextStyle(
+                        color: Colors.red,
+                        backgroundColor: Colors.white,
+                        fontSize: 12),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                )
+              ],
+            )
       ],
     );
   }
@@ -364,15 +379,18 @@ class ContainerInputWidget extends StatelessWidget {
                           : Color(0xFFA3A3A3),
                       fontSize: 14),
                   decoration: InputDecoration(
-                      contentPadding:
-                          EdgeInsets.only(top: inputRegisterModel.noBorder ? 0 : 6,bottom: inputRegisterModel.noBorder ? 0 : 6,
-                              left: inputRegisterModel.noBorder ? 20 : 0, right: inputRegisterModel.noBorder ? 0 : 0),
+                      contentPadding: inputRegisterModel.noBorder
+                          ? const EdgeInsets.only(
+                              top: 6, bottom: 6, left: 20, right: 0)
+                          : const EdgeInsets.only(
+                              top: 6, bottom: 6, left: 20, right: 0),
                       isDense: true,
                       hintText: inputRegisterModel.hintText,
                       border: inputRegisterModel.noUnder ? UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red),
+                        borderSide: BorderSide(color: AppColor.back09),
                       ): InputBorder.none,
                       counterText: ''),
+
                   minLines: 1,
                   maxLines: 5,
                 ),
@@ -747,306 +765,6 @@ void setTrailingSpaceWhenInput(InputRegisterModel inputRegisterModel) {
     inputRegisterModel.controller!.value = TextEditingValue(
         text: inputRegisterModel.controller!.text.replaceAll("\t", " "),
         selection: previousSelection);
-  }
-}
-
-class ContainerInput2FieldWidget extends StatelessWidget {
-  final Function? onClick;
-  final InputRegisterModel? inputRegisterText;
-  final InputRegisterModel? inputRegisterSelect;
-  final BuildContext? contextParent;
-  final ValueChanged<int>? onSelectCard;
-
-  const ContainerInput2FieldWidget({
-    Key? key,
-    this.onClick,
-    this.contextParent,
-    this.onSelectCard,
-    this.inputRegisterText,
-    this.inputRegisterSelect,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        GestureDetector(
-          onTap: () {
-            switch (inputRegisterText!.type) {
-              case TypeInputRegister.TextField:
-                inputRegisterText!.focusNode.requestFocus();
-                break;
-              case TypeInputRegister.Select:
-                onClick!();
-                break;
-              case TypeInputRegister.MultiSelection:
-                // TODO: Handle this case.
-                break;
-              case TypeInputRegister.TextFieldDate:
-              // TODO: Handle this case.
-                break;
-              case TypeInputRegister.Non:
-                // TODO: Handle this case.
-                break;
-              case TypeInputRegister.Balance:
-                // TODO: Handle this case.
-                break;
-              case TypeInputRegister.TextFieldIcon:
-                // TODO: Handle this case.
-
-                break;
-              case TypeInputRegister.TextFieldMoney:
-                // TODO: Handle this case.
-                break;
-              case TypeInputRegister.TextFieldRemark:
-                // TODO: Handle this case.
-                break;
-              case TypeInputRegister.Tolge:
-                // TODO: Handle this case.
-                break;
-            }
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: inputRegisterText!.error != null
-                    ? Colors.red
-                    : Color(0xFFB2B8BB),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              // color: Colors.grey[100]
-            ),
-            child: Container(
-              child: ListView(
-                shrinkWrap: true,
-                primary: false,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(6),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          '${inputRegisterText!.title}',
-                          style: TextStyle(
-                              color: Color(0xFFA3A3A3),
-                              fontSize: 14),
-                        ),
-                        (inputRegisterText!.isCompulsory &&
-                                inputRegisterText!.title.isNotEmpty)
-                            ? Text(
-                                " *",
-                                style: TextStyle(
-                                    color: Colors.red, fontSize: 14),
-                              )
-                            : Container(),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _CenterWidget(),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                    onTap: () {
-                                      if (inputRegisterSelect!.type ==
-                                          TypeInputRegister.Select) onClick!();
-                                    },
-                                    child: _rightWidget()),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // inputRegisterModel.type ==
-                  //     TypeInputRegister.MultiSelection ? bottomWidget():Container()
-                ],
-              ),
-            ),
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              "${inputRegisterText!.error ?? ""}",
-              style: TextStyle(
-                  color: Colors.red,
-                  backgroundColor: Colors.white,
-                  fontSize: 12),
-            ),
-            SizedBox(
-              width: 20,
-            )
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _rightWidget() {
-    switch (inputRegisterSelect!.type) {
-      case TypeInputRegister.Select:
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Expanded(
-              child: Text(
-                "${inputRegisterSelect?.valueDefault ?? Extension().getValueDisplay(
-                      inputRegisterSelect!.valueSelected,
-                    )}",
-                style: TextStyle(color: Colors.black, fontSize: 14),
-                textAlign: TextAlign.end,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 6),
-              child: Utils.iconCustom(
-                  icon: inputRegisterSelect!.icon,
-                  context: contextParent,
-                  size: 30),
-            )
-          ],
-        );
-        break;
-      case TypeInputRegister.TextField:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.MultiSelection:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Non:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Balance:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldIcon:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldMoney:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldRemark:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Tolge:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldDate:
-      // TODO: Handle this case.
-        break;
-    }
-    return Container();
-  }
-
-  Widget _CenterWidget() {
-    switch (inputRegisterText!.type) {
-      case TypeInputRegister.TextField:
-        int maxLength = 0;
-        if (inputRegisterText!.maxLengthTextInput != null) {
-          if (inputRegisterText!.isFormatText) {
-            maxLength = inputRegisterText!.maxLengthTextInput! +
-                (inputRegisterText!.maxLengthTextInput! % 3 == 0
-                    ? inputRegisterText!.maxLengthTextInput! ~/ 3 - 1
-                    : inputRegisterText!.maxLengthTextInput! ~/ 3);
-          } else {
-            maxLength = inputRegisterText!.maxLengthTextInput!;
-          }
-        }
-        List<TextInputFormatter> _textFormat = [];
-        if (inputRegisterText!.isAlwaysCap == null) {
-          _textFormat = <TextInputFormatter>[];
-        } else if (inputRegisterText!.isAlwaysCap &&
-            inputRegisterText!.isAlwaysCap != null) {
-          _textFormat = <TextInputFormatter>[UpperCaseTextFormatter()];
-        }
-        if (inputRegisterText!.isOnlyInputNumber) {
-          _textFormat = <TextInputFormatter>[
-            FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
-          ];
-        }
-
-        return TextField(
-          /// Chỉ cho phép nhận số. Kể cả dấu chấm
-          inputFormatters: _textFormat,
-          textCapitalization: inputRegisterText!.textCapitalization == null
-              ? TextCapitalization.none
-              : inputRegisterText!.textCapitalization!,
-          focusNode: inputRegisterText!.focusNode,
-          keyboardType: inputRegisterText!.typeInput,
-          controller: inputRegisterText!.controller,
-          // onTap: () {
-          //   inputRegisterText.controller.selection =
-          //       new TextSelection.fromPosition(new TextPosition(
-          //           offset: inputRegisterText.controller.text.length));
-          // },
-          onChanged: (newText) {
-            setTrailingSpaceWhenInput(inputRegisterText!);
-            if (inputRegisterText!.controller!.text.replaceAll(',', '').length <=
-                    inputRegisterText!.maxLengthTextInput! &&
-                inputRegisterText!.isFormatText) {
-              inputRegisterText!.controller!.value = TextEditingValue(
-                text: Utils.formatCurrency(inputRegisterText!.controller!.text),
-                selection: TextSelection.collapsed(
-                    offset:
-                        Utils.formatCurrency(inputRegisterText!.controller!.text)
-                            .length),
-              );
-            }
-            // onChangeText(newText);
-          },
-          textAlign: TextAlign.right,
-          autofocus: true,
-          maxLength: maxLength,
-          style: TextStyle(
-              color: Color(0xFFA3A3A3), fontSize: 14),
-          decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-            isDense: true,
-            counterText: '',
-            border: InputBorder.none,
-          ),
-          minLines: 1,
-          maxLines: 1,
-        );
-        break;
-      case TypeInputRegister.Select:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.MultiSelection:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Non:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Balance:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldIcon:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldMoney:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldRemark:
-        // TODO: Handle this case.
-        break;
-      case TypeInputRegister.Tolge:
-      // TODO: Handle this case.
-        break;
-      case TypeInputRegister.TextFieldDate:
-      // TODO: Handle this case.
-        break;
-    }
-    return Container();
   }
 }
 

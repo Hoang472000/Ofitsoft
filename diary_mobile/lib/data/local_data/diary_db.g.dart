@@ -905,6 +905,18 @@ class $ActivityTableTable extends ActivityTable
             SqlDialect.mysql: '',
             SqlDialect.postgres: '',
           }));
+  static const VerificationMeta _stringToolIdsMeta =
+      const VerificationMeta('stringToolIds');
+  @override
+  late final GeneratedColumn<String> stringToolIds = GeneratedColumn<String>(
+      'string_tool_ids', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringMaterialIdsMeta =
+      const VerificationMeta('stringMaterialIds');
+  @override
+  late final GeneratedColumn<String> stringMaterialIds =
+      GeneratedColumn<String>('string_material_ids', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -920,7 +932,9 @@ class $ActivityTableTable extends ActivityTable
         quantity,
         unitId,
         mediaContent,
-        harvesting
+        harvesting,
+        stringToolIds,
+        stringMaterialIds
       ];
   @override
   String get aliasedName => _alias ?? 'activity';
@@ -996,6 +1010,18 @@ class $ActivityTableTable extends ActivityTable
           harvesting.isAcceptableOrUnknown(
               data['harvesting']!, _harvestingMeta));
     }
+    if (data.containsKey('string_tool_ids')) {
+      context.handle(
+          _stringToolIdsMeta,
+          stringToolIds.isAcceptableOrUnknown(
+              data['string_tool_ids']!, _stringToolIdsMeta));
+    }
+    if (data.containsKey('string_material_ids')) {
+      context.handle(
+          _stringMaterialIdsMeta,
+          stringMaterialIds.isAcceptableOrUnknown(
+              data['string_material_ids']!, _stringMaterialIdsMeta));
+    }
     return context;
   }
 
@@ -1031,6 +1057,10 @@ class $ActivityTableTable extends ActivityTable
           .read(DriftSqlType.string, data['${effectivePrefix}unit_id']),
       mediaContent: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}media_content']),
+      stringToolIds: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}string_tool_ids']),
+      stringMaterialIds: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}string_material_ids']),
       harvesting: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}harvesting']),
     );
@@ -1057,6 +1087,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
   final Value<String?> unitId;
   final Value<String?> mediaContent;
   final Value<bool?> harvesting;
+  final Value<String?> stringToolIds;
+  final Value<String?> stringMaterialIds;
   const ActivityTableCompanion({
     this.id = const Value.absent(),
     this.categoryId = const Value.absent(),
@@ -1072,6 +1104,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
     this.unitId = const Value.absent(),
     this.mediaContent = const Value.absent(),
     this.harvesting = const Value.absent(),
+    this.stringToolIds = const Value.absent(),
+    this.stringMaterialIds = const Value.absent(),
   });
   ActivityTableCompanion.insert({
     this.id = const Value.absent(),
@@ -1088,6 +1122,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
     this.unitId = const Value.absent(),
     this.mediaContent = const Value.absent(),
     this.harvesting = const Value.absent(),
+    this.stringToolIds = const Value.absent(),
+    this.stringMaterialIds = const Value.absent(),
   });
   static Insertable<Activity> custom({
     Expression<int>? id,
@@ -1104,6 +1140,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
     Expression<String>? unitId,
     Expression<String>? mediaContent,
     Expression<bool>? harvesting,
+    Expression<String>? stringToolIds,
+    Expression<String>? stringMaterialIds,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -1120,6 +1158,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
       if (unitId != null) 'unit_id': unitId,
       if (mediaContent != null) 'media_content': mediaContent,
       if (harvesting != null) 'harvesting': harvesting,
+      if (stringToolIds != null) 'string_tool_ids': stringToolIds,
+      if (stringMaterialIds != null) 'string_material_ids': stringMaterialIds,
     });
   }
 
@@ -1137,7 +1177,9 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
       Value<int?>? quantity,
       Value<String?>? unitId,
       Value<String?>? mediaContent,
-      Value<bool?>? harvesting}) {
+      Value<bool?>? harvesting,
+      Value<String?>? stringToolIds,
+      Value<String?>? stringMaterialIds}) {
     return ActivityTableCompanion(
       id: id ?? this.id,
       categoryId: categoryId ?? this.categoryId,
@@ -1153,6 +1195,8 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
       unitId: unitId ?? this.unitId,
       mediaContent: mediaContent ?? this.mediaContent,
       harvesting: harvesting ?? this.harvesting,
+      stringToolIds: stringToolIds ?? this.stringToolIds,
+      stringMaterialIds: stringMaterialIds ?? this.stringMaterialIds,
     );
   }
 
@@ -1201,6 +1245,12 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
     if (harvesting.present) {
       map['harvesting'] = Variable<bool>(harvesting.value);
     }
+    if (stringToolIds.present) {
+      map['string_tool_ids'] = Variable<String>(stringToolIds.value);
+    }
+    if (stringMaterialIds.present) {
+      map['string_material_ids'] = Variable<String>(stringMaterialIds.value);
+    }
     return map;
   }
 
@@ -1220,7 +1270,9 @@ class ActivityTableCompanion extends UpdateCompanion<Activity> {
           ..write('quantity: $quantity, ')
           ..write('unitId: $unitId, ')
           ..write('mediaContent: $mediaContent, ')
-          ..write('harvesting: $harvesting')
+          ..write('harvesting: $harvesting, ')
+          ..write('stringToolIds: $stringToolIds, ')
+          ..write('stringMaterialIds: $stringMaterialIds')
           ..write(')'))
         .toString();
   }
@@ -4347,6 +4399,12 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
   late final GeneratedColumn<String> buyer = GeneratedColumn<String>(
       'buyer', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringSeasonFarmIdsMeta =
+      const VerificationMeta('stringSeasonFarmIds');
+  @override
+  late final GeneratedColumn<String> stringSeasonFarmIds =
+      GeneratedColumn<String>('string_season_farm_ids', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         api,
@@ -4377,7 +4435,8 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
         quantityUnitName,
         unitPrice,
         total,
-        buyer
+        buyer,
+        stringSeasonFarmIds
       ];
   @override
   String get aliasedName => _alias ?? 'activity_diary_no_network';
@@ -4541,6 +4600,12 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
       context.handle(
           _buyerMeta, buyer.isAcceptableOrUnknown(data['buyer']!, _buyerMeta));
     }
+    if (data.containsKey('string_season_farm_ids')) {
+      context.handle(
+          _stringSeasonFarmIdsMeta,
+          stringSeasonFarmIds.isAcceptableOrUnknown(
+              data['string_season_farm_ids']!, _stringSeasonFarmIdsMeta));
+    }
     return context;
   }
 
@@ -4608,6 +4673,9 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
           .read(DriftSqlType.double, data['${effectivePrefix}total']),
       buyer: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}buyer']),
+      stringSeasonFarmIds: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}string_season_farm_ids']),
     );
   }
 
@@ -4648,6 +4716,7 @@ class ActDiaryNoNetworkTableCompanion
   final Value<double?> unitPrice;
   final Value<double?> total;
   final Value<String?> buyer;
+  final Value<String?> stringSeasonFarmIds;
   const ActDiaryNoNetworkTableCompanion({
     this.api = const Value.absent(),
     this.id = const Value.absent(),
@@ -4678,6 +4747,7 @@ class ActDiaryNoNetworkTableCompanion
     this.unitPrice = const Value.absent(),
     this.total = const Value.absent(),
     this.buyer = const Value.absent(),
+    this.stringSeasonFarmIds = const Value.absent(),
   });
   ActDiaryNoNetworkTableCompanion.insert({
     this.api = const Value.absent(),
@@ -4709,6 +4779,7 @@ class ActDiaryNoNetworkTableCompanion
     this.unitPrice = const Value.absent(),
     this.total = const Value.absent(),
     this.buyer = const Value.absent(),
+    this.stringSeasonFarmIds = const Value.absent(),
   });
   static Insertable<ActDiaryNoNetwork> custom({
     Expression<String>? api,
@@ -4740,6 +4811,7 @@ class ActDiaryNoNetworkTableCompanion
     Expression<double>? unitPrice,
     Expression<double>? total,
     Expression<String>? buyer,
+    Expression<String>? stringSeasonFarmIds,
   }) {
     return RawValuesInsertable({
       if (api != null) 'api': api,
@@ -4772,6 +4844,8 @@ class ActDiaryNoNetworkTableCompanion
       if (unitPrice != null) 'unit_price': unitPrice,
       if (total != null) 'total': total,
       if (buyer != null) 'buyer': buyer,
+      if (stringSeasonFarmIds != null)
+        'string_season_farm_ids': stringSeasonFarmIds,
     });
   }
 
@@ -4804,7 +4878,8 @@ class ActDiaryNoNetworkTableCompanion
       Value<String?>? quantityUnitName,
       Value<double?>? unitPrice,
       Value<double?>? total,
-      Value<String?>? buyer}) {
+      Value<String?>? buyer,
+      Value<String?>? stringSeasonFarmIds}) {
     return ActDiaryNoNetworkTableCompanion(
       api: api ?? this.api,
       id: id ?? this.id,
@@ -4835,6 +4910,7 @@ class ActDiaryNoNetworkTableCompanion
       unitPrice: unitPrice ?? this.unitPrice,
       total: total ?? this.total,
       buyer: buyer ?? this.buyer,
+      stringSeasonFarmIds: stringSeasonFarmIds ?? this.stringSeasonFarmIds,
     );
   }
 
@@ -4928,6 +5004,10 @@ class ActDiaryNoNetworkTableCompanion
     if (buyer.present) {
       map['buyer'] = Variable<String>(buyer.value);
     }
+    if (stringSeasonFarmIds.present) {
+      map['string_season_farm_ids'] =
+          Variable<String>(stringSeasonFarmIds.value);
+    }
     return map;
   }
 
@@ -4962,7 +5042,8 @@ class ActDiaryNoNetworkTableCompanion
           ..write('quantityUnitName: $quantityUnitName, ')
           ..write('unitPrice: $unitPrice, ')
           ..write('total: $total, ')
-          ..write('buyer: $buyer')
+          ..write('buyer: $buyer, ')
+          ..write('stringSeasonFarmIds: $stringSeasonFarmIds')
           ..write(')'))
         .toString();
   }

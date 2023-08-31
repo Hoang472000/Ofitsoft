@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
@@ -31,21 +32,59 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         isShowProgress: true,
         formStatus: const InitialFormStatus(),
         seasonFarmId: event.id));
-    print("HoangCV: runtime1 :event harvesting : ${event.harvesting}");
-    if (event.action.compareTo("activity") == 0) {
-      final listDiaryActivity = await repository.getListActivityDiary(event.id);
+    List<ActivityDiary> listDiaryActivity = [];
+    List<ActivityDiary> listCallback = [];
+    List<ActivityTransaction> listActivityTransaction = [];
+    List<ActivityTransaction> listCallbackTransaction = [];
+    print("HoangCV: listActivity: ${event.list.length}");
+    if (event.action.compareTo("activity") == 0 ||
+        event.action.compareTo("harvesting") == 0) {
+      if (event.list.isNotEmpty) {
+        listDiaryActivity.addAll(event.list);
+      } else {
+        listDiaryActivity
+            .addAll(await repository.getListActivityDiary(event.id));
+        listCallback.addAll(listDiaryActivity);
+      }
+      if (event.action.compareTo("activity") == 0) {
+        listDiaryActivity.removeWhere((element) => element.harvesting == true);
+      } else if (event.action.compareTo("harvesting") == 0) {
+        listDiaryActivity.removeWhere((element) => element.harvesting == false);
+      }
       emitter(state.copyWith(
           isShowProgress: false, listDiaryActivity: listDiaryActivity));
+    } else if (event.action.compareTo("sell") == 0) {
+      listDiaryActivity.addAll(event.list);
+      listDiaryActivity.removeWhere((element) => element.harvesting == false);
+      if (event.harvesting) {
+        emitter(state.copyWith(
+            isShowProgress: true));
+        listActivityTransaction
+            .addAll(await repository.getListActivityTransaction(event.id));
+        print("HoangCV: listActivityTransaction: ${listActivityTransaction.length}");
+        listCallbackTransaction.addAll(listActivityTransaction);
+        emitter(state.copyWith(
+            isShowProgress: false,
+            listActivityTransaction: listActivityTransaction,
+            listCallbackTransaction: listCallbackTransaction,
+            listDiaryActivity: listDiaryActivity));
+      } else {
+        emitter(state.copyWith(
+            isShowProgress: false,
+            listActivityTransaction: event.listTransaction,
+            listDiaryActivity: listDiaryActivity));
+      }
     } else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
 
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
-      emitter(state.copyWith(
-          isShowProgress: false, listDiaryMonitor: listDiaryMonitor));
+      emitter(state.copyWith(listDiaryMonitor: listDiaryMonitor));
     }
-    if(event.harvesting) {
+    if (event.harvesting) {
       repository.getUpdateDiary(event.id);
+      emit(state.copyWith(updateHarvesting: true));
     }
+    emit(state.copyWith(isShowProgress: false, listCallback: listCallback, listCallbackTransaction: listCallbackTransaction));
     //DiaryDB.instance.getListDiary();
   }
 
@@ -56,7 +95,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
       add(GetListActivityEvent(
-          state.seasonFarmId ?? 0, event.action, false));
+          state.seasonFarmId ?? 0, event.action, false, [], []));
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: objectResult.message)));
@@ -77,11 +116,14 @@ class GetListActivityEvent extends ActivityEvent {
   final int id;
   final String action;
   final bool harvesting;
+  final List<ActivityDiary> list;
+  final List<ActivityTransaction> listTransaction;
 
-  GetListActivityEvent(this.id, this.action, this.harvesting);
+  GetListActivityEvent(
+      this.id, this.action, this.harvesting, this.list, this.listTransaction);
 
   @override
-  List<Object?> get props => [id, action, harvesting];
+  List<Object?> get props => [id, action, harvesting, list, listTransaction];
 }
 
 class RemoveActivityEvent extends ActivityEvent {
@@ -115,7 +157,11 @@ class ActivityState extends BlocState {
         listActivity,
         listDiaryMonitor,
         seasonFarmId,
-        diary
+        diary,
+        updateHarvesting,
+        listCallback,
+        listActivityTransaction,
+        listCallbackTransaction,
       ];
   final List<ActivityDiary> listDiaryActivity;
   final List<MaterialEntity> listMaterial;
@@ -127,8 +173,13 @@ class ActivityState extends BlocState {
   final List<MonitorDiary> listDiaryMonitor;
   final int? seasonFarmId;
   final Diary? diary;
+  final bool updateHarvesting;
+  final List<ActivityDiary> listCallback;
+  final List<ActivityTransaction> listCallbackTransaction;
+  final List<ActivityTransaction> listActivityTransaction;
 
   ActivityState({
+    this.listActivityTransaction = const [],
     this.listDiaryActivity = const [],
     this.listDiaryMonitor = const [],
     this.formStatus = const InitialFormStatus(),
@@ -139,6 +190,9 @@ class ActivityState extends BlocState {
     this.listActivity = const [],
     this.seasonFarmId,
     this.diary,
+    this.updateHarvesting = false,
+    this.listCallback = const [],
+    this.listCallbackTransaction = const [],
   });
 
   ActivityState copyWith({
@@ -152,18 +206,27 @@ class ActivityState extends BlocState {
     List<Activity>? listActivity,
     int? seasonFarmId,
     Diary? diary,
+    bool? updateHarvesting,
+    List<ActivityDiary>? listCallback,
+    List<ActivityTransaction>? listActivityTransaction,
+    List<ActivityTransaction>? listCallbackTransaction,
   }) {
     return ActivityState(
-      listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
-      listDiaryMonitor: listDiaryMonitor ?? this.listDiaryMonitor,
-      formStatus: formStatus ?? this.formStatus,
-      isShowProgress: isShowProgress ?? this.isShowProgress,
-      listMaterial: listMaterial ?? this.listMaterial,
-      listTool: listTool ?? this.listTool,
-      listUnit: listUnit ?? this.listUnit,
-      listActivity: listActivity ?? this.listActivity,
-      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
-      diary: diary ?? this.diary,
-    );
+        listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
+        listDiaryMonitor: listDiaryMonitor ?? this.listDiaryMonitor,
+        formStatus: formStatus ?? this.formStatus,
+        isShowProgress: isShowProgress ?? this.isShowProgress,
+        listMaterial: listMaterial ?? this.listMaterial,
+        listTool: listTool ?? this.listTool,
+        listUnit: listUnit ?? this.listUnit,
+        listActivity: listActivity ?? this.listActivity,
+        seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+        diary: diary ?? this.diary,
+        updateHarvesting: updateHarvesting ?? this.updateHarvesting,
+        listActivityTransaction:
+            listActivityTransaction ?? this.listActivityTransaction,
+        listCallbackTransaction:
+            listCallbackTransaction ?? this.listCallbackTransaction,
+        listCallback: listCallback ?? this.listCallback);
   }
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
@@ -638,6 +639,24 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<void> getUpdateDiary(int id) {
     // TODO: implement getUpdateDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> addManyActivityDiary(ActivityDiary diary) {
+    // TODO: implement addManyActivityDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction) {
+    // TODO: implement addActivityTransaction
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ActivityTransaction>> getListActivityTransaction(int id) {
+    // TODO: implement getListActivityTransaction
     throw UnimplementedError();
   }
 }

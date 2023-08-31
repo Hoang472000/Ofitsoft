@@ -51,7 +51,7 @@ class _ItemDiaryState extends State<ItemDiary> {
         child: Stack(
           children: [
             Positioned.fill(
-                left: 20,
+                left: 16,
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Visibility(
@@ -82,12 +82,12 @@ class _ItemDiaryState extends State<ItemDiary> {
                 )),
             Container(
               padding:
-                  const EdgeInsets.only(top: 8, bottom: 8, left: 24, right: 16),
+                  const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
               margin: widget.amountSelected > 0
                   ? const EdgeInsets.only(
-                      left: 56, right: 16, top: 4, bottom: 4)
+                      left: 52, right: 16, top: 4, bottom: 4)
                   : const EdgeInsets.only(
-                      left: 20, right: 16, top: 4, bottom: 4),
+                      left: 16, right: 16, top: 4, bottom: 4),
               /*            margin: const EdgeInsets.only(
                   left: 20, right: 16, top: 4, bottom: 4),*/
               decoration: BoxDecoration(boxShadow: const [

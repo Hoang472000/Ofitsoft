@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
@@ -34,7 +35,6 @@ class AddActivitySellBloc
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddActivitySellDiaryEvent>(_addActivitySellDiary);
     on<SaveValueTextFieldEvent>(_saveValueTextField);
-    on<OnChangeDonGiaEvent>(_changeDonGia);
     // add(InitAddActivityEvent());
   }
 
@@ -86,7 +86,7 @@ class AddActivitySellBloc
         title: "Sản phẩm",
         isCompulsory: false,
         maxLengthTextInput: 2000,
-        type: TypeInputRegister.TextField,
+        type: TypeInputRegister.Non,
         typeInput: TextInputType.text,
         controller: state.productController,
         //noBorder: true
@@ -111,17 +111,31 @@ class AddActivitySellBloc
       icon: Icons.arrow_drop_down,
       positionSelected: state.indexYield,
       listValue: state.listUnitYield,
-      controller: state.donGiaController,
+      controller: state.donViController,
       valueSelected: state.listUnitYield[state.indexYield],
       typeInputEnum: TypeInputEnum.dmucItem,
       //noBorder: true
     ));
-
+    List<InputRegisterModel> inputDonGia = [
+      InputRegisterModel(
+        title: " ",
+        isCompulsory: false,
+        maxLengthTextInput: 15,
+        type: TypeInputRegister.TextField,
+        typeInput: TextInputType.number,
+        controller: state.donGiaController,
+        noUnder: true,
+        noBorder: true,
+/*        noBorder: true,
+        noUnder: true,*/
+      )
+    ];
     emitter(state.copyWith(
         listWidget: list,
         listWidgetVT: listVT,
         listWidgetYield: listYield,
         listWidgetArea: listArea,
+        inputDonGia: inputDonGia,
         formStatus: const InitialFormStatus()));
   }
 
@@ -133,6 +147,7 @@ class AddActivitySellBloc
         listWidgetVT: [],
         listWidgetCC: [],
         listWidgetArea: [],
+        inputDonGia: [],
         listCongCuAdd: [],
         listVatTuAdd: []));
     //final listActivity = await DiaryDB.instance.getListActivity();
@@ -154,8 +169,11 @@ class AddActivitySellBloc
                   .convert ??
               0));
     }
-    double convert = (listUnitYield[0].convert??0)/(listUnitYield[indexYield].convert??0);
-    print("HoangCV: amountYield: ${amountYield} : $convert");
+
+    double convert = (listUnitYield[0].convert ?? 0) /
+        (listUnitYield[indexYield].convert ?? 0);
+    double totalYield = double.parse(Utils.formatNumber(amountYield * convert));
+    print("HoangCV: amountYield: ${totalYield} : $convert");
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
@@ -172,11 +190,13 @@ class AddActivitySellBloc
           TextEditingController(text: DateTime.now().toString().split('.')[0]),
       buyerController:
           TextEditingController(text: "${event.diary.farmerName ?? 0}"),
-      productController: TextEditingController(text: "${event.diary.cropName}"),
+      productController:
+          TextEditingController(text: "${event.diary.productName}"),
       moTaController: TextEditingController(),
       donViController: TextEditingController(
           text: "${event.activityDiary[0].amountUnitName}"),
-      soLuongController: TextEditingController(text: "${amountYield * convert}"),
+      soLuongController:
+          TextEditingController(text: "${totalYield}"),
       donGiaController: TextEditingController(text: ''),
     ));
     _initViewAdd(emitter);
@@ -245,18 +265,21 @@ class AddActivitySellBloc
           ));
         }
         if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
-          print("HoangCV: dơn vị : ${convert} : ${(double.parse(state.soLuongController!.text) * convert)/(event.list[event.index].valueSelected.convert)}}");
+          print(
+              "HoangCV: dơn vị : ${convert} : ${(double.parse(state.soLuongController!.text) * convert) / (event.list[event.index].valueSelected.convert)}}");
           double inputValue = double.parse(state.soLuongController!.text);
           double conversionFactor = convert;
           double selectedValue = event.list[event.index].valueSelected.convert;
           double result = (inputValue * conversionFactor) / selectedValue;
-          String formattedResult = formatNumber(result);
+          String formattedResult = Utils.formatNumber(result);
+          double total = double.parse(state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!.text) *
+              double.parse(formattedResult);
           emit(state.copyWith(
               donViController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
-          soLuongController: TextEditingController(
-            text: "$formattedResult"
-          )));
+              soLuongController:
+                  TextEditingController(text: "$formattedResult"),
+              total: total));
           state.listWidgetArea[0].controller = state.soLuongController;
         }
         if (event.list[event.index].title.compareTo("Người bán") == 0) {
@@ -268,45 +291,74 @@ class AddActivitySellBloc
     }
   }
 
-  String formatNumber(double number) {
-    String formatted = number.toStringAsFixed(3);
-    if (formatted.contains('.') && formatted.endsWith('000')) {
-      return formatted.substring(0, formatted.length - 4); // Loại bỏ số 0 thừa
-    } else if (formatted.endsWith('00')) {
-      return formatted.substring(0, formatted.length - 2); // Loại bỏ 2 số 0 thừa
-    } else if (formatted.endsWith('0')) {
-      return formatted.substring(0, formatted.length - 1); // Loại bỏ 1 số 0 thừa
-    } else {
-      return formatted; // Giữ nguyên nếu không có số 0 thừa
-    }
-  }
-
-
   FutureOr<void> _addActivitySellDiary(AddActivitySellDiaryEvent event,
       Emitter<AddActivitySellState> emit) async {
-    if (state.listWidgetYield.isNotEmpty) {
-      state.listWidgetYield[0].error = null;
-      state.listWidgetYield[1].error = null;
-    }
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
-    List<InputRegisterModel> list = List.from(state.listWidget);
-    List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
+    if (state.listWidgetYield.isNotEmpty) {
+      state.listWidgetArea[0].error = null;
+      state.listWidgetArea[1].error = null;
+      state.inputDonGia[0].error = null;
+    }
+    if (state.indexActivity == -1) {
+      validate = false;
+      state.listWidget[0].error = "Vui lòng chọn tên công ty";
+    } else if (state.soLuongController!.text.isEmpty) {
+      validate = false;
+      state.listWidgetArea[0].error = "Vui lòng nhập sản lượng";
+    } else if (state.soLuongController!.text.isNotEmpty &&
+        double.parse(state.soLuongController!.text) <= 0) {
+      validate = false;
+      state.listWidgetArea[0].error = "Vui lòng nhập sản lượng > 0";
+    } else if (state.soLuongController!.text.isNotEmpty &&
+        state.listWidgetArea[1].valueSelected == null) {
+      validate = false;
+      state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
+    }
+    /*else if(state.soLuongController!.text.isNotEmpty && state.listWidgetYield[1].valueSelected != null){
+      if((double.parse(state.soLuongController!.text.isNotEmpty ? state.soLuongController!.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
+        validate = false;
+        state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
+      } else{
+        state.listWidgetArea[0].error = null;
+      }
+    }*/
+    else if (state.donGiaController!.text.isEmpty) {
+      validate = false;
+      state.inputDonGia[0].error = "Vui lòng nhập đơn giá";
+    }
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
       print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
-      emit(state.copyWith(
-          isShowProgress: false,
-          formStatus:
-              SubmissionSuccess(success: "Thêm hoạt động thu bán sản phẩm thành công")));
+      print("HoangCV: state. state.listUnitYield[state.indexYield].id: ${ state.listUnitYield[state.indexYield].id}");
+      ActivityTransaction activityTransaction = ActivityTransaction(
+        id: -1,
+        seasonFarmId: state.detailActivity!.seasonId,
+        transactionDate: state.startTimeController!.text,
+        quantity: Utils.convertStringToDouble(state.soLuongController!.text),
+        quantityUnitId: state.listUnitYield[state.indexYield].id,
+        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text),
+        person: state.buyerController!.text,
+        isPurchase: false,
+      );
+      ObjectResult result =
+          await repository.addActivityTransaction(activityTransaction);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionSuccess(success: result.message)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<AddActivitySellState> emit) {
-
     print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
@@ -317,15 +369,19 @@ class AddActivitySellBloc
       double donGia = state.total / double.parse(state.soLuongController!.text);
       total = donGia * double.parse(event.text);
       emit(state.copyWith(
-          soLuongController: TextEditingController(text: event.text), total: total));
+          soLuongController: TextEditingController(text: event.text),
+          total: total));
+    } else if (event.inputRegisterModel.title.compareTo(" ") == 0) {
+      print(
+          "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
+      event.inputRegisterModel.error = null;
+      double total = 0;
+      total = double.parse(state.soLuongController!.text) *
+          double.parse(event.text);
+      emit(state.copyWith(
+          donGiaController: TextEditingController(text: event.text),
+          total: total));
     }
-  }
-
-  FutureOr<void> _changeDonGia(OnChangeDonGiaEvent event, Emitter<AddActivitySellState> emit) {
-    print("HoangCV: _changeDonGia: ${event.donGia} : ${state.soLuongController!.text}");
-    double total = 0;
-    total = double.parse(event.donGia) * double.parse(state.soLuongController!.text);
-    emit(state.copyWith(total: total));
   }
 }
 
@@ -362,15 +418,6 @@ class OnSelectValueEvent extends AddActivitySellEvent {
 
   @override
   List<Object?> get props => [list, index, context];
-}
-
-class OnChangeDonGiaEvent extends AddActivitySellEvent {
-  String donGia;
-
-  OnChangeDonGiaEvent(this.donGia);
-
-  @override
-  List<Object?> get props => [donGia];
 }
 
 class AddOrDeleteImageEvent extends AddActivitySellEvent {
@@ -459,6 +506,7 @@ class AddActivitySellState extends BlocState {
         activityDiary,
         indexYield,
         total,
+        inputDonGia,
       ];
   final Diary? detailActivity;
   final List<ActivityDiary> activityDiary;
@@ -472,6 +520,7 @@ class AddActivitySellState extends BlocState {
   final List<InputRegisterModel> listWidget;
   List<InputRegisterModel> listWidgetVT;
   List<InputRegisterModel> listWidgetCC;
+  List<InputRegisterModel> inputDonGia;
   List<ImageEntity> listImage = [];
   List<MaterialEntity> listVatTuAdd = [];
   List<Tool> listCongCuAdd = [];
@@ -498,6 +547,7 @@ class AddActivitySellState extends BlocState {
   double total;
 
   AddActivitySellState({
+    this.inputDonGia = const [],
     this.detailActivity,
     this.activityDiary = const [],
     this.seasonId = -1,
@@ -573,42 +623,45 @@ class AddActivitySellState extends BlocState {
     double? imageHeight,
     double? areaMax,
     double? total,
+    List<InputRegisterModel>? inputDonGia,
   }) {
     return AddActivitySellState(
-        detailActivity: detailActivity ?? this.detailActivity,
-        activityDiary: activityDiary ?? this.activityDiary,
-        formStatus: formStatus ?? this.formStatus,
-        isShowProgress: isShowProgress ?? this.isShowProgress,
-        listMaterial: listMaterial ?? this.listMaterial,
-        listTool: listTool ?? this.listTool,
-        listUnitArea: listUnitArea ?? this.listUnitArea,
-        listUnitAmount: listUnitAmount ?? this.listUnitAmount,
-        seasonId: seasonId ?? this.seasonId,
-        listActivity: listActivity ?? this.listActivity,
-        listWidget: listWidget ?? this.listWidget,
-        listWidgetVT: listWidgetVT ?? this.listWidgetVT,
-        listWidgetCC: listWidgetCC ?? this.listWidgetCC,
-        listWidgetArea: listWidgetArea ?? this.listWidgetArea,
-        listImage: listImage ?? this.listImage,
-        listVatTuAdd: listVatTuAdd ?? this.listVatTuAdd,
-        listCongCuAdd: listCongCuAdd ?? this.listCongCuAdd,
-        companyController: companyController ?? this.companyController,
-        totalController: totalController ?? this.totalController,
-        soLuongController: soLuongController ?? this.soLuongController,
-        moTaController: moTaController ?? this.moTaController,
-        donViController: donViController ?? this.donViController,
-        donGiaController: donGiaController ?? this.donGiaController,
-        startTimeController: startTimeController ?? this.startTimeController,
-        productController: productController ?? this.productController,
-        buyerController: buyerController ?? this.buyerController,
-        isEdit: isEdit ?? this.isEdit,
-        imageWidth: imageWidth ?? this.imageWidth,
-        imageHeight: imageHeight ?? this.imageHeight,
-        indexActivity: indexActivity ?? this.indexActivity,
-        listUnitYield: listUnitYield ?? this.listUnitYield,
-        listWidgetYield: listWidgetYield ?? this.listWidgetYield,
-        areaMax: areaMax ?? this.areaMax,
-        total: total ?? this.total,
-        indexYield: indexYield ?? this.indexYield);
+      detailActivity: detailActivity ?? this.detailActivity,
+      activityDiary: activityDiary ?? this.activityDiary,
+      formStatus: formStatus ?? this.formStatus,
+      isShowProgress: isShowProgress ?? this.isShowProgress,
+      listMaterial: listMaterial ?? this.listMaterial,
+      listTool: listTool ?? this.listTool,
+      listUnitArea: listUnitArea ?? this.listUnitArea,
+      listUnitAmount: listUnitAmount ?? this.listUnitAmount,
+      seasonId: seasonId ?? this.seasonId,
+      listActivity: listActivity ?? this.listActivity,
+      listWidget: listWidget ?? this.listWidget,
+      listWidgetVT: listWidgetVT ?? this.listWidgetVT,
+      listWidgetCC: listWidgetCC ?? this.listWidgetCC,
+      listWidgetArea: listWidgetArea ?? this.listWidgetArea,
+      listImage: listImage ?? this.listImage,
+      listVatTuAdd: listVatTuAdd ?? this.listVatTuAdd,
+      listCongCuAdd: listCongCuAdd ?? this.listCongCuAdd,
+      companyController: companyController ?? this.companyController,
+      totalController: totalController ?? this.totalController,
+      soLuongController: soLuongController ?? this.soLuongController,
+      moTaController: moTaController ?? this.moTaController,
+      donViController: donViController ?? this.donViController,
+      donGiaController: donGiaController ?? this.donGiaController,
+      startTimeController: startTimeController ?? this.startTimeController,
+      productController: productController ?? this.productController,
+      buyerController: buyerController ?? this.buyerController,
+      isEdit: isEdit ?? this.isEdit,
+      imageWidth: imageWidth ?? this.imageWidth,
+      imageHeight: imageHeight ?? this.imageHeight,
+      indexActivity: indexActivity ?? this.indexActivity,
+      listUnitYield: listUnitYield ?? this.listUnitYield,
+      listWidgetYield: listWidgetYield ?? this.listWidgetYield,
+      areaMax: areaMax ?? this.areaMax,
+      total: total ?? this.total,
+      indexYield: indexYield ?? this.indexYield,
+      inputDonGia: inputDonGia ?? this.inputDonGia,
+    );
   }
 }

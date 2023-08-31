@@ -12,6 +12,7 @@ import '../item_default/tool.dart';
 class ActivityDiary implements Insertable<ActivityDiary>{
   int? id;
   int? seasonFarmId;
+  List<int>? seasonFarmIds;
   String? seasonFarm;
   int? activityId;
   String? activityName;
@@ -79,6 +80,8 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     this.unitPrice,
     this.total,
     this.buyer,
+
+    this.seasonFarmIds,
   });
 
   factory ActivityDiary.fromJson(Map<String, dynamic> json) {
@@ -140,6 +143,7 @@ class ActivityDiary implements Insertable<ActivityDiary>{
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['season_farm_id'] = seasonFarmId;
+    data['season_farm_ids'] = seasonFarmIds;
     data['season_farm'] = seasonFarm;
     data['activity_id'] = activityId;
     data['action_time'] = actionTime;

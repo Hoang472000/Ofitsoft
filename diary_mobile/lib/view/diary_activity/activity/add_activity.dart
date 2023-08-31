@@ -17,7 +17,7 @@ import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
-import '../../../utils/widgets/dialog_manager.dart';
+import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../utils/widgets/media/image_widget.dart';
 import '../../../utils/widgets/media/video_widget.dart';
@@ -62,6 +62,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           context,
           centerTitle: true,
           showDefaultBackButton: true,
+          callback: const [false],
           title: Text(
             "Thêm hoạt động",
             style: StyleOfit.textStyleFW700(Colors.white, 20),

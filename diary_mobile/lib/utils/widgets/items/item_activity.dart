@@ -8,7 +8,7 @@ import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../dialog_manager.dart';
+import '../dialog/dialog_manager.dart';
 
 ///Bkav Nhungltk: item diary
 class ItemActivity extends StatefulWidget {
@@ -66,7 +66,7 @@ class _ItemActivityState extends State<ItemActivity> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              widget.action.compareTo('activity') == 0
+              widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 || widget.action.compareTo('sell') == 0
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

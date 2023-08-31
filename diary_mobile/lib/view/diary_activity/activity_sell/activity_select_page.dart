@@ -62,6 +62,7 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
             context,
             centerTitle: true,
             showDefaultBackButton: true,
+            callback: [false, false],
             title: Text(
               "Chọn hoạt động",
               style: StyleOfit.textStyleFW700(Colors.white, 20),
@@ -118,7 +119,7 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
                               },
                               child: Row(
                                 children: [
-                                  SizedBox(width: 5,),
+                                  //SizedBox(width: 1,),
                                   IconButton(
                                       onPressed: () {
                                         blocContext.read<ActivitySelectBloc>().add(

@@ -4,15 +4,15 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
-import '../../generated/l10n.dart';
-import '../../resource/assets.dart';
-import '../../resource/color.dart';
-import '../../resource/style.dart';
-import '../../view/login/login_page.dart';
-import '../../view_model/navigation_service.dart';
-import '../logger.dart';
-import '../utils.dart';
-import 'dashed_circle.dart';
+import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
+import '../../../resource/color.dart';
+import '../../../resource/style.dart';
+import '../../../view/login/login_page.dart';
+import '../../../view_model/navigation_service.dart';
+import '../../logger.dart';
+import '../../utils.dart';
+import '../dashed_circle.dart';
 ///Class chứa các dialog dùng chung cho app
 class DiaLogManager {
   static Future<void> displayDialog(

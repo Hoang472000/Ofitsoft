@@ -16,7 +16,7 @@ import '../../../resource/style.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
-import '../../../utils/widgets/dialog_manager.dart';
+import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 
 class AccountInformationPage extends StatefulWidget {

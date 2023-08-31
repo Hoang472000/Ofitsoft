@@ -222,7 +222,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                         ),
                       ),
                     ),
-                    Align(
+              /*      Align(
                       alignment: Alignment.centerRight,
                       child: Theme(
                         data: ThemeData(
@@ -247,7 +247,7 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                           ),
                         ),
                       ),
-                    )
+                    )*/
                   ],
                 ),
                 height: appBarHeight,

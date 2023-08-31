@@ -18,6 +18,11 @@ class Activity implements Insertable<Activity> {
   String? unitId;
   String? mediaContent;
   bool? harvesting;
+  String? stringToolIds;
+  String? stringMaterialIds;
+  List<int>? toolIds;
+  List<int>? materialIds;
+
   Activity(
       {this.id,
       this.name,
@@ -32,6 +37,10 @@ class Activity implements Insertable<Activity> {
       this.quantity,
       this.unitId,
       this.mediaContent,
+      this.toolIds,
+      this.materialIds,
+      this.stringToolIds,
+      this.stringMaterialIds,
       this.harvesting});
 
   factory Activity.fromJson(Map<String, dynamic> json) {
@@ -50,7 +59,19 @@ class Activity implements Insertable<Activity> {
       unitId: json['unit_id'] ?? '',
       mediaContent: json['media_content'] ?? '',
       harvesting: json['harvesting'] ?? false,
+      toolIds:
+          json['tool_ids'] != null ? List<int>.from(json['tool_ids']) : <int>[],
+      materialIds: json['material_ids'] != null
+          ? List<int>.from(json['material_ids'])
+          : <int>[],
+      stringToolIds: jsonEncode(json['tool_ids']) ?? '[]',
+      stringMaterialIds: jsonEncode(json['material_ids']) ?? '[]',
     );
+  }
+
+  String convertIntListToJson(List<int> intList) {
+    final List<int> copyIntList = List.from(intList);
+    return jsonEncode(copyIntList);
   }
 
   Map<String, dynamic> toJson() {
@@ -68,28 +89,31 @@ class Activity implements Insertable<Activity> {
     data['quantity'] = quantity;
     data['unit_id'] = unitId;
     data['media_content'] = mediaContent;
+    data['tool_ids'] = toolIds;
+    data['material_ids'] = materialIds;
     data['harvesting'] = harvesting;
     return data;
   }
 
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     return ActivityTableCompanion(
-        id: Value(id),
-        name: Value(name),
-        categoryId: Value(categoryId),
-        isOrganic: Value(isOrganic),
-        notation: Value(notation),
-        description: Value(description),
-        image: Value(image),
-        isActive: Value(isActive),
-        diaryFarmerId: Value(diaryFarmerId),
-        toolId: Value(toolId),
-        quantity: Value(quantity),
-        mediaContent: Value(mediaContent),
-        harvesting: Value(harvesting),
-        unitId: Value(unitId))
+            id: Value(id),
+            name: Value(name),
+            categoryId: Value(categoryId),
+            isOrganic: Value(isOrganic),
+            notation: Value(notation),
+            description: Value(description),
+            image: Value(image),
+            isActive: Value(isActive),
+            diaryFarmerId: Value(diaryFarmerId),
+            toolId: Value(toolId),
+            quantity: Value(quantity),
+            mediaContent: Value(mediaContent),
+            harvesting: Value(harvesting),
+            stringToolIds: Value(stringToolIds),
+            stringMaterialIds: Value(stringMaterialIds),
+            unitId: Value(unitId))
         .toColumns(nullToAbsent);
   }
 }

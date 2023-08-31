@@ -8,7 +8,7 @@ import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
-import '../../utils/widgets/dialog_manager.dart';
+import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../view_model/home_bloc.dart';
 import '../report/add_report_view.dart';
 import '../setting/contact/contact_page.dart';

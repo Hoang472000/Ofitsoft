@@ -7,454 +7,599 @@ import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
+import '../../extenstion/extenstions.dart';
+import '../../extenstion/input_register_model.dart';
+import '../../extenstion/service_info_extension.dart';
 import '../../logger.dart';
 import '../../utils.dart';
+import '../checkbox/checkbox_custom_widget.dart';
 
 ///custom 1 o nhat text
-class TextFieldNoBorder extends StatefulWidget {
-  final String _label;
-  final TextEditingController _textEditingController;
-  final bool _isTypePassword;
+class TextFieldNoBorder extends StatelessWidget {
+  final Function? onClick;
+  final InputRegisterModel inputRegisterModel;
+  final BuildContext? contextParent;
+  final ValueChanged<int>? onMutiChoice;
+  final ValueChanged<String>? onChangeText;
+  final ValueChanged<String>? onSubmittedText;
+  final Function(String)? onEditingComplete;
+  final Function? onClickIcon;
+  final Function? showPassword;
+  final ValueChanged<bool>? checkFocus;
+  final TextStyle? titleStyle; // điều chỉnh style tiêu đề
+  final ValueChanged<bool>? onChangeToggle;
+  final Color? color;
 
-  final bool _errorValidate;
-  final FocusNode _focusNode;
-  final String errorValidate;
-  final Function(bool) checkPass;
-  final bool changePass;
-  final bool?
-  isNotValidStart; // xac dinh xem truong thong tin co bat buoc hay khong
-  final bool? isPhone;
-  final bool? isNumber;
-  final bool? isFromEnterInfo;
-  final bool? isTime; // xac dinh truong chon thoi gian
-  final bool? isNotEdit; // xac dinh xem duoc sua hay khong
-  final bool? isNotPass;
-  final bool? noBorder; // set noBorder
-  final bool? underLine; // dung underLine thay cho OutLine
-  final Function(String)? onChangeCallBack;
-  final bool? isChangeCallBack;
-
-  const TextFieldNoBorder(
-      this._label,
-      this._textEditingController,
-      this._isTypePassword,
-      this._errorValidate,
-      this._focusNode,
-      this.errorValidate,
-      this.checkPass,
-      this.changePass,
-      {Key? key,
-        this.isNotValidStart,
-        this.isPhone,
-        this.isNumber,
-        this.isFromEnterInfo,
-        this.isTime, this.isNotEdit,
-        this.isNotPass, this.noBorder, this.underLine,
-        this.onChangeCallBack, this.isChangeCallBack})
+  const TextFieldNoBorder({
+    Key? key,
+  this.onClick,
+  required this.inputRegisterModel,
+  this.contextParent,
+  this.onMutiChoice,
+  this.onChangeText,
+  this.onSubmittedText,
+  this.onEditingComplete,
+  this.onClickIcon,
+  this.showPassword,
+  this.checkFocus,
+  this.titleStyle,
+  this.onChangeToggle,
+  this.color})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _TextFieldNoBorderState();
-}
-
-class _TextFieldNoBorderState extends State<TextFieldNoBorder> {
-  bool _showDeleteText = true;
-  bool _obscureText = true;
-  bool _showAsterisk = false;
-  bool _textIsNotEmpty = false;
-  bool _validatorTextIsEmpty = false;
-  bool hideError = false;
-  bool onTap = true;
-
-  bool _hasFocus = false;
-
-  // HanhNTHe add
-  DateTime selectedDate = DateTime.now();
-
-  _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2060),
-      builder: (context, child) {
-        return Theme(
-          data: Theme.of(context).copyWith(
-            colorScheme: const ColorScheme.light(
-              primary:
-              AppColor.main, // header background color// body text color
-            ),
-            textButtonTheme: TextButtonThemeData(
-              style: TextButton.styleFrom(
-                primary: Colors.red, // button text color
-              ),
-            ),
-          ),
-          child: child!,
-        );
-      },
-    );
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-        widget._textEditingController.text =
-        "${selectedDate.day < 10 ? "0${selectedDate.day}" : selectedDate.day}/${selectedDate.month < 10 ? "0${selectedDate.month}" : selectedDate.month}/${selectedDate.year}";
+  Widget build(BuildContext context) {
+    // Xử lí khi click ra ngoài sẽ viết hoa và bỏ dấu tiếng việt
+    if (inputRegisterModel.type == TypeInputRegister.TextField &&
+        inputRegisterModel.isUpCaseTextAndRemoveSign) {
+      inputRegisterModel.focusNode.addListener(() {
+        print(inputRegisterModel.focusNode.hasFocus);
+        if (!inputRegisterModel.focusNode.hasFocus) {
+          inputRegisterModel.controller!.text = Utils.formatText(
+              inputRegisterModel.controller!.text.toUpperCase());
+        }
       });
     }
-  }
+    return Stack(
+      children: [
+        Padding(
+          padding: /*inputRegisterModel.noBorder ? EdgeInsets.zero:*/ EdgeInsets.only(top: 8, bottom: 8),
+          child: GestureDetector(
+            onTap: () {
+              switch (inputRegisterModel.type) {
+                case TypeInputRegister.TextField:
+                  inputRegisterModel.focusNode.requestFocus();
+                  break;
+                case TypeInputRegister.Select:
+                  onClick!();
+                  break;
+                case TypeInputRegister.MultiSelection:
+                // TODO: Handle this case.
+                  break;
+                case TypeInputRegister.Non:
+                // TODO: Handle this case.
+                  break;
+                case TypeInputRegister.Balance:
+                // TODO: Handle this case.
+                  break;
+                case TypeInputRegister.TextFieldIcon:
+                  inputRegisterModel.focusNode.requestFocus();
+                  break;
+                case TypeInputRegister.TextFieldMoney:
+                  inputRegisterModel.focusNode.requestFocus();
+                  break;
+                case TypeInputRegister.TextFieldRemark:
+                  inputRegisterModel.focusNode.requestFocus();
+                  break;
+                case TypeInputRegister.Tolge:
+                // TODO: Handle this case.
+                  break;
+                case TypeInputRegister.TextFieldDate:
+                // TODO: Handle this case.
+                  break;
+              }
+            },
+            child: Row(
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: inputRegisterModel.error != null
+                            ? Colors.red
+                        // chỗ này kiểm tra xem nó là dạng togle thì không show viền boder
+                            : inputRegisterModel.type == TypeInputRegister.Tolge || inputRegisterModel.noBorder
+                            ? Colors.transparent
+                            : Color(0xFFB2B8BB),
+                        width: 1.5,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      color: color == null ? Colors.white : color),
+                  child: Container(
+                    child: ListView(
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      primary: false,
+                      children: [
+                        Padding(
+                          padding: inputRegisterModel.noBorder ? EdgeInsets.zero : const EdgeInsets.all(6),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              inputRegisterModel.title.length > 25 ?
+                              Expanded(
+                                flex: 5,
+                                child: Text(
+                                  '${inputRegisterModel.title}',
+                                  style: TextStyle(
+                                      color: AppColor.gray57,
+                                      fontSize: 14)
+                                      .merge(titleStyle),
+                                ),
+                              ) : Text(
+                                '${inputRegisterModel.title}',
+                                style: TextStyle(
+                                    color: AppColor.gray57,
+                                    fontSize: 14)
+                                    .merge(titleStyle),
+                              ),
+                              (inputRegisterModel.isCompulsory &&
+                                  inputRegisterModel.title.isNotEmpty)
+                                  ? Text(
+                                " *",
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 14),
+                              )
+                                  : Container(),
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Row(
+                                  children: [
+                                    Expanded(child: _rightWidget(context)),
+                                    inputRegisterModel.unit == null
+                                        ? Container()
+                                        : Expanded(
+                                        child: Text(
+                                          inputRegisterModel.unit ?? "",
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 14),
+                                          textAlign: TextAlign.end,
 
-  //final FocusNode _focusNode= FocusNode();
-
-  _TextFieldNoBorderState();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  ///show icon * mau do
-  void showAsterrick(bool show) {
-    setState(() {
-      _showAsterisk = show;
-    });
-  }
-
-  //hien thi thong bao text null
-  void textIsNotEmplty(bool textIsNotEmpty) {
-    setState(() {
-      _validatorTextIsEmpty = !textIsNotEmpty;
-    });
-  }
-
-  ///ham nay de tao lai deco
-  InputDecoration createInputDecoration() {
-    return InputDecoration(
-        fillColor: const Color(0xFFFFFFFF),
-        counterText: "",
-        filled: true,
-        contentPadding:
-        widget.noBorder == false?
-        const EdgeInsets.symmetric(vertical: 10.0, horizontal: 15.0):
-        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-        focusedBorder: widget.underLine==false?OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: const BorderSide(color: Color(0xFF08B7DD), width: 1.0)):UnderlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFF08B7DD)),
-        ),
-        border: widget.noBorder== false?OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(
-                color: widget.isNotEdit ?? false
-                    ? AppColor.redDD
-                    : (widget._errorValidate || _validatorTextIsEmpty) &&
-                    !hideError &&
-                    (widget.isNotValidStart == null ||
-                        (widget.isNotValidStart != null &&
-                            !widget.isNotValidStart!))
-                    ? AppColor.redDD
-                    : const Color(0xFFBDBDBD) ,
-                width: 1.0)) : widget.underLine==true?UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.red),
-        ): InputBorder.none,
-        errorText: widget.isNotEdit ?? false//
-            ? widget.errorValidate
-            : (widget.isNotValidStart == null ||
-            (widget.isNotValidStart != null &&
-                !widget.isNotValidStart!))
-            ? (widget.changePass == true &&
-            _validatorTextIsEmpty &&
-            !hideError && !(widget.isNotPass ?? false)
-            ? "${widget._label} ${S.of(context).not_emty}"
-            : (widget._errorValidate || _validatorTextIsEmpty) &&
-            !hideError
-            ? widget.errorValidate
-            : null)
-            : null,
-        label: (_showAsterisk /*&& (_notEmpty*/ ||
-            _textIsNotEmpty) /*)*/
-            ? Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Flexible(
-              child: Text(widget._label,
-                  style: StyleOfit.textStyleFW400(
-                      _hasFocus || _textIsNotEmpty
-                          ? AppColor.black22
-                          : AppColor.labelInputText,
-                      16)),
+                                        )),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            widget.isNotValidStart == null ||
-                (widget.isNotValidStart != null &&
-                    !widget.isNotValidStart!)
-                ? Flexible(
-              child: Text(" *",
-                  style:
-                  StyleOfit.textStyleFW400(AppColor.redDD, 16)),
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            inputRegisterModel.image != "" ? SizedBox(width: 44,) : SizedBox(),
+            Expanded(
+              child: Text(
+                "${inputRegisterModel.error ?? ""}",
+                style: TextStyle(
+                    color: Colors.red,
+                    backgroundColor: Colors.white,
+                    fontSize: 12),
+              ),
+            ),
+            SizedBox(
+              width: 20,
+            )
+          ],
+        )
+      ],
+    );
+  }
+
+  Widget _rightWidget(BuildContext context) {
+    print("HoangCV:_rightWidget chạy vào đây");
+    switch (inputRegisterModel.type) {
+      case TypeInputRegister.TextField:
+        int maxLength = 0;
+        if (inputRegisterModel.maxLengthTextInput != null) {
+          if (inputRegisterModel.isFormatText) {
+            maxLength = (inputRegisterModel.maxLengthTextInput! +
+                (inputRegisterModel.maxLengthTextInput! % 3 == 0
+                    ? inputRegisterModel.maxLengthTextInput! ~/ 3 - 1
+                    : inputRegisterModel.maxLengthTextInput! ~/ 3))!;
+          } else {
+            maxLength = inputRegisterModel.maxLengthTextInput!;
+          }
+        }
+
+        /// Format text
+        List<TextInputFormatter> _textFormat = [];
+        if (inputRegisterModel.isOnlyInputNumber) {
+          _textFormat = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[0-9,]')),
+          ];
+        }
+        if (inputRegisterModel.isUpCaseTextAndRemoveSign) {
+          _textFormat = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(
+                r'[a-z A-Z àáãạảăắằẳẵặâấầẩẫậèéẹẻẽêềếểễệđìíĩỉịòóõọỏôốồổỗộơớờởỡợùúũụủưứừửữựỳỵỷỹýÀÁÃẠẢĂẮẰẲẴẶÂẤẦẨẪẬÈÉẸẺẼÊỀẾỂỄỆĐÌÍĨỈỊÒÓÕỌỎÔỐỒỔỖỘƠỚỜỞỠỢÙÚŨỤỦƯỨỪỬỮỰỲỴỶỸÝ]')),
+          ];
+        }
+        if (inputRegisterModel.isRemoveSign) {
+          _textFormat = <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'[a-z A-Z 0-9]')),
+          ];
+        }
+        if (inputRegisterModel.isAlwaysCap == null) {
+          _textFormat = <TextInputFormatter>[];
+        } else if (inputRegisterModel.isAlwaysCap &&
+            inputRegisterModel.isAlwaysCap != null) {
+          _textFormat = <TextInputFormatter>[UpperCaseTextFormatter()];
+        } else {
+          _textFormat = <TextInputFormatter>[];
+        }
+        return Row(
+          children: [
+            Expanded(
+              child: Focus(
+                child: TextField(
+                  obscureText: inputRegisterModel.isPassword,
+
+                  /// Chỉ cho phép nhận số. Kể cả dấu chấm
+                  inputFormatters: _textFormat,
+                  focusNode: inputRegisterModel.focusNode,
+                  keyboardType: inputRegisterModel.typeInput,
+                  controller: inputRegisterModel.controller,
+                  textCapitalization:
+                  inputRegisterModel.textCapitalization == null
+                      ? TextCapitalization.none
+                      : inputRegisterModel.textCapitalization!,
+                  textAlign: TextAlign.right,
+                  //autofocus: true,
+                  // onTap: () {
+                  //   inputRegisterModel.controller.selection =
+                  //       new TextSelection.fromPosition(new TextPosition(
+                  //           offset: inputRegisterModel.controller.text.length));
+                  // },
+                  onChanged: (newText) {//HoangCV: đoạn này cần xem lại đang lỗi // đọc thì khá giống format cho nhập số điện thoại, kiểu int với double  `
+                    //setTrailingSpaceWhenInput(inputRegisterModel);
+
+                    if(onChangeText != null){
+                      onChangeText!(newText);
+                    }
+
+                    try {
+                      if (inputRegisterModel.controller!.text
+                          .replaceAll(',', '')
+                          .length <=
+                          inputRegisterModel.maxLengthTextInput! &&
+                          inputRegisterModel.isFormatText) {
+                        inputRegisterModel.controller!.value = TextEditingValue(
+                          text: Utils.formatCurrency(
+                              inputRegisterModel.controller!.text),
+                          selection: TextSelection.collapsed(
+                              offset: Utils.formatCurrency(
+                                  inputRegisterModel.controller!.text)
+                                  .length),
+                        );
+                      }
+                      // print(inputRegisterModel.controller.text);
+                    } catch (e) {
+                      print(e);
+                    }
+                  },
+                  onSubmitted: onSubmittedText,
+                  maxLength: maxLength,
+                  style: TextStyle(
+                      color: inputRegisterModel.unit == null
+                          ? Colors.black
+                          : Color(0xFFA3A3A3),
+                      fontSize: 14),
+                  decoration: InputDecoration(
+                      contentPadding:
+                      EdgeInsets.only(top: inputRegisterModel.noBorder ? 0 : 6,bottom: inputRegisterModel.noBorder ? 0 : 6,
+                          left: inputRegisterModel.noBorder ? 20 : 0, right: inputRegisterModel.noBorder ? 0 : 0),
+                      isDense: true,
+                      hintText: inputRegisterModel.hintText,
+                      border: inputRegisterModel.noUnder ? UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ): InputBorder.none,
+                      counterText: ''),
+                  minLines: 1,
+                  maxLines: 5,
+                ),
+                onFocusChange: (focus){
+                  if(!focus){
+                  }
+                },
+              ),
+            ),
+            inputRegisterModel.icon != null
+                ? GestureDetector(
+              onTap: () {
+                if(inputRegisterModel.typeInputEnum == TypeInputEnum.password ||
+                    inputRegisterModel.typeInputEnum == TypeInputEnum.new_password ||
+                    inputRegisterModel.typeInputEnum == TypeInputEnum.re_new_password)
+                  showPassword!();
+                else
+                  inputRegisterModel.controller!.text = "";
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Utils.iconCustom(
+                    icon: inputRegisterModel.icon,
+                    context: contextParent,
+                    size: 30),
+              ),
             )
                 : Container()
           ],
-        )
-            : (widget.isNotValidStart != null && !widget.isNotValidStart!)
-            ? RichText(
-          text: TextSpan(children: [
-            TextSpan(
-                text: widget._label,
-                style: StyleOfit.textStyleFW400(
-                    AppColor.labelInputText, 14)),
-            TextSpan(
-                text: "*",
-                style: StyleOfit.textStyleFW400(AppColor.redDD, 16)),
-          ]),
-          textScaleFactor: MediaQuery.of(context).textScaleFactor,
-        )
-            : Text(widget._label,
-            style:
-            StyleOfit.textStyleFW400(AppColor.labelInputText, 14)),
-        suffixIcon: widget.isNotEdit ?? false || widget.noBorder == true
-            ? null
-            : widget.isTime != null && _showDeleteText && _hasFocus
-            ? IconButton(
-          color: AppColor.black22,
-          //open lich
-          icon: SvgPicture.asset(
-            IconAsset.icLich,
-            width: 16,
-            height: 16,
-          ),
-          onPressed: () {
-            _selectDate(context);
-            // setState(() {
-            //   _obscureText = !_obscureText;
-            // });
-          },
-        )
-            : (!widget._isTypePassword
-            ? _showDeleteText && _hasFocus
-            ? Row(
-            mainAxisAlignment:
-            MainAxisAlignment.center, // added line
-            mainAxisSize: MainAxisSize.min, // added line
-            children: <Widget>[
-              Container(
-                  width: 24,
-                  height: 24,
-                  decoration: const BoxDecoration(
-                    // image: DecorationImage(
-                    //     image: AssetImage(
-                    //         IconAsset.backgroundClear),
-                    //     fit: BoxFit.cover),
-                  ),
-                  child: Transform.scale(
-                    scale: 2,
-                    child: IconButton(
-                      color: AppColor.black22,
-                      icon:
-                      //fix loi fucus bi mau xanh
-                      const Icon(
-                        Icons.clear,
-                        color: AppColor.main,
-                        size: 8,
-                      ),
-                      onPressed: () {
-                        widget._textEditingController.clear();
-                        _textIsNotEmpty = false;
-                        showDeleteText(false);
-                      },
-                    ),
-                  ))
-            ])
-            : null
-            : _showDeleteText && _hasFocus //
-            ? Row(
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween, // added line
-          mainAxisSize: MainAxisSize.min, // added line
-          children: <Widget>[
-            Container(
-                width: 24,
-                height: 24,
-                decoration: const BoxDecoration(
-                  // image: DecorationImage(
-                  //     image: AssetImage(
-                  //         IconAsset.backgroundClear),
-                  //     fit: BoxFit.cover),
-                ),
-                child: Transform.scale(
-                  scale: 2,
-                  child: IconButton(
-                    color: AppColor.black22,
-                    icon: const Icon(
-                      Icons.clear,
-                      color: AppColor.main,
-                      size: 8,
-                    ),
-                    onPressed: () {
-                      widget._textEditingController.clear();
-                      //
-                      _textIsNotEmpty = false;
-                      showDeleteText(false);
-                    },
-                  ),
-                )),
-            IconButton(
-              color: AppColor.black22,
-              //fix loi fucus bi mau xanh
-              icon: _obscureText
-                  ? const Icon(
-                Icons.remove_red_eye,
-                color: AppColor.main,
-                size: 16,
-              )
-                  : SvgPicture.asset(
-                IconAsset.eyeOff,
-                width: 16,
-                height: 16,
+        );
+        break;
+      case TypeInputRegister.Balance:
+        return Container();
+        break;
+      case TypeInputRegister.TextFieldIcon:
+        return Container();
+        break;
+      case TypeInputRegister.Tolge:
+        return Container();
+        break;
+      case TypeInputRegister.Select:
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Expanded(
+              child: Text(
+                "${inputRegisterModel.valueDefault ??
+                    Extension().getValueDisplay(
+                      inputRegisterModel.valueSelected,
+                    )}",
+                style: TextStyle(color: Colors.black, fontSize: 14),
+                textAlign: TextAlign.end,
               ),
-              onPressed: () {
-                setState(() {
-                  _obscureText = !_obscureText;
-                });
-              },
             ),
+            inputRegisterModel.icon != null
+                ? Padding(
+                padding: EdgeInsets.zero,
+                child: Icon(inputRegisterModel.icon, /*fontFamily: fontIconApp*/
+                    size: 30 ?? 16, color: color ?? Theme
+                        .of(context)
+                        .primaryColor)
+              /*Utils.iconCustom(
+                        icon: inputRegisterModel.icon,
+                        context: contextParent,
+                        size: 30),*/
+            ) : Container()
           ],
-        )
-            : IconButton(
-          color: AppColor.black22,
-          //fix loi fucus bi mau xanh
-          icon: _obscureText
-              ? const Icon(
-            Icons.remove_red_eye,
-            color: AppColor.main,
-            size: 16,
-          )
-              : SvgPicture.asset(
-            IconAsset.eyeOff,
-            width: 16,
-            height: 16,
+        );
+        break;
+      case TypeInputRegister.MultiSelection:
+        return Container();
+        break;
+      case TypeInputRegister.Non:
+        return TextField(
+          enabled: false,
+          keyboardType: inputRegisterModel.typeInput,
+          controller: inputRegisterModel.controller,
+          textAlign: TextAlign.right,
+          // onTap: () {
+          //   inputRegisterModel.controller.selection =
+          //       new TextSelection.fromPosition(new TextPosition(
+          //           offset: inputRegisterModel.controller.text.length));
+          // },
+          onChanged: (newText) {
+            setTrailingSpaceWhenInput(inputRegisterModel);
+          },
+          autofocus: true,
+          style: TextStyle(
+              color: inputRegisterModel.unit == null
+                  ? Colors.black
+                  : Color(0xFFA3A3A3),
+              fontSize: 14),
+          decoration: InputDecoration(
+              contentPadding:
+              EdgeInsets.symmetric(vertical: 16, horizontal: 0),
+              isDense: true,
+              border: InputBorder.none,
+              counterText: ''),
+          minLines: 1,
+          maxLines: 2,
+        );
+        break;
+
+      case TypeInputRegister.TextFieldMoney:
+        return TextField(
+          keyboardType: TextInputType.number,
+          controller: inputRegisterModel.controller,
+          textAlign: TextAlign.right,
+          autofocus: true,
+          onChanged: (newText) {
+            setTrailingSpaceWhenInput(inputRegisterModel);
+            if (inputRegisterModel.controller!.text
+                .replaceAll('\D', '')
+                .length <=
+                inputRegisterModel.maxLengthTextInput! &&
+                inputRegisterModel.isFormatText) {
+              inputRegisterModel.controller!.value = TextEditingValue(
+                text: inputRegisterModel.isDecimalCurrency
+                    ? Utils.formatDecimalCurrency(
+                    inputRegisterModel.controller!.text, false)
+                    : Utils.formatCurrency(inputRegisterModel.controller!.text),
+                selection: TextSelection.collapsed(
+                    offset: inputRegisterModel.isDecimalCurrency
+                        ? Utils.formatDecimalCurrency(
+                        inputRegisterModel.controller!.text, false)
+                        .length
+                        : Utils.formatCurrency(
+                        inputRegisterModel.controller!.text)
+                        .length),
+              );
+            }
+          },
+          onSubmitted: onSubmittedText,
+          onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
+          style: TextStyle(
+              color: inputRegisterModel.unit == null
+                  ? Colors.black
+                  : Color(0xFFA3A3A3),
+              fontSize: 14),
+          decoration: InputDecoration(
+            contentPadding:
+            EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+            isDense: true,
+            border: InputBorder.none,
+            counterText: '',
           ),
-          onPressed: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
-        )));
-  }
+          maxLength: inputRegisterModel.maxLengthTextInput,
+        );
 
-  ///ham nay de show Icon delete
-  void showDeleteText(bool show) {
-    setState(() {
-      Logger.loggerDebug("show Delete $show");
-      _showDeleteText = show;
-    });
-  }
+        break;
 
-  @override
-  Widget build(BuildContext context) {
-    if (widget._textEditingController.text.isNotEmpty) {
-      _textIsNotEmpty = true;
-    }
-    return Focus(
-      child: TextFormField(
-          readOnly: widget.isNotEdit ?? false,
-          onTap: () {
-            setState(() {
-              onTap = true;
-            });
-            widget._focusNode.requestFocus();
-          },
-          textInputAction: TextInputAction.next,
-          focusNode: widget._focusNode,
-          maxLength: TextInputType.number != null ? 12 : null,
-          maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds ,
-          keyboardType:
-          widget.isPhone != null ? TextInputType.phone :
-          widget.isNumber != null ? TextInputType.number : TextInputType.text,
-          controller: widget._textEditingController,
-          decoration: createInputDecoration(),
-          obscureText: widget._isTypePassword ? _obscureText : false,
-          obscuringCharacter: "*",
-          textAlign: widget.noBorder==true? TextAlign.right : TextAlign.start ,
-          onChanged: (text) => {
-            if (widget.isChangeCallBack == true)
-              {
-                widget.onChangeCallBack!(text),
-              },
-            showDeleteText((text.isNotEmpty)),
-            if ((text.isNotEmpty /*&& _isTypePassword*/) !=
-                _showDeleteText)
-              {
-                if (!text.isNotEmpty)
-                  {
-                    //check dieu kien khi text null
-                    _textIsNotEmpty = false,
-                  } //check khi co text trong form thi ko hien thong bao nhap text
-                else
-                  {
-                    textIsNotEmplty(true),
-                  }
-              }
-            else if (text.isNotEmpty)
-              {
-                _textIsNotEmpty = true,
-                textIsNotEmplty(true),
-                setState(() {
-                  hideError = true;
-                })
-              }
-            else
-              {
-                _textIsNotEmpty = false,
-                textIsNotEmplty(false),
-              }
-          },
-          validator: (String? value) {
-            if (value == null || value.isEmpty) {
-              textIsNotEmplty(false);
-            }
-            setState(() {
-              hideError = false;
-            });
-            //return null;
-          },
-          onEditingComplete: () async {
-            widget._focusNode.unfocus();
-            setState(() {
-              hideError = false;
-              onTap = false;
-            });
-            if (onTap == false && widget.changePass == true) {
-              setState(() {
-                onTap = true;
-              });
-              onLostFocus(widget._textEditingController.text, false);
-            }
-          }),
-      onFocusChange: (hasFocus) async {
-        showAsterrick(hasFocus);
-        setState(() {
-          _hasFocus = hasFocus;
-          if (hasFocus == false) {
-            hideError = false;
+    // các input dạng nhiều dong như nội dung
+      case TypeInputRegister.TextFieldRemark:
+        int maxLength = 0;
+        if (inputRegisterModel.maxLengthTextInput != null) {
+          if (inputRegisterModel.isFormatText) {
+            maxLength = inputRegisterModel.maxLengthTextInput! +
+                (inputRegisterModel.maxLengthTextInput! % 3 == 0
+                    ? inputRegisterModel.maxLengthTextInput! ~/ 3 - 1
+                    : inputRegisterModel.maxLengthTextInput! ~/ 3);
+          } else {
+            maxLength = inputRegisterModel.maxLengthTextInput!;
           }
-        });
-        if (hasFocus == false && widget.changePass == true) {
-          onLostFocus(widget._textEditingController.text, true);
         }
-      },
-    );
-  }
+        return TextField(
+          controller: inputRegisterModel.controller,
+          textAlign: TextAlign.right,
+          autofocus: true,
+          // onTap: () {
+          //   inputRegisterModel.controller.selection =
+          //       new TextSelection.fromPosition(new TextPosition(
+          //           offset: inputRegisterModel.controller.text.length));
+          // },
+          onChanged: (newText) {
+            setTrailingSpaceWhenInput(inputRegisterModel);
+            if (Utils.formatText(inputRegisterModel.controller!.text).length <=
+                inputRegisterModel.maxLengthTextInput &&
+                inputRegisterModel.isFormatText) {
+              inputRegisterModel.controller!.value = TextEditingValue(
+                text: Utils.formatText(
+                    inputRegisterModel.controller!.text.toUpperCase()),
+                selection: TextSelection.collapsed(
+                    offset: Utils.formatText(inputRegisterModel.controller!.text)
+                        .length),
+              );
+            }
+          },
+          maxLength: maxLength,
+          style: TextStyle(
+              color: inputRegisterModel.unit == null
+                  ? Colors.black
+                  : Color(0xFFA3A3A3),
+              fontSize: 14),
+          decoration: InputDecoration(
+              contentPadding:
+              EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+              isDense: true,
+              border: InputBorder.none,
+              counterText: '',
+              hintText: inputRegisterModel.hintText),
+          minLines: 3,
+          maxLines: 3,
+        );
+        break;
 
-  void onLostFocus(String text, bool lostFocus) {
-    if (text.isEmpty) {
-      textIsNotEmplty(false);
-    } else {
-      textIsNotEmplty(true);
+// đây là lựa chọn có hoac không togle
+
+
+    // các input dạng Nhập tiền
+      case TypeInputRegister.TextFieldDate:
+        return TextField(
+          keyboardType: TextInputType.text,
+          controller: inputRegisterModel.controller,
+          textAlign: TextAlign.right,
+          autofocus: false,
+          onChanged: (newText) {
+            print("HoangCV : TextFieldDate chạy vào đây: ${newText}");
+            setTrailingSpaceWhenInput(inputRegisterModel);
+            if (inputRegisterModel.controller!.text
+            /* .replaceAll('\D', '')*/
+                .length <=
+                inputRegisterModel.maxLengthTextInput!) {
+              inputRegisterModel.controller!.value = TextEditingValue(
+                text: Utils.formatDateTextField(
+                    inputRegisterModel.controller!.text),
+                selection: TextSelection.collapsed(
+                    offset: Utils.formatDateTextField(
+                        inputRegisterModel.controller!.text)
+                        .length),
+              );
+            }
+
+            // onChangeText(newText);
+          },
+          onSubmitted: onSubmittedText,
+          onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
+          style: TextStyle(
+              color: inputRegisterModel.unit == null
+                  ? Colors.black
+                  : Color(0xFFA3A3A3),
+              fontSize: 14),
+          decoration: InputDecoration(
+            contentPadding:
+            EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+            isDense: true,
+            border: InputBorder.none,
+            counterText: '',
+          ),
+          maxLength: inputRegisterModel.maxLengthTextInput,
+        );
+
+        break;
     }
-    widget.checkPass(lostFocus);
+    return Container();
+  }
+}
+
+void setTrailingSpaceWhenInput(InputRegisterModel inputRegisterModel) {
+  TextSelection previousSelection = inputRegisterModel.controller!.selection != null ? inputRegisterModel.controller!.selection : TextSelection(
+      baseOffset: 0, extentOffset: inputRegisterModel.controller!.text.length);
+  if (inputRegisterModel.controller!.text
+      .substring(inputRegisterModel.controller!.text.length - 1) ==
+      " ") {
+    inputRegisterModel.controller!.value = TextEditingValue(
+        text: inputRegisterModel.controller!.text.replaceAll(" ", "\t"),
+        selection: previousSelection);
+  } else if (inputRegisterModel.controller!.text
+      .substring(inputRegisterModel.controller!.text.length - 1) !=
+      " ") {
+    inputRegisterModel.controller!.value = TextEditingValue(
+        text: inputRegisterModel.controller!.text.replaceAll("\t", " "),
+        selection: previousSelection);
+  }
+}
+
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return TextEditingValue(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
+    );
   }
 }

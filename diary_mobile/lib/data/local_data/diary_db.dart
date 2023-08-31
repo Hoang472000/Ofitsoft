@@ -156,6 +156,7 @@ class DiaryDB extends _$DiaryDB {
           api: Value(entry.api),
           id: Value(entry.id),
           seasonFarmId: Value(entry.seasonFarmId),
+          stringSeasonFarmIds: Value(entry.stringSeasonFarmIds),
           seasonFarm: Value(entry.seasonFarm),
           activityId: Value(entry.activityId),
           actionTime: Value(entry.actionTime),
@@ -199,6 +200,7 @@ class DiaryDB extends _$DiaryDB {
         'api': queriedEntry.api,
         'id': queriedEntry.id,
         'season_farm_id': queriedEntry.seasonFarmId,
+        'season_farm_ids': jsonDecode(queriedEntry.stringSeasonFarmIds ?? '[]'),
         'season_farm': queriedEntry.seasonFarm,
         'activity_id': queriedEntry.activityId,
         'action_time': queriedEntry.actionTime,
@@ -266,7 +268,61 @@ class DiaryDB extends _$DiaryDB {
   }
 
   /// Activity
-  Future<void> insertListActivity(List<Activity> values) async{
+  Future<void> insertListActivity(List<Activity> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        final ActivityTableCompanion entryCompanion = ActivityTableCompanion(
+          id: Value(entry.id),
+          name: Value(entry.name),
+          description: Value(entry.description),
+          categoryId: Value(entry.categoryId),
+          isOrganic: Value(entry.isOrganic),
+          notation: Value(entry.notation),
+          image: Value(entry.image),
+          isActive: Value(entry.isActive),
+          diaryFarmerId: Value(entry.diaryFarmerId),
+          toolId: Value(entry.toolId),
+          quantity: Value(entry.quantity),
+          mediaContent: Value(entry.mediaContent),
+          harvesting: Value(entry.harvesting),
+          stringToolIds: Value(entry.stringToolIds),
+          stringMaterialIds: Value(entry.stringMaterialIds),
+          unitId: Value(entry.unitId),
+        );
+        batch.insertAllOnConflictUpdate(activityTable, [entryCompanion]);
+      }
+    });
+  }
+
+  Future<List<Activity>> getListActivity() async {
+    final query = await select(activityTable).get();
+    final List<Activity> activitiesList = [];
+
+    for (final queriedEntry in query) {
+      final activity = Activity.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'description': queriedEntry.description,
+        'category_id': queriedEntry.categoryId,
+        'is_organic': queriedEntry.isOrganic,
+        'notation': queriedEntry.notation,
+        'image': queriedEntry.image,
+        'is_active': queriedEntry.isActive,
+        'diary_farmer_id': queriedEntry.diaryFarmerId,
+        'tool_id': queriedEntry.toolId,
+        'quantity': queriedEntry.quantity,
+        'unit_id': queriedEntry.unitId,
+        'media_content': queriedEntry.mediaContent,
+        'harvesting': queriedEntry.harvesting,
+        'tool_ids': jsonDecode(queriedEntry.stringToolIds ?? '[]'),
+        'material_ids': jsonDecode(queriedEntry.stringMaterialIds ?? '[]'),
+      });
+      activitiesList.add(activity);
+    }
+
+    return activitiesList;
+  }
+/*  Future<void> insertListActivity(List<Activity> values) async{
     //final insertables = values.map((activity) => activityTable.map(activity.toMap())).toList();
     await batch((batch) {
       batch.insertAllOnConflictUpdate(activityTable, values );
@@ -274,7 +330,7 @@ class DiaryDB extends _$DiaryDB {
   }
   Future<List<Activity>> getListActivity() async {
     return await select(activityTable).get();
-  }
+  }*/
 
   /// Unit
   Future<void> insertListUnit(List<Unit> values) async{

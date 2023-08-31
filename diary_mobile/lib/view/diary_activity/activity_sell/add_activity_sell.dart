@@ -5,13 +5,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
-import '../../../utils/widgets/dialog_manager.dart';
+import '../../../utils/widgets/dashed_circle.dart';
+import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../utils/widgets/input/text_form_input.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/add_activity_sell_bloc.dart';
@@ -62,6 +64,7 @@ class _AddActivitySellPageState extends State<AddActivitySellPage> {
           context,
           centerTitle: true,
           showDefaultBackButton: true,
+          callback: [false, false],
           title: Text(
             "Thu bán sản phẩm",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
@@ -83,16 +86,17 @@ class _AddActivitySellPageState extends State<AddActivitySellPage> {
                 () {
               Get.back();
               Navigator.pop(context,
-                  [true, false]);
+                  [true]);
             }, () {
-/*              Get.back();
-              Navigator.pop(context, [true]);*/
             }, '', S.of(context).close_dialog, dismissible: false);
           } else if (formStatus is FormSubmitting) {
             DiaLogManager.showDialogLoading(context);
           }
         }, builder: (blocContext, state) {
-          return Container(
+          return state.isShowProgress ?
+          const Center(
+            child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+              : Container(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               child: SingleChildScrollView(
                 //physics: NeverScrollableScrollPhysics(),
@@ -228,8 +232,30 @@ class _AddActivitySellPageState extends State<AddActivitySellPage> {
                                         children: [
                                           SizedBox(
                                             width: 120,
-                                            height: 30,
-                                            child: Focus(
+                                            height: 40,
+                                            child: ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              physics: const NeverScrollableScrollPhysics(),
+                                              shrinkWrap: true,
+                                              itemCount: state.inputDonGia.length,
+                                              itemBuilder: (_, index) => ContainerInputWidget(
+                                                contextParent: context,
+                                                inputRegisterModel: state.inputDonGia[index],
+                                                onClick: () {},
+                                                onMutiChoice: (id) {},
+                                                onChangeText: (text) {
+                                                  blocContext.read<AddActivitySellBloc>().add(
+                                                      SaveValueTextFieldEvent(
+                                                          text, state.inputDonGia[index], index));
+                                                },
+                                                onEditingComplete: (text) {
+                                                  blocContext.read<AddActivitySellBloc>().add(
+                                                      SaveValueTextFieldEvent(
+                                                          text, state.inputDonGia[index], index));
+                                                },
+                                              ),
+                                            ),
+                                            /*Focus(
                                               child: TextFormFieldInput(
                                                   '',
                                                   state.donGiaController ??
@@ -251,7 +277,7 @@ class _AddActivitySellPageState extends State<AddActivitySellPage> {
                                                         .add(OnChangeDonGiaEvent(
                                                         text));
                                               }, isChangeCallBack: true),
-                                            ),
+                                            ),*/
                                           ),
                                           Text(
                                             " VND/${state.donViController?.text}",

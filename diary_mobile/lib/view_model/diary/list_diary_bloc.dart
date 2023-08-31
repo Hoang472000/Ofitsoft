@@ -151,15 +151,12 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     List<List<Diary>> searchResults = List.generate(list.length, (index) => []);
     for (int i = 0; i < list.length; i++) {
       List<Diary> searchSection = [];
-      for (int j = 0; j < list[i].length; j++) {
-        Diary item = list[i][j];
-        if ((item.name ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
-            (item.cropName ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
-            (item.farmerName ?? "").toLowerCase().contains(event.textSearch.toLowerCase()) ||
-            (Utils.formatTime(item.startDate ?? "")).toLowerCase().contains(event.textSearch.toLowerCase())) {
-          searchSection.add(item);
-        }
-      }
+        searchSection.addAll(list[i].where((item) {
+          return (Utils.formatText((item.name ?? "").toLowerCase()).contains(Utils.formatText(event.textSearch.toLowerCase())) ||
+              Utils.formatText((item.cropName ?? "").toLowerCase()).contains(Utils.formatText(event.textSearch.toLowerCase())) ||
+              Utils.formatText((item.farmerName ?? "").toLowerCase()).contains(Utils.formatText(event.textSearch.toLowerCase())) ||
+              (Utils.formatTime(item.startDate ?? "")).toLowerCase().contains(event.textSearch.toLowerCase()));
+        }).toList());
       searchResults[i] = searchSection; // Lưu kết quả tìm kiếm cho danh sách con tại vị trí tương ứng
     }
     searchResults.removeWhere((element) => element.isEmpty);

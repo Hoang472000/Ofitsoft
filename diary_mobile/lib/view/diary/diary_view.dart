@@ -103,7 +103,7 @@ class _DiaryViewState extends State<DiaryView> {
                             },
                             child: Row(
                               children: [
-                                SizedBox(width: 5,),
+                                SizedBox(width: 1,),
                                 IconButton(
                                     onPressed: () {
                                       blocContext.read<ListDiaryBloc>().add(

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
@@ -17,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/constants/shared_preferences_key.dart';
-import '../utils/widgets/dialog_manager.dart';
+import '../utils/widgets/dialog/dialog_manager.dart';
 import 'entity/diary/diary.dart';
 import 'entity/item_default/item_default.dart';
 import 'entity/item_default/material_entity.dart';
@@ -55,7 +56,7 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "0385672922",
+      'login': "0385672922",//adminvisimex
       //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
@@ -78,6 +79,9 @@ class RepositoryImpl extends Repository {
       sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"]);
       sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"]);
       sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"]??'');
+      List<int> roleList = objectResult.response["role"]?.cast<int>() ?? [];
+      List<String> roleStringList = roleList.map((role) => role.toString()).toList();
+      sharedPreferences.setStringList(SharedPreferencesKey.role, roleStringList);
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
       getListMaterials();
@@ -549,6 +553,100 @@ class RepositoryImpl extends Repository {
       sharedPreferences.remove(SharedPreferencesKey.imageProfile);
     }
     else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<ObjectResult> addManyActivityDiary(ActivityDiary diary) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.addManyActivityDiary,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: diary.toJson())));
+    print("HoangCV: addManyActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addManyActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addManyActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);
+      /*  DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<List<ActivityTransaction>> getListActivityTransaction(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.getListActivityTransaction}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListActivity response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<ActivityTransaction> list = List.from(objectResult.response)
+          .map((json) => ActivityTransaction.fromJson(json))
+          .toList();
+      list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
+      //DiaryDB.instance.insertListActivityDiary(list);
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return []/*DiaryDB.instance.getListActivityDiary(id)*/;
+  }
+
+  @override
+  Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.addActivityTransaction,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: transaction.toJson())));
+    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+  /*  else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);
+    }*/
+    else{
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,

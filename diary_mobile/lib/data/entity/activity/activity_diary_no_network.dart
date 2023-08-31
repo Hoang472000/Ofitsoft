@@ -10,6 +10,8 @@ class ActDiaryNoNetwork implements Insertable<ActDiaryNoNetwork>{
   String? api;
   int? id;
   int? seasonFarmId;
+  List<int>? seasonFarmIds;
+  String? stringSeasonFarmIds;
   String? seasonFarm;
   int? activityId;
   String? activityName;
@@ -80,6 +82,10 @@ class ActDiaryNoNetwork implements Insertable<ActDiaryNoNetwork>{
     this.unitPrice,
     this.total,
     this.buyer,
+
+    //up hang loat
+    this.seasonFarmIds,
+    this.stringSeasonFarmIds,
   });
 
   factory ActDiaryNoNetwork.fromJson(Map<String, dynamic> json) {
@@ -87,6 +93,8 @@ class ActDiaryNoNetwork implements Insertable<ActDiaryNoNetwork>{
       api: json['api'] ?? '',
       id: json['id'] ?? -1,
       seasonFarmId: json['season_farm_id'] ?? -1,
+      seasonFarmIds: json['season_farm_ids'] != null ? List<int>.from(json['season_farm_ids']) : <int>[],
+      stringSeasonFarmIds: jsonEncode(json['season_farm_ids']) ?? '[]',
       seasonFarm: json['season_farm'] ?? "",
       activityId: json['activity_id'],
       actionTime: json['action_time'] ?? "",
@@ -127,6 +135,8 @@ class ActDiaryNoNetwork implements Insertable<ActDiaryNoNetwork>{
       api: api,
       id: json.id,
       seasonFarmId: json.seasonFarmId,
+      seasonFarmIds: json.seasonFarmIds,
+      stringSeasonFarmIds: jsonEncode(json.seasonFarmIds) ?? '[]',
       seasonFarm: json.seasonFarm,
       activityId: json.activityId,
       actionTime: json.actionTime,

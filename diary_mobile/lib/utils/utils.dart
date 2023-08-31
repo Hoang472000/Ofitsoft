@@ -337,6 +337,21 @@ class Utils {
     return str;
   }
 
+  static String formatNumber(double number) {
+    String formatted = number.toStringAsFixed(3);
+    print("HoangCV: formatNumber: ${number} : ${formatted}");
+    if (formatted.contains('.') && formatted.endsWith('000')) {
+      print("HoangCV: run : ${formatted.substring(0, formatted.length - 4)}");
+      return formatted.substring(0, formatted.length - 4); // Loại bỏ số 0 thừa
+    } else if (formatted.endsWith('00')) {
+      return formatted.substring(0, formatted.length - 2); // Loại bỏ 2 số 0 thừa
+    } else if (formatted.endsWith('0')) {
+      return formatted.substring(0, formatted.length - 1); // Loại bỏ 1 số 0 thừa
+    } else {
+      return formatted; // Giữ nguyên nếu không có số 0 thừa
+    }
+  }
+
   static String formatCurrencyTonNumberString(String text) {
     return text.replaceAll(RegExp(r'\D'), '');
   }
@@ -584,7 +599,7 @@ class Utils {
       if (isMoney = true && buildContext != null)
         TextSpan(
             text: " ${S.of(buildContext!).vnd}",
-            style: StyleOfit.textStyleFW400(AppColor.gray57, 12))
+            style: StyleOfit.textStyleFW400(AppColor.gray57, 14))
     ]);
   }
 

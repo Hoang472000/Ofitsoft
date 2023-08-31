@@ -1,0 +1,384 @@
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
+import 'package:diary_mobile/data/repository.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import '../../../data/entity/diary/diary.dart';
+import '../../../generated/l10n.dart';
+import '../../../resource/assets.dart';
+import '../../../resource/color.dart';
+import '../../../resource/style.dart';
+import '../../../utils/status/form_submission_status.dart';
+import '../../../utils/utils.dart';
+import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/button_widget.dart';
+import '../../../utils/widgets/dialog/dialog_manager.dart';
+import '../../../utils/widgets/input/container_input_widget.dart';
+import '../../../view_model/diary_activity/activity/activity_sell/detail_activity_transaction_bloc.dart';
+
+class DetailActivityTransactionPage extends StatefulWidget {
+  DetailActivityTransactionPage({super.key, required this.activityDiary, required this.diary});
+
+  final ActivityTransaction activityDiary;
+  final Diary diary;
+
+  @override
+  _DetailActivityTransactionPageState createState() => _DetailActivityTransactionPageState();
+
+  static Route route(ActivityTransaction activityDiary, Diary diary) {
+    return Utils.pageRouteBuilder(
+        DetailActivityTransactionPage(
+            activityDiary: activityDiary,
+            diary: diary
+        ),
+        true);
+  }
+}
+
+class _DetailActivityTransactionPageState extends State<DetailActivityTransactionPage> {
+  bool edit = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => DetailActivityTransactionBloc(context.read<Repository>())
+        ..add(GetDetailActivityTransactionEvent(widget.activityDiary, widget.diary)),
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: AppColor.background,
+        appBar: OfitAppBar(
+          context,
+          centerTitle: true,
+          showDefaultBackButton: true,
+          title: Text(
+            "Chi tiết hoạt động",
+            style: StyleOfit.textStyleFW700(Colors.white, 20),
+          ),
+          backgroundColor: AppColor.main,
+          actions: [],
+        ),
+        body: BlocConsumer<DetailActivityTransactionBloc, DetailActivityTransactionState>(
+            listener: (blocContext, state) async {
+              final formStatus = state.formStatus;
+              if (formStatus is SubmissionFailed) {
+                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                  Get.back();
+                }, () {
+                  Get.back();
+                }, '', S.of(context).close_dialog);
+              } else if (formStatus is SubmissionSuccess) {
+                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                        () {
+                      Get.back();
+                      Navigator.pop(context, [true, state.listActivity[state.indexActivity].harvesting]);
+                    }, () {
+                    }, '', S.of(context).close_dialog, dismissible: false);
+              } else if (formStatus is FormSubmitting) {
+                DiaLogManager.showDialogLoading(context);
+              }
+            }, builder: (blocContext, state) {
+          return WillPopScope(
+            onWillPop: () async{
+              Navigator.pop(context);
+              return false;
+            },
+            child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                child: SingleChildScrollView(
+                  //physics: NeverScrollableScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: state.listWidget.length,
+                        itemBuilder: (_, index) => ContainerInputWidget(
+                          contextParent: context,
+                          inputRegisterModel: state.listWidget[index],
+                          onClick: () {
+                            setState(() {});
+                            blocContext.read<DetailActivityTransactionBloc>().add(
+                                OnSelectValueEvent(
+                                    state.listWidget, index, context));
+                            //onSelectValue(state.listWidget[index], context);
+                          },
+                          onMutiChoice: (id) {
+                            setState(() {
+                              state.listWidget[index].listMutiChoice![id]
+                                  .isSelected =
+                              !state.listWidget[index].listMutiChoice![id]
+                                  .isSelected;
+                            });
+                          },
+                          onChangeText: (text) {},
+                        ),
+                      ),
+                      state.listWidgetArea.isNotEmpty
+                          ? Row(
+                        children: [
+                          Expanded(
+                            //flex: 8,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetArea[0],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext
+                                      .read<DetailActivityTransactionBloc>()
+                                      .add(OnSelectValueEvent(
+                                      state.listWidgetArea,
+                                      0,
+                                      context));
+                                },
+                                onChangeText: (text) {
+                                  blocContext
+                                      .read<DetailActivityTransactionBloc>()
+                                      .add(SaveValueTextFieldEvent(text,
+                                      state.listWidgetArea[0], 0));
+                                },
+                                onSubmittedText: (text) {
+                                },
+                                onEditingComplete: (text) {
+                                  blocContext
+                                      .read<DetailActivityTransactionBloc>()
+                                      .add(SaveValueTextFieldEvent(text,
+                                      state.listWidgetArea[0], 0));
+                                },
+                              )),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            //flex: 5,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetArea[1],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext
+                                      .read<DetailActivityTransactionBloc>()
+                                      .add(OnSelectValueEvent(
+                                      state.listWidgetArea,
+                                      1,
+                                      context));
+                                },
+                                onChangeText: (text) {},
+                                onEditingComplete: (text) {},
+                              )),
+                        ],
+                      )
+                          : const SizedBox(),
+                      state.listWidgetYield.isNotEmpty
+                          ? Row(
+                        children: [
+                          Expanded(
+                            //flex: 8,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetYield[0],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext.read<DetailActivityTransactionBloc>().add(
+                                      OnSelectValueEvent(
+                                          state.listWidgetYield,
+                                          0,
+                                          context));
+                                },
+                                onChangeText: (text) {
+                                  blocContext.read<DetailActivityTransactionBloc>().add(
+                                      SaveValueTextFieldEvent(text,
+                                          state.listWidgetYield[0], 0));
+                                },
+                                onSubmittedText: (text) {
+                                  print(
+                                      "HoangCV: onSubmittedText: ${text}");
+                                },
+                                onEditingComplete: (text) {
+                                  print(
+                                      "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
+                                  blocContext.read<DetailActivityTransactionBloc>().add(
+                                      SaveValueTextFieldEvent(text,
+                                          state.listWidgetYield[0], 0));
+                                },
+                              )),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Expanded(
+                            //flex: 5,
+                              child: ContainerInputWidget(
+                                contextParent: context,
+                                inputRegisterModel: state.listWidgetYield[1],
+                                onClick: () {
+                                  setState(() {});
+                                  blocContext.read<DetailActivityTransactionBloc>().add(
+                                      OnSelectValueEvent(
+                                          state.listWidgetYield,
+                                          1,
+                                          context));
+                                },
+                                onChangeText: (text) {},
+                                onEditingComplete: (text) {},
+                              )),
+                        ],
+                      )
+                          : const SizedBox(),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Row(
+                          children: [
+                            Visibility(
+                              visible: !edit,
+                              child: Expanded(
+                                child: OfitButton(
+                                    text: "Sửa hoạt động",
+                                    onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
+                                        (widget.diary.status??'').compareTo("cancelled") == 0)?
+                                        () {
+                                      if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                        DiaLogManager.displayDialog(context,
+                                            "Nhật ký đã hoàn thành","Bạn không thể sửa hoạt động",
+                                                (){Navigator.pop(context);}, () {},
+                                            "",S.of(context).close_dialog);
+                                      }
+                                      if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                        DiaLogManager.displayDialog(context,
+                                            "Nhật ký đã đóng","Bạn không thể sửa hoạt động",
+                                                (){Navigator.pop(context);}, () {},
+                                            "",S.of(context).close_dialog);
+                                      }
+                                    }
+                                        :() {
+                                      setState(() {
+                                        edit = !edit;
+                                        //state.listWidget.clear();
+                                        if (edit) {
+                                          blocContext
+                                              .read<DetailActivityTransactionBloc>()
+                                              .add(ChangeEditActivityTransactionEvent());
+                                        } else {
+                                          /*               blocContext
+                                              .read<DetailActivityBloc>()
+                                              .add(ChangeDetailActivityEvent());*/
+                                        }
+                                      });
+                                    }),
+                              ),
+                            ),
+                            Visibility(
+                              visible: edit,
+                              child: Expanded(
+                                child: OfitButton(
+                                    text: "Hủy",
+                                    onPressed: () {
+                                      setState(() {
+                                        edit = !edit;
+                                      });
+                                      blocContext
+                                          .read<DetailActivityTransactionBloc>()
+                                          .add(GetDetailActivityTransactionEvent(widget.activityDiary, widget.diary, resetView: true));
+                                    }),
+                              ),
+                            ),
+                            Visibility(
+                                visible: edit,
+                                child: SizedBox(
+                                  width: 16,
+                                )),
+                            Visibility(
+                              visible: edit,
+                              child: Expanded(
+                                child: OfitButton(
+                                    text: "Lưu",
+                                    onPressed: () {
+                                      /// luu goi api
+                                      blocContext
+                                          .read<DetailActivityTransactionBloc>()
+                                          .add(UpdateActivityTransactionEvent());
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget itemAccount(BuildContext context,
+      {required String image,
+        required String text,
+        required VoidCallback voidCallback,
+        String? iconRight}) {
+    return InkWell(
+      onTap: () {
+        voidCallback();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8),
+              padding: const EdgeInsets.only(left: 6, right: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFFB2B8BB),
+                    width: 1.5,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      child: Text(
+                        text,
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      voidCallback();
+                    },
+                    icon: SvgPicture.asset(
+                      iconRight ?? IconAsset.icArrowRight,
+                      color: AppColor.main,
+                    ),
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 0, top: 10, bottom: 10),
+                    constraints: const BoxConstraints(),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

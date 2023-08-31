@@ -8,8 +8,9 @@ import '../../resource/color.dart';
 ///custom lại Appbar dùng chung cho cả App
 class OfitAppBar extends AppBar {
   final BuildContext context;
+  final dynamic callback;
 
-  static Widget defaultBackButton(BuildContext context, Color color) {
+  static Widget defaultBackButton(BuildContext context, Color color, dynamic callback) {
     return Container(
       padding: const EdgeInsets.only(left: 6),
       child: IconButton(
@@ -19,7 +20,7 @@ class OfitAppBar extends AppBar {
           color:color.value==AppColor.main.value? AppColor.whiteF2:AppColor.whiteF2
         ),
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(callback);
         },
         color: Colors.white,
         padding: EdgeInsets.zero,
@@ -28,7 +29,7 @@ class OfitAppBar extends AppBar {
   }
 
   OfitAppBar(
-      this.context, {
+      this.context, { this.callback = const [],
         required bool showDefaultBackButton,
         bool hasBottom=false,
         bool centerTitle = false,
@@ -62,7 +63,7 @@ class OfitAppBar extends AppBar {
       }) : super(
       key: key,
       leading:
-      showDefaultBackButton ? defaultBackButton(context, backgroundColor??Colors.white) : leading,
+      showDefaultBackButton ? defaultBackButton(context, backgroundColor??Colors.white, callback) : leading,
       automaticallyImplyLeading: automaticallyImplyLeading,
       title: title,
       actions: actions,

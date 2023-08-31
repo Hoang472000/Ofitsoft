@@ -91,11 +91,11 @@ class ActivitySelectBloc
     var result = await Navigator.of(event.context)
         .push(AddActivitySellPage.route(
         1, listSelected, state.diary ?? Diary()));
-    if (result != null && result[0]) {
-      if (result[1]) {
+    if (result != null && (result is List) && result[0]) {
+      if (!result[0]) {
         //add(GetListDiaryEvent());
       } else {
-        Navigator.pop(event.context);
+        Navigator.pop(event.context, [true]);
         List<bool> listSelected =
         List.generate(state.listDiaryActivity.length, (index) => false);
         emit(state.copyWith(isShowProgress: false,

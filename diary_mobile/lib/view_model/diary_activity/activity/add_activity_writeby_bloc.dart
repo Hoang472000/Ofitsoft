@@ -76,35 +76,6 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
-/*    listArea.add(InputRegisterModel(
-      title: "Diện tích",
-      isCompulsory: false,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.number,
-      controller: state.areaController,
-      maxLengthTextInput: 10,
-      image: ImageAsset.imageManagement,
-    ));
-
-    listArea.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitArea,
-      //valueSelected: state.listUnitArea[state.indexArea],
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));*/
-
     listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
         title: "Vật tư liên quan",
         isCompulsory: false,
@@ -186,35 +157,6 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
         valueSelected: Utils.stringToDateHour(state.startTimeController!.text),
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
-
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: Utils.stringToDate(state.endTimeController!.text),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
-
-/*    listArea.add(InputRegisterModel(
-      title: "Diện tích",
-      isCompulsory: false,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.number,
-      controller: state.areaController,
-      maxLengthTextInput: 10,
-      image: ImageAsset.imageManagement,
-    ));
-
-    listArea.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Select,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitArea,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));*/
 
     listVT.add(InputRegisterModel(
         title: "Vật tư liên quan",
@@ -302,6 +244,8 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
+      listMaterialAll: listMaterial,
+      listToolAll: listTool,
       listUnitAmount: listUnitAmount,
       listUnitArea: listUnitArea,
       listUnitYield: listUnitYield,
@@ -430,6 +374,18 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
           } else {
             emit(state.copyWith(listWidgetYield: []));
           }
+          List<int> tool = event.list[event.index].valueSelected.toolIds;
+          List<int> material = event.list[event.index].valueSelected.materialIds;
+          final listTool = <Tool>[];
+          listTool.addAll(state.listToolAll.map((tool) => Tool.copy(tool)));
+          final listMaterial = <MaterialEntity>[];
+          listMaterial.addAll(state.listMaterialAll.map((material) => MaterialEntity.copy(material)));
+          listTool.removeWhere((element) => !tool.contains(element.id));
+          listMaterial.removeWhere((element) => !material.contains(element.id));
+          emit(state.copyWith(listMaterial: listMaterial, listTool: listTool));
+          state.listWidgetVT[0].listValue= listMaterial;
+          state.listWidgetCC[0].listValue= listTool;
+          print("HoangCV: state.listMaterial writeby: ${listMaterial.length} : ${listTool.length} : ${state.listWidgetVT[0].listValue.length}");
         }
         if (event.list[event.index].title.compareTo("Đơn vị") == 0) {
           print("state.indexArea222: ${state.indexArea} : ${state.indexActivity} : ${state.listWidgetArea[1].positionSelected}");
@@ -527,16 +483,19 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
     } else {
       emit(state.copyWith(isShowProgress: false, formStatus: FormSubmitting()));
       List<ActivityDiary> listDiary = [];
+      List<int> seasonFarmIds = [];
       state.detailActivity.forEach((element) {
-         listDiary.add(ActivityDiary(
-        seasonFarmId: element.seasonId,
+        seasonFarmIds.add(element.seasonId ?? -1);
+      });
+      ActivityDiary activityDiary = ActivityDiary(
+        seasonFarmIds: seasonFarmIds,
         activityId: state.listActivity[state.indexActivity].id,
         activityName: state.listActivity[state.indexActivity].name,
         actionTime: state.listWidget[2].valueSelected.toString().split('.')[
         0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
-        actionArea: element.area,
-        actionAreaUnitId: element.areaUnitId,
-        actionAreaUnitName: element.amountUnitName,
+        // actionArea: element.area,
+        // actionAreaUnitId: element.areaUnitId,
+        // actionAreaUnitName: element.amountUnitName,
         harvesting: state.listActivity[state.indexActivity].harvesting,
         amount: state.yieldController!.text.isNotEmpty
             ? double.parse(state.yieldController!.text)
@@ -547,29 +506,18 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
         tool: state.listCongCuAdd,
         material: state.listVatTuAdd,
         media: state.listImage,
-      ));
-      });
+      );
+      print("HoangCV: activityDiary: ${activityDiary.toJson()}");
       //"is_shown": true,
-      List<ObjectResult> listObject = [];
-      listDiary.forEach((element) async {
-        listObject.add(await repository.addActivityDiary(element));
-      });
-      String messageError = "";
-      bool checkError = false;
-      for (var element in listObject) {
-        if(element.responseCode == StatusConst.code01){
-          messageError += element.message;
-          checkError = true;
-        }
-      }
-      if(checkError){
+      ObjectResult listObject = await repository.addManyActivityDiary(activityDiary);
+      if(listObject.responseCode == StatusConst.code00){
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(messageError)));
+            formStatus: SubmissionSuccess(success: listObject.message)));
       } else{
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: "Thêm hàng loạt thành công")));
+            formStatus: SubmissionFailed(listObject.message)));
       }
     }
   }
@@ -714,10 +662,14 @@ class AddActWriteByState extends BlocState {
     listUnitYield,
     yieldController,
     areaMax,
+    listMaterialAll,
+    listToolAll,
   ];
   final List<Diary> detailActivity;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
+  final List<MaterialEntity> listMaterialAll;
+  final List<Tool> listToolAll;
   final List<Unit> listUnitArea;
   final List<Unit> listUnitAmount;
   final List<Activity> listActivity;
@@ -757,6 +709,8 @@ class AddActWriteByState extends BlocState {
     this.isShowProgress = true,
     this.listMaterial = const [],
     this.listTool = const [],
+    this.listMaterialAll = const [],
+    this.listToolAll = const [],
     this.listUnitArea = const [],
     this.listUnitAmount = const [],
     this.listWidgetArea = const [],
@@ -794,6 +748,8 @@ class AddActWriteByState extends BlocState {
     int? seasonId,
     List<MaterialEntity>? listMaterial,
     List<Tool>? listTool,
+    List<MaterialEntity>? listMaterialAll,
+    List<Tool>? listToolAll,
     List<Unit>? listUnitArea,
     List<Unit>? listUnitAmount,
     List<Activity>? listActivity,
@@ -829,6 +785,8 @@ class AddActWriteByState extends BlocState {
       isShowProgress: isShowProgress ?? this.isShowProgress,
       listMaterial: listMaterial ?? this.listMaterial,
       listTool: listTool ?? this.listTool,
+      listMaterialAll: listMaterialAll ?? this.listMaterialAll,
+      listToolAll: listToolAll ?? this.listToolAll,
       listUnitArea: listUnitArea ?? this.listUnitArea,
       listUnitAmount: listUnitAmount ?? this.listUnitAmount,
       seasonId: seasonId ?? this.seasonId,

@@ -38,6 +38,8 @@ class ActDiaryNoNetworkTable extends Table {
   RealColumn get total => real().nullable()();
   TextColumn get buyer => text().nullable()();
 
+  TextColumn get stringSeasonFarmIds => text().nullable()();
+
   @override
   Set<Column>? get primaryKey => {id};
 }

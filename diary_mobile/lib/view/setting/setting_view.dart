@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
-import 'package:diary_mobile/utils/widgets/dialog_manager.dart';
+import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';

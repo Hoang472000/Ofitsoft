@@ -23,12 +23,20 @@ class ApiConst {
   static const String addActivityDiary = "/add/item/diary_farmer";
   static const String removeActivityDiary = "/delete/item/diary_farmer/";
   static const String updateActivityDiary = "/edit/diary_farmer/";
+  //api add hang loat activity_diary
+  static const String addManyActivityDiary = "/add/many_items/diary_farmer";
   //api get information 1 diary
   static const String getInfoDiary = "/get/season_diary/";
   //api get, add 1 monitor diary, remove, edit
   static const String getListMonitor = "/get/diary_monitor/";
   //api change password truyền vào id của nông hộ
   static const String changePassword = "/edit/password/";
+
+  //api get, add 1 activity diary sell, pay, remove, edit
+  static const String getListActivityTransaction = "/get/diary_transaction/";
+  static const String addActivityTransaction = "/add/diary_transaction/";
+  //static const String removeActivityDiary = "/delete/item/diary_farmer/";
+  static const String updateActivityTransaction = "/edit/diary_transaction/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";
