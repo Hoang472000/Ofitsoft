@@ -1,17 +1,10 @@
-import 'package:diary_mobile/resource/assets.dart';
-import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/diary/diary.dart';
-import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
-import '../../../view_model/diary_activity/activity/activity_bloc.dart';
-import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
-import '../../diary_activity/activity/activity_page.dart';
 import '../../diary_activity/infomation_diary/info_diary_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {

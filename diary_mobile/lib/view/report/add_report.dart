@@ -1,4 +1,3 @@
-/*
 import 'dart:convert';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
@@ -21,14 +20,15 @@ import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/add_report_bloc.dart';
 
 class AddReportViewPage extends StatefulWidget {
-  AddReportViewPage({super.key});
+  AddReportViewPage({super.key, required this.diary});
+  final Diary diary;
 
   @override
   _AddReportViewPageState createState() => _AddReportViewPageState();
 
-  static Route route() {
+  static Route route(Diary diary) {
     return Utils.pageRouteBuilder(
-        AddReportViewPage(
+        AddReportViewPage(diary: diary
         ),
         true);
   }
@@ -60,7 +60,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddReportBloc(context.read<Repository>())
-        ..add(GetAddReportEvent()),
+        ..add(GetAddReportEvent(widget.diary)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -107,13 +107,50 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                 child: SingleChildScrollView(
                   //physics: NeverScrollableScrollPhysics(),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      tableFooter(),
-                      tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
-                      SizedBox(height: 10,),
-                      tableDetail(),
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        tableFooter(),
+                        tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
+                        SizedBox(height: 10,),
+                        tableDetail(),
+                        state.listReport.isEmpty ? Container():
+                       ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: state.listReport[0].questionAndPageIds.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      Text("${state.listReport[0].questionAndPageIds[index].title}"),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          primary: false,
+                          itemCount: state.listReport[0].questionAndPageIds[index].questionAndPageIds.length,
+                          itemBuilder: (context, index1) {
+                            return   Column(
+                              children: [
+                                Text("${state.listReport[0].questionAndPageIds[index].questionAndPageIds[index1].title}"),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    itemCount: state.listReport[0].questionAndPageIds[index].questionAndPageIds[index1].suggestedAnswerIds.length,
+                                    itemBuilder: (context, index3) {
+                                      return Text("${state.listReport[0].questionAndPageIds[index].questionAndPageIds[index1].suggestedAnswerIds[index3].value}");
+                                    }),
+                                ListView.builder(
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    itemCount: state.listReport[0].questionAndPageIds[index].suggestedAnswerIds.length,
+                                    itemBuilder: (context, index2) {
+                                      return Text("${state.listReport[0].questionAndPageIds[index].suggestedAnswerIds[index2].value}");
+                                    }),
+                              ],
+                            );
+                          }),
+                    ],
+                  );
+                }),
                         ExpansionTile(
                           title: widgetMuc("1)  Biểu mẫu trang trại do nông dân sử dụng."),
                           children: [
@@ -121,97 +158,97 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                           ],
                         ),
                         ExpansionTile(
-                        title: widgetMuc("2)  Kiến thức và sự hiểu biết của người nông dân."),
-                        children: [
-                          tableDetail2(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("3)  Hạt giống, cây giống."),
-                        children: [
-                          tableDetail3(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("4)  Lưu giữ hóa chất tại nhà."),
-                        children: [
-                          tableDetail4(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("5)  Thu hoạch và vận chuyển sau thu hoạch."),
-                        children: [
-                          tableDetail5(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("6)  Quản lý sản phẩm hữu cơ và sản phẩm chuyển đổi."),
-                        children: [
-                          tableDetail6(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("7)  Đánh giá rủi ro và ước tính sản lượng sản phẩm tươi."),
-                        children: [
-                          tableDetail7(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("8)  Mô tả cây trồng trên các nương sản phẩm trong quá trình thanh tra."),
-                        children: [
-                          tableDetail8(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("9)  Rủi ro lẫn tạp với cây trồng không  hữu cơ."),
-                        children: [
-                          tableDetail9(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("10)  Rủi ro lẫn tạp phân hóa học."),
-                        children: [
-                          tableDetail10(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("11)  Rủi ro lẫn tạp thuốc trừ sâu hóa học."),
-                        children: [
-                          tableDetail11(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("12)  Tóm tắt chuyến thanh tra nội bộ."),
-                        children: [
-                          tableDetail12(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("13)  Tình hình thực hiện những đề xuất của lần thanh tra trước.(nếu có)"),
-                        children: [
-                          tableDetail13(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("14)  Đề xuất của thanh tra đối với nông dân."),
-                        children: [
-                          tableDetail14(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("15)  Chữ ký."),
-                        children: [
-                          tableDetail15(),
-                        ],
-                      ),
-                      ExpansionTile(
-                        title: widgetMuc("(*)  Rủi ro"),
-                        children: [
-                          tableDetail16(),
-                        ],
-                      ),
-                      tableDetailEnd(),
-                    ]
+                          title: widgetMuc("2)  Kiến thức và sự hiểu biết của người nông dân."),
+                          children: [
+                            tableDetail2(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("3)  Hạt giống, cây giống."),
+                          children: [
+                            tableDetail3(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("4)  Lưu giữ hóa chất tại nhà."),
+                          children: [
+                            tableDetail4(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("5)  Thu hoạch và vận chuyển sau thu hoạch."),
+                          children: [
+                            tableDetail5(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("6)  Quản lý sản phẩm hữu cơ và sản phẩm chuyển đổi."),
+                          children: [
+                            tableDetail6(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("7)  Đánh giá rủi ro và ước tính sản lượng sản phẩm tươi."),
+                          children: [
+                            tableDetail7(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("8)  Mô tả cây trồng trên các nương sản phẩm trong quá trình thanh tra."),
+                          children: [
+                            tableDetail8(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("9)  Rủi ro lẫn tạp với cây trồng không  hữu cơ."),
+                          children: [
+                            tableDetail9(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("10)  Rủi ro lẫn tạp phân hóa học."),
+                          children: [
+                            tableDetail10(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("11)  Rủi ro lẫn tạp thuốc trừ sâu hóa học."),
+                          children: [
+                            tableDetail11(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("12)  Tóm tắt chuyến thanh tra nội bộ."),
+                          children: [
+                            tableDetail12(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("13)  Tình hình thực hiện những đề xuất của lần thanh tra trước.(nếu có)"),
+                          children: [
+                            tableDetail13(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("14)  Đề xuất của thanh tra đối với nông dân."),
+                          children: [
+                            tableDetail14(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("15)  Chữ ký."),
+                          children: [
+                            tableDetail15(),
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: widgetMuc("(*)  Rủi ro"),
+                          children: [
+                            tableDetail16(),
+                          ],
+                        ),
+                        tableDetailEnd(),
+                      ]
                   ),
                 )),
           );
@@ -221,7 +258,6 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
   }
 
 
-*/
 /*  Widget table1(){
     List<Table> listTable1 =[];
     listTable1.add(Table(
@@ -638,8 +674,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     }
 
     return rows;
-  }*//*
-
+  }*/
 
   Widget tableMuc(String text){
     List<Table> listTable1 =[];
@@ -696,9 +731,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index],
         onChanged: (value) {
-            setState(() {
-              listSelected[index] = value ?? false;
-            });
+          setState(() {
+            listSelected[index] = value ?? false;
+          });
         },
       ),
     );
@@ -1201,44 +1236,44 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       border: TableBorder.all(color: AppColor.black22),
       children: [
         TableRow(
-          children: [
-            Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: const {
-                0: FlexColumnWidth(0.7),
-                1: FlexColumnWidth(2),
-              },
-              children: [
-                tableRowCheckBox(
-                    "Xuất sắc",
-                    0, listSelected2, isFirst: true),
-              ],
-            ),
-            Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: const {
-                0: FlexColumnWidth(0.7),
-                1: FlexColumnWidth(2),
-              },
-              children: [
-                tableRowCheckBox(
-                    "Trung bình",
-                    1, listSelected2, isFirst: true),
-              ],
-            ),
-            Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: const {
-                0: FlexColumnWidth(0.7),
-                1: FlexColumnWidth(2),
-              },
-              children: [
-                tableRowCheckBoxTextField(
-                    "Cần cải tiến về lĩnh vực",
-                    2, listSelected2,TextEditingController(), isFirst: true),
-              ],
-            ),
-          ]
+            children: [
+              Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: const {
+                  0: FlexColumnWidth(0.7),
+                  1: FlexColumnWidth(2),
+                },
+                children: [
+                  tableRowCheckBox(
+                      "Xuất sắc",
+                      0, listSelected2, isFirst: true),
+                ],
+              ),
+              Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: const {
+                  0: FlexColumnWidth(0.7),
+                  1: FlexColumnWidth(2),
+                },
+                children: [
+                  tableRowCheckBox(
+                      "Trung bình",
+                      1, listSelected2, isFirst: true),
+                ],
+              ),
+              Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: const {
+                  0: FlexColumnWidth(0.7),
+                  1: FlexColumnWidth(2),
+                },
+                children: [
+                  tableRowCheckBoxTextField(
+                      "Cần cải tiến về lĩnh vực",
+                      2, listSelected2,TextEditingController(), isFirst: true),
+                ],
+              ),
+            ]
         ),
       ],
     ),);
@@ -1684,7 +1719,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                                   4, listSelected5, isFirst: true),
                               tableRowCheckBox(
                                 "Bao gói do nhà máy cung",
-                                  5, listSelected5,),
+                                5, listSelected5,),
                             ],
                           ),
                         ]),
@@ -1977,14 +2012,14 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   children: [
                     TableRow(children: [
                       Padding(
-                      padding: EdgeInsets.only(bottom: 16, top: 16),
-                      child: Text(
-                        "Ước tính sản lượng sản phẩm (kg) 1 năm Annual yeild estimation",
-                        textAlign: TextAlign.center,
-                        style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-                        maxLines: 5,
+                        padding: EdgeInsets.only(bottom: 16, top: 16),
+                        child: Text(
+                          "Ước tính sản lượng sản phẩm (kg) 1 năm Annual yeild estimation",
+                          textAlign: TextAlign.center,
+                          style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                          maxLines: 5,
+                        ),
                       ),
-                    ),
                     ]),
                   ],
                 ),
@@ -2798,20 +2833,20 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       defaultVerticalAlignment: TableCellVerticalAlignment.top,
       border: TableBorder.all(color: AppColor.black22),
       children: [
-          TableRow(children: [
-            Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: const {
-                0: FlexColumnWidth(0.2),
-                1: FlexColumnWidth(2),
-              },
-              children: [
-                tableRowCheckBoxTextField("Các giấy tờ thành viên?", 0,
-                    listSelected12, TextEditingController(),
-                    isFirst: true),
-              ],
-            ),
-          ]),
+        TableRow(children: [
+          Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: const {
+              0: FlexColumnWidth(0.2),
+              1: FlexColumnWidth(2),
+            },
+            children: [
+              tableRowCheckBoxTextField("Các giấy tờ thành viên?", 0,
+                  listSelected12, TextEditingController(),
+                  isFirst: true),
+            ],
+          ),
+        ]),
         TableRow(children: [
           Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -2868,7 +2903,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             ],
           ),
         ]),
-        ],
+      ],
     ),);
 
     return Container(
@@ -3012,11 +3047,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color:  AppColor.back09),
                   ),
-                 */
-/* border: UnderlineInputBorder(
+                  /* border: UnderlineInputBorder(
                     borderSide: BorderSide(color:  AppColor.back09),
-                  ),*//*
-
+                  ),*/
                 )
             ),
           ),
@@ -3299,11 +3332,11 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           RichText(
             text: TextSpan(children: [
               TextSpan(
-                  text: "Báo cáo thanh tra nội bộ nông hộ- thực địa và tại nhà.\t\t\t\t\t\t",
+                text: "Báo cáo thanh tra nội bộ nông hộ- thực địa và tại nhà.\t\t\t\t\t\t",
                 style: StyleOfit.textStyleFW400(AppColor.black22, 12),
               ),
               TextSpan(
-                  text: "Hiệu chỉnh: 06/2020",
+                text: "Hiệu chỉnh: 06/2020",
                 style: StyleOfit.textStyleFW400(AppColor.black22, 12),
               ),
             ]),
@@ -3314,4 +3347,3 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     );
   }
 }
-*/

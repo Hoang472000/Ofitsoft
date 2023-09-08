@@ -4,6 +4,7 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
+import 'package:diary_mobile/utils/widgets/empty_widget.dart';
 import 'package:diary_mobile/view/diary_activity/activity/detail_activity.dart';
 import 'package:diary_mobile/view/diary_activity/activity_sell/activity_select_page.dart';
 import 'package:diary_mobile/view/diary_activity/monitor/add_monitor.dart';
@@ -25,6 +26,7 @@ import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/items/item_activity.dart';
+import '../../report/add_report.dart';
 import '../activity_sell/add_activity_sell.dart';
 import '../monitor/detail_monitor_page.dart';
 import 'add_activity.dart';
@@ -429,7 +431,9 @@ class _ActivityPageState extends State<ActivityPage> {
                             ? await Navigator.of(context)
                             .push(AddActivityPage.route(
                             widget.seasonFarmId, widget.diary))
-                            : await Navigator.of(context).push(
+                            : widget.action.compareTo(
+                            "report") == 0 ? await Navigator.of(context)
+                            .push(AddReportViewPage.route(widget.diary)): await Navigator.of(context).push(
                             AddMonitorPage.route());
                         if (result != null && result[0]) {
                           if(result[1]){
@@ -483,7 +487,10 @@ class _ActivityPageState extends State<ActivityPage> {
                       blocContext.read<ActivityBloc>().add(GetListActivityEvent(
                           widget.seasonFarmId, widget.action, false, [], []));
                     },
-                    child: SingleChildScrollView(
+                    child: ((widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 || widget.action.compareTo('sell') == 0) && state.listDiaryActivity.isEmpty) ||
+                        ((widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0) && state.listDiaryMonitor.isEmpty)
+                        ? const EmptyWidget()
+                        : SingleChildScrollView(
                       //physics: const NeverScrollableScrollPhysics(),
                       child: Column(
                         children: [

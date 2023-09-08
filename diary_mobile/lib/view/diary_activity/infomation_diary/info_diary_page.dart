@@ -102,6 +102,14 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                               ActivityPage.route("report",
                                                 widget.id, widget.diary,state
                                                     .listActivityFarm[index], state.listActivityDiary));
+                                        } else if(state.listActivityFarm[index].id == 6){
+                                          var result = await Navigator.push(context,
+                                              ActivityTransactionPage.route("purchase",
+                                                  widget.id, widget.diary, state
+                                                      .listActivityFarm[index], state.listActivityTransaction, state.listActivityDiary));
+                                          if(result != null && result[0]){
+                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
+                                          }
                                         }
                                       });
                                 }),

@@ -8,6 +8,7 @@ class DiaryTable extends Table {
   String get tableName => 'diary';
 
   IntColumn get id => integer().nullable()();
+  IntColumn get userId => integer().nullable()();
   TextColumn get name => text().nullable()();
   IntColumn get seasonId => integer().nullable()();
   IntColumn get farmId => integer().nullable()();
@@ -38,7 +39,7 @@ class DiaryTable extends Table {
   IntColumn get farmerId => integer().nullable()();
 
   @override
-  Set<Column>? get primaryKey => {id};
+  Set<Column>? get primaryKey => {id, userId};
 }
 
 // List<Item> tool;

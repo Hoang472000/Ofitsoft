@@ -57,6 +57,7 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
           context,
           centerTitle: true,
           showDefaultBackButton: true,
+          callback: [false],
           title: Text(
             "Chi tiết hoạt động",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
@@ -122,61 +123,6 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                           onChangeText: (text) {},
                         ),
                       ),
-                      state.listWidgetArea.isNotEmpty
-                          ? Row(
-                        children: [
-                          Expanded(
-                            //flex: 8,
-                              child: ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: state.listWidgetArea[0],
-                                onClick: () {
-                                  setState(() {});
-                                  blocContext
-                                      .read<DetailActivityTransactionBloc>()
-                                      .add(OnSelectValueEvent(
-                                      state.listWidgetArea,
-                                      0,
-                                      context));
-                                },
-                                onChangeText: (text) {
-                                  blocContext
-                                      .read<DetailActivityTransactionBloc>()
-                                      .add(SaveValueTextFieldEvent(text,
-                                      state.listWidgetArea[0], 0));
-                                },
-                                onSubmittedText: (text) {
-                                },
-                                onEditingComplete: (text) {
-                                  blocContext
-                                      .read<DetailActivityTransactionBloc>()
-                                      .add(SaveValueTextFieldEvent(text,
-                                      state.listWidgetArea[0], 0));
-                                },
-                              )),
-                          const SizedBox(
-                            width: 8,
-                          ),
-                          Expanded(
-                            //flex: 5,
-                              child: ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: state.listWidgetArea[1],
-                                onClick: () {
-                                  setState(() {});
-                                  blocContext
-                                      .read<DetailActivityTransactionBloc>()
-                                      .add(OnSelectValueEvent(
-                                      state.listWidgetArea,
-                                      1,
-                                      context));
-                                },
-                                onChangeText: (text) {},
-                                onEditingComplete: (text) {},
-                              )),
-                        ],
-                      )
-                          : const SizedBox(),
                       state.listWidgetYield.isNotEmpty
                           ? Row(
                         children: [
@@ -232,6 +178,156 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                         ],
                       )
                           : const SizedBox(),
+
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              // <= No more error here :)
+                              color: Colors.white,
+                            ),
+                            alignment: Alignment.bottomCenter,
+                            margin: const EdgeInsets.only(top: 10, bottom: 20),
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10, top: 10, bottom: 10),
+                            child: Column(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.newspaper, color: AppColor.main, size: 30,),
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text(
+                                              "Chi tiết đơn bán",
+                                              style: StyleOfit.textStyleFW500(
+                                                  AppColor.gray57, 18),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            "Đơn giá",
+                                            style: StyleOfit.textStyleFW500(
+                                                AppColor.gray57, 16),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Row(
+                                          children: [
+                                            SizedBox(
+                                              width: 120,
+                                              height: 40,
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: state.inputDonGia.length,
+                                                itemBuilder: (_, index) => ContainerInputWidget(
+                                                  contextParent: context,
+                                                  inputRegisterModel: state.inputDonGia[index],
+                                                  onClick: () {},
+                                                  onMutiChoice: (id) {},
+                                                  onChangeText: (text) {
+                                                    blocContext.read<DetailActivityTransactionBloc>().add(
+                                                        SaveValueTextFieldEvent(
+                                                            text, state.inputDonGia[index], index));
+                                                  },
+                                                  onEditingComplete: (text) {
+                                                    blocContext.read<DetailActivityTransactionBloc>().add(
+                                                        SaveValueTextFieldEvent(
+                                                            text, state.inputDonGia[index], index));
+                                                  },
+                                                ),
+                                              ),
+                                              /*Focus(
+                                              child: TextFormFieldInput(
+                                                  '',
+                                                  state.donGiaController ??
+                                                      TextEditingController(),
+                                                  false,
+                                                  false,
+                                                  focusNode,
+                                                  '',
+                                                  (lostFocus) {},
+                                                  true,
+                                                  isPhone: true,
+                                                  isNotValidStart: true,
+                                                  noBorder: true,
+                                                  underLine: true,
+                                                  onChangeCallBack: (text) {
+                                                         blocContext
+                                                        .read<
+                                                             AddActivitySellBloc>()
+                                                        .add(OnChangeDonGiaEvent(
+                                                        text));
+                                              }, isChangeCallBack: true),
+                                            ),*/
+                                            ),
+                                            Text(
+                                              " VND/${state.donViController?.text}",
+                                              style: StyleOfit.textStyleFW500(
+                                                  AppColor.gray57, 16),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const Divider(),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    /*         blocContext.read<CreateBillBloc>().add(ShowHideSummaryEvent());*/
+                                  },
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          bottom: 5, top: 5),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Text(
+                                                S.of(context).into_money,
+                                                style: StyleOfit.textStyleFW500(
+                                                    AppColor.main, 16),
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  Utils.convertNumber(state.total),
+                                                  style: StyleOfit.textStyleFW500(
+                                                      AppColor.main, 16),
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                                Text(
+                                                  " VND",
+                                                  style: StyleOfit.textStyleFW500(
+                                                      AppColor.gray57, 16),
+                                                )
+                                              ],
+                                            )
+                                          ])),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+
                       Container(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 8),

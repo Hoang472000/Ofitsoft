@@ -17,7 +17,12 @@ class EmptyWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(IconAsset.icEmpty),
+            //SvgPicture.asset(IconAsset.icEmpty),
+            Image(
+              image:
+              AssetImage(ImageAsset.imageEmptyData),
+              width: MediaQuery.of(context).size.width/1.5,
+            ),
             const SizedBox(
               height: 27.56,
             ),

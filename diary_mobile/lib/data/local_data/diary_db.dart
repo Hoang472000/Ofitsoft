@@ -14,6 +14,7 @@ import 'package:diary_mobile/data/local_data/table/item_default/material_table.d
 import 'package:diary_mobile/data/local_data/table/item_default/tool_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/unit_table.dart';
 import 'package:diary_mobile/data/local_data/table/monitor_diary_table.dart';
+import 'package:diary_mobile/data/local_data/table/report/report_table.dart';
 import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -26,9 +27,10 @@ import '../entity/item_default/activity_monitor.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/item_default/unit.dart';
 import '../entity/monitor/monitor_diary.dart';
+import '../entity/report/report.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable, ActDiaryNoNetworkTable ])
+@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable, ActDiaryNoNetworkTable, ReportTable ])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -47,8 +49,10 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(diaryTable, values);
     });
   }
-  Future<List<Diary>> getListDiary() async {
-    return await select(diaryTable).get();
+  Future<List<Diary>> getListDiary(int userId) async {
+    //return await select(diaryTable).get();
+    return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId)))
+        .get();
   }
   Future<List<Diary>> getInfoDiary(int id) async {
     return (select(diaryTable)..where((tbl) => tbl.id.equals(id)))

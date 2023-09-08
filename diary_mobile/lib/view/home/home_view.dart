@@ -76,9 +76,9 @@ class HomeView extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          //DiaLogManager.showDialogDevelopingFeature();
-                          Navigator.of(context)
-                              .push(AddReportViewPage.route());
+                          DiaLogManager.showDialogDevelopingFeature();
+             /*             Navigator.of(context)
+                              .push(AddReportViewPage.route());*/
                         },
                         child: Container(
                             margin: const EdgeInsets.symmetric(vertical: 15),

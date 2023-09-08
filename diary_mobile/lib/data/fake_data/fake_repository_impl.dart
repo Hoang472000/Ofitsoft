@@ -7,6 +7,7 @@ import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
@@ -365,33 +366,6 @@ class FakeRepositoryImpl extends Repository {
     return list;
   }
 
-  @override
-  Future<List<Diary>> getListDiary() async {
-    var json = [
-      {
-        "id": 1,
-        "name": "Mùa điều 2022 - Phạm Văn Dè",
-        "crop": "Cashew tree",
-        "user": "Phạm Văn Dè",
-        "start_date": "2022-02-02",
-        "end_date": "2022-12-08",
-        "status": "done"
-      },
-      {
-        "id": 2,
-        "name": "Mùa điều 2022 - Triệu Văn Thích",
-        "crop": "Cashew tree",
-        "user": "Triệu Văn Thích",
-        "start_date": "2023-07-05",
-        "end_date": "2023-07-15",
-        "status": "done"
-      }
-    ];
-    List<Diary> list =
-        List.from(json).map((json) => Diary.fromJson(json)).toList();
-    DiaryDB.instance.insertListDiary(list);
-    return list;
-  }
 
   @override
   Future<List<ActivityDiary>> getListActivityDiary(int id) async {
@@ -489,28 +463,6 @@ class FakeRepositoryImpl extends Repository {
     throw UnimplementedError();
   }
 
-  @override
-  Future<Diary> getInfoDiary(int id) async {
-    var json = {
-      "id": 1,
-      "name": "Mùa điều 2022 - Phạm Văn Dè",
-      "crop": "Cashew tree",
-      "user": "Phạm Văn Dè",
-      "start_date": "2022-02-02",
-      "end_date": "2022-12-08",
-      "area": 2.0,
-      "area_unit_id": -1,
-      "amount": 500.0,
-      "amount_unit_id": -1,
-      "yield_estimate": 5.0,
-      "yield_estimate_unit_id": -1,
-      "description": "<p>Đã hoàn thành mùa điều</p>",
-      "status": "done"
-    };
-    Diary list = Diary.fromJson(json);
-    print("HoangCV: getInfoDiary: ${list.name}");
-    return list;
-  }
 
   @override
   Future<ActivityDiary> getDetailDiary(int id) async {
@@ -657,6 +609,30 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<List<ActivityTransaction>> getListActivityTransaction(int id) {
     // TODO: implement getListActivityTransaction
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Report>> getListActivityReport() {
+    // TODO: implement getListActivityReport
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Diary>> getListBackupDiary() {
+    // TODO: implement getListBackupDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Diary> getInfoDiary(int id) {
+    // TODO: implement getInfoDiary
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Diary>> getListDiary({bool monitor = false}) {
+    // TODO: implement getListDiary
     throw UnimplementedError();
   }
 }

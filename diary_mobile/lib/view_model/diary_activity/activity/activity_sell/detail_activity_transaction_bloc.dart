@@ -38,7 +38,6 @@ class DetailActivityTransactionBloc
     on<ChangeEditActivityTransactionEvent>(_changeEditActivityTransaction);
     on<ChangeDetailActivityTransactionEvent>(_changeDetailActivityTransaction);
     on<OnSelectValueEvent>(_onSelectValue);
-    on<AddOrDeleteImageEvent>(_addOrDeleteImage);
     on<SaveValueTextFieldEvent>(_saveValueTextField);
     on<UpdateActivityTransactionEvent>(_updateActivityTransaction);
     on<BackEvent>(_back);
@@ -171,241 +170,183 @@ class DetailActivityTransactionBloc
 
   void _initViewDetail(Emitter<DetailActivityTransactionState> emitter) {
     List<InputRegisterModel> list = [];
-    List<InputRegisterModel> listCC = [];
+    List<InputRegisterModel> listYield = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-    List<InputRegisterModel> listYield = [];
-    list.add(InputRegisterModel<Activity, Activity>(
-        title: "Tên công việc",
+/*    list.add(InputRegisterModel<String, String>(
+        title: "Tên công ty",
         isCompulsory: true,
-        type: TypeInputRegister.Non,
+        type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
         positionSelected: -1,
         listValue: state.listActivity,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageActivityFarm));
+        //typeInputEnum: TypeInputEnum.dmucItem,
+        image: ImageAsset.imageCompany));*/
     list.add(InputRegisterModel(
-        title: "Chi tiết công việc",
+        title: "Người thực hiện",
         isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.Non,
         typeInput: TextInputType.text,
-        controller: state.moTaController,
-        image: ImageAsset.imageFile));
-
-/*    list.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: false,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: state.peopleController,
-      image: ImageAsset.imageMan,
-    ));*/
-
+        controller: state.buyerController,
+        image: ImageAsset.imageActivityFarm));
     list.add(InputRegisterModel<String, DateTime>(
-        title: "Thời gian thực hiện",
+        title: "Thời gian",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
+        //valueSelected: DateTime.now(),
+        controller: state.startTimeController,//
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
+    list.add(InputRegisterModel(
+        title: "Sản phẩm",
+        isCompulsory: false,
+        maxLengthTextInput: 2000,
         type: TypeInputRegister.Non,
-        // valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
+        typeInput: TextInputType.text,
+        controller: state.productController,
+        image: ImageAsset.imageTree));
 
-    listArea.add(InputRegisterModel(
-      title: "Diện tích",
+    listYield.add(InputRegisterModel(
+      title: "Sản lượng:",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       typeInput: TextInputType.number,
-      controller: state.areaController,
-      maxLengthTextInput: 12,
-      image: ImageAsset.imageManagement,
+      controller: state.soLuongController,
+      maxLengthTextInput: 10,
+      image: ImageAsset.imageBudget,
     ));
 
-    listArea.add(InputRegisterModel(
-      title: "Đơn vị",
+    listYield.add(InputRegisterModel(
+      title: "Đơn vị:",
       isCompulsory: false,
       type: TypeInputRegister.Non,
       icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitArea,
-      typeInputEnum: TypeInputEnum.dmucItem,
+      positionSelected: -1/*state.indexYield*/,
+      listValue: state.listUnitYield,
       controller: state.donViController,
+      //valueSelected: state.listUnitYield[state.indexYield],
+      typeInputEnum: TypeInputEnum.dmucItem,
     ));
-    listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
-        title: "Vật tư liên quan",
+
+    List<InputRegisterModel> inputDonGia = [
+      InputRegisterModel(
+        title: " ",
         isCompulsory: false,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        listValue: state.listMaterial,
-        image: ImageAsset.imageGardening));
-
-    listCC.add(InputRegisterModel<Tool, Tool>(
-      title: "Công cụ sử dụng",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listTool,
-      typeInputEnum: TypeInputEnum.dmucItem,
-      image: ImageAsset.imageTools,
-    ));
-
-    listVT.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    listCC.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-      listYield.add(InputRegisterModel(
-        title: "Sản lượng",
-        isCompulsory: false,
+        maxLengthTextInput: 15,
         type: TypeInputRegister.Non,
         typeInput: TextInputType.number,
-        controller: state.yieldController,
-        maxLengthTextInput: 10,
-        image: ImageAsset.imageBudget,
-      ));
-
-      listYield.add(InputRegisterModel(
-          title: "Đơn vị",
-          isCompulsory: false,
-          type: TypeInputRegister.Non,
-          icon: Icons.arrow_drop_down,
-          positionSelected: -1,
-          listValue: state.listUnitYield,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          controller: state.yieldUnitController
-      ));
+        controller: state.donGiaController,
+        noUnder: true,
+        noBorder: true,
+/*        noBorder: true,
+        noUnder: true,*/
+      )
+    ];
     emitter(state.copyWith(
-        formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
-        listWidgetCC: listCC,
+        listWidgetYield: listYield,
         listWidgetArea: listArea,
-        listWidgetYield: listYield));
+        inputDonGia: inputDonGia,
+        formStatus: const InitialFormStatus()));
   }
 
   void _changeViewEdit(Emitter<DetailActivityTransactionState> emitter) {
+
     List<InputRegisterModel> list = [];
-    List<InputRegisterModel> listCC = [];
+    List<InputRegisterModel> listYield = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-    List<InputRegisterModel> listYield = [];
-    print("HoangCV: state.listMaterial: ${state.listMaterial.length}");
-    list.add(InputRegisterModel<Activity, Activity>(
-        title: "Tên công việc",
+
+/*    list.add(InputRegisterModel<String, String>(
+        title: "Tên công ty",
         isCompulsory: true,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,
-        positionSelected: state.indexActivity,
+        positionSelected: -1,
         listValue: state.listActivity,
-        valueSelected: state.listActivity[state.indexActivity],
-        typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageActivityFarm));
+        //typeInputEnum: TypeInputEnum.dmucItem,
+        image: ImageAsset.imageCompany));*/
     list.add(InputRegisterModel(
-        title: "Chi tiết công việc",
+        title: "Người thực hiện ",
+        isCompulsory: false,
+        maxLengthTextInput: 2000,
+        type: TypeInputRegister.TextField,
+        typeInput: TextInputType.text,
+        controller: state.buyerController,
+        image: ImageAsset.imageActivityFarm));
+/*    list.add(InputRegisterModel(
+        title: "Chi tiết mua bán",
         isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.text,
         controller: state.moTaController,
-        image: ImageAsset.imageFile));
-
-/*
-    list.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: false,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.TextField,
-      typeInput: TextInputType.text,
-      controller: state.peopleController,
-      image: ImageAsset.imageMan,
-    ));
-*/
+        image: ImageAsset.imageFile));*/
 
     list.add(InputRegisterModel<String, DateTime>(
-        title: "Thời gian thực hiện",
+        title: "Thời gian",
         isCompulsory: true,
         typeInputEnum: TypeInputEnum.date,
         type: TypeInputRegister.Select,
         valueSelected: Utils.stringToDate(state.startTimeController!.text),
+        //controller: state.startTimeController,
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected:
-        Utils.stringToDate(state.endTimeController!.text),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
+    list.add(InputRegisterModel(
+        title: "Sản phẩm",
+        isCompulsory: false,
+        maxLengthTextInput: 2000,
+        type: TypeInputRegister.Non,
+        typeInput: TextInputType.text,
+        controller: state.productController,
+        image: ImageAsset.imageTree));
 
-    listArea.add(InputRegisterModel(
-      title: "Diện tích",
+    listYield.add(InputRegisterModel(
+      title: "Sản lượng:",
       isCompulsory: false,
       type: TypeInputRegister.TextField,
       typeInput: TextInputType.number,
-      controller: state.areaController,
-      maxLengthTextInput: 12,
-      image: ImageAsset.imageManagement,
+      controller: state.soLuongController,
+      maxLengthTextInput: 10,
+      image: ImageAsset.imageBudget,
     ));
 
-      listYield.add(InputRegisterModel(
-        title: "Sản lượng",
+    listYield.add(InputRegisterModel(
+      title: "Đơn vị:",
+      isCompulsory: false,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: state.indexYield,
+      listValue: state.listUnitYield,
+      controller: state.donViController,
+      valueSelected: state.listUnitYield[state.indexYield],
+      typeInputEnum: TypeInputEnum.dmucItem,
+    ));
+
+    List<InputRegisterModel> inputDonGia = [
+      InputRegisterModel(
+        title: " ",
         isCompulsory: false,
+        maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.number,
-        controller: state.yieldController,
-        maxLengthTextInput: 10,
-        image: ImageAsset.imageBudget,
-      ));
-      if (state.indexYieldUnit != -1) {
-        listYield.add(InputRegisterModel<Unit, Unit>(
-          title: "Đơn vị",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          listValue: state.listUnitYield,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          positionSelected: state.indexYieldUnit,
-          valueSelected: state.listUnitYield[state.indexYieldUnit],
-        ));
-    }
+        controller: state.donGiaController,
+        noUnder: true,
+        noBorder: true,
+      )
+    ];
     emitter(state.copyWith(
-        formStatus: const InitialFormStatus(),
         listWidget: list,
         listWidgetVT: listVT,
-        listWidgetCC: listCC,
+        listWidgetYield: listYield,
         listWidgetArea: listArea,
-        listWidgetYield: listYield
-    ));
+        inputDonGia: inputDonGia,
+        formStatus: const InitialFormStatus()));
   }
 
   void _getDetailActivityTransaction(GetDetailActivityTransactionEvent event,
@@ -427,10 +368,7 @@ class DetailActivityTransactionBloc
           listCongCuAdd: []));
     }
     final detailActivity = event.activityDiary;
-    final copiedActivityDiary = ActivityTransaction.copy(detailActivity);
     final listActivity = await DiaryDB.instance.getListActivity();
-    final listTool = await DiaryDB.instance.getListTool();
-    final listMaterial = await DiaryDB.instance.getListMaterial();
     final sharedPreferences = await SharedPreferences.getInstance();
     final categoryIdUnitArea =
         sharedPreferences.getInt(SharedPreferencesKey.unitArea) ?? -1;
@@ -457,7 +395,16 @@ class DetailActivityTransactionBloc
         listUnitAmount: listUnitAmount,
         listUnitArea: listUnitArea,
         listUnitYield: listUnitYield,
-        peopleController: TextEditingController(),
+      buyerController:
+      TextEditingController(text: "${event.diary.farmerName ?? 0}"),
+      productController:
+      TextEditingController(text: "${event.diary.productName}"),
+      donGiaController: TextEditingController(
+          text: "${detailActivity.unitPrice}"),
+      donViController: TextEditingController(
+          text: "${detailActivity.quantityUnitName}"),
+      soLuongController:
+      TextEditingController(text: "${detailActivity.quantity ?? ''}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(detailActivity.transactionDate ?? "")),
         yieldController:
@@ -465,31 +412,35 @@ class DetailActivityTransactionBloc
         yieldUnitController:
         TextEditingController(text: "${detailActivity.quantityUnitName}"),
         diary: event.diary,
-        indexYieldUnit: indexYield));
+        indexYieldUnit: indexYield, indexYield: indexYield,
+        total: (detailActivity.unitPrice ?? 0) * (detailActivity.quantity ?? 0),
+    ));
     for (int i = 0; i < state.listWidget.length; i++) {
       if (state.listWidget[i].title.compareTo("Tên công việc") == 0) {
         state.listWidget[i].controller = state.nameController;
         //state.listWidget[i].valueSelected = state.listActivity[index];
       }
-      if (state.listWidget[i].title.compareTo("Chi tiết công việc") == 0) {
-        state.listWidget[i].controller = state.moTaController;
+      if (state.listWidget[i].title.compareTo("Người thực hiện") == 0) {
+        state.listWidget[i].controller = state.buyerController;
       }
-      if (state.listWidget[i].title.compareTo("Người liên quan") == 0) {
-        state.listWidget[i].controller = state.peopleController;
-      }
-      if (state.listWidget[i].title.compareTo("Thời gian thực hiện") == 0) {
+      if (state.listWidget[i].title.compareTo("Thời gian") == 0) {
         state.listWidget[i].controller = state.startTimeController;
       }
-      if (state.listWidget[i].title.compareTo("Ngày kết thúc") == 0) {
-        state.listWidget[i].controller = state.endTimeController;
+      if (state.listWidget[i].title.compareTo("Sản phẩm") == 0) {
+        state.listWidget[i].controller = state.productController;
       }
     }
     for (int i = 0; i < state.listWidgetYield.length; i++) {
-      if (state.listWidgetYield[i].title.compareTo("Sản lượng") == 0) {
+      if (state.listWidgetYield[i].title.compareTo("Sản lượng:") == 0) {
         state.listWidgetYield[i].controller = state.yieldController;
       }
-      if (state.listWidgetYield[i].title.compareTo("Đơn vị") == 0) {
+      if (state.listWidgetYield[i].title.compareTo("Đơn vị:") == 0) {
         state.listWidgetYield[i].controller = state.yieldUnitController;
+      }
+    }
+    for (int i = 0; i < state.inputDonGia.length; i++) {
+      if (state.inputDonGia[i].title.compareTo(" ") == 0) {
+        state.inputDonGia[i].controller = state.donGiaController;
       }
     }
 
@@ -515,221 +466,109 @@ class DetailActivityTransactionBloc
   Future<FutureOr<void>> _onSelectValue(
       OnSelectValueEvent event, Emitter<DetailActivityTransactionState> emit) async {
     int result;
-/*    if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucTinh && dMucTinhResponse.tinh == null) {
-      Toast.showLongTop("Không có danh mục tỉnh");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucHuyen && dMucHuyenResponse.dmucHuyenTPS == null) {
-      Toast.showLongTop("Không có danh mục huyện");
-      return;
-    }else if(inputRegisterModel.typeInputEnum == TypeInputEnum.dmucXa && dMucXaResponse.dmucXaTPS == null) {
-      Toast.showLongTop("Không có danh mục xã");
-      return;
-    }*/
-    bool harvesting = false;
-    if (event.list[event.index].title.compareTo("Tên công việc") == 0) {
-   /*   if (state.detailActivity?.harvesting != null &&
-          (state.detailActivity!.harvesting ?? false)) {
-        if (state.detailActivity?.amount != null &&
-            (state.detailActivity!.amount ?? 0) > 0) {
-          harvesting = true;
-          DiaLogManager.showDialogSuccess(
-              event.context, "Không thể thay đổi hoạt động thu hoạch", () {
-            Get.back();
-          });
-        }
-      }*/
-    }
-    if (!harvesting) {
-      emit(state.copyWith(
-        formStatus: const InitialFormStatus(),
-      ));
-      if (event.list[event.index].valueSelected.runtimeType == DateTime ||
-          event.list[event.index].typeInputEnum == TypeInputEnum.date) {
-        //     setState(() {
-        print(
-            "HoangCV: event.list[event.index].valueSelected: ${Utils
-                .formatDateTimeToString(
-                event.list[event.index].valueSelected)} :");
-        int result1 = await ServiceInfoExtension()
-            .selectValue(
-            event.list[event.index], event.context, (modelInput) {});
-        print(
-            "HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(
-                event.list[event.index].valueSelected)}");
-        if (result1 == 1) {
-          if (event.list[event.index].title.compareTo("Thời gian thực hiện") ==
-              0) {
-            print(
-                "HoangCV:1 event.list[event.index].valueSelected: ${Utils
-                    .formatDateTimeToString(
-                    event.list[event.index].valueSelected)}");
-            emit(state.copyWith(
-              startTimeController: TextEditingController(
-                  text: Utils.formatDateTimeToString(
-                      event.list[event.index].valueSelected)),
-            ));
-          }
-          if (event.list[event.index].title.compareTo("Ngày kết thúc") == 0) {
-            emit(state.copyWith(
-              endTimeController: TextEditingController(
-                  text: Utils.formatDateTimeToString(
-                      event.list[event.index].valueSelected)),
-            ));
-          }
-        }
-//      });
-      } else {
-        result = await Extension().showBottomSheetSelection(
-            event.context,
-            event.list[event.index].listValue,
-            event.list[event.index].positionSelected,
-            "${event.list[event.index].title}",
-            hasSearch: event.list[event.index].hasSearch ?? false);
-        if (result != -1) {
-          //   setState(() {
-          event.list[event.index].positionSelected = result;
-          event.list[event.index].valueDefault = null;
-          event.list[event.index].valueSelected =
-          event.list[event.index].listValue[result];
-          event.list[event.index].error = null;
-          // });
-          if (event.list[event.index].title.compareTo("Tên công việc") == 0) {
-            emit(state.copyWith(
-              nameController: TextEditingController(
-                  text: event.list[event.index].valueSelected.name),
-              indexActivity: result,
-            ));
-            if (event.list[event.index].listValue[result].id == 20) {
-              List<InputRegisterModel> listYield = [];
-              listYield.add(InputRegisterModel(
-                title: "Sản lượng",
-                isCompulsory: false,
-                type: TypeInputRegister.TextField,
-                typeInput: TextInputType.number,
-                controller: state.yieldController,
-                maxLengthTextInput: 10,
-                image: ImageAsset.imageBudget,
-              ));
-
-              listYield.add(InputRegisterModel(
-                title: "Đơn vị",
-                isCompulsory: false,
-                type: TypeInputRegister.Select,
-                icon: Icons.arrow_drop_down,
-                positionSelected: -1,
-                listValue: state.listUnitYield,
-                typeInputEnum: TypeInputEnum.dmucItem,
-              ));
-              emit(state.copyWith(listWidgetYield: listYield));
-            } else {
-              emit(state.copyWith(listWidgetYield: []));
-            }
-            List<int> tool = event.list[event.index].valueSelected.toolIds;
-            List<int> material = event.list[event.index].valueSelected.materialIds;
-            final listTool = <Tool>[];
-            listTool.addAll(state.listToolAll.map((tool) => Tool.copy(tool)));
-            final listMaterial = <MaterialEntity>[];
-            listMaterial.addAll(state.listMaterialAll.map((material) => MaterialEntity.copy(material)));
-            listTool.removeWhere((element) => !tool.contains(element.id));
-            listMaterial.removeWhere((element) => !material.contains(element.id));
-            emit(state.copyWith(listMaterial: listMaterial, listTool: listTool));
-            state.listWidgetVT[0].listValue= listMaterial;
-            state.listWidgetCC[0].listValue= listTool;
-            print("HoangCV: state.listMaterial detail: ${listMaterial.length} : ${listTool.length} : ${state.listWidgetVT[0].listValue.length}");
-          }
-          if (event.list[event.index].title.compareTo("Đơn vị") == 0) {
-            print("state.indexArea222: ${state.indexDonViArea} : ${state
-                .indexActivity} : ${state.listWidgetArea[1].positionSelected}");
-            if ((double.parse(
-                state.areaController!.text.isNotEmpty ? state.areaController!
-                    .text : "0") * double.parse(
-                '${state.listUnitArea[state.listWidgetArea[1].positionSelected]
-                    .convert}')) > state.areaMax) {
-              state.listWidgetArea[0].error =
-              "Diện tích phải nhỏ hơn diện tích lô trồng";
-            } else {
-              state.listWidgetArea[0].error = null;
-            }
-            emit(state.copyWith(
-                donViController: TextEditingController(
-                    text: event.list[event.index].valueSelected.name),
-                indexDonViArea: result));
-          }
-          if (event.list[event.index].title.compareTo("Chi tiết công việc") ==
-              0) {
-            emit(state.copyWith(
-              moTaController: event.list[event.index].controller,
-            ));
-          }
-          if (event.list[event.index].title.compareTo("Người liên quan") == 0) {
-            emit(state.copyWith(
-              peopleController: event.list[event.index].controller,
-            ));
-          }
-          if (event.list[event.index].title.compareTo("Diện tích") == 0) {
-            emit(state.copyWith(
-              areaController: event.list[event.index].controller,
-              indexDonViArea: result,
-            ));
-          }
-          /*       if (event.list[event.index].title.compareTo("S") == 0) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
+    if (event.list[event.index].valueSelected.runtimeType == DateTime ||
+        event.list[event.index].typeInputEnum == TypeInputEnum.date) {
+      //     setState(() {
+      print(
+          "HoangCV: event.list[event.index].valueSelected: ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)} :");
+      int result1 = await ServiceInfoExtension()
+          .selectValue(event.list[event.index], event.context, (modelInput) {});
+      print(
+          "HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
+      if (result1 == 1) {
+        if (event.list[event.index].title.compareTo("Thời gian mua bán") == 0) {
+          print(
+              "HoangCV:1 event.list[event.index].valueSelected: ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
           emit(state.copyWith(
-            areaController: event.list[event.index].controller,
-            indexDonViArea: result,
+            startTimeController: TextEditingController(
+                text: Utils.formatDateTimeToString(
+                    event.list[event.index].valueSelected)),
           ));
+        }
+      }
+//      });
+    } else {
+      result = await Extension().showBottomSheetSelection(
+          event.context,
+          event.list[event.index].listValue,
+          event.list[event.index].positionSelected,
+          "${event.list[event.index].title}",
+          hasSearch: event.list[event.index].hasSearch ?? false);
+      if (result != -1) {
+        //   setState(() {
+        double convert = 0;
+        if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
+          convert = event.list[event.index].valueSelected.convert;
+        }
+        event.list[event.index].positionSelected = result;
+        event.list[event.index].valueDefault = null;
+        event.list[event.index].valueSelected =
+        event.list[event.index].listValue[result];
+        event.list[event.index].error = null;
+        // });
+    /*    if (event.list[event.index].title.compareTo("Tên công ty") == 0) {
+          emit(state.copyWith(
+              companyController: TextEditingController(
+                  text: event.list[event.index].valueSelected),
+              indexActivity: result));
         }*/
+        if (event.list[event.index].title.compareTo("Chi tiết mua bán") == 0) {
+          emit(state.copyWith(
+            moTaController: event.list[event.index].controller,
+          ));
+        }
+        if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
+          print(
+              "HoangCV: dơn vị : ${convert} : ${(double.parse(state.soLuongController!.text) * convert) / (event.list[event.index].valueSelected.convert)}}");
+          double inputValue = double.parse(state.soLuongController!.text);
+          double conversionFactor = convert;
+          double selectedValue = event.list[event.index].valueSelected.convert;
+          double result = (inputValue * conversionFactor) / selectedValue;
+          String formattedResult = Utils.formatNumber(result);
+          double total = double.parse(state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!.text) *
+              double.parse(formattedResult);
+          emit(state.copyWith(
+              donViController: TextEditingController(
+                  text: event.list[event.index].valueSelected.name),
+              soLuongController:
+              TextEditingController(text: "$formattedResult"),
+              total: total));
+          state.listWidgetArea[0].controller = state.soLuongController;
+        }
+        if (event.list[event.index].title.compareTo("Người thực hiện") == 0) {
+          emit(state.copyWith(
+            buyerController: event.list[event.index].controller,
+          ));
         }
       }
     }
-  }
-
-  FutureOr<void> _addOrDeleteImage(
-      AddOrDeleteImageEvent event, Emitter<DetailActivityTransactionState> emit) async {
-    print("HoangCV: event. image: ${event.listImage.length}");
-    List<ImageEntity> list = List.from(state.listImage);
-    if (event.index == -1) {
-      list.addAll(event.listImage);
-    } else {
-      list.removeAt(event.index);
-    }
-    double imageWidth = state.imageWidth;
-    double imageHeight = state.imageHeight;
-    if (list.length < 2) {
-      // Tính toán kích thước ảnh để hiển thị full màn hình
-      imageWidth = 360;
-      imageHeight = 240;
-    } else if (list.length < 3) {
-      // Tính toán kích thước ảnh để hiển thị full màn hình
-      imageWidth = 180;
-      imageHeight = 130;
-    } else {
-      imageWidth = 140;
-      imageHeight = 100;
-    }
-    emit(state.copyWith(
-        formStatus: const InitialFormStatus(),
-        listImage: list,
-        imageWidth: imageWidth,
-        imageHeight: imageHeight));
   }
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<DetailActivityTransactionState> emit) {
-    emit(state.copyWith(formStatus: const InitialFormStatus()));
-    print("HoangCV: bug111: ${event.text} : ${event.inputRegisterModel.title} : ${state.areaMax} : ${(double.parse(event.text.isNotEmpty ? event.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}'))> state.areaMax}");
+    print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
           moTaController: TextEditingController(text: event.text)));
-    } else if (event.inputRegisterModel.title.compareTo("Diện tích") == 0) {
+    } else if (event.inputRegisterModel.title.compareTo("Sản lượng:") == 0) {
+      event.inputRegisterModel.error = null;
+      double total = 0;
+      double donGia = double.parse(state.donGiaController!.text)/*state.total / double.parse(state.soLuongController!.text)*/;
+      total = donGia * double.parse(event.text);
       emit(state.copyWith(
-          areaController: TextEditingController(text: event.text)));
-      if((double.parse(event.text.isNotEmpty ? event.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
-        state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
-      } else{
-        state.listWidgetArea[0].error = null;
-      }
+          soLuongController: TextEditingController(text: event.text),
+          total: total));
+    } else if (event.inputRegisterModel.title.compareTo(" ") == 0) {
+      print(
+          "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
+      event.inputRegisterModel.error = null;
+      double total = 0;
+      total = double.parse(state.soLuongController!.text) *
+          double.parse(event.text);
       emit(state.copyWith(
-          areaController: TextEditingController(text: event.text)));
+          donGiaController: TextEditingController(text: event.text),
+          total: total));
     }
   }
 
@@ -886,17 +725,6 @@ class OnSelectValueEvent extends DetailActivityTransactionEvent {
   List<Object?> get props => [list, index, context];
 }
 
-class AddOrDeleteImageEvent extends DetailActivityTransactionEvent {
-  final List<ImageEntity> listImage;
-  final int index;
-  final BuildContext context;
-
-  AddOrDeleteImageEvent(this.listImage, this.index, this.context);
-
-  @override
-  List<Object?> get props => [listImage, index, context];
-}
-
 class SaveValueTextFieldEvent extends DetailActivityTransactionEvent {
   final InputRegisterModel inputRegisterModel;
   final String text;
@@ -960,6 +788,12 @@ class DetailActivityTransactionState extends BlocState {
     diary,
     listMaterialAll,
     listToolAll,
+    buyerController,
+    productController,
+    indexYield,
+    inputDonGia,
+    donGiaController,
+    total,
   ];
   final Diary? diary;
   final ActivityTransaction? detailActivity;
@@ -991,6 +825,14 @@ class DetailActivityTransactionState extends BlocState {
   TextEditingController? areaController = TextEditingController();
   TextEditingController? yieldController = TextEditingController();
   TextEditingController? yieldUnitController = TextEditingController();
+
+  TextEditingController? buyerController = TextEditingController();
+  TextEditingController? productController = TextEditingController();
+  TextEditingController? donGiaController = TextEditingController();
+  List<InputRegisterModel> inputDonGia;
+  final int indexYield;
+  double total;
+
   List<InputRegisterModel> listWidgetYield;
   final List<Unit> listUnitYield;
   bool isEdit;
@@ -1002,6 +844,11 @@ class DetailActivityTransactionState extends BlocState {
   double areaMax;
 
   DetailActivityTransactionState({
+    this.buyerController,
+    this.productController,
+    this.inputDonGia = const [],
+    this.indexYield = -1,
+    this.donGiaController,
     this.detailActivity,
     this.copiedActivityDiary,
     this.formStatus = const InitialFormStatus(),
@@ -1041,6 +888,7 @@ class DetailActivityTransactionState extends BlocState {
     this.indexYieldUnit = 0,
     this.areaMax = 0,
     this.diary,
+    this.total = 0,
   });
 
   DetailActivityTransactionState copyWith({
@@ -1083,6 +931,12 @@ class DetailActivityTransactionState extends BlocState {
     double? imageHeight,
     double? areaMax,
     Diary? diary,
+    TextEditingController? buyerController,
+    TextEditingController? productController,
+    TextEditingController? donGiaController,
+    List<InputRegisterModel>? inputDonGia,
+    int? indexYield,
+    double? total,
   }) {
     return DetailActivityTransactionState(
       copiedActivityDiary: copiedActivityDiary ?? this.copiedActivityDiary,
@@ -1124,6 +978,12 @@ class DetailActivityTransactionState extends BlocState {
       indexYieldUnit: indexYieldUnit ?? this.indexYieldUnit,
       areaMax: areaMax ?? this.areaMax,
       diary: diary ?? this.diary,
+      buyerController: buyerController ?? this.buyerController,
+      productController: productController ?? this.productController,
+      inputDonGia: inputDonGia ?? this.inputDonGia,
+      indexYield: indexYield ?? this.indexYield,
+      donGiaController: donGiaController ?? this.donGiaController,
+      total: total ?? this.total,
     );
   }
 }

@@ -1,14 +1,20 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
+import '../../utils/constants/shared_preferences.dart';
+import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/utils.dart';
 import '../../view_model/home_bloc.dart';
+import '../diary/diary_monitor/diary_monitor_view.dart';
 import '../diary/diary_view.dart';
 import '../notify/notify_view.dart';
 import '../quetma/quet_qr_view.dart';
@@ -31,15 +37,56 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   int currentTab = 0;
-  final List<Widget> screens = [
-    const HomeView(), //const Page1(),
-    const DiaryView(), // page ban hang const Page2(),
-    const QRCodeView(), // page mua hang Page3(),
-    const NotifyView(), //const Page4(),
-    const SettingView(), //const Page5(),
-  ];
+  late List<Widget> screens = [];
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = const HomeView();
+  bool checkMonitor = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkUser(context);
+  }
+
+  void checkUser(BuildContext context) async {
+    bool checkFarmer = false;
+    bool check = await SharedPreDiary.getRole();
+    print("HoangC: check: $check");
+    if (check) {
+      checkFarmer = true;
+    }
+    if (!check) {
+      checkFarmer = false;
+      setState(() {
+        checkMonitor = true;
+      });
+    }
+    /*  if (roleList.isNotEmpty && roleList[0] == 1) {
+      checkUser = true;
+          setState(() {
+        checkMonitor = true;
+      });
+    }*/
+    if (!checkFarmer) {
+      screens = [
+        const HomeView(), //const Page1(),
+        const DiaryMonitorView(), // page ban hang const Page2(),
+        const QRCodeView(), // page mua hang Page3(),
+        const NotifyView(), //const Page4(),
+        const SettingView(), //const Page5(),
+      ];
+    } else{
+      screens = [
+        const HomeView(), //const Page1(),
+        const DiaryView(), // page ban hang const Page2(),
+        const QRCodeView(), // page mua hang Page3(),
+        const NotifyView(), //const Page4(),
+        const SettingView(), //const Page5(),
+      ];
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,8 +196,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Expanded(
                     child: InkWell(
                       onTap: () {
+
                         setState(() {
-                          currentScreen = const DiaryView();
+                          currentScreen =  checkMonitor ? const DiaryMonitorView() : const DiaryView();
                           currentTab = 1;
                         });
                       },
@@ -186,7 +234,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           height: 27,
                         ),
                         Text(
-                          "Quét mã",
+                          "Truy xuất",
                           style: StyleOfit.textStyleFW500(Colors.grey, 10,
                               overflow: TextOverflow.ellipsis),
                         ),

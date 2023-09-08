@@ -7,6 +7,8 @@ import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
+import 'package:diary_mobile/data/entity/report/question.dart';
+import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_executor.dart';
@@ -17,6 +19,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/constants/shared_preferences.dart';
 import '../utils/constants/shared_preferences_key.dart';
 import '../utils/widgets/dialog/dialog_manager.dart';
 import 'entity/diary/diary.dart';
@@ -25,6 +28,7 @@ import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
 import 'entity/monitor/monitor_diary.dart';
+import 'entity/report/answer.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -56,7 +60,7 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "0385672922",//adminvisimex
+      'login': "managervis2",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
@@ -79,9 +83,15 @@ class RepositoryImpl extends Repository {
       sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"]);
       sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"]);
       sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"]??'');
-      List<int> roleList = objectResult.response["role"]?.cast<int>() ?? [];
-      List<String> roleStringList = roleList.map((role) => role.toString()).toList();
-      sharedPreferences.setStringList(SharedPreferencesKey.role, roleStringList);
+      Map<String, dynamic> roleMap = objectResult.response["role"];
+      Map<String, List<bool>> role = {};
+      roleMap.forEach((key, value) {
+        if (value is List<dynamic> && value.every((item) => item is bool)) {
+          role[key] = List<bool>.from(value);
+        }
+      });
+      final roleJson = jsonEncode(role); // Chuyển đổi role thành chuỗi JSON
+      await sharedPreferences.setString(SharedPreferencesKey.role, roleJson);
       //sau khi login thanh công gọi danh mục dùng chung
       getListActivities();
       getListMaterials();
@@ -224,13 +234,19 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Diary>> getListDiary() async{
+  Future<List<Diary>> getListDiary({bool monitor = false}) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    bool check = await SharedPreDiary.getRole();
+    String path = ApiConst.getListDiary;
+    if(check || monitor){
+      path += "$userId";
+    } else{
+    }
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.getListDiary + "$userId",
+            path: path/*ApiConst.getListDiary + "$userId"*/,
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
@@ -238,19 +254,23 @@ class RepositoryImpl extends Repository {
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00) {
       List<Diary> list = List.from(objectResult.response)
-          .map((json) => Diary.fromJson(json))
+          .map((json) => Diary.fromJson(json, userId))
           .toList();
       DiaryDB.instance.insertListDiary(list);
       return list;
     }
-    else {
+    else if (objectResult.responseCode != StatusConst.code02){
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
       );
     }
-    return DiaryDB.instance.getListDiary();
+   /* if (monitor) {
+      return [];
+    } else {*/
+      return DiaryDB.instance.getListDiary(userId);
+    //}
   }
 
   @override
@@ -341,6 +361,7 @@ class RepositoryImpl extends Repository {
   Future<void> getUpdateDiary(int id) async{
        final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+       int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: "${ApiConst.getInfoDiary}$id",
@@ -348,7 +369,7 @@ class RepositoryImpl extends Repository {
             body: ObjectData(token: token)));
     print("HoangCV: getInfoDiary response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00 || objectResult.message == "Successfully") {
-      Diary list = Diary.fromJson(objectResult.response);
+      Diary list = Diary.fromJson(objectResult.response, userId);
       DiaryDB.instance.insertListDiary([list]);
       //return list;
     }
@@ -654,6 +675,129 @@ class RepositoryImpl extends Repository {
       );
     }
     return objectResult;
+  }
+
+  @override
+  Future<List<Report>> getListActivityReport() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListReport,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListActivityReport response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<Report> list = List.from(objectResult.response)
+          .map((json) => Report.fromJson(json))
+          .toList();
+      final hierarchyList = buildReportHierarchy(list);
+      hierarchyList.forEach((element) {
+        print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
+      });
+      // list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
+      //DiaryDB.instance.insertListActivityDiary(list);
+      return hierarchyList;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return []/*DiaryDB.instance.getListActivityDiary(id)*/;
+  }
+
+  // convert list đánh giá nội bộ
+  List<Report> buildReportHierarchy(List<Report> reports) {
+    List<Question> list1 = reports[0].questionAndPageIds.map((question) => Question.copy(question)).toList();
+    List<Question> list2 = [];
+    List<Question> list3 = [];
+    for (int i = 0; i < list1.length - 1; i++) {
+      bool checkQuestion = true;
+      if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
+        list2.add(list1[i]);
+        print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
+        int index = list2.indexWhere((element) => element.id == list1[i].id);
+        for (int j = i + 1; j < list1.length; j++) {
+          if (list1[i].id == list1[j].pageId) {
+            checkQuestion = false;
+            print("HoangCV: list1[j]: ${list1[j].id}");
+            list2[index].questionAndPageIds.add(list1[j]);
+          }
+        }
+        if (!checkQuestion) {
+          int length = list2
+              .where((element) => element.id == list2[index].id)
+              .toList()
+              .length;
+          list2.removeRange(index, index + length - 1);
+        }
+      }
+    }
+    List<Question> result = list2.map((question) => Question.copy(question)).toList();
+    for(int k = 0 ; k < list2.length ; k++) {
+     /* list2[k].questionAndPageIds.forEach((element) {
+          print("HoangCV: list2: ${list2.length} : ${element.toJson()}");
+        });*/
+        for (int i = 0; i < list2[k].questionAndPageIds.length - 1; i++) {
+          for(int l = i+1; l<list2[k].questionAndPageIds.length ; l++)
+            {
+              if ((list2[k].questionAndPageIds[i].id ==
+                  list2[k].questionAndPageIds[l].triggeringQuestionId)){
+                for(int m = 0; m<list2[k].questionAndPageIds[i].suggestedAnswerIds.length;m++ ){
+                  if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m] ==
+                      list2[k].questionAndPageIds[l].triggeringAnswerId)){
+                    int index = result[i].questionAndPageIds.indexWhere((element) => element.id == list2[i].questionAndPageIds[i].id);
+                    result[i].questionAndPageIds[index].suggestedAnswerIds[m].questionAndPageIds.add(list2[k].questionAndPageIds[l]);
+                    result[i].questionAndPageIds.removeAt(l);
+                  }
+                }
+              }
+            }
+
+        }
+    }
+    result.forEach((element1) {
+      print("HoangCV: result: ${result.length} : ${element1.toJson()}");
+    });
+    print("HoangCV: ");
+    reports[0].questionAndPageIds = result;
+    return reports;
+  }
+
+  @override
+  Future<List<Diary>> getListBackupDiary() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListBackupDiary,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListDiary response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<Diary> list = List.from(objectResult.response)
+          .map((json) => Diary.fromJson(json, userId))
+          .toList();
+      DiaryDB.instance.insertListDiary(list);
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return DiaryDB.instance.getListDiary(userId);
   }
 
 }

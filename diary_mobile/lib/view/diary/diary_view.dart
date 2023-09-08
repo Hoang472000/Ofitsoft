@@ -85,6 +85,7 @@ class _DiaryViewState extends State<DiaryView> {
                           labelText: 'Tìm kiếm',
                           suffixIcon: Icon(Icons.search),
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.all(8),
                         ),
                       ),
                     ),

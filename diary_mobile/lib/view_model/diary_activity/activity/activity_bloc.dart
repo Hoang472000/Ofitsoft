@@ -61,6 +61,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             isShowProgress: true));
         listActivityTransaction
             .addAll(await repository.getListActivityTransaction(event.id));
+        listActivityTransaction.removeWhere((element) => element.isPurchase == true);
         print("HoangCV: listActivityTransaction: ${listActivityTransaction.length}");
         listCallbackTransaction.addAll(listActivityTransaction);
         emitter(state.copyWith(
@@ -69,12 +70,38 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             listCallbackTransaction: listCallbackTransaction,
             listDiaryActivity: listDiaryActivity));
       } else {
+        listActivityTransaction.addAll(event.listTransaction);
+        listActivityTransaction.removeWhere((element) => element.isPurchase == true);
         emitter(state.copyWith(
             isShowProgress: false,
-            listActivityTransaction: event.listTransaction,
+            listActivityTransaction: listActivityTransaction,
             listDiaryActivity: listDiaryActivity));
       }
-    } else {
+    } else if (event.action.compareTo("purchase") == 0) {
+      listDiaryActivity.addAll(event.list);
+      listDiaryActivity.removeWhere((element) => element.harvesting == false);
+      if (event.harvesting) {
+        emitter(state.copyWith(
+            isShowProgress: true));
+        listActivityTransaction
+            .addAll(await repository.getListActivityTransaction(event.id));
+        listActivityTransaction.removeWhere((element) => element.isPurchase == false);
+        print("HoangCV: listActivityTransaction: ${listActivityTransaction.length}");
+        listCallbackTransaction.addAll(listActivityTransaction);
+        emitter(state.copyWith(
+            isShowProgress: false,
+            listActivityTransaction: listActivityTransaction,
+            listCallbackTransaction: listCallbackTransaction,
+            listDiaryActivity: listDiaryActivity));
+      } else {
+        listActivityTransaction.addAll(event.listTransaction);
+        listActivityTransaction.removeWhere((element) => element.isPurchase == false);
+        emitter(state.copyWith(
+            isShowProgress: false,
+            listActivityTransaction: listActivityTransaction,
+            listDiaryActivity: listDiaryActivity));
+      }
+    }else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
 
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
-import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
@@ -26,21 +25,21 @@ import '../../../../utils/utils.dart';
 import '../../../bloc_event.dart';
 import '../../../bloc_state.dart';
 
-class AddActivitySellBloc
-    extends Bloc<AddActivitySellEvent, AddActivitySellState> {
+class AddActivityPurchaseBloc
+    extends Bloc<AddActivityPurchaseEvent, AddActivityPurchaseState> {
   final Repository repository;
 
-  AddActivitySellBloc(this.repository) : super(AddActivitySellState()) {
-    on<InitAddActivitySellEvent>(_initAddActivitySell);
+  AddActivityPurchaseBloc(this.repository) : super(AddActivityPurchaseState()) {
+    on<InitAddActivityPurchaseEvent>(_initAddActivityPurchase);
     on<OnSelectValueEvent>(_onSelectValue);
-    on<AddActivitySellDiaryEvent>(_addActivitySellDiary);
+    on<AddActivityPurchaseDiaryEvent>(_addActivityPurchaseDiary);
     on<SaveValueTextFieldEvent>(_saveValueTextField);
     // add(InitAddActivityEvent());
   }
 
   bool edit = false;
 
-  void _initViewAdd(Emitter<AddActivitySellState> emitter) {
+  void _initViewAdd(Emitter<AddActivityPurchaseState> emitter) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listYield = [];
     List<InputRegisterModel> listVT = [];
@@ -109,16 +108,16 @@ class AddActivitySellBloc
       isCompulsory: false,
       type: TypeInputRegister.Select,
       icon: Icons.arrow_drop_down,
-      positionSelected: state.indexYield,
+      //positionSelected: state.indexYield,
       listValue: state.listUnitYield,
       controller: state.donViController,
-      valueSelected: state.listUnitYield[state.indexYield],
+      //valueSelected: state.listUnitYield[state.indexYield],
       typeInputEnum: TypeInputEnum.dmucItem,
       //noBorder: true
     ));
     List<InputRegisterModel> inputDonGia = [
       InputRegisterModel(
-        title: " ",
+        title: "Đơn giá                   ",
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
@@ -139,8 +138,8 @@ class AddActivitySellBloc
         formStatus: const InitialFormStatus()));
   }
 
-  void _initAddActivitySell(InitAddActivitySellEvent event,
-      Emitter<AddActivitySellState> emitter) async {
+  void _initAddActivityPurchase(InitAddActivityPurchaseEvent event,
+      Emitter<AddActivityPurchaseState> emitter) async {
     emitter(state.copyWith(
         isShowProgress: true,
         listWidget: [],
@@ -151,6 +150,7 @@ class AddActivitySellBloc
         listCongCuAdd: [],
         listVatTuAdd: []));
     //final listActivity = await DiaryDB.instance.getListActivity();
+    print("HoangCV: event.diary: ${event.diary.toJson()}");
     final List<String> listActivity = ["Visimex", "Angimex", "Ofitsoft"];
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
@@ -159,44 +159,26 @@ class AddActivitySellBloc
         sharedPreferences.getInt(SharedPreferencesKey.unitYield) ?? -1;
     final listUnitYield =
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
-    int indexYield = listUnitYield.indexWhere(
-        (element) => element.id == event.activityDiary[0].amountUnitId);
-    double amountYield = 0;
-    for (int i = 0; i < event.activityDiary.length; i++) {
-      amountYield += ((event.activityDiary[i].amount ?? 0) *
-          (listUnitYield[listUnitYield.indexWhere((element) =>
-                      element.id == event.activityDiary[i].amountUnitId)]
-                  .convert ??
-              0));
-    }
 
-    double convert = (listUnitYield[0].convert ?? 0) /
-        (listUnitYield[indexYield].convert ?? 0);
-    double totalYield = double.parse(Utils.formatNumber(amountYield * convert));
-    print("HoangCV: amountYield: ${totalYield} : $convert");
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
       detailActivity: event.diary,
-      activityDiary: event.activityDiary,
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
       listUnitYield: listUnitYield,
       seasonId: event.seasonId,
-      indexYield: indexYield,
       total: 0,
       startTimeController:
           TextEditingController(text: DateTime.now().toString().split('.')[0]),
       buyerController:
-          TextEditingController(text: "${event.diary.farmerName ?? 0}"),
+          TextEditingController(text: event.diary.farmerName ?? ''),
       productController:
           TextEditingController(text: "${event.diary.productName}"),
-      moTaController: TextEditingController(),
-      donViController: TextEditingController(
-          text: "${event.activityDiary[0].amountUnitName}"),
-      soLuongController:
-          TextEditingController(text: "${totalYield}"),
+      moTaController: TextEditingController(text: ''),
+      donViController: TextEditingController(text: ''),
+      soLuongController: TextEditingController(text: ''),
       donGiaController: TextEditingController(text: ''),
     ));
     _initViewAdd(emitter);
@@ -210,7 +192,7 @@ class AddActivitySellBloc
   }
 
   Future<FutureOr<void>> _onSelectValue(
-      OnSelectValueEvent event, Emitter<AddActivitySellState> emit) async {
+      OnSelectValueEvent event, Emitter<AddActivityPurchaseState> emit) async {
     int result;
     emit(state.copyWith(formStatus: const InitialFormStatus()));
     if (event.list[event.index].valueSelected.runtimeType == DateTime ||
@@ -245,7 +227,9 @@ class AddActivitySellBloc
         //   setState(() {
         double convert = 0;
         if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
-          convert = event.list[event.index].valueSelected.convert;
+          if(event.list[event.index].valueSelected != null) {
+            convert = event.list[event.index].valueSelected.convert;
+          }
         }
         event.list[event.index].positionSelected = result;
         event.list[event.index].valueDefault = null;
@@ -265,16 +249,18 @@ class AddActivitySellBloc
           ));
         }
         if (event.list[event.index].title.compareTo("Đơn vị:") == 0) {
-          print(
-              "HoangCV: dơn vị : ${convert} : ${(double.parse(state.soLuongController!.text) * convert) / (event.list[event.index].valueSelected.convert)}}");
-          double inputValue = double.parse(state.soLuongController!.text);
+          double inputValue = double.parse((state.soLuongController!.text.isEmpty ? '0'
+              : state.soLuongController!.text));
           double conversionFactor = convert;
           double selectedValue = event.list[event.index].valueSelected.convert;
           double result = (inputValue * conversionFactor) / selectedValue;
           String formattedResult = Utils.formatNumber(result);
-          double total = double.parse(state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!.text) *
+          double total = double.parse(state.donGiaController!.text.isEmpty
+                  ? '0'
+                  : state.donGiaController!.text) *
               double.parse(formattedResult);
           emit(state.copyWith(
+            indexYield: event.list[event.index].positionSelected,
               donViController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
               soLuongController:
@@ -291,8 +277,8 @@ class AddActivitySellBloc
     }
   }
 
-  FutureOr<void> _addActivitySellDiary(AddActivitySellDiaryEvent event,
-      Emitter<AddActivitySellState> emit) async {
+  FutureOr<void> _addActivityPurchaseDiary(AddActivityPurchaseDiaryEvent event,
+      Emitter<AddActivityPurchaseState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
     bool validate = true;
@@ -332,7 +318,8 @@ class AddActivitySellBloc
       emit(state.copyWith(isShowProgress: false));
       print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
-      print("HoangCV: state. state.listUnitYield[state.indexYield].id: ${ state.listUnitYield[state.indexYield].id}");
+      print(
+          "HoangCV: state. state.listUnitYield[state.indexYield].id: ${state.listUnitYield[state.indexYield].id}");
       ActivityTransaction activityTransaction = ActivityTransaction(
         id: -1,
         seasonFarmId: state.detailActivity!.seasonId,
@@ -341,7 +328,7 @@ class AddActivitySellBloc
         quantityUnitId: state.listUnitYield[state.indexYield].id,
         unitPrice: Utils.convertStringToDouble(state.donGiaController!.text),
         person: state.buyerController!.text,
-        isPurchase: false,
+        isPurchase: true,
       );
       ObjectResult result =
           await repository.addActivityTransaction(activityTransaction);
@@ -358,7 +345,7 @@ class AddActivitySellBloc
   }
 
   FutureOr<void> _saveValueTextField(
-      SaveValueTextFieldEvent event, Emitter<AddActivitySellState> emit) {
+      SaveValueTextFieldEvent event, Emitter<AddActivityPurchaseState> emit) {
     print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
@@ -366,12 +353,13 @@ class AddActivitySellBloc
     } else if (event.inputRegisterModel.title.compareTo("Sản lượng:") == 0) {
       event.inputRegisterModel.error = null;
       double total = 0;
-      double donGia = /*state.total / */double.parse(state.donGiaController!.text);
+      double donGia = /*state.total / */
+          double.parse(state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!.text);
       total = donGia * double.parse(event.text);
       emit(state.copyWith(
           soLuongController: TextEditingController(text: event.text),
           total: total));
-    } else if (event.inputRegisterModel.title.compareTo(" ") == 0) {
+    } else if (event.inputRegisterModel.title.compareTo("Đơn giá                   ") == 0) {
       print(
           "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
       event.inputRegisterModel.error = null;
@@ -385,31 +373,26 @@ class AddActivitySellBloc
   }
 }
 
-class AddActivitySellEvent extends BlocEvent {
+class AddActivityPurchaseEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class InitAddActivitySellEvent extends AddActivitySellEvent {
+class InitAddActivityPurchaseEvent extends AddActivityPurchaseEvent {
   int seasonId;
   final Diary diary;
-  final List<ActivityDiary> activityDiary;
 
-  InitAddActivitySellEvent(this.seasonId, this.diary, this.activityDiary);
+  InitAddActivityPurchaseEvent(this.seasonId, this.diary);
 
   @override
-  List<Object?> get props => [seasonId, diary, activityDiary];
+  List<Object?> get props => [seasonId, diary];
 }
 
-class ChangeEditActivitySellEvent extends AddActivitySellEvent {
-  ChangeEditActivitySellEvent();
-}
-
-class ChangeDetailActivitySellEvent extends AddActivitySellEvent {
+class ChangeDetailActivitySellEvent extends AddActivityPurchaseEvent {
   ChangeDetailActivitySellEvent();
 }
 
-class OnSelectValueEvent extends AddActivitySellEvent {
+class OnSelectValueEvent extends AddActivityPurchaseEvent {
   List<InputRegisterModel> list;
   int index;
   BuildContext context;
@@ -420,7 +403,7 @@ class OnSelectValueEvent extends AddActivitySellEvent {
   List<Object?> get props => [list, index, context];
 }
 
-class AddOrDeleteImageEvent extends AddActivitySellEvent {
+class AddOrDeleteImageEvent extends AddActivityPurchaseEvent {
   final List<ImageEntity> listImage;
   final int index;
   final BuildContext context;
@@ -439,7 +422,7 @@ class AddOrDeleteImageEvent extends AddActivitySellEvent {
       ];
 }
 
-class SaveValueTextFieldEvent extends AddActivitySellEvent {
+class SaveValueTextFieldEvent extends AddActivityPurchaseEvent {
   final InputRegisterModel inputRegisterModel;
   final String text;
   final int index;
@@ -457,19 +440,19 @@ class SaveValueTextFieldEvent extends AddActivitySellEvent {
       ];
 }
 
-class AddActivitySellDiaryEvent extends AddActivitySellEvent {
-  AddActivitySellDiaryEvent();
+class AddActivityPurchaseDiaryEvent extends AddActivityPurchaseEvent {
+  AddActivityPurchaseDiaryEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class UpdateAvatarEvent extends AddActivitySellEvent {
+class UpdateAvatarEvent extends AddActivityPurchaseEvent {
   //final ImageSource source;
   UpdateAvatarEvent();
 }
 
-class AddActivitySellState extends BlocState {
+class AddActivityPurchaseState extends BlocState {
   @override
   List<Object?> get props => [
         detailActivity,
@@ -546,7 +529,7 @@ class AddActivitySellState extends BlocState {
   final double areaMax;
   double total;
 
-  AddActivitySellState({
+  AddActivityPurchaseState({
     this.inputDonGia = const [],
     this.detailActivity,
     this.activityDiary = const [],
@@ -586,7 +569,7 @@ class AddActivitySellState extends BlocState {
     this.total = 0,
   });
 
-  AddActivitySellState copyWith({
+  AddActivityPurchaseState copyWith({
     Diary? detailActivity,
     List<ActivityDiary>? activityDiary,
     FormSubmissionStatus? formStatus,
@@ -625,7 +608,7 @@ class AddActivitySellState extends BlocState {
     double? total,
     List<InputRegisterModel>? inputDonGia,
   }) {
-    return AddActivitySellState(
+    return AddActivityPurchaseState(
       detailActivity: detailActivity ?? this.detailActivity,
       activityDiary: activityDiary ?? this.activityDiary,
       formStatus: formStatus ?? this.formStatus,

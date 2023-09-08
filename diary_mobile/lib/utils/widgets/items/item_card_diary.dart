@@ -5,8 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../resource/color.dart';
 
-class ItemCardActivity extends StatelessWidget {
-  const ItemCardActivity({
+class ItemCardDiary extends StatelessWidget {
+  const ItemCardDiary({
     super.key,
     required this.name,
     required this.icon,
@@ -22,11 +22,11 @@ class ItemCardActivity extends StatelessWidget {
   }
 
   Color get borderColor {
-    return AppColor.green99;
+    return AppColor.green53;
   }
 
   Color get shadowColor {
-    return AppColor.green99;
+    return AppColor.green53;
   }
 
   Color get textColor {
@@ -50,7 +50,7 @@ class ItemCardActivity extends StatelessWidget {
                   duration: const Duration(milliseconds: 120),
                   decoration: ShapeDecoration(
                     gradient: const LinearGradient(
-                      colors: [AppColor.yellowFE,AppColor.green2, AppColor.green01, AppColor.main, AppColor.green99],
+                      colors: [AppColor.green2,AppColor.green01,AppColor.green1, AppColor.green53],
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),

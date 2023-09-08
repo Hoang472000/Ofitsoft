@@ -26,7 +26,9 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
+import '../../../utils/widgets/empty_widget.dart';
 import '../../../utils/widgets/items/item_activity.dart';
+import '../activity_sell/add_activity_purchase.dart';
 import '../activity_sell/add_activity_sell.dart';
 import '../activity_sell/detail_activity_transaction.dart';
 import '../monitor/detail_monitor_page.dart';
@@ -75,7 +77,6 @@ class ActivityTransactionPage extends StatefulWidget {
 
 class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
   bool visible = true;
-  OverlayEntry? _overlayEntry;
   bool updateHarvesting = false;
   List<ActivityTransaction> listCallback = const [];
 
@@ -83,203 +84,6 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if (widget.action.compareTo('activity') == 0 ||
-        widget.action.compareTo('monitor') == 0 ||
-        widget.action.compareTo('harvesting') == 0 ||
-        widget.action.compareTo('report') == 0) {
-      setState(() {
-        visible = true;
-      });
-    } else {
-      setState(() {
-        visible = false;
-      });
-    }
-    //_initView();
-  }
-
-  void _showOverlay(BuildContext contextBloc, ActivityState state,
-      Function(bool isSell) callback) {
-    _overlayEntry = OverlayEntry(
-      builder: (BuildContext context) {
-        return Stack(
-          children: [
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () {
-                  _overlayEntry?.remove();
-                  _overlayEntry = null;
-                  setState(() {
-                    visible = true;
-                  });
-                },
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Visibility(
-                        visible: !visible,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  callback(true);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: AppColor.gray57,
-                                                blurRadius: 1,
-                                                offset: Offset(0, 0),
-                                              ),
-                                            ],
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                AppColor.main,
-                                                AppColor.green99
-                                              ],
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            color: Colors.white),
-                                        margin: const EdgeInsets.all(8.0),
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: "Ghi thu bán",
-                                            style: StyleOfit.textStyleFW500(
-                                                AppColor.whiteF2, 14),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    "", // Chữ bị gạch chân sẽ được thay bằng chuỗi rỗng
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            AppColor.main,
-                                            AppColor.green99
-                                          ],
-                                          begin: Alignment.centerRight,
-                                          end: Alignment.centerLeft,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            36.0), // Adjust the border radius as needed
-                                      ),
-                                      child: FloatingActionButton(
-                                          backgroundColor: Colors.transparent,
-                                          child: Icon(Icons.monetization_on),
-                                          onPressed: () {
-                                            callback(true);
-                                          }),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  callback(false);
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Container(
-                                        decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                color: AppColor.gray57,
-                                                blurRadius: 1,
-                                                offset: Offset(0, 0),
-                                              ),
-                                            ],
-                                            gradient: const LinearGradient(
-                                              colors: [
-                                                AppColor.main,
-                                                AppColor.green99
-                                              ],
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            color: Colors.white),
-                                        margin: const EdgeInsets.all(8.0),
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: RichText(
-                                          text: TextSpan(
-                                            text: "Ghi nhật ký",
-                                            style: StyleOfit.textStyleFW500(
-                                                AppColor.whiteF2, 14),
-                                            children: <TextSpan>[
-                                              TextSpan(
-                                                text:
-                                                    "", // Chữ bị gạch chân sẽ được thay bằng chuỗi rỗng
-                                              ),
-                                            ],
-                                          ),
-                                        )),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            AppColor.main,
-                                            AppColor.green99
-                                          ],
-                                          begin: Alignment.centerRight,
-                                          end: Alignment.centerLeft,
-                                        ),
-                                        borderRadius: BorderRadius.circular(
-                                            36.0), // Adjust the border radius as needed
-                                      ),
-                                      child: FloatingActionButton(
-                                          backgroundColor: Colors.transparent,
-                                          child: Icon(Icons.note_add),
-                                          onPressed: () {
-                                            callback(false);
-                                          }),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-
-    Overlay.of(context)?.insert(_overlayEntry!);
   }
 
   @override
@@ -288,63 +92,58 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
       create: (context) => ActivityBloc(context.read<Repository>())
         ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false,
             widget.listActivityDiary, widget.listActivityTransaction)),
-      child: GestureDetector(
-        onTap: () {
-/*          setState(() {
-            visible = true;
-          });
-          _overlayEntry?.remove();
-          _overlayEntry = null;*/
-        },
-        child: Scaffold(
-          appBar: OfitAppBar(context,
-              centerTitle: true,
-              hasBottom: true,
-              showDefaultBackButton: true,
-              callback: [updateHarvesting, listCallback],
-              title: Text(
-                widget.activityFarm.nameActivity,
-                style: StyleOfit.textStyleFW700(Colors.white, 20),
-              )),
-          //resizeToAvoidBottomInset: true,
-          backgroundColor: AppColor.background,
-          floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(
-            builder: (contextBloc, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Visibility(
-                    visible: !visible,
-                    child: floatingActionButton(
-                        "Ghi mua bán",
-                        Icons.monetization_on,
-                        (widget.diary.status ?? '').compareTo("done") == 0 ||
-                                (widget.diary.status ?? '')
-                                        .compareTo("cancelled") ==
-                                    0
-                            ? () {
-                                if ((widget.diary.status ?? '')
-                                        .compareTo("done") ==
-                                    0) {
-                                  DiaLogManager.displayDialog(
-                                      context,
-                                      "Nhật ký đã hoàn thành",
-                                      "Bạn không thể thêm mới hoạt động", () {
-                                    Navigator.pop(context);
-                                  }, () {}, "", S.of(context).close_dialog);
-                                }
-                                if ((widget.diary.status ?? '')
-                                        .compareTo("cancelled") ==
-                                    0) {
-                                  DiaLogManager.displayDialog(
-                                      context,
-                                      "Nhật ký đã đóng",
-                                      "Bạn không thể thêm mới hoạt động", () {
-                                    Navigator.pop(context);
-                                  }, () {}, "", S.of(context).close_dialog);
-                                }
+      child: Scaffold(
+        appBar: OfitAppBar(context,
+            centerTitle: true,
+            hasBottom: true,
+            showDefaultBackButton: true,
+            callback: [updateHarvesting, listCallback],
+            title: Text(
+              widget.activityFarm.nameActivity,
+              style: StyleOfit.textStyleFW700(Colors.white, 20),
+            )),
+        //resizeToAvoidBottomInset: true,
+        backgroundColor: AppColor.background,
+        floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(
+          builder: (contextBloc, state) {
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible: visible,
+                  child: floatingActionButton(
+                      widget.action.compareTo("sell") == 0
+                          ? "Ghi bán hàng"
+                          : "Ghi thu mua",
+                      Icons.monetization_on,
+                      (widget.diary.status ?? '').compareTo("done") == 0 ||
+                              (widget.diary.status ?? '')
+                                      .compareTo("cancelled") ==
+                                  0
+                          ? () {
+                              if ((widget.diary.status ?? '')
+                                      .compareTo("done") ==
+                                  0) {
+                                DiaLogManager.displayDialog(
+                                    context,
+                                    "Nhật ký đã hoàn thành",
+                                    "Bạn không thể thêm mới hoạt động", () {
+                                  Navigator.pop(context);
+                                }, () {}, "", S.of(context).close_dialog);
                               }
-                            : () async {
+                              if ((widget.diary.status ?? '')
+                                      .compareTo("cancelled") ==
+                                  0) {
+                                DiaLogManager.displayDialog(
+                                    context,
+                                    "Nhật ký đã đóng",
+                                    "Bạn không thể thêm mới hoạt động", () {
+                                  Navigator.pop(context);
+                                }, () {}, "", S.of(context).close_dialog);
+                              }
+                            }
+                          : () async {
+                              if (widget.action.compareTo("sell") == 0) {
                                 var result = await Navigator.of(context).push(
                                     ActivitySelectPage.route(
                                         widget.diary, state.listDiaryActivity));
@@ -359,101 +158,115 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           result[0],
                                           widget.listActivityDiary, []));
                                 }
-                              }),
-                  ),
-                ],
-              );
-            },
-          ),
-          body: BlocConsumer<ActivityBloc, ActivityState>(
-              listener: (blocContext, state) async {
-            final formStatus = state.formStatus;
-            if (!state.isShowProgress) {
-              setState(() {
-                listCallback = state.listCallbackTransaction;
-              });
-              print(
-                  "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
-            }
-            if (formStatus is SubmissionFailed) {
-              DiaLogManager.displayDialog(context, "", formStatus.exception,
-                  () {
-                Get.back();
-              }, () {
-                Get.back();
-              }, '', S.of(context).close_dialog);
-            } else if (formStatus is SubmissionSuccess) {
-              DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                  () {
-                Get.back();
-              }, () {
-                Get.back();
-              }, '', S.of(context).close_dialog);
-            } else if (formStatus is FormSubmitting) {
-              //DiaLogManager.showDialogLoading(context);
-            }
-          }, builder: (blocContext, state) {
-            return state
-                    .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                ? const Center(
-                    child:
-                        DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-                  )
-                : RefreshIndicator(
-                    onRefresh: () async {
-                      blocContext.read<ActivityBloc>().add(GetListActivityEvent(
-                          widget.seasonFarmId, widget.action, false, [], []));
-                    },
-                    child: SingleChildScrollView(
-                      //physics: const NeverScrollableScrollPhysics(),
-                      child: Column(
-                        children: [
-                          ListView.builder(
-                            itemCount: state.listActivityTransaction.length,
-                            itemBuilder: (BuildContext contextBloc, int index) {
-                              return ItemTransaction(
-                                  diary: widget.diary,
-                                  activityDiary:
-                                      state.listActivityTransaction[index],
-                                  action: widget.action,
-                                  callbackChooseItem: () async {
-                                    //Truyen id de sang man ben goi api hoac DB
-                                    if (widget.action.compareTo('sell') == 0) {
-                                      var result = await Navigator.push(
-                                          context,
-                                          DetailActivityTransactionPage.route(
-                                              state.listActivityTransaction[
-                                                  index],
-                                              widget.diary));
-                                      if (result != null && result[0]) {
-                                        contextBloc.read<ActivityBloc>().add(
-                                            GetListActivityEvent(
-                                                widget.seasonFarmId,
-                                                widget.action,
-                                                result[1], [], []));
-                                      }
-                                    }
-                                  },
-                                  callbackDelete: () {
-                                    blocContext.read<ActivityBloc>().add(
-                                        RemoveActivityEvent(
-                                            state.listDiaryActivity[index].id ??
-                                                -1,
-                                            widget.action));
+                              } else {
+                                var result = await Navigator.of(context).push(AddActivityPurchasePage.route(
+                                    1, widget.diary));
+                                if (result != null && result[0]) {
+                                  setState(() {
+                                    updateHarvesting = result[0];
                                   });
-                            },
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                          ),
-                          SizedBox(
-                            height: 60,
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-          }),
+                                  contextBloc.read<ActivityBloc>().add(
+                                      GetListActivityEvent(
+                                          widget.seasonFarmId,
+                                          widget.action,
+                                          result[0],
+                                          widget.listActivityDiary, []));
+                                }
+                              }
+                            }),
+                ),
+              ],
+            );
+          },
         ),
+        body: BlocConsumer<ActivityBloc, ActivityState>(
+            listener: (blocContext, state) async {
+          final formStatus = state.formStatus;
+          if (!state.isShowProgress) {
+            setState(() {
+              listCallback = state.listCallbackTransaction;
+            });
+            print(
+                "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
+          }
+          if (formStatus is SubmissionFailed) {
+            DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+              Get.back();
+            }, () {
+              Get.back();
+            }, '', S.of(context).close_dialog);
+          } else if (formStatus is SubmissionSuccess) {
+            DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                () {
+              Get.back();
+            }, () {
+              Get.back();
+            }, '', S.of(context).close_dialog);
+          } else if (formStatus is FormSubmitting) {
+            //DiaLogManager.showDialogLoading(context);
+          }
+        }, builder: (blocContext, state) {
+          return state
+                  .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
+              ? const Center(
+                  child:
+                      DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<ActivityBloc>().add(GetListActivityEvent(
+                        widget.seasonFarmId, widget.action, false, [], []));
+                  },
+                  child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: state.listActivityTransaction.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemTransaction(
+                                diary: widget.diary,
+                                activityDiary:
+                                    state.listActivityTransaction[index],
+                                action: widget.action,
+                                callbackChooseItem: () async {
+                                  //Truyen id de sang man ben goi api hoac DB
+                                  if (widget.action.compareTo('sell') == 0) {
+                                    var result = await Navigator.push(
+                                        context,
+                                        DetailActivityTransactionPage.route(
+                                            state
+                                                .listActivityTransaction[index],
+                                            widget.diary));
+                                    if (result != null && result[0]) {
+                                      contextBloc.read<ActivityBloc>().add(
+                                          GetListActivityEvent(
+                                              widget.seasonFarmId,
+                                              widget.action,
+                                              result[1], [], []));
+                                    }
+                                  }
+                                },
+                                callbackDelete: () {
+                                  blocContext.read<ActivityBloc>().add(
+                                      RemoveActivityEvent(
+                                          state.listDiaryActivity[index].id ??
+                                              -1,
+                                          widget.action));
+                                });
+                          },
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+        }),
       ),
     );
   }

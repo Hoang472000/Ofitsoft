@@ -211,4 +211,6 @@ class ImageAsset {
   //background ofitsoft
 
   static const String imageOfitSoftBackground = "${iMages}image_ofitsoft_background.jpg";
+
+  static const String imageEmptyData = "${iMages}empty_data.png";
 }

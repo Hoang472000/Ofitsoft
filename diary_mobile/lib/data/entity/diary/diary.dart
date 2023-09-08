@@ -1,5 +1,6 @@
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
+import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:drift/drift.dart';
 
 import '../image/image_entity.dart';
@@ -9,6 +10,7 @@ import '../item_default/tool.dart';
 
 class Diary implements Insertable<Diary> {
   //Thuoc tinh information detail diary
+  int? userId;
   int? id;
   String? name;
   int? seasonId;
@@ -40,6 +42,7 @@ class Diary implements Insertable<Diary> {
   String? farmerName;
 
   Diary({
+    this.userId,
     this.id,
     this.name,
     this.seasonId,
@@ -71,9 +74,10 @@ class Diary implements Insertable<Diary> {
     this.farmerId,
   });
 
-  factory Diary.fromJson(Map<String, dynamic> json) {
+  factory Diary.fromJson(Map<String, dynamic> json, int userId) {
     return Diary(
       id: json['id'] ?? -1,
+      userId: userId,
       name: json['name'] ?? "",
       seasonId: json['season_id'] ?? -1,
       farmName: json['farm_name'] ?? '',
@@ -108,6 +112,7 @@ class Diary implements Insertable<Diary> {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
+    data['user_id'] = userId;
     data['name'] = name;
     data['season_id'] = seasonId;
     data['farm_name'] = farmName;
@@ -141,6 +146,7 @@ class Diary implements Insertable<Diary> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     return DiaryTableCompanion(
       id: Value(id),
+      userId: Value(userId),
       name: Value(name),
       seasonId: Value(seasonId),
       description: Value(description),

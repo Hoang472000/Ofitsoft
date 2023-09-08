@@ -4,6 +4,7 @@ import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/generated/l10n.dart';
 import 'package:diary_mobile/resource/assets.dart';
+import 'package:diary_mobile/utils/constants/shared_preferences.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,15 +48,9 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       final detailDiary = await repository.getInfoDiary(event.id);
       final listActivityDiary = await repository.getListActivityDiary(event.id);
       final listActivityTransaction = await repository.getListActivityTransaction(event.id);
-      final sharedPreferences = await SharedPreferences.getInstance();
-      List<String>? roleStringList =
-          sharedPreferences.getStringList(SharedPreferencesKey.role);
-      List<int> roleList =
-          roleStringList?.map((roleString) => int.parse(roleString)).toList() ??
-              [];
-      print("HoangCV: role: ${roleList[0]} : ${roleList[0]}");
+      bool check = await SharedPreDiary.getRole();
       List<ActivityFarm> list = [];
-      if (roleList.isNotEmpty && roleList[0] == 1) {
+      if (check) {
         list.add(ActivityFarm(
             id: 1,
             nameActivity: "HOẠT ĐỘNG CANH TÁC",
@@ -66,10 +61,26 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
             iconActivity: ImageAsset.imagePlantCrop));
         list.add(ActivityFarm(
             id: 3,
-            nameActivity: "HOẠT ĐỘNG MUA BÁN",
+            nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
             iconActivity: ImageAsset.imageSelling));
       }
-      if (roleList.isNotEmpty && roleList[1] == 1) {
+      if (!check) {
+        list.add(ActivityFarm(
+            id: 1,
+            nameActivity: "HOẠT ĐỘNG CANH TÁC",
+            iconActivity: ImageAsset.imageActivityFarm));
+        list.add(ActivityFarm(
+            id: 2,
+            nameActivity: "HOẠT ĐỘNG THU HOẠCH",
+            iconActivity: ImageAsset.imagePlantCrop));
+        list.add(ActivityFarm(
+            id: 3,
+            nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
+            iconActivity: ImageAsset.imageSelling));
+        list.add(ActivityFarm(
+            id: 6,
+            nameActivity: "HOẠT ĐỘNG THU MUA",
+            iconActivity: ImageAsset.imageSelling));
         list.add(ActivityFarm(
             id: 4,
             nameActivity: "HOẠT ĐỘNG GIÁM SÁT",

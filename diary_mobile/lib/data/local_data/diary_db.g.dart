@@ -14,6 +14,11 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -185,6 +190,7 @@ class $DiaryTableTable extends DiaryTable
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        userId,
         name,
         seasonId,
         farmId,
@@ -225,6 +231,10 @@ class $DiaryTableTable extends DiaryTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -375,6 +385,8 @@ class $DiaryTableTable extends DiaryTable
   Diary map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Diary(
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
       name: attachedDatabase.typeMapping
@@ -445,6 +457,7 @@ class $DiaryTableTable extends DiaryTable
 
 class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> id;
+  final Value<int?> userId;
   final Value<String?> name;
   final Value<int?> seasonId;
   final Value<int?> farmId;
@@ -475,6 +488,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> farmerId;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
     this.farmId = const Value.absent(),
@@ -506,6 +520,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   });
   DiaryTableCompanion.insert({
     this.id = const Value.absent(),
+    this.userId = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
     this.farmId = const Value.absent(),
@@ -537,6 +552,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   });
   static Insertable<Diary> custom({
     Expression<int>? id,
+    Expression<int>? userId,
     Expression<String>? name,
     Expression<int>? seasonId,
     Expression<int>? farmId,
@@ -568,6 +584,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
       if (seasonId != null) 'season_id': seasonId,
       if (farmId != null) 'farm_id': farmId,
@@ -603,6 +620,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
 
   DiaryTableCompanion copyWith(
       {Value<int?>? id,
+      Value<int?>? userId,
       Value<String?>? name,
       Value<int?>? seasonId,
       Value<int?>? farmId,
@@ -633,6 +651,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<int?>? farmerId}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       name: name ?? this.name,
       seasonId: seasonId ?? this.seasonId,
       farmId: farmId ?? this.farmId,
@@ -670,6 +689,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -763,6 +785,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   String toString() {
     return (StringBuffer('DiaryTableCompanion(')
           ..write('id: $id, ')
+          ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('seasonId: $seasonId, ')
           ..write('farmId: $farmId, ')
@@ -5049,6 +5072,287 @@ class ActDiaryNoNetworkTableCompanion
   }
 }
 
+class $ReportTableTable extends ReportTable
+    with TableInfo<$ReportTableTable, Report> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReportTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activeMeta = const VerificationMeta('active');
+  @override
+  late final GeneratedColumn<bool> active =
+      GeneratedColumn<bool>('active', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _hasConditionalQuestionsMeta =
+      const VerificationMeta('hasConditionalQuestions');
+  @override
+  late final GeneratedColumn<bool> hasConditionalQuestions =
+      GeneratedColumn<bool>('has_conditional_questions', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("has_conditional_questions" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _questionsSelectionMeta =
+      const VerificationMeta('questionsSelection');
+  @override
+  late final GeneratedColumn<String> questionsSelection =
+      GeneratedColumn<String>('questions_selection', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _timeLimitMeta =
+      const VerificationMeta('timeLimit');
+  @override
+  late final GeneratedColumn<double> timeLimit = GeneratedColumn<double>(
+      'time_limit', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _stringQuestionAndPageIdsMeta =
+      const VerificationMeta('stringQuestionAndPageIds');
+  @override
+  late final GeneratedColumn<String> stringQuestionAndPageIds =
+      GeneratedColumn<String>('string_question_and_page_ids', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        title,
+        userId,
+        active,
+        hasConditionalQuestions,
+        questionsSelection,
+        timeLimit,
+        stringQuestionAndPageIds
+      ];
+  @override
+  String get aliasedName => _alias ?? 'report';
+  @override
+  String get actualTableName => 'report';
+  @override
+  VerificationContext validateIntegrity(Insertable<Report> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('active')) {
+      context.handle(_activeMeta,
+          active.isAcceptableOrUnknown(data['active']!, _activeMeta));
+    }
+    if (data.containsKey('has_conditional_questions')) {
+      context.handle(
+          _hasConditionalQuestionsMeta,
+          hasConditionalQuestions.isAcceptableOrUnknown(
+              data['has_conditional_questions']!,
+              _hasConditionalQuestionsMeta));
+    }
+    if (data.containsKey('questions_selection')) {
+      context.handle(
+          _questionsSelectionMeta,
+          questionsSelection.isAcceptableOrUnknown(
+              data['questions_selection']!, _questionsSelectionMeta));
+    }
+    if (data.containsKey('time_limit')) {
+      context.handle(_timeLimitMeta,
+          timeLimit.isAcceptableOrUnknown(data['time_limit']!, _timeLimitMeta));
+    }
+    if (data.containsKey('string_question_and_page_ids')) {
+      context.handle(
+          _stringQuestionAndPageIdsMeta,
+          stringQuestionAndPageIds.isAcceptableOrUnknown(
+              data['string_question_and_page_ids']!,
+              _stringQuestionAndPageIdsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Report map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Report(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title']),
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
+      active: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}active']),
+      hasConditionalQuestions: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool,
+          data['${effectivePrefix}has_conditional_questions']),
+      questionsSelection: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}questions_selection']),
+      timeLimit: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}time_limit']),
+      stringQuestionAndPageIds: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}string_question_and_page_ids']),
+    );
+  }
+
+  @override
+  $ReportTableTable createAlias(String alias) {
+    return $ReportTableTable(attachedDatabase, alias);
+  }
+}
+
+class ReportTableCompanion extends UpdateCompanion<Report> {
+  final Value<int?> id;
+  final Value<String?> title;
+  final Value<int?> userId;
+  final Value<bool?> active;
+  final Value<bool?> hasConditionalQuestions;
+  final Value<String?> questionsSelection;
+  final Value<double?> timeLimit;
+  final Value<String?> stringQuestionAndPageIds;
+  const ReportTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.active = const Value.absent(),
+    this.hasConditionalQuestions = const Value.absent(),
+    this.questionsSelection = const Value.absent(),
+    this.timeLimit = const Value.absent(),
+    this.stringQuestionAndPageIds = const Value.absent(),
+  });
+  ReportTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.active = const Value.absent(),
+    this.hasConditionalQuestions = const Value.absent(),
+    this.questionsSelection = const Value.absent(),
+    this.timeLimit = const Value.absent(),
+    this.stringQuestionAndPageIds = const Value.absent(),
+  });
+  static Insertable<Report> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+    Expression<int>? userId,
+    Expression<bool>? active,
+    Expression<bool>? hasConditionalQuestions,
+    Expression<String>? questionsSelection,
+    Expression<double>? timeLimit,
+    Expression<String>? stringQuestionAndPageIds,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (userId != null) 'user_id': userId,
+      if (active != null) 'active': active,
+      if (hasConditionalQuestions != null)
+        'has_conditional_questions': hasConditionalQuestions,
+      if (questionsSelection != null) 'questions_selection': questionsSelection,
+      if (timeLimit != null) 'time_limit': timeLimit,
+      if (stringQuestionAndPageIds != null)
+        'string_question_and_page_ids': stringQuestionAndPageIds,
+    });
+  }
+
+  ReportTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? title,
+      Value<int?>? userId,
+      Value<bool?>? active,
+      Value<bool?>? hasConditionalQuestions,
+      Value<String?>? questionsSelection,
+      Value<double?>? timeLimit,
+      Value<String?>? stringQuestionAndPageIds}) {
+    return ReportTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      userId: userId ?? this.userId,
+      active: active ?? this.active,
+      hasConditionalQuestions:
+          hasConditionalQuestions ?? this.hasConditionalQuestions,
+      questionsSelection: questionsSelection ?? this.questionsSelection,
+      timeLimit: timeLimit ?? this.timeLimit,
+      stringQuestionAndPageIds:
+          stringQuestionAndPageIds ?? this.stringQuestionAndPageIds,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (active.present) {
+      map['active'] = Variable<bool>(active.value);
+    }
+    if (hasConditionalQuestions.present) {
+      map['has_conditional_questions'] =
+          Variable<bool>(hasConditionalQuestions.value);
+    }
+    if (questionsSelection.present) {
+      map['questions_selection'] = Variable<String>(questionsSelection.value);
+    }
+    if (timeLimit.present) {
+      map['time_limit'] = Variable<double>(timeLimit.value);
+    }
+    if (stringQuestionAndPageIds.present) {
+      map['string_question_and_page_ids'] =
+          Variable<String>(stringQuestionAndPageIds.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReportTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('userId: $userId, ')
+          ..write('active: $active, ')
+          ..write('hasConditionalQuestions: $hasConditionalQuestions, ')
+          ..write('questionsSelection: $questionsSelection, ')
+          ..write('timeLimit: $timeLimit, ')
+          ..write('stringQuestionAndPageIds: $stringQuestionAndPageIds')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -5065,6 +5369,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
       $MonitorDiaryTableTable(this);
   late final $ActDiaryNoNetworkTableTable actDiaryNoNetworkTable =
       $ActDiaryNoNetworkTableTable(this);
+  late final $ReportTableTable reportTable = $ReportTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5079,6 +5384,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         userInfoTable,
         activityMonitorTable,
         monitorDiaryTable,
-        actDiaryNoNetworkTable
+        actDiaryNoNetworkTable,
+        reportTable
       ];
 }

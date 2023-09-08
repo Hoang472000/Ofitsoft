@@ -3,6 +3,7 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
+import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import 'entity/diary/diary.dart';
@@ -49,7 +50,7 @@ abstract class Repository {
 
   Future<ObjectResult> changePassword(String passwordOld, String passwordNew);
 
-  Future<List<Diary>> getListDiary();
+  Future<List<Diary>> getListDiary({bool monitor = false});
 
   Future<List<ActivityDiary>> getListActivityDiary(int id);
 
@@ -84,4 +85,8 @@ abstract class Repository {
   Future<List<ActivityTransaction>> getListActivityTransaction(int id);
 
   Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction);
+
+  Future<List<Report>> getListActivityReport();
+
+  Future<List<Diary>> getListBackupDiary();
 }

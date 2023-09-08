@@ -138,13 +138,13 @@ class ContainerInputWidget extends StatelessWidget {
                         primary: false,
                         children: [
                           Padding(
-                            padding: inputRegisterModel.noBorder ? const EdgeInsets.only(bottom: 12, ) : const EdgeInsets.all(6),
+                            padding: inputRegisterModel.noBorder ? EdgeInsets.zero : const EdgeInsets.all(6),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 inputRegisterModel.title.length > 25 ?
                                 Expanded(
-                                  flex: 5,
+                                  flex: 4,
                                   child: Text(
                                     '${inputRegisterModel.title}',
                                     style: TextStyle(
@@ -381,7 +381,7 @@ class ContainerInputWidget extends StatelessWidget {
                   decoration: InputDecoration(
                       contentPadding: inputRegisterModel.noBorder
                           ? const EdgeInsets.only(
-                              top: 6, bottom: 6, left: 20, right: 0)
+                              top: 6, bottom: 6, left: 8, right: 0)
                           : const EdgeInsets.only(
                               top: 6, bottom: 6, left: 20, right: 0),
                       isDense: true,
