@@ -721,12 +721,12 @@ class RepositoryImpl extends Repository {
       bool checkQuestion = true;
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
-        print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
+        //print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
         int index = list2.indexWhere((element) => element.id == list1[i].id);
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {
             checkQuestion = false;
-            print("HoangCV: list1[j]: ${list1[j].id}");
+            //print("HoangCV: list1[j]: ${list1[j].id}");
             list2[index].questionAndPageIds.add(list1[j]);
           }
         }
@@ -747,14 +747,35 @@ class RepositoryImpl extends Repository {
         for (int i = 0; i < list2[k].questionAndPageIds.length - 1; i++) {
           for(int l = i+1; l<list2[k].questionAndPageIds.length ; l++)
             {
+              //print("HoangCV: i : ${list2[k].questionAndPageIds[l].id}");
               if ((list2[k].questionAndPageIds[i].id ==
                   list2[k].questionAndPageIds[l].triggeringQuestionId)){
+                //print("HoangCV: banwfg : ${list2[k].questionAndPageIds[l].triggeringQuestionId}");
                 for(int m = 0; m<list2[k].questionAndPageIds[i].suggestedAnswerIds.length;m++ ){
-                  if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m] ==
+                  if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
                       list2[k].questionAndPageIds[l].triggeringAnswerId)){
-                    int index = result[i].questionAndPageIds.indexWhere((element) => element.id == list2[i].questionAndPageIds[i].id);
-                    result[i].questionAndPageIds[index].suggestedAnswerIds[m].questionAndPageIds.add(list2[k].questionAndPageIds[l]);
-                    result[i].questionAndPageIds.removeAt(l);
+
+                    print("HoangCV: banwfg : ${list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id} : "
+                        "${list2[k].questionAndPageIds[i].suggestedAnswerIds[m].value} : "
+                        "${list2[k].questionAndPageIds[l].title}");
+                    int index = result[k].questionAndPageIds.indexWhere((element) =>
+                      element.id == list2[k].questionAndPageIds[i].id);
+                    if(index != -1) {
+                      result[k].questionAndPageIds[index].suggestedAnswerIds[m]
+                          .questionAndPageIds.
+                      add(list2[k].questionAndPageIds[l]);
+                    }
+
+                    // int indexRemove = result[i].questionAndPageIds.indexWhere((element) =>
+                    // element.id == list2[i].questionAndPageIds[l].id);
+                    int indexRemove = result[k].questionAndPageIds.indexWhere((element) =>
+                    element.id == list2[k].questionAndPageIds[l].id);
+                    print("HoangCV: index: $index : indexRemove: $indexRemove");
+                    //print("HoangCV: index: ${result[k].questionAndPageIds.length} : $index  : $indexRemove : ${list2[i].questionAndPageIds[l].id}  : ${list2[i].questionAndPageIds[l].title} :}");
+
+                    if(indexRemove != -1) {
+                      result[k].questionAndPageIds.removeAt(indexRemove);
+                    }
                   }
                 }
               }
@@ -764,9 +785,14 @@ class RepositoryImpl extends Repository {
     }
     result.forEach((element1) {
       print("HoangCV: result: ${result.length} : ${element1.toJson()}");
+
+    });
+    result[0].questionAndPageIds.forEach((element1) {
+      print("HoangCV: question: ${result.length} : ${element1.toJson()}");
+
     });
     print("HoangCV: ");
-    reports[0].questionAndPageIds = result;
+    reports[0].questionAndPageIds = List.from(result);
     return reports;
   }
 

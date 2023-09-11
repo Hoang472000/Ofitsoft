@@ -34,7 +34,7 @@ class Question {
         triggeringAnswerId = other.triggeringAnswerId,
         questionsSelection = other.questionsSelection,
         questionType = other.questionType,
-        suggestedAnswerIds = List.of(other.suggestedAnswerIds??[]),
+        suggestedAnswerIds = other.suggestedAnswerIds.map((answer) => Answer.copy(answer)).toList(),
         questionAndPageIds = List.of(other.questionAndPageIds??[]),
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 

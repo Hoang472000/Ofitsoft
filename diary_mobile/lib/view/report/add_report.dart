@@ -1,22 +1,18 @@
 import 'dart:convert';
 import 'package:diary_mobile/data/repository.dart';
-import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
-import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
+import '../../data/entity/report/answer.dart';
+import '../../data/entity/report/question.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
-import '../../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
-import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/add_report_bloc.dart';
 
 class AddReportViewPage extends StatefulWidget {
@@ -114,6 +110,20 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                         tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
                         SizedBox(height: 10,),
                         tableDetail(),
+                        state.listReport.isEmpty ? Container():
+                        ListView.builder(
+                            shrinkWrap: true,
+                            primary: false,
+                            itemCount: state.listReport[0].questionAndPageIds.length,
+                            itemBuilder: (context, index) {
+                              return  ExpansionTile(
+                                title: widgetMuc("${state.listReport[0].questionAndPageIds[index].title}"),
+                                children: [
+                                  tableDetailResult(state.listReport[0].questionAndPageIds[index].questionAndPageIds),
+                                ],
+                              );
+                            }),
+
                         state.listReport.isEmpty ? Container():
                        ListView.builder(
                 shrinkWrap: true,
@@ -972,6 +982,247 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ),
     );
   }
+
+  Widget tableDetailResult(List<Question> list){
+    List<Table> listTable1 =[];
+    int form = 0;
+    for(int i = 0 ; i < list.length; i++) {
+      List<Table> tableSub = [];
+      List<TableRow> tableRow = [];
+      List<TableRow> tableRowSub = [];
+      List<TableRow> tableRowSubSub = [];
+      form = checkForm(list[i]);
+
+      print("HongcV: list . title: ${list[i].title} : ${list[i].questionType} : ${form} ");
+      if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"){
+        if(list[i].suggestedAnswerIds.length<=2){
+          for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
+            tableRow.add(tableRowCheckBox(
+                "${list[i].suggestedAnswerIds[j].value}",
+                j, listSelected1, isFirst: true));
+          }
+        }
+      }
+        if (form == 2) {
+          for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
+            if (list[i].suggestedAnswerIds[j].questionAndPageIds.isNotEmpty) {
+              tableRow.add(tableRowCheckBox(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  j, listSelected1, isFirst: true));
+              for (int k = 0; k <
+                  list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
+                print("HongcV: list . title: ${list[i].suggestedAnswerIds[j]
+                    .questionAndPageIds[k].title} : ${list[i]
+                    .suggestedAnswerIds[j]
+                    .questionAndPageIds[k].questionType} ");
+                if (list[i].suggestedAnswerIds[j].questionAndPageIds[k]
+                    .questionType == "numerical_box" ||
+                    list[i].suggestedAnswerIds[j].questionAndPageIds[k]
+                        .questionType == "char_box") {
+                  tableRowSub.add(tableRowCheckBoxTextField(
+                      "${list[i].suggestedAnswerIds[j].questionAndPageIds[k]
+                          .title}",
+                      3, listSelected1, TextEditingController()));
+                } else {
+                  tableRowSub.add(tableRowCheckBox(
+                      "${list[i].suggestedAnswerIds[j].questionAndPageIds[k]
+                          .title}",
+                      list[i].suggestedAnswerIds.length + k, listSelected1,
+                      isFirst: true));
+                }
+              }
+            }
+            else {
+              tableRow.add(tableRowCheckBox(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  j, listSelected1, isFirst: true));
+            }
+          }
+          listTable1.add(Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          columnWidths: {
+            0: FlexColumnWidth(0.6),
+            1: FlexColumnWidth(0.6),
+            2: FlexColumnWidth(2),
+          },
+          border: TableBorder.all(color: AppColor.black22),
+          children: [
+            TableRow(children: [
+              Padding(
+                padding: EdgeInsets.only(bottom: 16, top: 16),
+                child: Text(
+                  "${list[i].title}",
+                  textAlign: TextAlign.center,
+                  style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                  maxLines: 3,
+                ),
+              ),
+              tableRow.isNotEmpty
+                  ? Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: const {
+                  0: FlexColumnWidth(0.7),
+                  1: FlexColumnWidth(2),
+                },
+                children: tableRow,
+              )
+                  : Container(),
+              tableRowSub.isNotEmpty ?
+              Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: const {
+                  0: FlexColumnWidth(0.3),
+                  1: FlexColumnWidth(2),
+                },
+                children: tableRowSub,
+              ) : Container(),
+            ]),
+          ],
+        ),);
+        } else if(form == 1){
+          for(int j = 0 ; j< list[i].suggestedAnswerIds.length; j++){
+            if(list[i].suggestedAnswerIds[j].commentAnswer == true){
+              tableSub.add(tableForm2TextField(list[i].suggestedAnswerIds[j].value ?? '', j, listSelected2, TextEditingController()));
+            } else {
+              tableSub.add(tableForm2(list[i].suggestedAnswerIds[j].value ?? '', j, listSelected2));
+            }
+          }
+          listTable1.add(Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: { },
+            border: TableBorder.all(color: AppColor.black22),
+            children: [
+              TableRow(children: [
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16, top: 16),
+                  child: Text(
+                    "${list[i].title}",
+                    textAlign: TextAlign.center,
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                    maxLines: 3,
+                  ),
+                ),
+              ]),
+            ],
+          ),);
+          listTable1.add(Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(1),
+              2: FlexColumnWidth(2),
+
+            },
+            border: TableBorder.all(color: AppColor.black22),
+            children: [
+              TableRow(
+                  children: tableSub
+              ),
+            ],
+          ),);
+        }
+        else if(form == 0){
+          for(int j = 0 ; j< list[i].suggestedAnswerIds.length; j++){
+            if(list[i].suggestedAnswerIds[j].commentAnswer == true){
+              tableSub.add(tableForm2TextField(list[i].suggestedAnswerIds[j].value ?? '', j, listSelected2, TextEditingController()));
+            } else {
+              tableSub.add(tableForm2(list[i].suggestedAnswerIds[j].value ?? '', j, listSelected2));
+            }
+          }
+          listTable1.add(Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(1),
+              2: FlexColumnWidth(2),
+
+            },
+            border: TableBorder.all(color: AppColor.black22),
+            children: [
+              TableRow(
+                  children: [tableForm2TextField(list[i].title ?? '', i, listSelected3, TextEditingController())]
+    ),
+            ],
+          ),);
+        }
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(width: 2,color: AppColor.black22),
+      ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width*1.1),
+          child: Column(
+              children: listTable1
+          ),
+        ),
+      ),
+    );
+  }
+
+  Table tableForm2TextField(String title, int index, List<bool> listSelected, TextEditingController controller, {bool isFirst = false}){
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      columnWidths: const {
+        0: FlexColumnWidth(0.7),
+        1: FlexColumnWidth(2),
+      },
+      children: [
+        tableRowCheckBoxTextField(
+            title,
+            index, listSelected,TextEditingController(), isFirst: true),
+      ],
+    );
+  }
+  Table tableForm2(String title, int index, List<bool> listSelected, {bool isFirst = false}){
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      columnWidths: const {
+        0: FlexColumnWidth(0.7),
+        1: FlexColumnWidth(2),
+      },
+      children: [
+        tableRowCheckBox(
+            title,
+            index, listSelected, isFirst: isFirst),
+      ],
+    );
+
+  }
+  int checkForm(Question qs){
+    int count = 0;
+    if(qs.suggestedAnswerIds.isNotEmpty){
+      count++;
+      List<Answer> as = qs.suggestedAnswerIds;
+      bool checkAdd = true;
+      for(int i = 0 ; i< as.length ; i++){
+        if(as[i].questionAndPageIds.isEmpty){
+          count++;
+          if(as[i].commentAnswer == true){
+            count = count + 4;
+          }
+        }
+        if(as[i].questionAndPageIds.isNotEmpty && checkAdd){
+          checkAdd = false;
+          count++;
+          List<Question> qsSub = as[i].questionAndPageIds;
+          for(int j = 0 ; j< qsSub.length ; j++){
+            if(qsSub[j].suggestedAnswerIds.isNotEmpty){
+              count++;
+            } else{
+              count++;
+            }
+          }
+        }
+      }
+    }
+
+    return count;
+  }
+
   Widget tableDetail1(){
     List<Table> listTable1 =[];
     listTable1.add(Table(
