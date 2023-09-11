@@ -24,11 +24,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       GetAddReportEvent event, Emitter<AddReportState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
     final report = await repository.getListActivityReport();
-    print("HoangCV: report: result: ${report[0].questionAndPageIds[0].toJson()}");
-    report[0].questionAndPageIds[0].questionAndPageIds.forEach((element) {
+    //print("HoangCV: report: result: ${report[0].questionAndPageIds[0].toJson()}");
+   /* report[0].questionAndPageIds[0].questionAndPageIds.forEach((element) {
 
       print("HoangCV: report: elemetn: ${element.toJson()}");
-    });
+    });*/
     emitter(state.copyWith(
       isShowProgress: false,
       detailDiary: event.diary,

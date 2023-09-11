@@ -689,7 +689,7 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListActivityReport response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+    if (objectResult.responseCode == StatusConst.code00 /*|| objectResult.responseCode == StatusConst.code02*/) {
       List<Report> list = List.from(objectResult.response)
           .map((json) => Report.fromJson(json))
           .toList();
