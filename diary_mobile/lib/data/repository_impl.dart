@@ -726,7 +726,6 @@ class RepositoryImpl extends Repository {
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {
             checkQuestion = false;
-            //print("HoangCV: list1[j]: ${list1[j].id}");
             list2[index].questionAndPageIds.add(list1[j]);
           }
         }
@@ -741,52 +740,15 @@ class RepositoryImpl extends Repository {
     }
     List<Question> result = list2.map((question) => Question.copy(question)).toList();
     for(int k = 0 ; k < list2.length ; k++) {
-     /* list2[k].questionAndPageIds.forEach((element) {
-          print("HoangCV: list2: ${list2.length} : ${element.toJson()}");
-        });*/
-
       for (int i = 0; i < list2[k].questionAndPageIds.length - 1; i++) {
-        if(list2[k].questionAndPageIds[i].questionType == "table"
-            || (i==list2[k].questionAndPageIds.length - 2 &&
-                list2[k].questionAndPageIds[i+1].questionType == "table")){
-          for(int m=0; m<list2[k].questionAndPageIds[i].suggestedAnswerIds.length;m++ ){
-            for(int n=m+1; n<list2[k].questionAndPageIds[i].suggestedAnswerIds.length;n++ ){
-              if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
-                  list2[k].questionAndPageIds[i].suggestedAnswerIds[n].parentColId)) {
-                int index = result[k].questionAndPageIds[i].suggestedAnswerIds.indexWhere((
-                    element) =>
-                element.id == list2[k].questionAndPageIds[i].suggestedAnswerIds[n].id);
-                if (index != -1) {
-                  result[k].questionAndPageIds[index].suggestedAnswerIds[m]
-                      .suggestedAnswerIds.
-                  add(list2[k].questionAndPageIds[i].suggestedAnswerIds[n]);
-                }
-                int indexRemove = result[k].questionAndPageIds[i].suggestedAnswerIds.indexWhere((
-                    element) =>
-                element.id == list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id);
-                if (indexRemove != -1) {
-                  result[k].questionAndPageIds[i].suggestedAnswerIds.removeAt(indexRemove);
-                }
-              }
-            }
-            }
-          }
-        print("HoangcatyepewerwesfcSCSDF: ${list2[k].questionAndPageIds[i].title}");
           for (int l = i + 1; l < list2[k].questionAndPageIds.length; l++) {
-            //print("HoangCV: i : ${list2[k].questionAndPageIds[l].id}");
             if ((list2[k].questionAndPageIds[i].id ==
                 list2[k].questionAndPageIds[l].triggeringQuestionId)) {
-              //print("HoangCV: banwfg : ${list2[k].questionAndPageIds[l].triggeringQuestionId}");
               for (int m = 0; m <
                   list2[k].questionAndPageIds[i].suggestedAnswerIds
                       .length; m++) {
                 if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
                     list2[k].questionAndPageIds[l].triggeringAnswerId)) {
-          /*        print("HoangCV: banwfg : ${list2[k].questionAndPageIds[i]
-                      .suggestedAnswerIds[m].id} : "
-                      "${list2[k].questionAndPageIds[i].suggestedAnswerIds[m]
-                      .value} : "
-                      "${list2[k].questionAndPageIds[l].title}");*/
                   int index = result[k].questionAndPageIds.indexWhere((
                       element) =>
                   element.id == list2[k].questionAndPageIds[i].id);
@@ -795,15 +757,9 @@ class RepositoryImpl extends Repository {
                         .questionAndPageIds.
                     add(list2[k].questionAndPageIds[l]);
                   }
-
-                  // int indexRemove = result[i].questionAndPageIds.indexWhere((element) =>
-                  // element.id == list2[i].questionAndPageIds[l].id);
                   int indexRemove = result[k].questionAndPageIds.indexWhere((
                       element) =>
                   element.id == list2[k].questionAndPageIds[l].id);
-                  //print("HoangCV: index: $index : indexRemove: $indexRemove");
-                  //print("HoangCV: index: ${result[k].questionAndPageIds.length} : $index  : $indexRemove : ${list2[i].questionAndPageIds[l].id}  : ${list2[i].questionAndPageIds[l].title} :}");
-
                   if (indexRemove != -1) {
                     result[k].questionAndPageIds.removeAt(indexRemove);
                   }
@@ -812,6 +768,37 @@ class RepositoryImpl extends Repository {
             }
           }
         }
+      for (int i = 0; i < list2[k].questionAndPageIds.length; i++) {
+        if (list2[k].questionAndPageIds[i].questionType == "table") {
+          for (int m = 0; m <
+              list2[k].questionAndPageIds[i].suggestedAnswerIds.length; m++) {
+            for (int n = m+1; n <
+                list2[k].questionAndPageIds[i].suggestedAnswerIds.length; n++) {
+              if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
+                  list2[k].questionAndPageIds[i].suggestedAnswerIds[n]
+                      .parentColId)) {
+                int index = result[k].questionAndPageIds[i].suggestedAnswerIds
+                    .indexWhere((element) =>
+                element.id ==
+                    list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id);
+                if (index != -1) {
+                  result[k].questionAndPageIds[i].suggestedAnswerIds[index]
+                      .suggestedAnswerIds.
+                  add(list2[k].questionAndPageIds[i].suggestedAnswerIds[n]);
+                }
+                int indexRemove = result[k].questionAndPageIds[i]
+                    .suggestedAnswerIds.indexWhere((element) =>
+                element.id ==
+                    list2[k].questionAndPageIds[i].suggestedAnswerIds[n].id);
+                if (indexRemove != -1) {
+                  result[k].questionAndPageIds[i].suggestedAnswerIds.removeAt(
+                      indexRemove);
+                }
+              }
+            }
+          }
+        }
+      }
     }
     result.forEach((element1) {
       print("HoangCV: result: ${result.length} : ${element1.toJson()}");

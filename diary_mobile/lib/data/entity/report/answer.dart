@@ -25,8 +25,8 @@ class Answer {
         parentColId = other.parentColId,
         value = other.value,
         commentAnswer = other.commentAnswer,
-        questionAndPageIds = List.of(other.questionAndPageIds ?? []),
-        suggestedAnswerIds = List.of(other.suggestedAnswerIds ?? []);
+        questionAndPageIds = other.questionAndPageIds.map((question) => Question.copy(question)).toList(),
+        suggestedAnswerIds = other.suggestedAnswerIds.map((answer) => Answer.copy(answer)).toList();
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],

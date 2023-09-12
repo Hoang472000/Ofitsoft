@@ -7,6 +7,7 @@ class Question {
   String? title;
   String? questionsSelection;
   String? questionType;
+  bool? commentAnswer;
   int? triggeringQuestionId;
   int? triggeringAnswerId;
   List<Answer> suggestedAnswerIds;
@@ -17,6 +18,7 @@ class Question {
     this.id,
     this.pageId,
     this.title,
+    this.commentAnswer,
     this.triggeringQuestionId,
     this.triggeringAnswerId,
     this.questionsSelection,
@@ -30,12 +32,17 @@ class Question {
       : id = other.id,
         pageId = other.pageId,
         title = other.title,
+        commentAnswer = other.commentAnswer,
         triggeringQuestionId = other.triggeringQuestionId,
         triggeringAnswerId = other.triggeringAnswerId,
         questionsSelection = other.questionsSelection,
         questionType = other.questionType,
-        suggestedAnswerIds = other.suggestedAnswerIds.map((answer) => Answer.copy(answer)).toList(),
-        questionAndPageIds = List.of(other.questionAndPageIds??[]),
+        suggestedAnswerIds = other.suggestedAnswerIds
+            .map((answer) => Answer.copy(answer))
+            .toList(),
+        questionAndPageIds = other.questionAndPageIds
+            .map((question) => Question.copy(question))
+            .toList(),
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 
   factory Question.fromJson(Map<String, dynamic> json,
@@ -44,6 +51,7 @@ class Question {
       id: json['id'] ?? -1,
       pageId: json['page_id'] ?? -1,
       title: json['title'] ?? '',
+      commentAnswer: json['comment_answer'] ?? false,
       triggeringQuestionId: json['triggering_question_id'] ?? -1,
       triggeringAnswerId: json['triggering_answer_id'] ?? -1,
       questionsSelection: json['questions_selection'] ?? '',
@@ -69,6 +77,7 @@ class Question {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['title'] = title;
+    data['comment_answer'] = commentAnswer;
     data['triggering_question_id'] = triggeringQuestionId;
     data['triggering_answer_id'] = triggeringAnswerId;
     data['questions_selection'] = questionsSelection;
