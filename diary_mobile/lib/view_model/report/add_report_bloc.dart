@@ -1,6 +1,3 @@
-import 'package:diary_mobile/data/entity/item_default/activity.dart';
-import 'package:diary_mobile/data/entity/item_default/tool.dart';
-import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/entity/activity/activity_diary.dart';
