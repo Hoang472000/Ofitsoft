@@ -31,13 +31,15 @@ class QuestionUpload {
   int? scoring_success;
   bool? is_session_answer;
   //
+  bool? is_answer_exist;
   QuestionUpload({
     this.user_input_id, this.survey_id, this.question_id, this.question_sequence, this.suggested_answer_id,
     this.matrix_row_id, this.answer_type, this.value_char_box, this.value_date, this.value_text_box,
     this.value_numerical_box, this.value_datetime, this.value_comment_answer, this.value_row_table, this.skipped,
     this.answer_is_correct, this.create_date, this.test_entry, this.start_datetime, this.end_datetime, this.state,
     this.answer_score, this.message_main_attachment_id, this.last_displayed_page_id, this.deadline,
-    this.scoring_percentage, this.scoring_total, this.scoring_success, this.is_session_answer
+    this.scoring_percentage, this.scoring_total, this.scoring_success, this.is_session_answer,
+    this.is_answer_exist,
   });
 
   Map<String, dynamic> toJson() {
@@ -76,6 +78,7 @@ class QuestionUpload {
     data['scoring_total'] = scoring_total;
     data['scoring_success'] = scoring_success;
     data['is_session_answer'] = is_session_answer;
+    data['is_answer_exist'] = is_answer_exist;
     return data;
   }
 }

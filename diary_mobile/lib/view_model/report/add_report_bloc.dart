@@ -252,14 +252,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           if(listQs[i].questionAndPageIds[h].idSelected == event.id){
             print("HoanghCV123213412 123123  qw3123");
             question = Question.copy(listQs[i].questionAndPageIds[h]);
-            if(question.questionType =="simple_choice"
+            /*if(question.questionType =="simple_choice"
                 || question.questionType =="multiple_choice"
                 || question.questionType =="matrix"
                 || question.questionType =="table"){
               answerType = "suggestion";
-            }else{
+            }else{*/
               answerType = question.questionType ?? "";
-            }
+            //}
           } else {
             print("listQs[i].questionAndPageIds.length : ${listQs[i]
                 .questionAndPageIds[h].title} : ${listQs[i]
@@ -276,14 +276,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                   question = Question.copy(
                       listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
                           .questionAndPageIds[k]);
-                  if (question.questionType == "simple_choice"
+                 /* if (question.questionType == "simple_choice"
                       || question.questionType == "multiple_choice"
                       || question.questionType == "matrix"
                       || question.questionType == "table") {
                     answerType = "suggestion";
-                  } else {
+                  } else {*/
                     answerType = question.questionType ?? "";
-                  }
+                  //}
                 }
               }
               if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
@@ -292,14 +292,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 question = Question.copy(listQs[i].questionAndPageIds[h]);
                 answer = Answer.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
-                if (question.questionType == "simple_choice"
+               /* if (question.questionType == "simple_choice"
                     || question.questionType == "multiple_choice"
                     || question.questionType == "matrix"
                     || question.questionType == "table") {
                   answerType = "suggestion";
-                } else {
+                } else {*/
                   answerType = question.questionType ?? "";
-                }
+                //}
               }
             }
             for (int l = 0; l <
@@ -310,14 +310,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 print("HoanghCV123213412 123123  qw3123");
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
-                if (question.questionType == "simple_choice"
+                /*if (question.questionType == "simple_choice"
                     || question.questionType == "multiple_choice"
                     || question.questionType == "matrix"
                     || question.questionType == "table") {
                   answerType = "suggestion";
-                } else {
+                } else {*/
                   answerType = question.questionType ?? "";
-                }
+                //}
               }
             }
           }
@@ -332,6 +332,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         answer_type: answerType == '' ? null : answerType,
         value_comment_answer: event.value,
         test_entry: false,// value default ko ro Anh Dung de lam gi
+         is_answer_exist: true,
       );
       ObjectResult result =
           await repository.uploadQuestion(questionUpload);

@@ -61,7 +61,7 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "0965265253",//"0385672922",//adminvisimex//managervis2
+      'login': "managervis2",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
