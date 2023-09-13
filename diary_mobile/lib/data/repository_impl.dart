@@ -8,6 +8,7 @@ import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/report/question.dart';
+import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
@@ -60,7 +61,7 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "managervis2",//"0385672922",//adminvisimex//managervis2
+      'login': "0965265253",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
       'password': "Abcd@1234",
     };
@@ -693,6 +694,9 @@ class RepositoryImpl extends Repository {
       List<Report> list = List.from(objectResult.response)
           .map((json) => Report.fromJson(json))
           .toList();
+      //assignIdSelected(list[0].questionAndPageIds);
+      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 2, (index) => index + 1);
+      assignIdSelected(list[1].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportHierarchy(list);
       hierarchyList.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
@@ -712,9 +716,22 @@ class RepositoryImpl extends Repository {
     return []/*DiaryDB.instance.getListActivityDiary(id)*/;
   }
 
+  void assignIdSelected(List<dynamic> items, List<int> idSelectedList) {
+    for (dynamic item in items) {
+      if (item is Question || item is Answer) {
+        // Assign a unique idSelected value to the current item
+        item.idSelected = idSelectedList.removeAt(0);
+
+        // Recursively assign idSelected values to child questions and answers
+        assignIdSelected(item.suggestedAnswerIds, idSelectedList);
+        assignIdSelected(item.questionAndPageIds, idSelectedList);
+      }
+    }
+  }
+
   // convert list đánh giá nội bộ
   List<Report> buildReportHierarchy(List<Report> reports) {
-    List<Question> list1 = reports[0].questionAndPageIds.map((question) => Question.copy(question)).toList();
+    List<Question> list1 = reports[1].questionAndPageIds.map((question) => Question.copy(question)).toList();
     List<Question> list2 = [];
     List<Question> list3 = [];
     for (int i = 0; i < list1.length - 1; i++) {
@@ -804,12 +821,12 @@ class RepositoryImpl extends Repository {
       print("HoangCV: result: ${result.length} : ${element1.toJson()}");
 
     });
-    result[0].questionAndPageIds.forEach((element1) {
+    result[1].questionAndPageIds.forEach((element1) {
       print("HoangCV: question: ${result.length} : ${element1.toJson()}");
 
     });
     print("HoangCV: ");
-    reports[0].questionAndPageIds = List.from(result);
+    reports[1].questionAndPageIds = List.from(result);
     return reports;
   }
 
@@ -841,6 +858,35 @@ class RepositoryImpl extends Repository {
       );
     }
     return DiaryDB.instance.getListDiary(userId);
+  }
+
+  @override
+  Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.uploadQuestion,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: questionUpload.toJson())));
+    print("HoangCV: uploadQuestion response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    /*  else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);
+    }*/
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
   }
 
 }

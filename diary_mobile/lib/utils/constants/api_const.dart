@@ -42,7 +42,7 @@ class ApiConst {
 
   //api get, add 1 activity REPORT, remove, edit
   static const String getListReport = "/get/assessment/";
-  //static const String addActivityTransaction = "/add/diary_transaction/";
+  static const String uploadQuestion = "/add/user_input_line/";
   //static const String removeActivityDiary = "/delete/item/diary_farmer/";
   //static const String updateActivityTransaction = "/edit/diary_transaction/";
 

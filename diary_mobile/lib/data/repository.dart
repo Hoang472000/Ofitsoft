@@ -12,6 +12,7 @@ import 'entity/item_default/item_default.dart';
 import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
+import 'entity/report/question_upload.dart';
 import 'entity/setting/user_info.dart';
 
 
@@ -89,4 +90,6 @@ abstract class Repository {
   Future<List<Report>> getListActivityReport();
 
   Future<List<Diary>> getListBackupDiary();
+
+  Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload);
 }

@@ -3,6 +3,7 @@ import 'package:diary_mobile/data/entity/report/answer.dart';
 
 class Question {
   int? id;
+  int? idSelected;
   int? pageId;
   String? title;
   String? questionsSelection;
@@ -16,6 +17,7 @@ class Question {
 
   Question({
     this.id,
+    this.idSelected,
     this.pageId,
     this.title,
     this.commentAnswer,
@@ -32,6 +34,7 @@ class Question {
       : id = other.id,
         pageId = other.pageId,
         title = other.title,
+        idSelected = other.idSelected,
         commentAnswer = other.commentAnswer,
         triggeringQuestionId = other.triggeringQuestionId,
         triggeringAnswerId = other.triggeringAnswerId,
@@ -46,9 +49,10 @@ class Question {
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 
   factory Question.fromJson(Map<String, dynamic> json,
-      {List<Question> questionAndPageIds = const []}) {
+      {List<Question> questionAndPageIds = const [], int idSelected = -1}) {
     return Question(
       id: json['id'] ?? -1,
+      idSelected: idSelected,
       pageId: json['page_id'] ?? -1,
       title: json['title'] ?? '',
       commentAnswer: json['comment_answer'] ?? false,

@@ -2,6 +2,7 @@ import 'package:diary_mobile/data/entity/report/question.dart';
 
 class Answer {
   int? id;
+  int? idSelected;
   int? questionId;
   int? parentColId;
   String? value;
@@ -11,6 +12,7 @@ class Answer {
 
   Answer({
     this.id,
+    this.idSelected,
     this.questionId,
     this.parentColId,
     this.value,
@@ -21,6 +23,7 @@ class Answer {
 
   Answer.copy(Answer other)
       : id = other.id,
+        idSelected = other.idSelected,
         questionId = other.questionId,
         parentColId = other.parentColId,
         value = other.value,
@@ -30,9 +33,10 @@ class Answer {
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],
-      List<Answer> suggestedAnswerIds = const []}) {
+      List<Answer> suggestedAnswerIds = const [], int idSelected = -1}) {
     return Answer(
       id: json['id'] ?? -1,
+      idSelected: idSelected,
       questionId: json['question_id'] ?? -1,
       parentColId: json['parent_col_id'] ?? -1,
       value: json['value'] ?? '',
