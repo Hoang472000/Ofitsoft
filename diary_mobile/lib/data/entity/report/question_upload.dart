@@ -6,13 +6,8 @@ class QuestionUpload {
   int? suggested_answer_id;
   int? matrix_row_id;
   String? answer_type;
-  String? value_char_box;
-  String? value_date;
-  String? value_text_box;
-  int? value_numerical_box;
-  String? value_datetime;
-  String? value_comment_answer;
-  String? value_row_table;
+  String? value_text;
+  int? value_number;
   bool? skipped;
   bool? answer_is_correct;
   String? create_date;
@@ -32,14 +27,16 @@ class QuestionUpload {
   bool? is_session_answer;
   //
   bool? is_answer_exist;
+  bool? value_check_box;
+  int? table_row_id;
+  List<int>? list_id_suggested;
   QuestionUpload({
     this.user_input_id, this.survey_id, this.question_id, this.question_sequence, this.suggested_answer_id,
-    this.matrix_row_id, this.answer_type, this.value_char_box, this.value_date, this.value_text_box,
-    this.value_numerical_box, this.value_datetime, this.value_comment_answer, this.value_row_table, this.skipped,
+    this.matrix_row_id, this.answer_type, this.value_text, this.value_number, this.skipped,
     this.answer_is_correct, this.create_date, this.test_entry, this.start_datetime, this.end_datetime, this.state,
     this.answer_score, this.message_main_attachment_id, this.last_displayed_page_id, this.deadline,
     this.scoring_percentage, this.scoring_total, this.scoring_success, this.is_session_answer,
-    this.is_answer_exist,
+    this.is_answer_exist, this.value_check_box, this.table_row_id, this.list_id_suggested,
   });
 
   Map<String, dynamic> toJson() {
@@ -52,14 +49,8 @@ class QuestionUpload {
 
     data['matrix_row_id'] = matrix_row_id;
     data['answer_type'] = answer_type;
-    data['value_char_box'] = value_char_box;
-    data['value_date'] = value_date;
-    data['value_text_box'] = value_text_box;
-
-    data['value_numerical_box'] = value_numerical_box;
-    data['value_datetime'] = value_datetime;
-    data['value_comment_answer'] = value_comment_answer;
-    data['value_row_table'] = value_row_table;
+    data['value_text'] = value_text;
+    data['value_number'] = value_number;
     data['skipped'] = skipped;
 
     data['answer_is_correct'] = answer_is_correct;
@@ -79,6 +70,10 @@ class QuestionUpload {
     data['scoring_success'] = scoring_success;
     data['is_session_answer'] = is_session_answer;
     data['is_answer_exist'] = is_answer_exist;
+
+    data['value_check_box'] = true;
+    data['table_row_id'] = table_row_id;
+    data['list_id_suggested'] = list_id_suggested;
     return data;
   }
 }

@@ -5,6 +5,7 @@ class Question {
   int? id;
   int? idSelected;
   int? pageId;
+  int? parentTitleId;
   String? title;
   String? questionsSelection;
   String? questionType;
@@ -19,6 +20,7 @@ class Question {
     this.id,
     this.idSelected,
     this.pageId,
+    this.parentTitleId,
     this.title,
     this.commentAnswer,
     this.triggeringQuestionId,
@@ -33,6 +35,7 @@ class Question {
   Question.copy(Question other)
       : id = other.id,
         pageId = other.pageId,
+        parentTitleId = other.parentTitleId,
         title = other.title,
         idSelected = other.idSelected,
         commentAnswer = other.commentAnswer,
@@ -54,6 +57,7 @@ class Question {
       id: json['id'] ?? -1,
       idSelected: idSelected,
       pageId: json['page_id'] ?? -1,
+      parentTitleId: json['parent_title_id'] ?? -1,
       title: json['title'] ?? '',
       commentAnswer: json['comment_answer'] ?? false,
       triggeringQuestionId: json['triggering_question_id'] ?? -1,
@@ -81,6 +85,7 @@ class Question {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['title'] = title;
+    data['parent_title_id'] = parentTitleId;
     data['comment_answer'] = commentAnswer;
     data['triggering_question_id'] = triggeringQuestionId;
     data['triggering_answer_id'] = triggeringAnswerId;

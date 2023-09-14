@@ -34,9 +34,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     emitter(state.copyWith(isShowProgress: true));
     final report = await repository.getListActivityReport();
     List<List<Select>> listSelected = [];
+    List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
     if (report.isNotEmpty) {
       listSelected = createSelectLists(report[1].questionAndPageIds);
+      listVisible = createVisibleLists(report[1].questionAndPageIds);
       listController = createTextEditingControllerLists(report[1].questionAndPageIds);
       listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
@@ -50,6 +52,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       detailDiary: event.diary,
       listReport: report,
       listSelected: listSelected,
+        listVisible: listVisible,
         listController: listController,
     ));
   }
@@ -62,7 +65,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       List<Select> selectList = [];
 
       // Thêm Select cho câu hỏi cha
-      selectList.add(Select(question.idSelected!, false, question.title!, []));
+      selectList.add(Select(question.idSelected!, false, question.title!));
 
       // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
       initSelectValues(question, selectList);
@@ -77,45 +80,47 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     if (item is Question) {
       // Gọi hàm đệ quy cho danh sách câu trả lời con
       for (Answer answer in item.suggestedAnswerIds) {
+        List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
+        List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
         print(
-            "HoangCV: Question:1 ${item.title} : ${answer.value} : ${answer.idSelected}");
-        //List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
+            "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${selectedIdsList.toString()}");
         selectList.add(Select(answer.idSelected!, false,
-            answer.value!, [])); // Thêm Select cho câu trả lời con
+            answer.value!, listId: selectedIdsList,
+        listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
-        print(
-            "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected}");
+/*        print(
+            "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected}");*/
         selectList.add(Select(childQuestion.idSelected!, false,
-            childQuestion.title!, [])); // Thêm Select cho câu hỏi con
+            childQuestion.title!, listId: [], listSubId: [])); // Thêm Select cho câu hỏi con
         initSelectValues(childQuestion, selectList);
       }
     } else if (item is Answer) {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
+     /*   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
         print(
-            "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected}");
-        List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
-        selectList.add(Select(
+            "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${selectedIdsList.toString()}");
+       */ selectList.add(Select(
             childQuestion.idSelected!,
             false,
             childQuestion
-                .title!, selectedIdsList)); // Thêm Select cho câu hỏi con của câu trả lời con
+                .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        print(
-            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected}");
+     /*   print(
+            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected}");*/
         selectList.add(Select(
             childAnswer.idSelected!,
             false,
             childAnswer
-                .value!, [])); // Thêm Select cho câu trả lời con của câu trả lời con
+                .value!)); // Thêm Select cho câu trả lời con của câu trả lời con
         initSelectValues(childAnswer, selectList);
       }
     }
@@ -189,7 +194,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       final List<Controller> textEditingControllerList = [];
 
       // Thêm TextEditingController cho câu hỏi cha
-      textEditingControllerList.add(Controller(question.idSelected!, TextEditingController()));
+      textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(), checkQuestionType(question.questionType ?? '')));
 
       // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
       initTextControllers(question, textEditingControllerList);
@@ -200,152 +205,128 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     return textEditingControllerLists;
   }
 
+  String checkQuestionType(String type){
+    switch(type){
+      case 'numerical_box':
+        return 'number';
+        break;
+      default:
+        return 'text';
+        break;
+    }
+  }
+
   void initTextControllers(
       dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question) {
       // Gọi hàm đệ quy cho danh sách câu trả lời con
       for (Answer answer in item.suggestedAnswerIds) {
+        print("HoangCV: initTextControllers: ${item.title} : ${answer.idSelected} : ${answer.value}");
         textEditingControllerList.add(
-            Controller(answer.idSelected!, TextEditingController())); // Thêm TextEditingController cho câu trả lời con
+            Controller(answer.idSelected!, TextEditingController(), checkQuestionType(answer.commentAnswer == true ? '': ''))); // Thêm TextEditingController cho câu trả lời con
         initTextControllers(answer, textEditingControllerList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController())); // Thêm TextEditingController cho câu hỏi con
+            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? ''))); // Thêm TextEditingController cho câu hỏi con
         initTextControllers(childQuestion, textEditingControllerList);
       }
     } else if (item is Answer) {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController())); // Thêm TextEditingController cho câu hỏi con của câu trả lời con
+            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? ''))); // Thêm TextEditingController cho câu hỏi con của câu trả lời con
         initTextControllers(childQuestion, textEditingControllerList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController())); // Thêm TextEditingController cho câu trả lời con của câu trả lời con
+            Controller(childAnswer.idSelected!, TextEditingController(), checkQuestionType(childAnswer.commentAnswer == true ? '' : ''))); // Thêm TextEditingController cho câu trả lời con của câu trả lời con
         initTextControllers(childAnswer, textEditingControllerList);
       }
     }
   }
 
-  Future<FutureOr<void>> updateAddReport(UpdateAddReportEvent event, Emitter<AddReportState> emit) async {
+  Future<FutureOr<void>> updateAddReport(
+      UpdateAddReportEvent event, Emitter<AddReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
-    bool validate = true;
-    print("HoanghCV121");
-    if (!validate) {
-
-    } else {
-      print("HoanghCV123213412");
-      Question question = Question();
-      Answer answer = Answer();
-      String answerType = '';
-      List<Question> listQs = state.listReport[1].questionAndPageIds;
-      for(int i = 0; i< listQs.length; i++){
-        print("listQs.length : ${listQs[i].title}");
-        for(int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-          if(listQs[i].questionAndPageIds[h].idSelected == event.id){
-            print("HoanghCV123213412 123123  qw3123");
-            question = Question.copy(listQs[i].questionAndPageIds[h]);
-            /*if(question.questionType =="simple_choice"
-                || question.questionType =="multiple_choice"
-                || question.questionType =="matrix"
-                || question.questionType =="table"){
-              answerType = "suggestion";
-            }else{*/
-              answerType = question.questionType ?? "";
-            //}
-          } else {
-            print("listQs[i].questionAndPageIds.length : ${listQs[i]
-                .questionAndPageIds[h].title} : ${listQs[i]
-                .questionAndPageIds[h].questionAndPageIds.length}");
-            for (int j = 0; j <
-                listQs[i].questionAndPageIds[h].suggestedAnswerIds
-                    .length; j++) {
-              for (int k = 0; k <
-                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
-                      .questionAndPageIds.length; k++) {
-                if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
-                    .questionAndPageIds[k].idSelected == event.id) {
-                  print("HoanghCV123213412 123123");
-                  question = Question.copy(
-                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
-                          .questionAndPageIds[k]);
-                 /* if (question.questionType == "simple_choice"
-                      || question.questionType == "multiple_choice"
-                      || question.questionType == "matrix"
-                      || question.questionType == "table") {
-                    answerType = "suggestion";
-                  } else {*/
-                    answerType = question.questionType ?? "";
-                  //}
-                }
-              }
-              if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
-                  .idSelected == event.id) {
-                print("HoanghCV123213412 123123 dhgdfh");
-                question = Question.copy(listQs[i].questionAndPageIds[h]);
-                answer = Answer.copy(
-                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
-               /* if (question.questionType == "simple_choice"
-                    || question.questionType == "multiple_choice"
-                    || question.questionType == "matrix"
-                    || question.questionType == "table") {
-                  answerType = "suggestion";
-                } else {*/
-                  answerType = question.questionType ?? "";
-                //}
+    print("HoanghCV123213412");
+    Question question = Question();
+    Answer answer = Answer();
+    List<int> listIdSuggested = [];
+    String answerType = '';
+    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    for (int i = 0; i < listQs.length; i++) {
+      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+        if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
+          question = Question.copy(listQs[i].questionAndPageIds[h]);
+          answerType = question.questionType ?? "";
+          if(answerType == 'simple_choice'){
+            listIdSuggested = listQs[i].questionAndPageIds.map((item) => item.id ?? -1).toList();
+          }
+        } else {
+          for (int j = 0;
+              j < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
+              j++) {
+            for (int k = 0;
+                k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds.length;
+                k++) {
+              if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
+                question = Question.copy(
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
+                answerType = question.questionType ?? "";
               }
             }
-            for (int l = 0; l <
-                listQs[i].questionAndPageIds[h].questionAndPageIds
-                    .length; l++) {
-              if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
-                  .idSelected == event.id) {
-                print("HoanghCV123213412 123123  qw3123");
-                question = Question.copy(
-                    listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
-                /*if (question.questionType == "simple_choice"
-                    || question.questionType == "multiple_choice"
-                    || question.questionType == "matrix"
-                    || question.questionType == "table") {
-                  answerType = "suggestion";
-                } else {*/
-                  answerType = question.questionType ?? "";
-                //}
+            if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].idSelected ==event.id) {
+              question = Question.copy(listQs[i].questionAndPageIds[h]);
+              answer = Answer.copy(
+                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+              answerType = question.questionType ?? "";
+              if(answerType == 'simple_choice'){
+                listIdSuggested = listQs[i].questionAndPageIds[h].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
               }
+            }
+          }
+          for (int l = 0;
+              l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
+              l++) {
+            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
+              question = Question.copy(
+                  listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
+              answerType = question.questionType ?? "";
             }
           }
         }
       }
-      print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType}");
-     QuestionUpload questionUpload = QuestionUpload(
-        user_input_id: state.reportId,
-        survey_id: state.listReport[1].id,
-        question_id: question.id,
-        suggested_answer_id: answer.id,
-        answer_type: answerType == '' ? null : answerType,
-        value_comment_answer: event.value,
-        test_entry: false,// value default ko ro Anh Dung de lam gi
-         is_answer_exist: true,
-      );
-      ObjectResult result =
-          await repository.uploadQuestion(questionUpload);
-      if (result.responseCode == StatusConst.code00) {
-        emit(state.copyWith(
-            isShowProgress: false,
-            reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
-      } else {
-        emit(state.copyWith(
-            isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
-      }
+    }
+
+    int index = event.listSelect.indexWhere((element) => element.id == event.id);
+    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : ${event.listSelect[index].value}");
+    QuestionUpload questionUpload = QuestionUpload(
+      user_input_id: state.reportId,
+      survey_id: state.listReport[1].id,
+      question_id: question.id,
+      suggested_answer_id: answer.id,
+      answer_type: answerType == '' ? null : answerType,
+      value_text: checkQuestionType(answerType)=='text'? event.value : null,
+      value_number: checkQuestionType(answerType)=='text'? null : int.parse(event.value),
+      test_entry: false, // value default ko ro Anh Dung de lam gi
+      is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+        list_id_suggested: listIdSuggested
+    );
+    ObjectResult result = await repository.uploadQuestion(questionUpload);
+    if (result.responseCode == StatusConst.code00) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          reportId: result.response is int ? result.response : null,
+          formStatus: SubmissionSuccess(success: result.message)));
+    } else {
+      emit(state.copyWith(
+          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
     }
   }
 }
@@ -355,8 +336,15 @@ class Select {
   bool value;
   String title;
   List<int> listId;
+  List<int> listSubId;
+  String type;
+  String typeSub;
 
-  Select(this.id, this.value, this.title, this.listId);
+  Select(this.id, this.value, this.title,
+      {this.listId = const [],
+      this.listSubId = const [],
+      this.type = '',
+      this.typeSub = ''});
 }
 
 class Visible {
@@ -370,8 +358,9 @@ class Visible {
 class Controller {
   int id;
   TextEditingController controller;
+  String type;
 
-  Controller(this.id, this.controller);
+  Controller(this.id, this.controller, this.type);
 }
 
 class AddReportEvent extends BlocEvent {
@@ -390,13 +379,13 @@ class GetAddReportEvent extends AddReportEvent {
 
 class UpdateAddReportEvent extends AddReportEvent {
   final int id;
-  final bool checkBox;
   final String value;
+  final List<Select> listSelect;
 
-  UpdateAddReportEvent(this.id, this.checkBox, this.value);
+  UpdateAddReportEvent(this.id, this.value, this.listSelect);
 
   @override
-  List<Object?> get props => [id, checkBox, value];
+  List<Object?> get props => [id, value, listSelect];
 }
 
 class AddReportState extends BlocState {
@@ -408,12 +397,14 @@ class AddReportState extends BlocState {
         listReport,
         listSelected,
         listController,
-    reportId
+        reportId,
+        listVisible,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
   final List<List<Select>> listSelected;
   final List<List<Controller>> listController;
+  final List<List<Visible>> listVisible;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final int? reportId;
@@ -425,6 +416,7 @@ class AddReportState extends BlocState {
     this.listReport = const [],
     this.listSelected = const [],
     this.listController = const [],
+    this.listVisible = const [],
     this.reportId,
   });
 
@@ -439,12 +431,13 @@ class AddReportState extends BlocState {
     int? reportId,
   }) {
     return AddReportState(
-      detailDiary: detailDiary ?? this.detailDiary,
-      formStatus: formStatus ?? this.formStatus,
-      isShowProgress: isShowProgress ?? this.isShowProgress,
-      listReport: listReport ?? this.listReport,
+        detailDiary: detailDiary ?? this.detailDiary,
+        formStatus: formStatus ?? this.formStatus,
+        isShowProgress: isShowProgress ?? this.isShowProgress,
+        listReport: listReport ?? this.listReport,
         listSelected: listSelected ?? this.listSelected,
         listController: listController ?? this.listController,
+        listVisible: listVisible ?? this.listVisible,
         reportId: reportId ?? this.reportId);
   }
 }

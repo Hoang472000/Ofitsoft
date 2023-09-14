@@ -864,6 +864,7 @@ class RepositoryImpl extends Repository {
   Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    print("HoangCV: uploadQuestion response: ${questionUpload.list_id_suggested is List}");
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.uploadQuestion,

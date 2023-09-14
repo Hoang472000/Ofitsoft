@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../generated/l10n.dart';
 import '../../resource/color.dart';
@@ -230,14 +231,15 @@ class _QRCodeViewState extends State<QRCodeView> {
         }
 
       }else{
-        print("Hoangcv: qrcode");
+        print("Hoangcv: qrcode: ${scanData.code} : ${scanData.rawBytes}");
+        Utils.launchInBrowser(scanData.code??"");
         controller.pauseCamera();
-        DiaLogManager.displayDialog(
+/*        DiaLogManager.displayDialog(
             context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).qrcode:S.of(context).qrcode_error, () {},
                 () async {
               controller.resumeCamera();
               Get.back();
-            }, S.of(context).close_dialog, "");
+            }, S.of(context).close_dialog, "");*/
         // setState(() {
         //   textError =
         //   "${S.of(context).you_scanning}${scanData.format == BarcodeFormat.qrcode ? S.of(context).qrcode
