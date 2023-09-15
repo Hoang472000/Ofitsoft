@@ -36,6 +36,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<List<Select>> listSelected = [];
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
+    List<Question> listTable = [];
     if (report.isNotEmpty) {
       listSelected = createSelectLists(report[1].questionAndPageIds);
       listVisible = createVisibleLists(report[1].questionAndPageIds);
@@ -43,6 +44,16 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
       });
+      listController.forEach((element) {
+        print("HoangCV:listController:  ${element.length} : ${element[0].id}");
+      });
+      int i = 0;
+      addTableRow(report[1].questionAndPageIds, listTable);
+      listTable.forEach((element) {
+        print("HoangCV:listTable:  ${element.title} : ${element.suggestedAnswerIds[0].value}");
+      });
+      List<List<Controller>> listCtrlTable = createTextEditingControllerLists(listTable);
+      listController.addAll(listCtrlTable);
       listController.forEach((element) {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });
@@ -54,8 +65,29 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listSelected: listSelected,
         listVisible: listVisible,
         listController: listController,
+      listTable: listTable,
     ));
   }
+  void addTableRow(List<dynamic> items, List<Question> listTable) {
+    //for(int i = 0 ; i< 2; i++) {
+      for (dynamic item in items) {
+        if (item is Question) {
+          if (item.questionType == 'table') {
+            List<Answer> listAs = [];
+            for (Answer answer in item.suggestedAnswerIds) {
+              //answer.value = '';
+              listAs.add(answer);
+            }
+            Question qs = item;
+            qs.suggestedAnswerIds = listAs;
+            listTable.add(qs);
+          }
+          addTableRow(item.questionAndPageIds, listTable);
+        }
+      }
+    //}
+  }
+
 
 
   List<List<Select>> createSelectLists(List<Question> questions) {
@@ -146,6 +178,21 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
 
   void initVisibleValues(dynamic item, List<Visible> selectList) {
+    if (item is Question || item is Answer) {
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        //print("HoangCV: Visible: ${item.title} : ${childAnswer.value} : ${childAnswer.idSelected}");
+        selectList.add(Visible(childAnswer.idSelected!, false, childAnswer.value!));
+        initVisibleValues(childAnswer, selectList);
+      }
+
+      for (Question childQuestion in item.questionAndPageIds) {
+        //print("HoangCV: Visible: ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected}");
+        selectList.add(Visible(childQuestion.idSelected!, false, childQuestion.title!));
+        initVisibleValues(childQuestion, selectList);
+      }
+    }
+  }
+/*  void initVisibleValues(dynamic item, List<Visible> selectList) {
     if (item is Question) {
       // Gọi hàm đệ quy cho danh sách câu trả lời con
       for (Answer answer in item.suggestedAnswerIds) {
@@ -185,7 +232,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         initVisibleValues(childAnswer, selectList);
       }
     }
-  }
+  }*/
   List<List<Controller>> createTextEditingControllerLists(
       List<Question> questions) {
     final List<List<Controller>> textEditingControllerLists = [];
@@ -216,7 +263,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
   }
 
-  void initTextControllers(
+/*  void initTextControllers(
       dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question) {
       // Gọi hàm đệ quy cho danh sách câu trả lời con
@@ -245,6 +292,21 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(), checkQuestionType(childAnswer.commentAnswer == true ? '' : ''))); // Thêm TextEditingController cho câu trả lời con của câu trả lời con
+        initTextControllers(childAnswer, textEditingControllerList);
+      }
+    }
+  }*/
+  void initTextControllers(dynamic item, List<Controller> textEditingControllerList) {
+    if (item is Question || item is Answer) {
+      for (Question childQuestion in item.questionAndPageIds) {
+        textEditingControllerList.add(
+            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? '')));
+        initTextControllers(childQuestion, textEditingControllerList);
+      }
+
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        textEditingControllerList.add(
+            Controller(childAnswer.idSelected!, TextEditingController(), checkQuestionType(childAnswer.commentAnswer == true ? '' : '')));
         initTextControllers(childAnswer, textEditingControllerList);
       }
     }
@@ -312,10 +374,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       question_id: question.id,
       suggested_answer_id: answer.id,
       answer_type: answerType == '' ? null : answerType,
-      value_text: checkQuestionType(answerType)=='text'? event.value : null,
-      value_number: checkQuestionType(answerType)=='text'? null : int.parse(event.value),
+      value_text: event.value,
       test_entry: false, // value default ko ro Anh Dung de lam gi
       is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+        table_row_id: 1,
         list_id_suggested: listIdSuggested
     );
     ObjectResult result = await repository.uploadQuestion(questionUpload);
@@ -357,10 +419,11 @@ class Visible {
 
 class Controller {
   int id;
+  int? idRow;
   TextEditingController controller;
   String type;
 
-  Controller(this.id, this.controller, this.type);
+  Controller(this.id, this.controller, this.type, {this.idRow});
 }
 
 class AddReportEvent extends BlocEvent {
@@ -399,12 +462,14 @@ class AddReportState extends BlocState {
         listController,
         reportId,
         listVisible,
+    listTable,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
   final List<List<Select>> listSelected;
   final List<List<Controller>> listController;
   final List<List<Visible>> listVisible;
+  final List<Question> listTable;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final int? reportId;
@@ -417,6 +482,7 @@ class AddReportState extends BlocState {
     this.listSelected = const [],
     this.listController = const [],
     this.listVisible = const [],
+    this.listTable = const [],
     this.reportId,
   });
 
@@ -428,6 +494,7 @@ class AddReportState extends BlocState {
     List<List<Select>>? listSelected,
     List<List<Visible>>? listVisible,
     List<List<Controller>>? listController,
+    List<Question>? listTable,
     int? reportId,
   }) {
     return AddReportState(
@@ -438,6 +505,7 @@ class AddReportState extends BlocState {
         listSelected: listSelected ?? this.listSelected,
         listController: listController ?? this.listController,
         listVisible: listVisible ?? this.listVisible,
+        listTable: listTable ?? this.listTable,
         reportId: reportId ?? this.reportId);
   }
 }

@@ -2,6 +2,7 @@ import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/data/entity/report/report_result.dart';
 import 'package:diary_mobile/generated/l10n.dart';
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/utils/constants/shared_preferences.dart';
@@ -48,6 +49,7 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       final detailDiary = await repository.getInfoDiary(event.id);
       final listActivityDiary = await repository.getListActivityDiary(event.id);
       final listActivityTransaction = await repository.getListActivityTransaction(event.id);
+      final listReportResult = await repository.getListReportResult();
       bool check = await SharedPreDiary.getRole();
       List<ActivityFarm> list = [];
       if (check) {
@@ -108,7 +110,8 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           detailDiary: detailDiary,
           listActivityFarm: list,
           listActivityTransaction: listActivityTransaction,
-          listActivityDiary: listActivityDiary));
+          listActivityDiary: listActivityDiary,
+          listReportResult: listReportResult));
     }
   }
 }
@@ -146,6 +149,7 @@ class DetailDiaryState extends BlocState {
         listActivityFarm,
         listActivityDiary,
         listActivityTransaction,
+        listReportResult,
       ];
   final Diary? detailDiary;
   final List<MaterialEntity> listMaterial;
@@ -155,6 +159,7 @@ class DetailDiaryState extends BlocState {
   final List<ActivityDiary> listActivityDiary;
   final List<ActivityTransaction> listActivityTransaction;
   final List<ActivityFarm> listActivityFarm;
+  final List<ReportResult> listReportResult;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
 
@@ -169,19 +174,22 @@ class DetailDiaryState extends BlocState {
     this.listActivityFarm = const [],
     this.listActivityDiary = const [],
     this.listActivityTransaction = const [],
+    this.listReportResult = const [],
   });
 
-  DetailDiaryState copyWith(
-      {Diary? detailDiary,
-      FormSubmissionStatus? formStatus,
-      bool? isShowProgress,
-      List<MaterialEntity>? listMaterial,
-      List<Tool>? listTool,
-      List<Unit>? listUnit,
-      List<Activity>? listActivity,
-      List<ActivityDiary>? listActivityDiary,
-      List<ActivityTransaction>? listActivityTransaction,
-      List<ActivityFarm>? listActivityFarm}) {
+  DetailDiaryState copyWith({
+    Diary? detailDiary,
+    FormSubmissionStatus? formStatus,
+    bool? isShowProgress,
+    List<MaterialEntity>? listMaterial,
+    List<Tool>? listTool,
+    List<Unit>? listUnit,
+    List<Activity>? listActivity,
+    List<ActivityDiary>? listActivityDiary,
+    List<ActivityTransaction>? listActivityTransaction,
+    List<ActivityFarm>? listActivityFarm,
+    List<ReportResult>? listReportResult,
+  }) {
     return DetailDiaryState(
         detailDiary: detailDiary ?? this.detailDiary,
         formStatus: formStatus ?? this.formStatus,
@@ -193,7 +201,8 @@ class DetailDiaryState extends BlocState {
         listActivityFarm: listActivityFarm ?? this.listActivityFarm,
         listActivityTransaction:
             listActivityTransaction ?? this.listActivityTransaction,
-        listActivityDiary: listActivityDiary ?? this.listActivityDiary);
+        listActivityDiary: listActivityDiary ?? this.listActivityDiary,
+        listReportResult: listReportResult ?? this.listReportResult);
   }
 }
 

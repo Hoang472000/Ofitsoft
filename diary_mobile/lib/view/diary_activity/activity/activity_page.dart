@@ -27,7 +27,6 @@ import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/items/item_activity.dart';
 import '../../report/add_report.dart';
-import '../activity_sell/add_activity_sell.dart';
 import '../monitor/detail_monitor_page.dart';
 import 'add_activity.dart';
 

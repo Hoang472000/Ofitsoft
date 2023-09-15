@@ -4,6 +4,7 @@ import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
+import 'package:diary_mobile/data/entity/report/report_result.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import 'entity/diary/diary.dart';
@@ -92,4 +93,6 @@ abstract class Repository {
   Future<List<Diary>> getListBackupDiary();
 
   Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload);
+
+  Future<List<ReportResult>> getListReportResult();
 }

@@ -120,7 +120,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                                 title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
                                 children: [
                                   tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
-                                      state.listSelected[index], state.listController[index], state.listController, blocContext),
+                                      state.listSelected[index], state.listController[index], state.listController, blocContext,
+                                  state.listTable),
                                 ],
                               );
                             }),
@@ -307,29 +308,39 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ],
     );
   }
-  Widget tableNon(int id,  List<Controller> controller, BuildContext context) {
+  Table tableNon(int id,  List<Controller> controller, BuildContext context) {
     int index = controller.indexWhere((element) => element.id == id);
     //HoangCV: note table chua co controller
-    return Padding(
-        padding: EdgeInsets.zero,
-        child: TextField(
-          controller: controller[index].controller,
-          keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-          onSubmitted: (str){
-            context.read<AddReportBloc>().add(
-                UpdateAddReportEvent(id, str, const []));
-          },
-          decoration: const InputDecoration(
-            isDense: true,
-            border: InputBorder.none, // No border or underline
-            contentPadding: EdgeInsets.only(bottom: 4, top: 4,left: 4, right: 4),
-          ),
-          maxLines: 10,
-          minLines: 1,
-        )
+    return  Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      border: TableBorder.all(color: AppColor.black22),
+      children: [
+        TableRow(
+          children: [
+            Padding(
+                padding: EdgeInsets.zero,
+                child: TextField(
+                  controller: controller[index].controller,
+                  keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
+                  onSubmitted: (str){
+                    context.read<AddReportBloc>().add(
+                        UpdateAddReportEvent(id, str, const []));
+                  },
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    border: InputBorder.none, // No border or underline
+                    contentPadding: EdgeInsets.only(bottom: 4, top: 4,left: 4, right: 4),
+                  ),
+                  maxLines: 10,
+                  minLines: 1,
+                )
+            ),
+          ],
+        ),
+      ],
     );
   }
-  Widget tableNonHasSub(List<Answer> list, int count, List<Controller> controller, BuildContext context) {
+  Table tableNonHasSub(List<Answer> list, int count, List<Controller> controller, BuildContext context) {
     List<Widget> tabNonSub = [];
     for (int i = 0; i < list.length; i++) {
       //print("HoangCV: tableNonHasSub+j+1:  ${count+i+1} :: ${controller.last.id}");
@@ -345,18 +356,11 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       },
       border: /*TableBorder.lerp(color: AppColor.black22),*/const TableBorder(horizontalInside: BorderSide(color: AppColor.black22)),
       children: [
-        TableRow(children: [
-          Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            border: TableBorder.all(color: AppColor.black22),
-            children: [
-              TableRow(children: tabNonSub),
-            ],
-          ),
-        ]),
+        TableRow(children: tabNonSub),
       ],
     );
   }
+
   TableRow tableRowCheckBoxTextField(String title, int id, List<Select> listSelected, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
@@ -634,7 +638,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     );
   }
 
-  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController, List<List<Controller>> listCount, BuildContext context){
+  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController, List<List<Controller>> listCount, BuildContext context, List<Question> listTable,){
     List<Table> listTable1 =[];
     int form = 0;
     for(int i = 0 ; i < list.length; i++) {
@@ -642,7 +646,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       List<TableRow> tableRow = [];
       List<TableRow> tableRowSub = [];
       List<Widget> tableWidgetText = [];
-      List<Widget> tableWidgetNon = [];
+      List<Table> tableWidgetNon = [];
+      List<TableRow> tableWidgetRowNon = [];
       form = checkForm(list[i]);
 
       //print("HoangCV: $i : ${list[i].title} :  ${list.length} : $form");
@@ -749,13 +754,24 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             tableWidgetText.add(tableRowTextHasSub(
                 list[i].suggestedAnswerIds[j].value ?? '',
                 list[i].suggestedAnswerIds[j].suggestedAnswerIds));
-            tableWidgetNon.add(tableNonHasSub(
-                list[i].suggestedAnswerIds[j].suggestedAnswerIds,totalCount+j+1, listController, context));
+       /*     tableWidgetNon.add(tableNonHasSub(
+                list[i].suggestedAnswerIds[j].suggestedAnswerIds,totalCount+j+1, listController, context));*/
           } else {
             tableWidgetText
                 .add(tableRowText(list[i].suggestedAnswerIds[j].value ?? ''));
-            tableWidgetNon.add(tableNon(/*list[i].suggestedAnswerIds[j].idSelected!*/totalCount+j+1, listController, context));
+            //tableWidgetNon.add(tableNon(totalCount+j+1, listController, context));
           }
+        }
+        for(int j = 0 ; j< listTable.length; j++){
+          for(int k = 0 ; k < listTable[j].suggestedAnswerIds.length; k++){
+            if (listTable[j].suggestedAnswerIds[k].suggestedAnswerIds.isNotEmpty) {
+              tableWidgetNon.add(tableNonHasSub(
+                  listTable[j].suggestedAnswerIds[k].suggestedAnswerIds,listTable[j].suggestedAnswerIds[k].idSelected!, listController, context));
+            } else {
+              tableWidgetNon.add(tableNon(listTable[j].suggestedAnswerIds[k].idSelected!, listController, context));
+            }
+          }
+          tableWidgetRowNon.add(TableRow(children: tableWidgetNon ));
         }
       }
       if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && form != 7) {
@@ -922,35 +938,19 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           columnWidths: {
-/*            0: FlexColumnWidth(1),
-            1: FlexColumnWidth(1),
-            2: FlexColumnWidth(1),
-            3: FlexColumnWidth(1),
-            4: FlexColumnWidth(1),
-            5: FlexColumnWidth(1),*/
-
           },
           border: TableBorder.all(color: AppColor.black22),
           children: [
             TableRow(children: tableWidgetText),
           ],
         ),);
-        for(int i =0 ; i< 2; i++){
+        for(int i = 0; i< tableWidgetRowNon.length; i++) {
           listTable1.add(Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            columnWidths: {
-/*              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(1),
-              2: FlexColumnWidth(1),
-              3: FlexColumnWidth(1),
-              4: FlexColumnWidth(1),
-              5: FlexColumnWidth(1),*/
-
-            },
-            border: TableBorder.all(color: AppColor.black22),
-            children: [
-              TableRow(children: tableWidgetNon),
-            ],
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [tableWidgetRowNon[i]]
           ),);
         }
       }

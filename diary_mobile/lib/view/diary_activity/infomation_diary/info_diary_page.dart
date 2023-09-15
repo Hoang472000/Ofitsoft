@@ -11,6 +11,7 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
+import '../../report/list_report_result_view.dart';
 import '../activity/activity_page.dart';
 import '../activity/activity_transaction_page.dart';
 
@@ -99,9 +100,8 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                                     .listActivityFarm[index], state.listActivityDiary));
                                         } else if(state.listActivityFarm[index].id == 5){
                                           Navigator.push(context,
-                                              ActivityPage.route("report",
-                                                widget.id, widget.diary,state
-                                                    .listActivityFarm[index], state.listActivityDiary));
+                                              ListReportResultView.route(widget.diary,state
+                                                    .listActivityFarm[index], state.listReportResult));
                                         } else if(state.listActivityFarm[index].id == 6){
                                           var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("purchase",

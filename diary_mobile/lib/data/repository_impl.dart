@@ -30,6 +30,7 @@ import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
 import 'entity/monitor/monitor_diary.dart';
 import 'entity/report/answer.dart';
+import 'entity/report/report_result.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -684,7 +685,7 @@ class RepositoryImpl extends Repository {
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.getListReport,
+            path: ApiConst.getListReport+'1',
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
@@ -890,4 +891,30 @@ class RepositoryImpl extends Repository {
     return objectResult;
   }
 
+  @override
+  Future<List<ReportResult>> getListReportResult() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListReportResult,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListReportResult response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<ReportResult> list = List.from(objectResult.response)
+          .map((json) => ReportResult.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
+  }
 }
