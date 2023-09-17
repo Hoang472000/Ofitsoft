@@ -62,21 +62,21 @@ class _ItemReportResultState extends State<ItemReportResult> {
               Container(
                 margin: const EdgeInsets.only(bottom: 5),
                 child: Text(
-                  "${widget.reportResult.id}",
+                  "Khảo sát: ${widget.reportResult.id}",
                   style:
-                  StyleOfit.textStyleFW700(AppColor.gray500, 16),
+                  StyleOfit.textStyleFW500(AppColor.gray57, 16),
                 ),
               ),
               Container(
                   alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(bottom: 5, top: 5),
+                  margin: const EdgeInsets.only(bottom: 0, top: 0),
                   child: RichText(
                     text: Utils.convertText(
                         "",
                         "${widget.reportResult.surveyId}",
                         AppColor.blue15,
                         14),
-                    maxLines: 1,
+                    maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   )),
               SizedBox(
@@ -86,7 +86,21 @@ class _ItemReportResultState extends State<ItemReportResult> {
                     child: RichText(
                       text: Utils.convertText(
                           "Thanh tra viên: ",
-                          "${widget.reportResult.inspector}",
+                          "${widget.reportResult.internalInspector}",
+                          AppColor.blue15,
+                          14),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )),
+              ),
+              SizedBox(
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    margin: const EdgeInsets.only(top: 5),
+                    child: RichText(
+                      text: Utils.convertText(
+                          "Ngày thực hiện: ",
+                          "${widget.reportResult.createDate}",
                           AppColor.blue15,
                           14),
                       maxLines: 1,

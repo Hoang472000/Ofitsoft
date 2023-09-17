@@ -308,16 +308,16 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ],
     );
   }
-  Table tableNon(int id,  List<Controller> controller, BuildContext context) {
-    int index = controller.indexWhere((element) => element.id == id);
+  Widget tableNon(int id, int idRow, List<Controller> controller, BuildContext context) {
+    int index = controller.indexWhere((element) => element.id == id && (element.idRow == idRow));
+    controller.forEach((element) {
+      if(element.idRow != null) {
+        print("HoangCV: index:  $index : controller: ${element.idRow}");
+      }
+    });
+
     //HoangCV: note table chua co controller
-    return  Table(
-      defaultVerticalAlignment: TableCellVerticalAlignment.top,
-      border: TableBorder.all(color: AppColor.black22),
-      children: [
-        TableRow(
-          children: [
-            Padding(
+    return Padding(
                 padding: EdgeInsets.zero,
                 child: TextField(
                   controller: controller[index].controller,
@@ -334,19 +334,12 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   maxLines: 10,
                   minLines: 1,
                 )
-            ),
-          ],
-        ),
-      ],
-    );
+            );
   }
-  Table tableNonHasSub(List<Answer> list, int count, List<Controller> controller, BuildContext context) {
+  Table tableNonHasSub(int idRow, List<Answer> list, List<Controller> controller, BuildContext context) {
     List<Widget> tabNonSub = [];
     for (int i = 0; i < list.length; i++) {
-      //print("HoangCV: tableNonHasSub+j+1:  ${count+i+1} :: ${controller.last.id}");
-
-      controller.add(Controller(count+i+1, TextEditingController(), ''));
-      tabNonSub.add(tableNon(count+i+1, controller,context));
+      tabNonSub.add(tableNon(list[i].idSelected!, idRow, controller,context));
     }
     return Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -354,7 +347,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         0: FlexColumnWidth(1),
         1: FlexColumnWidth(1),
       },
-      border: /*TableBorder.lerp(color: AppColor.black22),*/const TableBorder(horizontalInside: BorderSide(color: AppColor.black22)),
+      border: TableBorder.all(color: AppColor.black22),//const TableBorder(horizontalInside: BorderSide(color: AppColor.black22)),
       children: [
         TableRow(children: tabNonSub),
       ],
@@ -638,7 +631,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     );
   }
 
-  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController, List<List<Controller>> listCount, BuildContext context, List<Question> listTable,){
+  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController, List<List<Controller>> listCount, BuildContext context, List<TableQuestion> listTable,){
     List<Table> listTable1 =[];
     int form = 0;
     for(int i = 0 ; i < list.length; i++) {
@@ -646,12 +639,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       List<TableRow> tableRow = [];
       List<TableRow> tableRowSub = [];
       List<Widget> tableWidgetText = [];
-      List<Table> tableWidgetNon = [];
-      List<TableRow> tableWidgetRowNon = [];
+      List<List<Widget>> listRow= [];
       form = checkForm(list[i]);
 
-      //print("HoangCV: $i : ${list[i].title} :  ${list.length} : $form");
-      //print("HoangCV:commentAnswer $i : ${list[i].title} :  ${listController.last.id}");
       if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"){
         if(list[i].suggestedAnswerIds.length<=2 || list[i].suggestedAnswerIds.length>=4){
           for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
@@ -745,33 +735,35 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         }
       }
       else if(list[i].questionType == "table"){
-        //int lengthController=  listController.length;
-        int totalCount = listCount.fold(0, (count, innerList) => count + innerList.length);
         for (int j = 0; j < list[i].suggestedAnswerIds.length; j++) {
-          //print("HoangCV: lengthController+j+1:  ${totalCount+j+1} : ${listSelect.last.id} : ${listController.last.id}");
-          listController.add(Controller(totalCount+j+1, TextEditingController(), 'text'));
           if (list[i].suggestedAnswerIds[j].suggestedAnswerIds.isNotEmpty) {
             tableWidgetText.add(tableRowTextHasSub(
                 list[i].suggestedAnswerIds[j].value ?? '',
                 list[i].suggestedAnswerIds[j].suggestedAnswerIds));
-       /*     tableWidgetNon.add(tableNonHasSub(
-                list[i].suggestedAnswerIds[j].suggestedAnswerIds,totalCount+j+1, listController, context));*/
           } else {
             tableWidgetText
                 .add(tableRowText(list[i].suggestedAnswerIds[j].value ?? ''));
-            //tableWidgetNon.add(tableNon(totalCount+j+1, listController, context));
           }
         }
-        for(int j = 0 ; j< listTable.length; j++){
-          for(int k = 0 ; k < listTable[j].suggestedAnswerIds.length; k++){
-            if (listTable[j].suggestedAnswerIds[k].suggestedAnswerIds.isNotEmpty) {
-              tableWidgetNon.add(tableNonHasSub(
-                  listTable[j].suggestedAnswerIds[k].suggestedAnswerIds,listTable[j].suggestedAnswerIds[k].idSelected!, listController, context));
+        int index = listTable.indexWhere((element) =>
+        element.id == list[i].id
+        );
+        for(int a = 0 ; a <listTable[index].listQuestion.length; a ++){
+          print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listTable[index].listQuestion[a].title}");
+
+          List<Widget> tableWidgetNon = [];
+          for(int g = 0 ; g <listTable[index].listQuestion[a].suggestedAnswerIds.length; g++){
+           if (listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds.isNotEmpty) {
+              tableWidgetNon.add(tableNonHasSub(listTable[index].listQuestion[a].rowId!,
+                  listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds, listController, context));
             } else {
-              tableWidgetNon.add(tableNon(listTable[j].suggestedAnswerIds[k].idSelected!, listController, context));
-            }
+              tableWidgetNon.add(tableNon(listTable[index].listQuestion[a].suggestedAnswerIds[g].idSelected!, listTable[index].listQuestion[a].rowId!,listController, context));
+              print("HoangCV: rowID:  ${a} : ${listTable[index].listQuestion[a].rowId} : ${listTable[index].listQuestion[a].title}");
+
+           }
           }
-          tableWidgetRowNon.add(TableRow(children: tableWidgetNon ));
+          listRow.add(tableWidgetNon);
+          print("HoangCV: listQuestion[g]:  ${listRow.length}");
         }
       }
       if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && form != 7) {
@@ -944,13 +936,17 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             TableRow(children: tableWidgetText),
           ],
         ),);
-        for(int i = 0; i< tableWidgetRowNon.length; i++) {
+        for(int i = 0; i< listRow.length; i++) {
           listTable1.add(Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.top,
               columnWidths: {
               },
               border: TableBorder.all(color: AppColor.black22),
-              children: [tableWidgetRowNon[i]]
+              children: [
+                TableRow(
+                  children: listRow[i]
+                )
+              ]
           ),);
         }
       }

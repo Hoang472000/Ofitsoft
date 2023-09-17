@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
@@ -6,6 +7,7 @@ import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
 import '../../../data/entity/activity/activity_diary.dart';
 import '../../../data/entity/diary/diary.dart';
@@ -36,27 +38,32 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<List<Select>> listSelected = [];
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
-    List<Question> listTable = [];
+    List<TableQuestion> listTable = [];
     if (report.isNotEmpty) {
       listSelected = createSelectLists(report[1].questionAndPageIds);
       listVisible = createVisibleLists(report[1].questionAndPageIds);
       listController = createTextEditingControllerLists(report[1].questionAndPageIds);
-      listSelected.forEach((element) {
+/*      listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
       });
       listController.forEach((element) {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
-      });
+      });*/
       int i = 0;
-      addTableRow(report[1].questionAndPageIds, listTable);
+      addTableRow(report[1].questionAndPageIds, listTable, i);
       listTable.forEach((element) {
-        print("HoangCV:listTable:  ${element.title} : ${element.suggestedAnswerIds[0].value}");
+        print("HoangCV:listTable:  ${element.title} : ${element.listQuestion[0].suggestedAnswerIds[0].value} : ${element.id}");
+        element.listQuestion.forEach((e) {
+          e.suggestedAnswerIds.forEach((el){
+            print("HoangCV:listQuestion:  ${el.value} : ${el.rowId}");
+          });
+        });
       });
-      List<List<Controller>> listCtrlTable = createTextEditingControllerLists(listTable);
+      List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listController.addAll(listCtrlTable);
-      listController.forEach((element) {
-        print("HoangCV:listController:  ${element.length} : ${element[0].id}");
-      });
+    /*  listController.forEach((element) {
+        print("HoangCV:listController:  ${element.length} : ${element[0].toJson()}");
+      });*/
     }
     emitter(state.copyWith(
       isShowProgress: false,
@@ -68,24 +75,40 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listTable: listTable,
     ));
   }
-  void addTableRow(List<dynamic> items, List<Question> listTable) {
-    //for(int i = 0 ; i< 2; i++) {
+  void addTableRow(List<dynamic> items, List<TableQuestion> listTable, int id) {
       for (dynamic item in items) {
         if (item is Question) {
-          if (item.questionType == 'table') {
-            List<Answer> listAs = [];
-            for (Answer answer in item.suggestedAnswerIds) {
-              //answer.value = '';
-              listAs.add(answer);
+            if (item.questionType == 'table') {
+              List<Question> list = [];
+              for (int i = 0; i < 3; i++) {
+              List<Answer> listAs = [];
+              for (Answer answer in item.suggestedAnswerIds) {
+                answer.rowId = id;
+                print("HoangCV: row value: ${answer.value} : ${answer.rowId} : ${answer.idSelected}");
+                List<Answer> las = [];
+                for (Answer as in answer.suggestedAnswerIds) {
+                  as.rowId = id;
+                  las.add(as);
+                  print("HoangCV: row value: ${as.value} : ${as.rowId} : ${as.idSelected}");
+                }
+                if(answer.suggestedAnswerIds.isNotEmpty){
+                  answer.suggestedAnswerIds = las;
+                }
+                //print("HoangCV: row value answer: ${answer.value} : ${answer.suggestedAnswerIds.length} ");
+                listAs.add(answer);
+              }
+              Question qs = item;
+              qs.suggestedAnswerIds = listAs;
+              qs.rowId = id;
+              id++;
+              list.add(qs);
+              listTable.add(TableQuestion(item.id!, item.title!, list));
             }
-            Question qs = item;
-            qs.suggestedAnswerIds = listAs;
-            listTable.add(qs);
           }
-          addTableRow(item.questionAndPageIds, listTable);
         }
+        id = 0;
+        addTableRow(item.questionAndPageIds, listTable, id);
       }
-    //}
   }
 
 
@@ -114,9 +137,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       for (Answer answer in item.suggestedAnswerIds) {
         List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
         List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
-        print(
+        /*print(
             "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${selectedIdsList.toString()}");
-        selectList.add(Select(answer.idSelected!, false,
+        */selectList.add(Select(answer.idSelected!, false,
             answer.value!, listId: selectedIdsList,
         listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
@@ -192,47 +215,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
-/*  void initVisibleValues(dynamic item, List<Visible> selectList) {
-    if (item is Question) {
-      // Gọi hàm đệ quy cho danh sách câu trả lời con
-      for (Answer answer in item.suggestedAnswerIds) {
-        print(
-            "HoangCV: Visible: ${item.title} : ${answer.value} : ${answer.idSelected}");
-        selectList.add(Visible(answer.idSelected!, false,
-            answer.value!)); // Thêm Select cho câu trả lời con
-        initVisibleValues(answer, selectList);
-      }
-
-      // Gọi hàm đệ quy cho danh sách câu hỏi con
-      for (Question childQuestion in item.questionAndPageIds) {
-        selectList.add(Visible(childQuestion.idSelected!, false,
-            childQuestion.title!)); // Thêm Select cho câu hỏi con
-        initVisibleValues(childQuestion, selectList);
-      }
-    } else if (item is Answer) {
-      // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
-      for (Question childQuestion in item.questionAndPageIds) {
-        selectList.add(Visible(
-            childQuestion.idSelected!,
-            false,
-            childQuestion
-                .title!)); // Thêm Select cho câu hỏi con của câu trả lời con
-        initVisibleValues(childQuestion, selectList);
-      }
-
-      // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
-      for (Answer childAnswer in item.suggestedAnswerIds) {
-        print(
-            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected}");
-        selectList.add(Visible(
-            childAnswer.idSelected!,
-            false,
-            childAnswer
-                .value!)); // Thêm Select cho câu trả lời con của câu trả lời con
-        initVisibleValues(childAnswer, selectList);
-      }
-    }
-  }*/
   List<List<Controller>> createTextEditingControllerLists(
       List<Question> questions) {
     final List<List<Controller>> textEditingControllerLists = [];
@@ -252,50 +234,25 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     return textEditingControllerLists;
   }
 
-  String checkQuestionType(String type){
-    switch(type){
-      case 'numerical_box':
-        return 'number';
-        break;
-      default:
-        return 'text';
-        break;
-    }
+  List<List<Controller>> createTECTBLists(
+      List<TableQuestion> tableQs) {
+    final List<List<Controller>> textEditingControllerLists = [];
+    tableQs.forEach((questions) {
+      for (Question question in questions.listQuestion) {
+        final List<Controller> textEditingControllerList = [];
+
+        // Thêm TextEditingController cho câu hỏi cha
+        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(), checkQuestionType(question.questionType ?? '')));
+
+        // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
+        initTextControllersTable(question, textEditingControllerList);
+
+        textEditingControllerLists.add(textEditingControllerList);
+      }
+    });
+    return textEditingControllerLists;
   }
 
-/*  void initTextControllers(
-      dynamic item, List<Controller> textEditingControllerList) {
-    if (item is Question) {
-      // Gọi hàm đệ quy cho danh sách câu trả lời con
-      for (Answer answer in item.suggestedAnswerIds) {
-        print("HoangCV: initTextControllers: ${item.title} : ${answer.idSelected} : ${answer.value}");
-        textEditingControllerList.add(
-            Controller(answer.idSelected!, TextEditingController(), checkQuestionType(answer.commentAnswer == true ? '': ''))); // Thêm TextEditingController cho câu trả lời con
-        initTextControllers(answer, textEditingControllerList);
-      }
-
-      // Gọi hàm đệ quy cho danh sách câu hỏi con
-      for (Question childQuestion in item.questionAndPageIds) {
-        textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? ''))); // Thêm TextEditingController cho câu hỏi con
-        initTextControllers(childQuestion, textEditingControllerList);
-      }
-    } else if (item is Answer) {
-      // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
-      for (Question childQuestion in item.questionAndPageIds) {
-        textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? ''))); // Thêm TextEditingController cho câu hỏi con của câu trả lời con
-        initTextControllers(childQuestion, textEditingControllerList);
-      }
-
-      // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
-      for (Answer childAnswer in item.suggestedAnswerIds) {
-        textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(), checkQuestionType(childAnswer.commentAnswer == true ? '' : ''))); // Thêm TextEditingController cho câu trả lời con của câu trả lời con
-        initTextControllers(childAnswer, textEditingControllerList);
-      }
-    }
-  }*/
   void initTextControllers(dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
       for (Question childQuestion in item.questionAndPageIds) {
@@ -306,9 +263,45 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(), checkQuestionType(childAnswer.commentAnswer == true ? '' : '')));
+            Controller(childAnswer.idSelected!, TextEditingController(),
+              checkQuestionType(childAnswer.commentAnswer == true ? '' : ''),
+                idRow: childAnswer.rowId));
+        if(item is Question && item.questionType == 'table'){
+          print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
+        }
+        /*if(item is Question && item.questionType == 'table'){
+          print("HoangCV: qs table: ${item.rowId} : ${item.idSelected}");
+        }*/
         initTextControllers(childAnswer, textEditingControllerList);
       }
+    }
+  }
+  void initTextControllersTable(dynamic item, List<Controller> textEditingControllerList) {
+    if (item is Question || item is Answer) {
+        print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
+      for (Question childQuestion in item.questionAndPageIds) {
+        textEditingControllerList.add(
+            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? '')));
+        initTextControllers(childQuestion, textEditingControllerList);
+      }
+
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        textEditingControllerList.add(
+            Controller(childAnswer.idSelected!, TextEditingController(),
+                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''),
+                idRow: childAnswer.rowId));
+        initTextControllers(childAnswer, textEditingControllerList);
+      }
+    }
+  }
+  String checkQuestionType(String type){
+    switch(type){
+      case 'numerical_box':
+        return 'number';
+        break;
+      default:
+        return 'text';
+        break;
     }
   }
 
@@ -424,6 +417,23 @@ class Controller {
   String type;
 
   Controller(this.id, this.controller, this.type, {this.idRow});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['idRow'] = idRow;
+    data['controller'] = controller;
+    data['type'] = type;
+    return data;
+  }
+}
+
+class TableQuestion {
+  int id;
+  String title;
+  List<Question> listQuestion;
+
+  TableQuestion(this.id, this.title, this.listQuestion);
 }
 
 class AddReportEvent extends BlocEvent {
@@ -462,14 +472,14 @@ class AddReportState extends BlocState {
         listController,
         reportId,
         listVisible,
-    listTable,
+        listTable,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
   final List<List<Select>> listSelected;
   final List<List<Controller>> listController;
   final List<List<Visible>> listVisible;
-  final List<Question> listTable;
+  final List<TableQuestion> listTable;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final int? reportId;
@@ -494,7 +504,7 @@ class AddReportState extends BlocState {
     List<List<Select>>? listSelected,
     List<List<Visible>>? listVisible,
     List<List<Controller>>? listController,
-    List<Question>? listTable,
+    List<TableQuestion>? listTable,
     int? reportId,
   }) {
     return AddReportState(

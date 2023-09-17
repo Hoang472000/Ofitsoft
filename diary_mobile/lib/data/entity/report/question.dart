@@ -16,6 +16,8 @@ class Question {
   List<Question> questionAndPageIds;
   String? stringSuggestedAnswerIds;
 
+  int? rowId;
+
   Question({
     this.id,
     this.idSelected,
@@ -30,6 +32,7 @@ class Question {
     this.suggestedAnswerIds = const [],
     this.questionAndPageIds = const [],
     this.stringSuggestedAnswerIds,
+    this.rowId,
   });
 
   Question.copy(Question other)
@@ -49,10 +52,11 @@ class Question {
         questionAndPageIds = other.questionAndPageIds
             .map((question) => Question.copy(question))
             .toList(),
+        rowId = other.rowId,
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 
   factory Question.fromJson(Map<String, dynamic> json,
-      {List<Question> questionAndPageIds = const [], int idSelected = -1}) {
+      {List<Question> questionAndPageIds = const [], int idSelected = -1, int rowId = -1}) {
     return Question(
       id: json['id'] ?? -1,
       idSelected: idSelected,
@@ -72,6 +76,7 @@ class Question {
       stringSuggestedAnswerIds:
           jsonEncode(json['suggested_answer_ids']) ?? '[]',
       questionAndPageIds: questionAndPageIds,
+      rowId: rowId,
     );
   }
 

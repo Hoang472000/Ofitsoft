@@ -9,6 +9,7 @@ class Answer {
   bool? commentAnswer;
   List<Question> questionAndPageIds;
   List<Answer> suggestedAnswerIds;
+  int? rowId;
 
   Answer({
     this.id,
@@ -19,6 +20,7 @@ class Answer {
     this.commentAnswer,
     this.questionAndPageIds = const [],
     this.suggestedAnswerIds = const [],
+    this.rowId,
   });
 
   Answer.copy(Answer other)
@@ -28,12 +30,13 @@ class Answer {
         parentColId = other.parentColId,
         value = other.value,
         commentAnswer = other.commentAnswer,
+        rowId = other.rowId,
         questionAndPageIds = other.questionAndPageIds.map((question) => Question.copy(question)).toList(),
         suggestedAnswerIds = other.suggestedAnswerIds.map((answer) => Answer.copy(answer)).toList();
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],
-      List<Answer> suggestedAnswerIds = const [], int idSelected = -1}) {
+      List<Answer> suggestedAnswerIds = const [], int idSelected = -1, int rowId = -1}) {
     return Answer(
       id: json['id'] ?? -1,
       idSelected: idSelected,
@@ -43,6 +46,7 @@ class Answer {
       commentAnswer: json['comment_answer'] ?? false,
       questionAndPageIds: questionAndPageIds,
       suggestedAnswerIds: suggestedAnswerIds,
+      rowId: rowId,
     );
   }
 

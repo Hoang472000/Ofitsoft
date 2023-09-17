@@ -739,7 +739,7 @@ class RepositoryImpl extends Repository {
       bool checkQuestion = true;
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
-        print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
+        //print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
         int index = list2.indexWhere((element) => element.id == list1[i].id);
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {
