@@ -18,6 +18,11 @@ class Question {
 
   int? rowId;
 
+  //for farmer - inspector
+  List<People> farmers;
+  List<People> internalInspector;
+  List<MonitoringVisitType> monitoringVisitType;
+
   Question({
     this.id,
     this.idSelected,
@@ -33,6 +38,10 @@ class Question {
     this.questionAndPageIds = const [],
     this.stringSuggestedAnswerIds,
     this.rowId,
+    //
+    this.farmers = const [],
+    this.internalInspector = const [],
+    this.monitoringVisitType = const [],
   });
 
   Question.copy(Question other)
@@ -53,6 +62,15 @@ class Question {
             .map((question) => Question.copy(question))
             .toList(),
         rowId = other.rowId,
+        farmers = other.farmers
+            .map((farmer) => People.copy(farmer))
+            .toList(),
+        internalInspector = other.internalInspector
+            .map((inspector) => People.copy(inspector))
+            .toList(),
+        monitoringVisitType = other.monitoringVisitType
+            .map((visitType) => MonitoringVisitType.copy(visitType))
+            .toList(),
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 
   factory Question.fromJson(Map<String, dynamic> json,
@@ -100,4 +118,35 @@ class Question {
     data['questionAndPageIds'] = questionAndPageIds;
     return data;
   }
+}
+
+class People{
+  final int id;
+  final String name;
+  People(this.id, this.name);
+
+  People.copy(People other)
+      : id = other.id,
+        name = other.name;
+}
+
+class MonitoringVisitType {
+  String type;
+  String value;
+
+  MonitoringVisitType({
+    required this.type,
+    required this.value,
+  });
+
+  factory MonitoringVisitType.fromJson(Map<String, dynamic> json) {
+    return MonitoringVisitType(
+      type: json['type'],
+      value: json['value']
+    );
+  }
+
+  MonitoringVisitType.copy(MonitoringVisitType other)
+      : type = other.type,
+        value = other.value;
 }

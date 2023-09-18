@@ -120,7 +120,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                                 title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
                                 children: [
                                   tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
-                                      state.listSelected[index], state.listController[index], state.listController, blocContext,
+                                      state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
                                   state.listTable),
                                 ],
                               );
@@ -308,38 +308,46 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ],
     );
   }
-  Widget tableNon(int id, int idRow, List<Controller> controller, BuildContext context) {
-    int index = controller.indexWhere((element) => element.id == id && (element.idRow == idRow));
-    controller.forEach((element) {
-      if(element.idRow != null) {
-        print("HoangCV: index:  $index : controller: ${element.idRow}");
-      }
-    });
+  Widget tableNon(int questionId, int answerId, int idSelected, int idRow, List<List<Controller>> controllers, BuildContext context) {
+    TextEditingController controller = TextEditingController();
+    String type = '';
+    int index = -1;
 
-    //HoangCV: note table chua co controller
-    return Padding(
-                padding: EdgeInsets.zero,
-                child: TextField(
-                  controller: controller[index].controller,
-                  keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-                  onSubmitted: (str){
-                    context.read<AddReportBloc>().add(
-                        UpdateAddReportEvent(id, str, const []));
-                  },
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    border: InputBorder.none, // No border or underline
-                    contentPadding: EdgeInsets.only(bottom: 4, top: 4,left: 4, right: 4),
-                  ),
-                  maxLines: 10,
-                  minLines: 1,
-                )
-            );
+    for (var element in controllers) {
+      index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
+
+      if (index != -1) {
+        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        controller = element[index].controller;
+        type = element[index].type;
+        return Padding(
+          padding: EdgeInsets.only(bottom: 4, top: 4),
+          child: TextField(
+            controller: controller,
+            keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+            onSubmitted: (str) {
+              context.read<AddReportBloc>().add(UpdateAddTableEvent(questionId, answerId, idRow, str));
+            },
+            decoration: const InputDecoration(
+              isDense: true,
+              border: InputBorder.none, // No border or underline
+              contentPadding: EdgeInsets.only(bottom: 4, top: 4, left: 4, right: 4),
+            ),
+            maxLines: 10,
+            minLines: 2,
+          ),
+        );
+      }
+    }
+
+    // Trả về một giá trị mặc định nếu không tìm thấy phần tử thỏa mãn điều kiện
+    return SizedBox(); // Hoặc bạn có thể trả về một Widget mặc định khác tuỳ ý
   }
-  Table tableNonHasSub(int idRow, List<Answer> list, List<Controller> controller, BuildContext context) {
+
+  Table tableNonHasSub(int questionId, int idRow, List<Answer> list, List<List<Controller>> controller, BuildContext context) {
     List<Widget> tabNonSub = [];
     for (int i = 0; i < list.length; i++) {
-      tabNonSub.add(tableNon(list[i].idSelected!, idRow, controller,context));
+      tabNonSub.add( tableNon(questionId, list[i].id!, list[i].idSelected!, idRow, controller, context),);
     }
     return Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -347,7 +355,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         0: FlexColumnWidth(1),
         1: FlexColumnWidth(1),
       },
-      border: TableBorder.all(color: AppColor.black22),//const TableBorder(horizontalInside: BorderSide(color: AppColor.black22)),
+      border: TableBorder.all(color: AppColor.black22),//const TableBorder(verticalInside: BorderSide(color: AppColor.black22)),
       children: [
         TableRow(children: tabNonSub),
       ],
@@ -631,7 +639,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     );
   }
 
-  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController, List<List<Controller>> listCount, BuildContext context, List<TableQuestion> listTable,){
+  Widget tableDetailResult(List<Question> list, List<Select> listSelect, List<Controller> listController,
+      List<List<Controller>> listControllerTable, BuildContext context, List<TableQuestion> listTable,){
     List<Table> listTable1 =[];
     int form = 0;
     for(int i = 0 ; i < list.length; i++) {
@@ -646,8 +655,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         if(list[i].suggestedAnswerIds.length<=2 || list[i].suggestedAnswerIds.length>=4){
           for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
             if (list[i].suggestedAnswerIds[j].questionAndPageIds.isNotEmpty){
-              if (list[i].suggestedAnswerIds[j]
-                  .commentAnswer == true) {
+              if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
                 //print("HoangCV:commentAnswer1 $i : $j : ${list[i].title} :  ${listController.last.id}");
                 tableRow.add(tableRowCheckBoxTextField(
                     "${list[i].suggestedAnswerIds[j].value}",
@@ -655,9 +663,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     isFirst: i == 0 ? true : false));
               } else {
                 //print("HoangCV: $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
-                tableRow.add(tableRowCheckBox(
-                    "${list[i].suggestedAnswerIds[j].value}",
-                    list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect, context, isFirst: i == 0 ? true : false));
+                tableRow.add(tableRowCheckBox("${list[i].suggestedAnswerIds[j].value}",
+                    list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect,
+                    context, isFirst: i == 0 ? true : false));
               }
             for (int k = 0; k <
                 list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
@@ -749,21 +757,24 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         element.id == list[i].id
         );
         for(int a = 0 ; a <listTable[index].listQuestion.length; a ++){
-          print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listTable[index].listQuestion[a].title}");
+          //print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listTable[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId}");
 
           List<Widget> tableWidgetNon = [];
           for(int g = 0 ; g <listTable[index].listQuestion[a].suggestedAnswerIds.length; g++){
            if (listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds.isNotEmpty) {
-              tableWidgetNon.add(tableNonHasSub(listTable[index].listQuestion[a].rowId!,
-                  listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds, listController, context));
+              tableWidgetNon.add(tableNonHasSub(listTable[index].listQuestion[a].id!, listTable[index].listQuestion[a].rowId!,
+                  listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds, listControllerTable, context));
             } else {
-              tableWidgetNon.add(tableNon(listTable[index].listQuestion[a].suggestedAnswerIds[g].idSelected!, listTable[index].listQuestion[a].rowId!,listController, context));
-              print("HoangCV: rowID:  ${a} : ${listTable[index].listQuestion[a].rowId} : ${listTable[index].listQuestion[a].title}");
+              tableWidgetNon.add(tableNon(listTable[index].listQuestion[a].id!,
+                  listTable[index].listQuestion[a].suggestedAnswerIds[g].id!,
+                  listTable[index].listQuestion[a].suggestedAnswerIds[g].idSelected!,
+                  listTable[index].listQuestion[a].rowId!,listControllerTable, context));
+              //print("HoangCV: rowID:  ${a} : ${listTable[index].listQuestion[a].rowId} : ${listTable[index].listQuestion[a].title}");
 
            }
           }
           listRow.add(tableWidgetNon);
-          print("HoangCV: listQuestion[g]:  ${listRow.length}");
+          //print("HoangCV: listQuestion[g]:  ${listRow.length} : ${tableWidgetNon.length}");
         }
       }
       if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && form != 7) {
@@ -926,7 +937,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         ),);
       }
       else if(form ==7 && tableWidgetText.isNotEmpty){
-
+        print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           columnWidths: {
