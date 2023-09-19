@@ -735,11 +735,12 @@ class RepositoryImpl extends Repository {
     List<Question> list1 = reports[1].questionAndPageIds.map((question) => Question.copy(question)).toList();
     List<Question> list2 = [];
     List<Question> list3 = [];
+    print("HoangCV: list1 length: ${list1.length}");
     for (int i = 0; i < list1.length - 1; i++) {
       bool checkQuestion = true;
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
-        //print("HoangCV: list1[i].id[j]: ${list1[i].pageId} : ${list2.last.id}");
+        print("HoangCV: list1[i].id[j]: ${list1[i].parentTitleId} : ${list2.last.id} : ${list1[i].title}");
         int index = list2.indexWhere((element) => element.id == list1[i].id);
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {
@@ -756,6 +757,7 @@ class RepositoryImpl extends Repository {
         }
       }
     }
+    print("HoangCV: list2 length: ${list2.length}");
     List<Question> result = list2.map((question) => Question.copy(question)).toList();
     for(int k = 0 ; k < list2.length ; k++) {
       for (int i = 0; i < list2[k].questionAndPageIds.length - 1; i++) {
@@ -818,16 +820,41 @@ class RepositoryImpl extends Repository {
         }
       }
     }
-    result.forEach((element1) {
-      print("HoangCV: result: ${result.length} : ${element1.toJson()}");
+    for (int i = 0; i < result.length; i++) {
+      bool checkQuestion = true;
+      if ((i > 0 && result[i].parentTitleId != list3.last.id) || i == 0) {
+        list3.add(result[i]);
+        print("HoangCV: list1[i].id[j]: ${result[i].parentTitleId} : ${list3.last.id} : ${result[i].title}");
+        int index = list3.indexWhere((element) => element.id == result[i].id);
+        for (int j = i + 1; j < result.length; j++) {
+          if(result[i].id == result[j].parentTitleId) {
+            print("HoangCV: parentTitleId: ${result[j].parentTitleId} : ${result[j].title} : ${result[i].parentTitleId}");
+            checkQuestion = false;
+            list3[index].questionParentTitleId.add(result[j]);
+          }
+        }
+        if (!checkQuestion) {
+          int length = list3
+              .where((element) => element.id == list3[index].id)
+              .toList()
+              .length;
+          print("HoangCV: length: ${length} : ${index} : ${list3[index].id} : ${list3[index].title} : ${result[i].parentTitleId}");
+
+          list3.removeRange(index, index + length - 1);
+        }
+      }
+    }
+    print("HoangCV: result length: ${list3.length}");
+    list3.forEach((element1) {
+      print("HoangCV: result: ${list3.length} : ${element1.toJson()}");
 
     });
-    result[1].questionAndPageIds.forEach((element1) {
-      print("HoangCV: question: ${result.length} : ${element1.toJson()}");
+    list3[1].questionAndPageIds.forEach((element1) {
+      print("HoangCV: question: ${list3.length} : ${element1.toJson()}");
 
     });
     print("HoangCV: ");
-    reports[1].questionAndPageIds = List.from(result);
+    reports[1].questionAndPageIds = List.from(list3);
     return reports;
   }
 

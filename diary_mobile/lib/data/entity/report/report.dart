@@ -18,6 +18,11 @@ class Report implements Insertable<Report> {
   List<Question> questionAndPageIds;
   String? stringQuestionAndPageIds;
 
+  //for farmer - inspector
+  List<People> farmers;
+  List<People> internalInspector;
+  List<MonitoringVisitType> monitoringVisitType;
+
   Report(
       {this.id,
       this.isPage,
@@ -30,7 +35,11 @@ class Report implements Insertable<Report> {
       this.questionsSelection,
       this.timeLimit,
       this.questionAndPageIds = const [],
-      this.stringQuestionAndPageIds});
+      this.stringQuestionAndPageIds,
+        //
+  this.farmers = const [],
+  this.internalInspector = const [],
+  this.monitoringVisitType = const [],});
 
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(
@@ -49,8 +58,27 @@ class Report implements Insertable<Report> {
               .map((itemJson) => Question.fromJson(itemJson))
               .toList()
           : [],
+      //
+      farmers: json['farmers'] != null
+          ? (json['farmers'] as List<dynamic>)
+          .map((itemJson) => People.fromJson(itemJson))
+          .toList()
+          : [],
+
+      internalInspector: json['internal_inspector'] != null
+          ? (json['internal_inspector'] as List<dynamic>)
+          .map((itemJson) => People.fromJson(itemJson))
+          .toList()
+          : [],
+
+      monitoringVisitType: json['monitoring_visit_type'] != null
+          ? (json['monitoring_visit_type'] as List<dynamic>)
+          .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
+          .toList()
+          : [],
       stringQuestionAndPageIds:
           jsonEncode(json['question_and_page_ids']) ?? '[]',
+
     );
   }
 
@@ -89,4 +117,45 @@ class Report implements Insertable<Report> {
             stringQuestionAndPageIds: Value(stringQuestionAndPageIds))
         .toColumns(nullToAbsent);
   }
+}
+
+class MonitoringVisitType {
+  String type;
+  String value;
+
+  MonitoringVisitType({
+    required this.type,
+    required this.value,
+  });
+
+  factory MonitoringVisitType.fromJson(Map<String, dynamic> json) {
+    return MonitoringVisitType(
+        type: json['type'],
+        value: json['value']
+    );
+  }
+
+  MonitoringVisitType.copy(MonitoringVisitType other)
+      : type = other.type,
+        value = other.value;
+}
+
+class People {
+  final int id;
+  final String name;
+  final String? image;
+
+  People({required this.id, required this.name, this.image});
+
+  factory People.fromJson(Map<String, dynamic> json) {
+    return People(
+      id: json['id'] ?? -1,
+      name: json['name'] ?? '',
+    );
+  }
+
+  People.copy(People other)
+      : id = other.id,
+        name = other.name,
+        image = other.image;
 }

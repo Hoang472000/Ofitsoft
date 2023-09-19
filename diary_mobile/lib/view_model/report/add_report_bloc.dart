@@ -1,25 +1,21 @@
 import 'dart:async';
-import 'dart:ffi';
 
-import 'package:diary_mobile/data/entity/item_default/activity.dart';
-import 'package:diary_mobile/data/entity/item_default/tool.dart';
-import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-
-import '../../../data/entity/activity/activity_diary.dart';
 import '../../../data/entity/diary/diary.dart';
-import '../../../data/entity/item_default/material_entity.dart';
-import '../../../data/local_data/diary_db.dart';
 import '../../../data/repository.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
+import '../../utils/extenstion/extenstions.dart';
+import '../../utils/extenstion/input_register_model.dart';
+import '../../utils/extenstion/service_info_extension.dart';
 import '../../utils/status/form_submission_status.dart';
+import '../../utils/utils.dart';
+import '../../utils/widgets/dialog/toast_widget.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 
@@ -28,19 +24,175 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
   AddReportBloc(this.repository) : super(AddReportState()) {
     on<GetAddReportEvent>(_getAddReport);
+    on<OnSelectValueEvent>(_onSelectValue);
     on<UpdateAddReportEvent>(updateAddReport);
     on<UpdateAddTableEvent>(updateAddTable);
+    on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
+  }
+
+  void _initViewAdd(Emitter<AddReportState> emitter) {
+    List<InputRegisterModel> list= [];
+    print("HoangCV: state.listFarmer : ${state.listFarmer.length}");
+    list.add(InputRegisterModel<People, People>(
+        title: "",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listFarmer,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        noBorder: true,
+        hasSearch: true,
+        textAlign: TextAlign.left
+    ));
+
+    list.add(InputRegisterModel(
+        title: "",
+        isCompulsory: false,
+        type: TypeInputRegister.Non,
+        controller: state.idFarmerController,
+        noBorder: true,
+        textAlign: TextAlign.center
+    ));
+
+    list.add(InputRegisterModel<People, People>(
+        title: "",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listInspector,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+        noBorder: true,
+        textAlign: TextAlign.left
+    ));
+
+    list.add(InputRegisterModel<String, DateTime>(
+        title: "",
+        isCompulsory: true,
+        typeInputEnum: TypeInputEnum.date,
+        type: TypeInputRegister.Select,
+        valueSelected: DateTime.now(),
+        controller: state.startTimeController,
+        noBorder: true,
+        textAlign: TextAlign.center
+        //icon: Icons.calendar_today
+    ));
+
+    emitter(state.copyWith(
+        listWidget: list,
+        formStatus: const InitialFormStatus()));
+  }
+
+  Future<FutureOr<void>> _onSelectValue(
+      OnSelectValueEvent event, Emitter<AddReportState> emit) async {
+    int result;
+    bool checkPass = true;
+    if(event.index == 0 && state.listFarmer.isEmpty) {
+      Toast.showLongTop("Không có danh sách nông hộ");
+      checkPass = false;
+    }else if(event.index == 1 && state.listInspector.isEmpty) {
+      Toast.showLongTop("Không có danh sách thanh tra viên");
+      checkPass = false;
+    }
+    if(checkPass) {
+      if (event.list[event.index].valueSelected.runtimeType == DateTime ||
+          event.list[event.index].typeInputEnum == TypeInputEnum.date) {
+        //     setState(() {
+        int result1 = await ServiceInfoExtension()
+            .selectValue(
+            event.list[event.index], event.context, (modelInput) {});
+        if (result1 == 1) {
+          state.farmerInspector!.visit_date = Utils.formatDateTimeToString(
+              event.list[event.index].valueSelected);
+          emit(state.copyWith(
+            startTimeController: TextEditingController(
+                text: Utils.formatDateTimeToString(
+                    event.list[event.index].valueSelected)),
+            farmerInspector: state.farmerInspector,
+          ));
+        }
+      } else {
+        print("HoangCV: event.list[event.index].listValue: ${event.index} : ${event.list[event.index].toString()} : ${event.list[event.index].listValue.length} ");
+        result = await Extension().showBottomSheetSelection(
+            event.context,
+            event.list[event.index].listValue,
+            event.list[event.index].positionSelected,
+            "${event.list[event.index].title}",
+            hasSearch: event.list[event.index].hasSearch ?? false);
+        if (result != -1) {
+          //   setState(() {
+          event.list[event.index].positionSelected = result;
+          event.list[event.index].valueDefault = null;
+          event.list[event.index].valueSelected =
+          event.list[event.index].listValue[result];
+          event.list[event.index].error = null;
+          // });
+
+          if (event.index == 0) {
+            event.list[1].controller = TextEditingController(text: "${state.listFarmer[result].id}");
+            state.farmerInspector!.farmer_id = state.listFarmer[result].id;
+            emit(state.copyWith(
+            idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
+            farmerInspector: state.farmerInspector,
+            ));
+          } else if (event.index == 2) {
+            state.farmerInspector!.internal_inspector_id = state.listInspector[result].id;
+            emit(state.copyWith(
+              farmerInspector: state.farmerInspector,
+            ));
+            print("HoangCV: state.farmerInspector!.internal_inspector_id : ${ state.farmerInspector!.internal_inspector_id} ");
+          }
+          if(state.reportId != null ){
+            emit(state.copyWith(
+                isShowProgress: true, formStatus: const InitialFormStatus()));
+
+            QuestionUpload questionUpload = QuestionUpload(
+              user_input_id: state.reportId,
+              survey_id: state.listReport[1].id,
+              is_answer_exist: true,
+              list_id_suggested: [],
+              farmer_id: state.farmerInspector!.farmer_id,
+              farmer_code: state.farmerInspector!.farmer_code,
+              internal_inspector_id: state.farmerInspector!.internal_inspector_id,
+              monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
+              visit_date: state.farmerInspector!.visit_date,
+            );
+            ObjectResult result = await repository.uploadQuestion(questionUpload);
+            if (result.responseCode == StatusConst.code00) {
+              emit(state.copyWith(
+                  isShowProgress: false,
+                  reportId: result.response is int ? result.response : null,
+                  formStatus: SubmissionSuccess(success: result.message)));
+            } else {
+              emit(state.copyWith(
+                  isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+            }
+          }
+        }
+      }
+    }
   }
 
   void _getAddReport(
       GetAddReportEvent event, Emitter<AddReportState> emitter) async {
-    emitter(state.copyWith(isShowProgress: true));
+    emitter(state.copyWith(
+      isShowProgress: true,
+      startTimeController: TextEditingController(
+          text: DateTime.now().toString() /*.split('.')[0]*/),
+      idFarmerController: TextEditingController(text: ''),
+      farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
+    ));
     final report = await repository.getListActivityReport();
     List<List<Select>> listSelected = [];
+    List<Select> listSelectedInspector = [];
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
     List<List<Controller>> listControllerTable = [];
     List<TableQuestion> listTable = [];
+    List<People> listFarmer = [];
+    List<People> listInspector = [];
     if (report.isNotEmpty) {
       listSelected = createSelectLists(report[1].questionAndPageIds);
       listVisible = createVisibleLists(report[1].questionAndPageIds);
@@ -64,23 +216,42 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listControllerTable.addAll(listCtrlTable);
+      for (int i = 0; i < report[0].monitoringVisitType.length; i++) {
+        listSelectedInspector.add(Select(
+            i, false, report[0].monitoringVisitType[i].value,
+            type: report[0].monitoringVisitType[i].type));
+      }
+      listFarmer = [
+        People(id: 1, name: "Cao Văn Hoàng"),
+        People(id: 2, name: "Trần Thị Thư"),
+        People(id: 3, name: "Hoàng Anh Dũng"),
+        People(id: 4, name: "Nguyễn Bá Tín"),
+        People(id: 5, name: "Nguyễn Thi Thuận"),
+      ];
+      emitter(state.copyWith(
+        listFarmer: listFarmer,
+        listInspector: listFarmer,
+      ));
+      _initViewAdd(emitter);
     }
     emitter(state.copyWith(
       isShowProgress: false,
       detailDiary: event.diary,
       listReport: report,
       listSelected: listSelected,
-        listVisible: listVisible,
-        listController: listController,
+      listVisible: listVisible,
+      listController: listController,
       listControllerTable: listControllerTable,
       listTable: listTable,
+      listSelectedInspector: listSelectedInspector,
     ));
-    state.listControllerTable.forEach((element) {
+/*    state.listControllerTable.forEach((element) {
       element.forEach((e) {
         print("HoangCV:listController:  ${e.toJson()}");
       });
-    });
+    });*/
   }
+
   void addTableRow(List<dynamic> items, List<TableQuestion> listTable, int id) {
     for (dynamic item in items) {
       if (item is Question) {
@@ -121,8 +292,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
-
-
 
   List<List<Select>> createSelectLists(List<Question> questions) {
     List<List<Select>> selectLists = [];
@@ -373,19 +542,45 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
 
     int index = event.listSelect.indexWhere((element) => element.id == event.id);
-    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : ${event.listSelect[index].value}");
-    QuestionUpload questionUpload = QuestionUpload(
-      user_input_id: state.reportId,
-      survey_id: state.listReport[1].id,
-      question_id: question.id,
-      suggested_answer_id: answer.id,
-      answer_type: answerType == '' ? null : answerType,
-      value_text: event.value,
-      test_entry: false, // value default ko ro Anh Dung de lam gi
-      is_answer_exist: index != -1 ? event.listSelect[index].value : false,// value khi tich chon va bo tich chon
-      //table_row_id: 1,
-      list_id_suggested: listIdSuggested
-    );
+    QuestionUpload questionUpload;
+    //print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : ${event.listSelect[index].value}");
+    if(state.reportId != null) {
+      questionUpload = QuestionUpload(
+          user_input_id: state.reportId,
+          survey_id: state.listReport[1].id,
+          question_id: question.id,
+          suggested_answer_id: answer.id,
+          answer_type: answerType == '' ? null : answerType,
+          value_text: event.value,
+          test_entry: false,
+          // value default ko ro Anh Dung de lam gi
+          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+          // value khi tich chon va bo tich chon
+          //table_row_id: 1,
+          list_id_suggested: listIdSuggested
+      );
+    } else{
+      questionUpload = QuestionUpload(
+          user_input_id: state.reportId,
+          survey_id: state.listReport[1].id,
+          question_id: question.id,
+          suggested_answer_id: answer.id,
+          answer_type: answerType == '' ? null : answerType,
+          value_text: event.value,
+          test_entry: false,
+          // value default ko ro Anh Dung de lam gi
+          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+          // value khi tich chon va bo tich chon
+          //table_row_id: 1,
+          list_id_suggested: listIdSuggested,
+          farmer_id: state.farmerInspector!.farmer_id,
+          farmer_code: state.farmerInspector!.farmer_code,
+          internal_inspector_id: state.farmerInspector!.internal_inspector_id,
+          monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
+          visit_date: state.farmerInspector!.visit_date,
+      );
+    }
+
     ObjectResult result = await repository.uploadQuestion(questionUpload);
     if (result.responseCode == StatusConst.code00) {
       emit(state.copyWith(
@@ -423,6 +618,39 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     } else {
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+    }
+  }
+
+  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<AddReportState> emit) async {
+    state.farmerInspector!.monitoring_visit_type = event.value;
+    emit(state.copyWith(
+      farmerInspector: state.farmerInspector
+    ));
+    if(state.reportId != null ){
+      emit(state.copyWith(
+          isShowProgress: true, formStatus: const InitialFormStatus()));
+
+      QuestionUpload questionUpload = QuestionUpload(
+        user_input_id: state.reportId,
+        survey_id: state.listReport[1].id,
+        is_answer_exist: true,
+        list_id_suggested: [],
+        farmer_id: state.farmerInspector!.farmer_id,
+        farmer_code: state.farmerInspector!.farmer_code,
+        internal_inspector_id: state.farmerInspector!.internal_inspector_id,
+        monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
+        visit_date: state.farmerInspector!.visit_date,
+      );
+      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(success: result.message)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 }
@@ -504,6 +732,28 @@ class UpdateAddReportEvent extends AddReportEvent {
   List<Object?> get props => [id, value, listSelect];
 }
 
+class UpdateFarmerInspectorEvent extends AddReportEvent {
+  final int id;
+  final String value;
+  final List<Select> listSelect;
+
+  UpdateFarmerInspectorEvent(this.id, this.value, this.listSelect);
+
+  @override
+  List<Object?> get props => [id, value, listSelect];
+}
+
+class OnSelectValueEvent extends AddReportEvent {
+  List<InputRegisterModel> list;
+  int index;
+  BuildContext context;
+
+  OnSelectValueEvent(this.list, this.index, this.context);
+
+  @override
+  List<Object?> get props => [list, index, context];
+}
+
 class UpdateAddTableEvent extends AddReportEvent {
   final int questionId;
   final int answerId;
@@ -528,16 +778,30 @@ class AddReportState extends BlocState {
         reportId,
         listVisible,
         listTable,
-    listControllerTable,
+        listControllerTable,
+        listSelectedInspector,
+        listWidget,
+        listFarmer,
+        listInspector,
+        startTimeController,
+        idFarmerController,
+        farmerInspector,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
   final List<List<Select>> listSelected;
+  final List<Select> listSelectedInspector;
   final List<List<Controller>> listController;
   final List<List<Controller>> listControllerTable;
   final List<List<Visible>> listVisible;
   final List<TableQuestion> listTable;
   final FormSubmissionStatus formStatus;
+  final List<InputRegisterModel> listWidget;
+  final List<People> listFarmer;
+  final List<People> listInspector;
+  TextEditingController? startTimeController = TextEditingController();
+  TextEditingController? idFarmerController = TextEditingController();
+  FarmerInspectorUpload? farmerInspector;
   final bool isShowProgress;
   final int? reportId;
 
@@ -551,6 +815,13 @@ class AddReportState extends BlocState {
     this.listVisible = const [],
     this.listTable = const [],
     this.listControllerTable = const [],
+    this.listSelectedInspector = const [],
+    this.listWidget = const [],
+    this.listFarmer = const [],
+    this.listInspector = const [],
+    this.startTimeController,
+    this.idFarmerController,
+    this.farmerInspector,
     this.reportId,
   });
 
@@ -564,6 +835,13 @@ class AddReportState extends BlocState {
     List<List<Controller>>? listController,
     List<TableQuestion>? listTable,
     List<List<Controller>>? listControllerTable,
+    List<Select>? listSelectedInspector,
+    List<InputRegisterModel>? listWidget,
+    List<People>? listFarmer,
+    List<People>? listInspector,
+    TextEditingController? startTimeController,
+    TextEditingController? idFarmerController,
+    FarmerInspectorUpload? farmerInspector,
     int? reportId,
   }) {
     return AddReportState(
@@ -576,6 +854,13 @@ class AddReportState extends BlocState {
         listVisible: listVisible ?? this.listVisible,
         listTable: listTable ?? this.listTable,
         listControllerTable: listControllerTable ?? this.listControllerTable,
+        listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
+        listWidget: listWidget ?? this.listWidget,
+        listFarmer: listFarmer ?? this.listFarmer,
+        listInspector: listInspector ?? this.listInspector,
+        startTimeController: startTimeController ?? this.startTimeController,
+        idFarmerController: idFarmerController ?? this.idFarmerController,
+        farmerInspector: farmerInspector ?? this.farmerInspector,
         reportId: reportId ?? this.reportId);
   }
 }

@@ -3,13 +3,13 @@ import 'package:diary_mobile/data/entity/item_default/item_default.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/utils/widgets/bottom_sheet/bottom_sheet_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../../view_model/setting/account/account_information_bloc.dart';
-import '../widgets/bottom_sheet/drop_down_button.dart';
 import 'input_register_model.dart';
 import 'service_info_extension.dart';
 
@@ -68,7 +68,12 @@ class Extension {
       case Unit:
       case Item:
       case Gender:
+      case People:
         return model.name;
+/*
+      case People:
+        return "${model.id} - "+ model.name;
+*/
 
       case DateTime:
         return DateFormat('dd/MM/yyyy HH:mm:ss').format(model);

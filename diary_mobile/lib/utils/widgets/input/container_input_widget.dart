@@ -442,7 +442,7 @@ class ContainerInputWidget extends StatelessWidget {
     try {
       // print("HoangCV: run way111111 ${inputRegisterModel.valueSelected} : ${inputRegisterModel.valueSelected.image}");
         return Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
               child: Row(
@@ -461,7 +461,7 @@ class ContainerInputWidget extends StatelessWidget {
                             inputRegisterModel.valueSelected,
                           )}",
                       style: TextStyle(color: Colors.black, fontSize: 14),
-                      textAlign: TextAlign.end,
+                      textAlign: inputRegisterModel.textAlign,
                     ),
                   ),
                 ],
@@ -483,7 +483,7 @@ class ContainerInputWidget extends StatelessWidget {
         } catch(e){
       // print("HoangCV: run way111111 ${inputRegisterModel.valueSelected}");
       return Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Text(
@@ -491,7 +491,7 @@ class ContainerInputWidget extends StatelessWidget {
                 inputRegisterModel.valueSelected,
               )}",
               style: TextStyle(color: Colors.black, fontSize: 14),
-              textAlign: TextAlign.end,
+              textAlign: inputRegisterModel.textAlign,
             ),
           ),
           inputRegisterModel.icon != null
@@ -519,7 +519,7 @@ class ContainerInputWidget extends StatelessWidget {
             enabled: false,
             keyboardType: inputRegisterModel.typeInput,
             controller: inputRegisterModel.controller,
-            textAlign: TextAlign.right,
+            textAlign: inputRegisterModel.textAlign,
             // onTap: () {
             //   inputRegisterModel.controller.selection =
             //       new TextSelection.fromPosition(new TextPosition(
@@ -557,7 +557,7 @@ class ContainerInputWidget extends StatelessWidget {
             enabled: false,
             keyboardType: inputRegisterModel.typeInput,
             controller: inputRegisterModel.controller,
-            textAlign: TextAlign.right,
+            textAlign: inputRegisterModel.textAlign,
             // onTap: () {
             //   inputRegisterModel.controller.selection =
             //       new TextSelection.fromPosition(new TextPosition(

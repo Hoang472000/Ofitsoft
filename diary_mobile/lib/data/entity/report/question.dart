@@ -14,14 +14,10 @@ class Question {
   int? triggeringAnswerId;
   List<Answer> suggestedAnswerIds;
   List<Question> questionAndPageIds;
+  List<Question> questionParentTitleId;
   String? stringSuggestedAnswerIds;
 
   int? rowId;
-
-  //for farmer - inspector
-  List<People> farmers;
-  List<People> internalInspector;
-  List<MonitoringVisitType> monitoringVisitType;
 
   Question({
     this.id,
@@ -38,10 +34,7 @@ class Question {
     this.questionAndPageIds = const [],
     this.stringSuggestedAnswerIds,
     this.rowId,
-    //
-    this.farmers = const [],
-    this.internalInspector = const [],
-    this.monitoringVisitType = const [],
+    this.questionParentTitleId = const [],
   });
 
   Question.copy(Question other)
@@ -61,8 +54,11 @@ class Question {
         questionAndPageIds = other.questionAndPageIds
             .map((question) => Question.copy(question))
             .toList(),
+        questionParentTitleId = other.questionParentTitleId
+            .map((question) => Question.copy(question))
+            .toList(),
         rowId = other.rowId,
-        farmers = other.farmers
+/*        farmers = other.farmers
             .map((farmer) => People.copy(farmer))
             .toList(),
         internalInspector = other.internalInspector
@@ -70,11 +66,11 @@ class Question {
             .toList(),
         monitoringVisitType = other.monitoringVisitType
             .map((visitType) => MonitoringVisitType.copy(visitType))
-            .toList(),
+            .toList(),*/
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
 
   factory Question.fromJson(Map<String, dynamic> json,
-      {List<Question> questionAndPageIds = const [], int idSelected = -1, int rowId = -1}) {
+      {List<Question> questionAndPageIds = const [],List<Question> questionParentTitleId = const [], int idSelected = -1, int rowId = -1}) {
     return Question(
       id: json['id'] ?? -1,
       idSelected: idSelected,
@@ -94,6 +90,7 @@ class Question {
       stringSuggestedAnswerIds:
           jsonEncode(json['suggested_answer_ids']) ?? '[]',
       questionAndPageIds: questionAndPageIds,
+      questionParentTitleId: questionParentTitleId,
       rowId: rowId,
     );
   }
@@ -116,37 +113,7 @@ class Question {
     data['question_type'] = questionType;
     data['suggested_answer_ids'] = suggestedAnswerIds;
     data['questionAndPageIds'] = questionAndPageIds;
+    data['questionParentTitleId'] = questionParentTitleId;
     return data;
   }
-}
-
-class People{
-  final int id;
-  final String name;
-  People(this.id, this.name);
-
-  People.copy(People other)
-      : id = other.id,
-        name = other.name;
-}
-
-class MonitoringVisitType {
-  String type;
-  String value;
-
-  MonitoringVisitType({
-    required this.type,
-    required this.value,
-  });
-
-  factory MonitoringVisitType.fromJson(Map<String, dynamic> json) {
-    return MonitoringVisitType(
-      type: json['type'],
-      value: json['value']
-    );
-  }
-
-  MonitoringVisitType.copy(MonitoringVisitType other)
-      : type = other.type,
-        value = other.value;
 }

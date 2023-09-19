@@ -12,7 +12,7 @@ class QuestionUpload {
   bool? answer_is_correct;
   String? create_date;
 
-  bool? test_entry;// default = false
+  bool? test_entry; // default = false
   String? start_datetime;
   String? end_datetime;
   String? state; // submit upload done or progress
@@ -25,11 +25,20 @@ class QuestionUpload {
   int? scoring_total;
   int? scoring_success;
   bool? is_session_answer;
+
   //
   bool? is_answer_exist;
   bool? value_check_box;
   int? table_row_id;
   List<int>? list_id_suggested;
+
+  //
+  int? farmer_id;
+  int? farmer_code;
+  int? internal_inspector_id;
+  String? monitoring_visit_type;
+  String? visit_date;
+
   QuestionUpload({
     this.user_input_id, this.survey_id, this.question_id, this.question_sequence, this.suggested_answer_id,
     this.matrix_row_id, this.answer_type, this.value_text, this.value_number, this.skipped,
@@ -37,6 +46,7 @@ class QuestionUpload {
     this.answer_score, this.message_main_attachment_id, this.last_displayed_page_id, this.deadline,
     this.scoring_percentage, this.scoring_total, this.scoring_success, this.is_session_answer,
     this.is_answer_exist, this.value_check_box, this.table_row_id, this.list_id_suggested,
+    this.farmer_id, this.farmer_code, this.internal_inspector_id, this.monitoring_visit_type, this.visit_date
   });
 
   Map<String, dynamic> toJson() {
@@ -74,6 +84,39 @@ class QuestionUpload {
     data['value_check_box'] = true;
     data['table_row_id'] = table_row_id;
     data['list_id_suggested'] = list_id_suggested;
+
+    //
+    data['farmer_id'] = farmer_id;
+    data['farmer_code'] = farmer_code;
+    data['internal_inspector_id'] = internal_inspector_id;
+    data['monitoring_visit_type'] = monitoring_visit_type;
+    data['visit_date'] = visit_date;
     return data;
   }
+}
+
+class FarmerInspectorUpload {
+  int? farmer_id;
+  int? farmer_code;
+  int? internal_inspector_id;
+  String? monitoring_visit_type;
+  String? visit_date;
+
+  FarmerInspectorUpload(
+      {this.farmer_id,
+      this.farmer_code,
+      this.internal_inspector_id,
+      this.monitoring_visit_type,
+      this.visit_date});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['farmer_id'] = farmer_id;
+    data['farmer_code'] = farmer_code;
+    data['internal_inspector_id'] = internal_inspector_id;
+    data['monitoring_visit_type'] = monitoring_visit_type;
+    data['visit_date'] = visit_date;
+    return data;
+  }
+
 }

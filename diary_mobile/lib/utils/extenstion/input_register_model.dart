@@ -49,6 +49,7 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
   bool isAlwaysCap;
   bool noBorder;
   bool noUnder;
+  TextAlign textAlign;
 //<editor-fold desc="Data Methods" defaultstate="collapsed">
 
   InputRegisterModel({
@@ -84,6 +85,7 @@ class InputRegisterModel<T,S> extends ChangeNotifier {
     this.image='',
     this.noBorder = false,
     this.noUnder = false,
+    this.textAlign = TextAlign.end,
   });
 
   InputRegisterModel copyWith({
