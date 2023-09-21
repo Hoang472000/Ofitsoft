@@ -19,18 +19,18 @@ import '../../utils/widgets/dialog/toast_widget.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 
-class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
+class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   final Repository repository;
 
-  AddReportBloc(this.repository) : super(AddReportState()) {
-    on<GetAddReportEvent>(_getAddReport);
+  DetailReportBloc(this.repository) : super(DetailReportState()) {
+    on<GetDetailReportEvent>(_getDetailReport);
     on<OnSelectValueEvent>(_onSelectValue);
-    on<UpdateAddReportEvent>(updateAddReport);
-    on<UpdateAddTableEvent>(updateAddTable);
+    on<UpdateDetailReportEvent>(updateDetailReport);
+    on<UpdateDetailTableEvent>(updateDetailTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
   }
 
-  void _initViewAdd(Emitter<AddReportState> emitter) {
+  void _initViewDetail(Emitter<DetailReportState> emitter) {
     List<InputRegisterModel> list= [];
     print("HoangCV: state.listFarmer : ${state.listFarmer.length}");
     list.add(InputRegisterModel<People, People>(
@@ -77,7 +77,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         controller: state.startTimeController,
         noBorder: true,
         textAlign: TextAlign.center
-        //icon: Icons.calendar_today
+      //icon: Icons.calendar_today
     ));
 
     emitter(state.copyWith(
@@ -86,7 +86,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
 
   Future<FutureOr<void>> _onSelectValue(
-      OnSelectValueEvent event, Emitter<AddReportState> emit) async {
+      OnSelectValueEvent event, Emitter<DetailReportState> emit) async {
     int result;
     bool checkPass = true;
     if(event.index == 0 && state.listFarmer.isEmpty) {
@@ -134,8 +134,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             event.list[1].controller = TextEditingController(text: "${state.listFarmer[result].id}");
             state.farmerInspector!.farmer_id = state.listFarmer[result].id;
             emit(state.copyWith(
-            idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
-            farmerInspector: state.farmerInspector,
+              idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
+              farmerInspector: state.farmerInspector,
             ));
           } else if (event.index == 2) {
             state.farmerInspector!.internal_inspector_id = state.listInspector[result].id;
@@ -175,8 +175,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
   }
 
-  void _getAddReport(
-      GetAddReportEvent event, Emitter<AddReportState> emitter) async {
+  void _getDetailReport(
+      GetDetailReportEvent event, Emitter<DetailReportState> emitter) async {
     emitter(state.copyWith(
       isShowProgress: true,
       startTimeController: TextEditingController(
@@ -184,7 +184,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       idFarmerController: TextEditingController(text: ''),
       farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
     ));
-    final report = await repository.getListActivityReport();
+    final report = await repository.getDetailReport(event.id);
     List<List<Select>> listSelected = [];
     List<Select> listSelectedInspector = [];
     List<List<Visible>> listVisible = [];
@@ -194,9 +194,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<People> listFarmer = [];
     List<People> listInspector = [];
     if (report.isNotEmpty) {
-      listSelected = createSelectLists(report[1].questionAndPageIds);
-      listVisible = createVisibleLists(report[1].questionAndPageIds);
-      listController = createTextEditingControllerLists(report[1].questionAndPageIds);
+      listSelected = createSelectLists(report[0].questionAndPageIds);
+      listVisible = createVisibleLists(report[0].questionAndPageIds);
+      listController = createTextEditingControllerLists(report[0].questionAndPageIds);
 /*      listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
       });
@@ -204,7 +204,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });*/
       int i = 0;
-      addTableRow(report[1].questionAndPageIds, listTable, i);
+      addTableRow(report[0].questionAndPageIds, listTable, i);
 /*      listTable.forEach((element) {
         print("HoangCV:listTable:  ${listTable.toString()}");
         element.listQuestion.forEach((e) {
@@ -221,19 +221,18 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             i, false, report[0].monitoringVisitType[i].value,
             type: report[0].monitoringVisitType[i].type));
       }
-      /*listFarmer = [
+      listFarmer = [
         People(id: 1, name: "Cao Văn Hoàng"),
         People(id: 2, name: "Trần Thị Thư"),
         People(id: 3, name: "Hoàng Anh Dũng"),
         People(id: 4, name: "Nguyễn Bá Tín"),
         People(id: 5, name: "Nguyễn Thi Thuận"),
-      ];*/
-
+      ];
       emitter(state.copyWith(
-        listFarmer: report[0].farmers,
-        listInspector: report[0].internalInspector,
+        listFarmer: listFarmer,
+        listInspector: listFarmer,
       ));
-      _initViewAdd(emitter);
+      _initViewDetail(emitter);
     }
     emitter(state.copyWith(
       isShowProgress: false,
@@ -322,7 +321,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${selectedIdsList.toString()}");
         */selectList.add(Select(answer.idSelected!, false,
             answer.value!, listId: selectedIdsList,
-        listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
+            listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
       }
 
@@ -337,20 +336,20 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     } else if (item is Answer) {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
-     /*   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
+        /*   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
         print(
             "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${selectedIdsList.toString()}");
        */ selectList.add(Select(
-            childQuestion.idSelected!,
-            false,
-            childQuestion
-                .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
+          childQuestion.idSelected!,
+          false,
+          childQuestion
+              .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-     /*   print(
+        /*   print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected}");*/
         selectList.add(Select(
             childAnswer.idSelected!,
@@ -445,7 +444,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(),
-              checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
+                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
                 idRow: childAnswer.rowId));
         if(item is Question && item.questionType == 'table'){
           //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
@@ -459,7 +458,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
   void initTextControllersTable(dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
-        //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
+      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
             Controller(childQuestion.idSelected!, TextEditingController(),
@@ -572,8 +571,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
 
 
-  Future<FutureOr<void>> updateAddReport(
-      UpdateAddReportEvent event, Emitter<AddReportState> emit) async {
+  Future<FutureOr<void>> updateDetailReport(
+      UpdateDetailReportEvent event, Emitter<DetailReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
     print("HoanghCV123213412");
@@ -594,11 +593,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           }
         } else {
           for (int j = 0;
-              j < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
-              j++) {
+          j < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
+          j++) {
             for (int k = 0;
-                k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds.length;
-                k++) {
+            k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds.length;
+            k++) {
               if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
@@ -618,8 +617,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             }
           }
           for (int l = 0;
-              l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
-              l++) {
+          l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
+          l++) {
             print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
                 " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
             if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
@@ -630,26 +629,25 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               for (int m = 0;
               m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
               m++) {
-                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].idSelected == event.id) {
+                if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].idSelected == event.id) {
+                  question = Question.copy(
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
+                  answerType = question.questionType ?? "";
+                  answer = Answer.copy(
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
+                  if(answerType == 'simple_choice'){
+                    listIdSuggested = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
+                  }
+                }
+                for (int n = 0;
+                n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
+                n++) {
+                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].idSelected == event.id) {
                     question = Question.copy(
-                        listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
+                        listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
                     answerType = question.questionType ?? "";
                     answer = Answer.copy(
                         listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
-                    if(answerType == 'simple_choice'){
-                      listIdSuggested = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
-                    }
-                  }
-                  for (int n = 0;
-                  n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
-                  n++) {
-                    if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].idSelected == event.id) {
-                      question = Question.copy(
-                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
-                      answerType = question.questionType ?? "";
-                      answer = Answer.copy(
-                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
-                    }
                   }
                 }
               }
@@ -657,6 +655,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           }
         }
       }
+    }
     //List<dynamic> resultUpload = findQuestionAndAnswerById(state.listReport[1].questionAndPageIds, event.id, listIdSuggested, answerType);
 /*    findQuestionAndAnswerById(state.listReport[1].questionAndPageIds, event.id, question,
         answer, listIdSuggested, answerType);*/
@@ -686,23 +685,23 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       );
     } else{
       questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[1].id,
-          question_id: question.id,
-          suggested_answer_id: answer.id,
-          answer_type: answerType == '' ? null : answerType,
-          value_text: event.value,
-          test_entry: false,
-          // value default ko ro Anh Dung de lam gi
-          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
-          // value khi tich chon va bo tich chon
-          //table_row_id: 1,
-          list_id_suggested: listIdSuggested,
-          farmer_id: state.farmerInspector!.farmer_id,
-          farmer_code: state.farmerInspector!.farmer_code,
-          internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-          monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-          visit_date: state.farmerInspector!.visit_date,
+        user_input_id: state.reportId,
+        survey_id: state.listReport[1].id,
+        question_id: question.id,
+        suggested_answer_id: answer.id,
+        answer_type: answerType == '' ? null : answerType,
+        value_text: event.value,
+        test_entry: false,
+        // value default ko ro Anh Dung de lam gi
+        is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+        // value khi tich chon va bo tich chon
+        //table_row_id: 1,
+        list_id_suggested: listIdSuggested,
+        farmer_id: state.farmerInspector!.farmer_id,
+        farmer_code: state.farmerInspector!.farmer_code,
+        internal_inspector_id: state.farmerInspector!.internal_inspector_id,
+        monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
+        visit_date: state.farmerInspector!.visit_date,
       );
     }
 
@@ -718,20 +717,20 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
   }
 
-  Future<FutureOr<void>> updateAddTable(
-      UpdateAddTableEvent event, Emitter<AddReportState> emit) async {
+  Future<FutureOr<void>> updateDetailTable(
+      UpdateDetailTableEvent event, Emitter<DetailReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
     QuestionUpload questionUpload = QuestionUpload(
-      user_input_id: state.reportId,
-      survey_id: state.listReport[1].id,
-      question_id: event.questionId,
-      suggested_answer_id: event.answerId,
-      answer_type: 'table',
-      value_text: event.value,
-      is_answer_exist: true,
-      table_row_id: event.rowId,
+        user_input_id: state.reportId,
+        survey_id: state.listReport[1].id,
+        question_id: event.questionId,
+        suggested_answer_id: event.answerId,
+        answer_type: 'table',
+        value_text: event.value,
+        is_answer_exist: true,
+        table_row_id: event.rowId,
         list_id_suggested: []
     );
     ObjectResult result = await repository.uploadQuestion(questionUpload);
@@ -746,10 +745,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
   }
 
-  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<AddReportState> emit) async {
+  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<DetailReportState> emit) async {
     state.farmerInspector!.monitoring_visit_type = event.value;
     emit(state.copyWith(
-      farmerInspector: state.farmerInspector
+        farmerInspector: state.farmerInspector
     ));
     if(state.reportId != null ){
       emit(state.copyWith(
@@ -791,9 +790,9 @@ class Select {
 
   Select(this.id, this.value, this.title,
       {this.listId = const [],
-      this.listSubId = const [],
-      this.type = '',
-      this.typeSub = ''});
+        this.listSubId = const [],
+        this.type = '',
+        this.typeSub = ''});
 }
 
 class Visible {
@@ -832,32 +831,33 @@ class TableQuestion {
   TableQuestion(this.id, this.title, this.listQuestion);
 }
 
-class AddReportEvent extends BlocEvent {
+class DetailReportEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class GetAddReportEvent extends AddReportEvent {
+class GetDetailReportEvent extends DetailReportEvent {
   final Diary diary;
+  final int id;
 
-  GetAddReportEvent(this.diary);
+  GetDetailReportEvent(this.diary, this.id);
 
   @override
-  List<Object?> get props => [diary];
+  List<Object?> get props => [diary, id];
 }
 
-class UpdateAddReportEvent extends AddReportEvent {
+class UpdateDetailReportEvent extends DetailReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
 
-  UpdateAddReportEvent(this.id, this.value, this.listSelect);
+  UpdateDetailReportEvent(this.id, this.value, this.listSelect);
 
   @override
   List<Object?> get props => [id, value, listSelect];
 }
 
-class UpdateFarmerInspectorEvent extends AddReportEvent {
+class UpdateFarmerInspectorEvent extends DetailReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
@@ -868,7 +868,7 @@ class UpdateFarmerInspectorEvent extends AddReportEvent {
   List<Object?> get props => [id, value, listSelect];
 }
 
-class OnSelectValueEvent extends AddReportEvent {
+class OnSelectValueEvent extends DetailReportEvent {
   List<InputRegisterModel> list;
   int index;
   BuildContext context;
@@ -879,39 +879,39 @@ class OnSelectValueEvent extends AddReportEvent {
   List<Object?> get props => [list, index, context];
 }
 
-class UpdateAddTableEvent extends AddReportEvent {
+class UpdateDetailTableEvent extends DetailReportEvent {
   final int questionId;
   final int answerId;
   final int rowId;
   final String value;
 
-  UpdateAddTableEvent(this.questionId, this.answerId, this.rowId, this.value);
+  UpdateDetailTableEvent(this.questionId, this.answerId, this.rowId, this.value);
 
   @override
   List<Object?> get props => [questionId, answerId, rowId, value];
 }
 
-class AddReportState extends BlocState {
+class DetailReportState extends BlocState {
   @override
   List<Object?> get props => [
-        detailDiary,
-        formStatus,
-        isShowProgress,
-        listReport,
-        listSelected,
-        listController,
-        reportId,
-        listVisible,
-        listTable,
-        listControllerTable,
-        listSelectedInspector,
-        listWidget,
-        listFarmer,
-        listInspector,
-        startTimeController,
-        idFarmerController,
-        farmerInspector,
-      ];
+    detailDiary,
+    formStatus,
+    isShowProgress,
+    listReport,
+    listSelected,
+    listController,
+    reportId,
+    listVisible,
+    listTable,
+    listControllerTable,
+    listSelectedInspector,
+    listWidget,
+    listFarmer,
+    listInspector,
+    startTimeController,
+    idFarmerController,
+    farmerInspector,
+  ];
   final Diary? detailDiary;
   final List<Report> listReport;
   final List<List<Select>> listSelected;
@@ -930,7 +930,7 @@ class AddReportState extends BlocState {
   final bool isShowProgress;
   final int? reportId;
 
-  AddReportState({
+  DetailReportState({
     this.detailDiary,
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
@@ -950,7 +950,7 @@ class AddReportState extends BlocState {
     this.reportId,
   });
 
-  AddReportState copyWith({
+  DetailReportState copyWith({
     Diary? detailDiary,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
@@ -969,7 +969,7 @@ class AddReportState extends BlocState {
     FarmerInspectorUpload? farmerInspector,
     int? reportId,
   }) {
-    return AddReportState(
+    return DetailReportState(
         detailDiary: detailDiary ?? this.detailDiary,
         formStatus: formStatus ?? this.formStatus,
         isShowProgress: isShowProgress ?? this.isShowProgress,

@@ -50,35 +50,23 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       final listActivityDiary = await repository.getListActivityDiary(event.id);
       final listActivityTransaction = await repository.getListActivityTransaction(event.id);
       final listReportResult = await repository.getListReportResult();
-      bool check = await SharedPreDiary.getRole();
+      List<bool> check = await SharedPreDiary.getRole();
       List<ActivityFarm> list = [];
-      if (check) {
-        list.add(ActivityFarm(
-            id: 1,
-            nameActivity: "HOẠT ĐỘNG CANH TÁC",
-            iconActivity: ImageAsset.imageActivityFarm));
-        list.add(ActivityFarm(
-            id: 2,
-            nameActivity: "HOẠT ĐỘNG THU HOẠCH",
-            iconActivity: ImageAsset.imagePlantCrop));
-        list.add(ActivityFarm(
-            id: 3,
-            nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
-            iconActivity: ImageAsset.imageSelling));
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "HOẠT ĐỘNG CANH TÁC",
+          iconActivity: ImageAsset.imageActivityFarm));
+      list.add(ActivityFarm(
+          id: 2,
+          nameActivity: "HOẠT ĐỘNG THU HOẠCH",
+          iconActivity: ImageAsset.imagePlantCrop));
+      list.add(ActivityFarm(
+          id: 3,
+          nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
+          iconActivity: ImageAsset.imageSelling));
+      if (check[0]) {
       }
-      if (!check) {
-        list.add(ActivityFarm(
-            id: 1,
-            nameActivity: "HOẠT ĐỘNG CANH TÁC",
-            iconActivity: ImageAsset.imageActivityFarm));
-        list.add(ActivityFarm(
-            id: 2,
-            nameActivity: "HOẠT ĐỘNG THU HOẠCH",
-            iconActivity: ImageAsset.imagePlantCrop));
-        list.add(ActivityFarm(
-            id: 3,
-            nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
-            iconActivity: ImageAsset.imageSelling));
+      if (check[1]) {
         list.add(ActivityFarm(
             id: 6,
             nameActivity: "HOẠT ĐỘNG THU MUA",
@@ -87,6 +75,8 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
             id: 4,
             nameActivity: "HOẠT ĐỘNG GIÁM SÁT",
             iconActivity: ImageAsset.imageSpyware));
+
+      }      if (check[3]) {
         list.add(ActivityFarm(
             id: 5,
             nameActivity: "BÁO CÁO ĐÁNH GIÁ THỰC ĐỊA",
@@ -210,9 +200,10 @@ class ActivityFarm {
   final int id;
   final String nameActivity;
   final String iconActivity;
+  final String action;
 
   ActivityFarm(
       {required this.id,
       required this.nameActivity,
-      required this.iconActivity});
+      required this.iconActivity, this.action = ''});
 }

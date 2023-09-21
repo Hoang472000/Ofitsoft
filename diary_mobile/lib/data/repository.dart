@@ -95,4 +95,6 @@ abstract class Repository {
   Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload);
 
   Future<List<ReportResult>> getListReportResult();
+
+  Future<List<Report>> getDetailReport(int id);
 }

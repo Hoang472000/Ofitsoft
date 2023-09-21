@@ -649,4 +649,10 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getListReportResult
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<Report>> getDetailReport(int id) {
+    // TODO: implement getDetailReport
+    throw UnimplementedError();
+  }
 }

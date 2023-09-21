@@ -4,8 +4,8 @@ import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreDiary{
-  static Future<bool> getRole() async {
-    bool checkFarmer = true;
+  static Future<List<bool>> getRole() async {
+    List<bool> checkFarmer = [false, false, false, false];
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? roleJson = sharedPreferences.getString(SharedPreferencesKey.role);
     if (roleJson != null) {
@@ -15,24 +15,32 @@ class SharedPreDiary{
         role[key] = List<bool>.from(value);
       });
       // Bây giờ role chứa dữ liệu được lấy từ SharedPreferences
+
+      // [true, true, true, true] : [đọc, thêm, sửa, xóa
+
+      // "farmer": [ true, true, true, true ],
+      // "monitor": [ true, true, true, true ],
+      // "backup_dairy": [ true, true, true, true ],
+      // "report": [ true, true, true, true ]]
+
       print('Role: $role : ${role['farmer']}');
-      if(role['farmer']![0]){
-        checkFarmer = true;
+      if(role['farmer']!.contains(true)){
+        checkFarmer[0] = true;
       }
-      if(role['monitor']![0]){
-        return false;
+      if(role['monitor']!.contains(true)){
+        checkFarmer[1] = true;
       }
-      if(role['backup_dairy']![0]){
-        return false;
+      if(role['backup_dairy']!.contains(true)){
+        checkFarmer[2] = true;
       }
       //đánh giá nội bộ có phải quản lý không
-      /*if(role['report']![0]){
-        return false;
-      }*/
+      if(role['report']!.contains(true)){
+        checkFarmer[3] = true;
+      }
     } else {
       // Xử lý trường hợp không tìm thấy dữ liệu
-      return true;
+      return checkFarmer;
     }
-    return true;
+    return checkFarmer;
   }
 }

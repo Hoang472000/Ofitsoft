@@ -31,6 +31,7 @@ import 'entity/item_default/unit.dart';
 import 'entity/monitor/monitor_diary.dart';
 import 'entity/report/answer.dart';
 import 'entity/report/report_result.dart';
+import 'entity/report/survey_report_result.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -62,8 +63,9 @@ class RepositoryImpl extends Repository {
       'password': pass,
     };
     final Map<String, Object> object1 = {
-      'login': "managervis2",//"0385672922",//adminvisimex//managervis2
+      //'login': "managervis2",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
+      'login': "adminvisimex",
       'password': "Abcd@1234",
     };
     var headers = {'Content-Type': 'application/json'};
@@ -82,9 +84,9 @@ class RepositoryImpl extends Repository {
     if (objectResult.responseCode == StatusConst.code00) {
       sharedPreferences.setString(SharedPreferencesKey.token, objectResult.response["token"]);
       sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
-      sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"]);
-      sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"]);
-      sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"]??'');
+      sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"] ?? '');
+      sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"] ?? '');
+      sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"] ?? '');
       Map<String, dynamic> roleMap = objectResult.response["role"];
       Map<String, List<bool>> role = {};
       roleMap.forEach((key, value) {
@@ -240,9 +242,11 @@ class RepositoryImpl extends Repository {
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
-    bool check = await SharedPreDiary.getRole();
+    List<bool> check = await SharedPreDiary.getRole();
+    bool isAllTrueExceptFirst = check[0] == true &&
+        check.skip(1).every((element) => element == false);
     String path = ApiConst.getListDiary;
-    if(check || monitor){
+    if(isAllTrueExceptFirst || monitor){
       path += "$userId";
     } else{
     }
@@ -252,13 +256,14 @@ class RepositoryImpl extends Repository {
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
-    print("HoangCV: getListDiary response: ${objectResult.response}");
+    print("HoangCV: getListDiary response: ${objectResult.response} : $monitor : $isAllTrueExceptFirst : ${objectResult.responseCode}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<Diary> list = List.from(objectResult.response)
           .map((json) => Diary.fromJson(json, userId))
           .toList();
       DiaryDB.instance.insertListDiary(list);
+      print("HoangCV: getListDiary response: ${list.length}");
       return list;
     }
     else if (objectResult.responseCode != StatusConst.code02){
@@ -721,11 +726,14 @@ class RepositoryImpl extends Repository {
     for (dynamic item in items) {
       if (item is Question || item is Answer) {
         // Assign a unique idSelected value to the current item
-        item.idSelected = idSelectedList.removeAt(0);
+        print("HoangCV: idSelectedList : ${idSelectedList.length}");
+        if(idSelectedList.isNotEmpty) {
+          item.idSelected = idSelectedList.removeAt(0);
 
-        // Recursively assign idSelected values to child questions and answers
-        assignIdSelected(item.suggestedAnswerIds, idSelectedList);
-        assignIdSelected(item.questionAndPageIds, idSelectedList);
+          // Recursively assign idSelected values to child questions and answers
+          assignIdSelected(item.suggestedAnswerIds, idSelectedList);
+          assignIdSelected(item.questionAndPageIds, idSelectedList);
+        }
       }
     }
   }
@@ -734,7 +742,6 @@ class RepositoryImpl extends Repository {
   List<Report> buildReportHierarchy(List<Report> reports) {
     List<Question> list1 = reports[1].questionAndPageIds.map((question) => Question.copy(question)).toList();
     List<Question> list2 = [];
-    List<Question> list3 = [];
     print("HoangCV: list1 length: ${list1.length}");
     for (int i = 0; i < list1.length - 1; i++) {
       bool checkQuestion = true;
@@ -788,6 +795,7 @@ class RepositoryImpl extends Repository {
             }
           }
         }
+
       for (int i = 0; i < list2[k].questionAndPageIds.length; i++) {
         if (list2[k].questionAndPageIds[i].questionType == "table") {
           for (int m = 0; m <
@@ -820,38 +828,35 @@ class RepositoryImpl extends Repository {
         }
       }
     }
-    for (int i = 0; i < result.length; i++) {
-      bool checkQuestion = true;
-      if ((i > 0 && result[i].parentTitleId != list3.last.id) || i == 0) {
-        list3.add(result[i]);
-        print("HoangCV: list1[i].id[j]: ${result[i].parentTitleId} : ${list3.last.id} : ${result[i].title}");
-        int index = list3.indexWhere((element) => element.id == result[i].id);
-        for (int j = i + 1; j < result.length; j++) {
-          if(result[i].id == result[j].parentTitleId) {
-            print("HoangCV: parentTitleId: ${result[j].parentTitleId} : ${result[j].title} : ${result[i].parentTitleId}");
-            checkQuestion = false;
-            list3[index].questionParentTitleId.add(result[j]);
+    print("HoangCV: result length: ${result.length}");
+    List<Question> list3 = result.map((question) => Question.copy(question)).toList();
+    for(int k = 0 ; k < result.length ; k++) {
+      for (int i = 0; i < result[k].questionAndPageIds.length - 1; i++) {
+        for (int l = i + 1; l < result[k].questionAndPageIds.length; l++) {
+          if ((result[k].questionAndPageIds[i].id ==
+              result[k].questionAndPageIds[l].parentTitleId)) {
+            int index = list3[k].questionAndPageIds.indexWhere((
+                element) =>
+            element.id == result[k].questionAndPageIds[i].id);
+            if (index != -1) {
+              list3[k].questionAndPageIds[index].questionAndPageIds.
+              add(result[k].questionAndPageIds[l]);
+            }
+            int indexRemove = list3[k].questionAndPageIds.indexWhere((
+                element) =>
+            element.id == result[k].questionAndPageIds[l].id);
+            if (indexRemove != -1) {
+              list3[k].questionAndPageIds.removeAt(indexRemove);
+            }
           }
         }
-        if (!checkQuestion) {
-          int length = list3
-              .where((element) => element.id == list3[index].id)
-              .toList()
-              .length;
-          print("HoangCV: length: ${length} : ${index} : ${list3[index].id} : ${list3[index].title} : ${result[i].parentTitleId}");
-
-          list3.removeRange(index, index + length - 1);
-        }
       }
+
     }
-    print("HoangCV: result length: ${list3.length}");
+
+
     list3.forEach((element1) {
       print("HoangCV: result: ${list3.length} : ${element1.toJson()}");
-
-    });
-    list3[1].questionAndPageIds.forEach((element1) {
-      print("HoangCV: question: ${list3.length} : ${element1.toJson()}");
-
     });
     print("HoangCV: ");
     reports[1].questionAndPageIds = List.from(list3);
@@ -869,7 +874,7 @@ class RepositoryImpl extends Repository {
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
-    print("HoangCV: getListDiary response: ${objectResult.response}");
+    print("HoangCV: getListBackupDiary response: ${objectResult.response} : ${userId}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00) {
       List<Diary> list = List.from(objectResult.response)
@@ -944,4 +949,168 @@ class RepositoryImpl extends Repository {
     }
     return [];
   }
+
+  @override
+  Future<List<Report>> getDetailReport(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: '${ApiConst.getDetailReport}$id',
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListActivityReport response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 /*|| objectResult.responseCode == StatusConst.code02*/) {
+      List<SurveyRpRlt> list = List.from(objectResult.response)
+          .map((json) => SurveyRpRlt.fromJson(json))
+          .toList();
+      //assignIdSelected(list[0].questionAndPageIds);
+      print("HoangCV: getListActivityReport: ${list[1].survey_id[0].questionAndPageIds.length}");
+      List<int> idSelectedList = List.generate(list[1].survey_id[0].questionAndPageIds.length * 2, (index) => index + 1);
+      assignIdSelected(list[1].survey_id[0].questionAndPageIds, idSelectedList);
+      final hierarchyList = buildReportResult(list[1].survey_id);
+      hierarchyList.forEach((element) {
+        print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
+      });
+      // list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
+      //DiaryDB.instance.insertListActivityDiary(list);
+      return hierarchyList;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return []/*DiaryDB.instance.getListActivityDiary(id)*/;
+  }
+
+  List<Report> buildReportResult(List<Report> reports) {
+    List<Question> list1 = reports[0].questionAndPageIds.map((question) => Question.copy(question)).toList();
+    List<Question> list2 = [];
+    print("HoangCV: list1 length: ${list1.length}");
+    for (int i = 0; i < list1.length - 1; i++) {
+      bool checkQuestion = true;
+      if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
+        list2.add(list1[i]);
+        print("HoangCV: list1[i].id[j]: ${list1[i].parentTitleId} : ${list2.last.id} : ${list1[i].title}");
+        int index = list2.indexWhere((element) => element.id == list1[i].id);
+        for (int j = i + 1; j < list1.length; j++) {
+          if (list1[i].id == list1[j].pageId) {
+            checkQuestion = false;
+            list2[index].questionAndPageIds.add(list1[j]);
+          }
+        }
+        if (!checkQuestion) {
+          int length = list2
+              .where((element) => element.id == list2[index].id)
+              .toList()
+              .length;
+          list2.removeRange(index, index + length - 1);
+        }
+      }
+    }
+    print("HoangCV: list2 length: ${list2.length}");
+    List<Question> result = list2.map((question) => Question.copy(question)).toList();
+    for(int k = 0 ; k < list2.length ; k++) {
+      for (int i = 0; i < list2[k].questionAndPageIds.length - 1; i++) {
+        for (int l = i + 1; l < list2[k].questionAndPageIds.length; l++) {
+          if ((list2[k].questionAndPageIds[i].id ==
+              list2[k].questionAndPageIds[l].triggeringQuestionId)) {
+            for (int m = 0; m <
+                list2[k].questionAndPageIds[i].suggestedAnswerIds
+                    .length; m++) {
+              if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
+                  list2[k].questionAndPageIds[l].triggeringAnswerId)) {
+                int index = result[k].questionAndPageIds.indexWhere((
+                    element) =>
+                element.id == list2[k].questionAndPageIds[i].id);
+                if (index != -1) {
+                  result[k].questionAndPageIds[index].suggestedAnswerIds[m]
+                      .questionAndPageIds.
+                  add(list2[k].questionAndPageIds[l]);
+                }
+                int indexRemove = result[k].questionAndPageIds.indexWhere((
+                    element) =>
+                element.id == list2[k].questionAndPageIds[l].id);
+                if (indexRemove != -1) {
+                  result[k].questionAndPageIds.removeAt(indexRemove);
+                }
+              }
+            }
+          }
+        }
+      }
+
+      for (int i = 0; i < list2[k].questionAndPageIds.length; i++) {
+        if (list2[k].questionAndPageIds[i].questionType == "table") {
+          for (int m = 0; m <
+              list2[k].questionAndPageIds[i].suggestedAnswerIds.length; m++) {
+            for (int n = m+1; n <
+                list2[k].questionAndPageIds[i].suggestedAnswerIds.length; n++) {
+              if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
+                  list2[k].questionAndPageIds[i].suggestedAnswerIds[n]
+                      .parentColId)) {
+                int index = result[k].questionAndPageIds[i].suggestedAnswerIds
+                    .indexWhere((element) =>
+                element.id ==
+                    list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id);
+                if (index != -1) {
+                  result[k].questionAndPageIds[i].suggestedAnswerIds[index]
+                      .suggestedAnswerIds.
+                  add(list2[k].questionAndPageIds[i].suggestedAnswerIds[n]);
+                }
+                int indexRemove = result[k].questionAndPageIds[i]
+                    .suggestedAnswerIds.indexWhere((element) =>
+                element.id ==
+                    list2[k].questionAndPageIds[i].suggestedAnswerIds[n].id);
+                if (indexRemove != -1) {
+                  result[k].questionAndPageIds[i].suggestedAnswerIds.removeAt(
+                      indexRemove);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    print("HoangCV: result length: ${result.length}");
+    List<Question> list3 = result.map((question) => Question.copy(question)).toList();
+    for(int k = 0 ; k < result.length ; k++) {
+      for (int i = 0; i < result[k].questionAndPageIds.length - 1; i++) {
+        for (int l = i + 1; l < result[k].questionAndPageIds.length; l++) {
+          if ((result[k].questionAndPageIds[i].id ==
+              result[k].questionAndPageIds[l].parentTitleId)) {
+            int index = list3[k].questionAndPageIds.indexWhere((
+                element) =>
+            element.id == result[k].questionAndPageIds[i].id);
+            if (index != -1) {
+              list3[k].questionAndPageIds[index].questionAndPageIds.
+              add(result[k].questionAndPageIds[l]);
+            }
+            int indexRemove = list3[k].questionAndPageIds.indexWhere((
+                element) =>
+            element.id == result[k].questionAndPageIds[l].id);
+            if (indexRemove != -1) {
+              list3[k].questionAndPageIds.removeAt(indexRemove);
+            }
+          }
+        }
+      }
+
+    }
+
+
+    list3.forEach((element1) {
+      print("HoangCV: result: ${list3.length} : ${element1.toJson()}");
+    });
+    print("HoangCV: ");
+    reports[0].questionAndPageIds = List.from(list3);
+    return reports;
+  }
+
 }

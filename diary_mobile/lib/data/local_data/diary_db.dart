@@ -50,7 +50,6 @@ class DiaryDB extends _$DiaryDB {
     });
   }
   Future<List<Diary>> getListDiary(int userId) async {
-    //return await select(diaryTable).get();
     return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId)))
         .get();
   }

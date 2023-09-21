@@ -104,6 +104,31 @@ class Report implements Insertable<Report> {
     return data;
   }
 
+  Report.copy(Report other)
+      : id = other.id,
+        pageId = other.pageId,
+        isPage = other.isPage,
+        surveyId = other.surveyId,
+        title = other.title,
+        userId = other.userId,
+        active = other.active,
+        hasConditionalQuestions = other.hasConditionalQuestions,
+        questionsSelection = other.questionsSelection,
+        timeLimit = other.timeLimit,
+        questionAndPageIds = other.questionAndPageIds
+            .map((answer) => Question.copy(answer))
+            .toList(),
+        stringQuestionAndPageIds = other.stringQuestionAndPageIds,
+        farmers = other.farmers
+            .map((answer) => People.copy(answer))
+            .toList(),
+        internalInspector = other.internalInspector
+            .map((answer) => People.copy(answer))
+            .toList(),
+        monitoringVisitType = other.monitoringVisitType
+      .map((answer) => MonitoringVisitType.copy(answer))
+      .toList();
+
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ReportTableCompanion(

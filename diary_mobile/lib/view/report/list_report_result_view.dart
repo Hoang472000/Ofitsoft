@@ -19,6 +19,7 @@ import '../../utils/widgets/items/item_report_result.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/report/list_report_result_bloc.dart';
 import 'add_report.dart';
+import 'detail_report.dart';
 
 
 class ListReportResultView extends StatefulWidget {
@@ -145,7 +146,19 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                     itemBuilder: (BuildContext contextBloc, int index) {
                       return ItemReportResult(
                           reportResult: state.listReport[index],
-                          callbackChooseItem: () {},
+                          callbackChooseItem: () async {
+                            var result = await Navigator.of(context)
+                                .push(DetailReportViewPage.route(widget.diary, state.listReport[index].id??-1));
+                            if (result != null && result[0]) {
+                              if(result[1]){
+                                setState(() {
+                                  updateHarvesting = result[1];
+                                });
+                              }
+                              contextBloc.read<ListReportResultBloc>().add(
+                                  GetListReportResultEvent(const []));
+                            }
+                          },
                           callbackDelete: () {});
                     },
                     shrinkWrap: true,

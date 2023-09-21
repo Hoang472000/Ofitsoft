@@ -33,31 +33,58 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
     var listFarmerDiary = await repository.getListDiary();
     var listBackupDiary = await repository.getListBackupDiary();
     var listMonitorDiary = await repository.getListDiary(monitor: true);
-    bool check = await SharedPreDiary.getRole();
+    listBackupDiary.forEach((element) {
+      print("HoangCV: listBackupDiary : ${listMonitorDiary.length} :${listBackupDiary.length} : ${element.toJson()}");
+    });
+    listFarmerDiary.forEach((element) {
+      print("HoangCV: listFarmerDiary : ${listFarmerDiary.length} : ${element.toJson()}");
+    });
+    List<bool> check = await SharedPreDiary.getRole();
     List<ActivityFarm> list = [];
-    if (!check) {
+    if (check[0] && check[2] && !check[1]) {
       list.add(ActivityFarm(
           id: 1,
-          nameActivity: "NHẬT KÝ CANH TÁC CỦA NÔNG HỘ",
-          iconActivity: ImageAsset.imageDiary));
-      list.add(ActivityFarm(
-          id: 2,
-          nameActivity: "NHẬT KÝ GHI HỘ",
-          iconActivity: ImageAsset.imageDiary));
-      list.add(ActivityFarm(
-          id: 3,
-          nameActivity: "NHẬT KÝ CANH TÁC CỦA GIÁM SÁT",
-          iconActivity: ImageAsset.imageDiary));
-    }
-    if (check) {
+          nameActivity: "Nông hộ",
+          iconActivity: ImageAsset.imageDiary,
+          action: "farmer"));
       list.add(ActivityFarm(
           id: 1,
-          nameActivity: "NHẬT KÝ CANH TÁC",
-          iconActivity: ImageAsset.imageSelling));
+          nameActivity: "Ghi hộ",
+          iconActivity: ImageAsset.imageDiary,
+          action: "record"));
+    } else if (check[0] && check[2] && check[1]) {
       list.add(ActivityFarm(
-          id: 2,
-          nameActivity: "NHẬT KÝ GHI HỘ",
-          iconActivity: ImageAsset.imageSpyware));
+          id: 1,
+          nameActivity: "Nông hộ",
+          iconActivity: ImageAsset.imageDiary,
+          action: "farmer"));
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Ghi hộ",
+          iconActivity: ImageAsset.imageDiary,
+          action: "record"));
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Giám sát",
+          iconActivity: ImageAsset.imageDiary,
+          action: "monitor"));
+    } else if (check[0] && !check[2] && check[1]) {
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Nông hộ",
+          iconActivity: ImageAsset.imageDiary,
+          action: "farmer"));
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Giám sát",
+          iconActivity: ImageAsset.imageDiary,
+          action: "monitor"));
+    } else if (!check[0] && !check[2] && check[1]) {
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Giám sát",
+          iconActivity: ImageAsset.imageDiary,
+          action: "monitor"));
     }
 
     emitter(state.copyWith(
