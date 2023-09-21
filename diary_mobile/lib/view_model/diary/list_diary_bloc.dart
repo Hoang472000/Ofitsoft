@@ -27,7 +27,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
   void _getListDiary(
       GetListDiaryEvent event, Emitter<ListDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final listDiary = await repository.getListDiary();
+    final listDiary = await repository.getListDiary("farmer");
     List<String> distinctMonthsAndYears = [];
     List<List<Diary>> list = [];
     listDiary

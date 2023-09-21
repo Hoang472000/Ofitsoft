@@ -1,6 +1,6 @@
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/data/entity/report/report_result.dart';
+import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/entity/diary/diary.dart';

@@ -4,7 +4,7 @@ import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
-import 'package:diary_mobile/data/entity/report/report_result.dart';
+import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import 'entity/diary/diary.dart';
@@ -14,6 +14,7 @@ import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
 import 'entity/report/question_upload.dart';
+import 'entity/report/survey_report_result.dart';
 import 'entity/setting/user_info.dart';
 
 
@@ -52,7 +53,7 @@ abstract class Repository {
 
   Future<ObjectResult> changePassword(String passwordOld, String passwordNew);
 
-  Future<List<Diary>> getListDiary({bool monitor = false});
+  Future<List<Diary>> getListDiary(String action,{bool monitor = false});
 
   Future<List<ActivityDiary>> getListActivityDiary(int id);
 
@@ -68,7 +69,7 @@ abstract class Repository {
 
   Future<ActivityDiary> getDetailDiary(int id);
 
-  Future<void> getUpdateDiary(int id);
+  Future<void> getUpdateDiary(String action, int id);
 
   Future<Diary> getInfoDiary(int id);
 
@@ -90,11 +91,11 @@ abstract class Repository {
 
   Future<List<Report>> getListActivityReport();
 
-  Future<List<Diary>> getListBackupDiary();
+  Future<List<Diary>> getListBackupDiary(String action,);
 
   Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload);
 
   Future<List<ReportResult>> getListReportResult();
 
-  Future<List<Report>> getDetailReport(int id);
+  Future<List<SurveyRpRlt>> getDetailReport(int id);
 }

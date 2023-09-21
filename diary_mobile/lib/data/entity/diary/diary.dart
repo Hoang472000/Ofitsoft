@@ -11,6 +11,7 @@ import '../item_default/tool.dart';
 class Diary implements Insertable<Diary> {
   //Thuoc tinh information detail diary
   int? userId;
+  String? action;
   int? id;
   String? name;
   int? seasonId;
@@ -43,6 +44,7 @@ class Diary implements Insertable<Diary> {
 
   Diary({
     this.userId,
+    this.action,
     this.id,
     this.name,
     this.seasonId,
@@ -74,10 +76,11 @@ class Diary implements Insertable<Diary> {
     this.farmerId,
   });
 
-  factory Diary.fromJson(Map<String, dynamic> json, int userId) {
+  factory Diary.fromJson(Map<String, dynamic> json, int userId, String action) {
     return Diary(
       id: json['id'] ?? -1,
       userId: userId,
+      action: action,
       name: json['name'] ?? "",
       seasonId: json['season_id'] ?? -1,
       farmName: json['farm_name'] ?? '',
@@ -113,6 +116,7 @@ class Diary implements Insertable<Diary> {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['user_id'] = userId;
+    data['action'] = action;
     data['name'] = name;
     data['season_id'] = seasonId;
     data['farm_name'] = farmName;
@@ -146,6 +150,7 @@ class Diary implements Insertable<Diary> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     return DiaryTableCompanion(
       id: Value(id),
+      action: Value(action),
       userId: Value(userId),
       name: Value(name),
       seasonId: Value(seasonId),

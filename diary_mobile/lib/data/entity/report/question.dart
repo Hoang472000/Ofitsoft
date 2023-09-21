@@ -18,6 +18,10 @@ class Question {
   String? stringSuggestedAnswerIds;
 
   int? rowId;
+  // result
+  bool? checkResult;
+  String? valueResult;
+  List<Answer> userInputLines;
 
   Question({
     this.id,
@@ -35,6 +39,10 @@ class Question {
     this.stringSuggestedAnswerIds,
     this.rowId,
     this.questionParentTitleId = const [],
+
+    this.checkResult,
+    this.valueResult,
+    this.userInputLines = const [],
   });
 
   Question.copy(Question other)
@@ -58,16 +66,10 @@ class Question {
             .map((question) => Question.copy(question))
             .toList(),
         rowId = other.rowId,
-/*        farmers = other.farmers
-            .map((farmer) => People.copy(farmer))
-            .toList(),
-        internalInspector = other.internalInspector
-            .map((inspector) => People.copy(inspector))
-            .toList(),
-        monitoringVisitType = other.monitoringVisitType
-            .map((visitType) => MonitoringVisitType.copy(visitType))
-            .toList(),*/
-        stringSuggestedAnswerIds = other.stringSuggestedAnswerIds;
+        checkResult = other.checkResult,
+        valueResult = other.valueResult,
+        stringSuggestedAnswerIds = other.stringSuggestedAnswerIds,
+        userInputLines = other.userInputLines;
 
   factory Question.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],List<Question> questionParentTitleId = const [], int idSelected = -1, int rowId = -1}) {
@@ -92,6 +94,14 @@ class Question {
       questionAndPageIds: questionAndPageIds,
       questionParentTitleId: questionParentTitleId,
       rowId: rowId,
+
+      checkResult: json['checkResult'] ?? false,
+      valueResult: json['valueResult'] ?? '',
+      userInputLines: json['user_input_lines'] != null
+          ? (json['user_input_lines'] as List<dynamic>)
+          .map((itemJson) => Answer.fromJson(itemJson))
+          .toList()
+          : [],
     );
   }
 
@@ -114,6 +124,9 @@ class Question {
     data['suggested_answer_ids'] = suggestedAnswerIds;
     data['questionAndPageIds'] = questionAndPageIds;
     data['questionParentTitleId'] = questionParentTitleId;
+    data['checkResult'] = checkResult;
+    data['valueResult'] = valueResult;
+    data['userInputLines'] = userInputLines;
     return data;
   }
 }

@@ -193,10 +193,10 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     List<TableQuestion> listTable = [];
     List<People> listFarmer = [];
     List<People> listInspector = [];
-    if (report.isNotEmpty) {
-      listSelected = createSelectLists(report[0].questionAndPageIds);
-      listVisible = createVisibleLists(report[0].questionAndPageIds);
-      listController = createTextEditingControllerLists(report[0].questionAndPageIds);
+    if (report[1].surveyId.isNotEmpty) {
+      listSelected = createSelectLists(report[1].surveyId[0].questionAndPageIds);
+      listVisible = createVisibleLists(report[1].surveyId[0].questionAndPageIds);
+      listController = createTextEditingControllerLists(report[1].surveyId[0].questionAndPageIds);
 /*      listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
       });
@@ -204,7 +204,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });*/
       int i = 0;
-      addTableRow(report[0].questionAndPageIds, listTable, i);
+      addTableRow(report[1].surveyId[0].questionAndPageIds, listTable, i);
 /*      listTable.forEach((element) {
         print("HoangCV:listTable:  ${listTable.toString()}");
         element.listQuestion.forEach((e) {
@@ -216,28 +216,22 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listControllerTable.addAll(listCtrlTable);
-      for (int i = 0; i < report[0].monitoringVisitType.length; i++) {
+      for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(
-            i, false, report[0].monitoringVisitType[i].value,
-            type: report[0].monitoringVisitType[i].type));
+            i, false, report[0].listMonitoringVisitType[i].value,
+            type: report[0].listMonitoringVisitType[i].type));
       }
-      listFarmer = [
-        People(id: 1, name: "Cao Văn Hoàng"),
-        People(id: 2, name: "Trần Thị Thư"),
-        People(id: 3, name: "Hoàng Anh Dũng"),
-        People(id: 4, name: "Nguyễn Bá Tín"),
-        People(id: 5, name: "Nguyễn Thi Thuận"),
-      ];
+
       emitter(state.copyWith(
-        listFarmer: listFarmer,
-        listInspector: listFarmer,
+        listFarmer: report[0].listFarmers,
+        listInspector: report[0].listInternalInspector,
       ));
       _initViewDetail(emitter);
     }
     emitter(state.copyWith(
       isShowProgress: false,
       detailDiary: event.diary,
-      listReport: report,
+      listReport: report[1].surveyId,
       listSelected: listSelected,
       listVisible: listVisible,
       listController: listController,
@@ -580,7 +574,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     Answer answer = Answer();
     List<int> listIdSuggested = [];
     String answerType = '';
-    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    List<Question> listQs = state.listReport[0].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
       print("HoangCV: listQs: ${listQs[i].title}");
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {

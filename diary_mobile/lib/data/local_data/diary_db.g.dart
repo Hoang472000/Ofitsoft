@@ -19,6 +19,11 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> userId = GeneratedColumn<int>(
       'user_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -191,6 +196,7 @@ class $DiaryTableTable extends DiaryTable
   List<GeneratedColumn> get $columns => [
         id,
         userId,
+        action,
         name,
         seasonId,
         farmId,
@@ -235,6 +241,10 @@ class $DiaryTableTable extends DiaryTable
     if (data.containsKey('user_id')) {
       context.handle(_userIdMeta,
           userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -380,13 +390,15 @@ class $DiaryTableTable extends DiaryTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {id, userId};
   @override
   Diary map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return Diary(
       userId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action']),
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
       name: attachedDatabase.typeMapping
@@ -458,6 +470,7 @@ class $DiaryTableTable extends DiaryTable
 class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<int?> id;
   final Value<int?> userId;
+  final Value<String?> action;
   final Value<String?> name;
   final Value<int?> seasonId;
   final Value<int?> farmId;
@@ -486,9 +499,11 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> description;
   final Value<String?> farmerName;
   final Value<int?> farmerId;
+  final Value<int> rowid;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.action = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
     this.farmId = const Value.absent(),
@@ -517,10 +532,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
     this.farmerId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   DiaryTableCompanion.insert({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
+    this.action = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
     this.farmId = const Value.absent(),
@@ -549,10 +566,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
     this.farmerId = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   static Insertable<Diary> custom({
     Expression<int>? id,
     Expression<int>? userId,
+    Expression<String>? action,
     Expression<String>? name,
     Expression<int>? seasonId,
     Expression<int>? farmId,
@@ -581,10 +600,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? description,
     Expression<String>? farmerName,
     Expression<int>? farmerId,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
+      if (action != null) 'action': action,
       if (name != null) 'name': name,
       if (seasonId != null) 'season_id': seasonId,
       if (farmId != null) 'farm_id': farmId,
@@ -615,12 +636,14 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (description != null) 'description': description,
       if (farmerName != null) 'farmer_name': farmerName,
       if (farmerId != null) 'farmer_id': farmerId,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   DiaryTableCompanion copyWith(
       {Value<int?>? id,
       Value<int?>? userId,
+      Value<String?>? action,
       Value<String?>? name,
       Value<int?>? seasonId,
       Value<int?>? farmId,
@@ -648,10 +671,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? statusName,
       Value<String?>? description,
       Value<String?>? farmerName,
-      Value<int?>? farmerId}) {
+      Value<int?>? farmerId,
+      Value<int>? rowid}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
+      action: action ?? this.action,
       name: name ?? this.name,
       seasonId: seasonId ?? this.seasonId,
       farmId: farmId ?? this.farmId,
@@ -681,6 +706,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       description: description ?? this.description,
       farmerName: farmerName ?? this.farmerName,
       farmerId: farmerId ?? this.farmerId,
+      rowid: rowid ?? this.rowid,
     );
   }
 
@@ -692,6 +718,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     }
     if (userId.present) {
       map['user_id'] = Variable<int>(userId.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -778,6 +807,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (farmerId.present) {
       map['farmer_id'] = Variable<int>(farmerId.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
@@ -786,6 +818,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     return (StringBuffer('DiaryTableCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
+          ..write('action: $action, ')
           ..write('name: $name, ')
           ..write('seasonId: $seasonId, ')
           ..write('farmId: $farmId, ')
@@ -813,7 +846,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('statusName: $statusName, ')
           ..write('description: $description, ')
           ..write('farmerName: $farmerName, ')
-          ..write('farmerId: $farmerId')
+          ..write('farmerId: $farmerId, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }

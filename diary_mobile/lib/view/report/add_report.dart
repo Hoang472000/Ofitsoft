@@ -114,6 +114,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                         SizedBox(height: 10,),
                         tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
                         ListView.builder(
+                            padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             primary: false,
                             itemCount: state.listReport[1].questionAndPageIds.length,

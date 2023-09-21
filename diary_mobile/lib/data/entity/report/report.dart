@@ -19,9 +19,9 @@ class Report implements Insertable<Report> {
   String? stringQuestionAndPageIds;
 
   //for farmer - inspector
-  List<People> farmers;
-  List<People> internalInspector;
-  List<MonitoringVisitType> monitoringVisitType;
+  List<People> listFarmers;
+  List<People> listInternalInspector;
+  List<MonitoringVisitType> listMonitoringVisitType;
 
   Report(
       {this.id,
@@ -36,10 +36,11 @@ class Report implements Insertable<Report> {
       this.timeLimit,
       this.questionAndPageIds = const [],
       this.stringQuestionAndPageIds,
-        //
-  this.farmers = const [],
-  this.internalInspector = const [],
-  this.monitoringVisitType = const [],});
+      //
+      this.listFarmers = const [],
+      this.listInternalInspector = const [],
+      this.listMonitoringVisitType = const [],
+  });
 
   factory Report.fromJson(Map<String, dynamic> json) {
     return Report(
@@ -59,20 +60,20 @@ class Report implements Insertable<Report> {
               .toList()
           : [],
       //
-      farmers: json['farmers'] != null
-          ? (json['farmers'] as List<dynamic>)
+      listFarmers: json['list_farmers'] != null
+          ? (json['list_farmers'] as List<dynamic>)
           .map((itemJson) => People.fromJson(itemJson))
           .toList()
           : [],
 
-      internalInspector: json['internal_inspector'] != null
-          ? (json['internal_inspector'] as List<dynamic>)
+      listInternalInspector: json['list_internal_inspector'] != null
+          ? (json['list_internal_inspector'] as List<dynamic>)
           .map((itemJson) => People.fromJson(itemJson))
           .toList()
           : [],
 
-      monitoringVisitType: json['monitoring_visit_type'] != null
-          ? (json['monitoring_visit_type'] as List<dynamic>)
+      listMonitoringVisitType: json['list_monitoring_visit_type'] != null
+          ? (json['list_monitoring_visit_type'] as List<dynamic>)
           .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
           .toList()
           : [],
@@ -119,13 +120,13 @@ class Report implements Insertable<Report> {
             .map((answer) => Question.copy(answer))
             .toList(),
         stringQuestionAndPageIds = other.stringQuestionAndPageIds,
-        farmers = other.farmers
+        listFarmers = other.listFarmers
             .map((answer) => People.copy(answer))
             .toList(),
-        internalInspector = other.internalInspector
+        listInternalInspector = other.listInternalInspector
             .map((answer) => People.copy(answer))
             .toList(),
-        monitoringVisitType = other.monitoringVisitType
+        listMonitoringVisitType = other.listMonitoringVisitType
       .map((answer) => MonitoringVisitType.copy(answer))
       .toList();
 

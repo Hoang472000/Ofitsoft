@@ -107,8 +107,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
       emitter(state.copyWith(listDiaryMonitor: listDiaryMonitor));
     }
-    if (event.harvesting) {
-      repository.getUpdateDiary(event.id);
+    if (event.harvesting) {// bug
+      repository.getUpdateDiary((state.diary?? Diary()).action??"", event.id);
       emit(state.copyWith(updateHarvesting: true));
     }
     emit(state.copyWith(isShowProgress: false, listCallback: listCallback, listCallbackTransaction: listCallbackTransaction));

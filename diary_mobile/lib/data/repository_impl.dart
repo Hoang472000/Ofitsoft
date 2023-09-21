@@ -30,7 +30,7 @@ import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
 import 'entity/monitor/monitor_diary.dart';
 import 'entity/report/answer.dart';
-import 'entity/report/report_result.dart';
+import 'entity/report/report_result_title.dart';
 import 'entity/report/survey_report_result.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
@@ -238,7 +238,7 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Diary>> getListDiary({bool monitor = false}) async{
+  Future<List<Diary>> getListDiary(String action, {bool monitor = false}) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
@@ -260,7 +260,7 @@ class RepositoryImpl extends Repository {
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<Diary> list = List.from(objectResult.response)
-          .map((json) => Diary.fromJson(json, userId))
+          .map((json) => Diary.fromJson(json, userId, action))
           .toList();
       DiaryDB.instance.insertListDiary(list);
       print("HoangCV: getListDiary response: ${list.length}");
@@ -276,7 +276,7 @@ class RepositoryImpl extends Repository {
    /* if (monitor) {
       return [];
     } else {*/
-      return DiaryDB.instance.getListDiary(userId);
+      return DiaryDB.instance.getListDiary(userId, action);
     //}
   }
 
@@ -365,7 +365,7 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<void> getUpdateDiary(int id) async{
+  Future<void> getUpdateDiary(String action, int id) async{
        final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
        int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
@@ -376,7 +376,7 @@ class RepositoryImpl extends Repository {
             body: ObjectData(token: token)));
     print("HoangCV: getInfoDiary response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00 || objectResult.message == "Successfully") {
-      Diary list = Diary.fromJson(objectResult.response, userId);
+      Diary list = Diary.fromJson(objectResult.response, userId, action);
       DiaryDB.instance.insertListDiary([list]);
       //return list;
     }
@@ -864,7 +864,7 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Diary>> getListBackupDiary() async{
+  Future<List<Diary>> getListBackupDiary(String action,) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
@@ -878,7 +878,7 @@ class RepositoryImpl extends Repository {
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00) {
       List<Diary> list = List.from(objectResult.response)
-          .map((json) => Diary.fromJson(json, userId))
+          .map((json) => Diary.fromJson(json, userId, action))
           .toList();
       DiaryDB.instance.insertListDiary(list);
       return list;
@@ -890,7 +890,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return DiaryDB.instance.getListDiary(userId);
+    return DiaryDB.instance.getListDiary(userId, action);
   }
 
   @override
@@ -951,7 +951,7 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Report>> getDetailReport(int id) async{
+  Future<List<SurveyRpRlt>> getDetailReport(int id) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     ObjectResult objectResult = await networkExecutor.request(
@@ -967,16 +967,19 @@ class RepositoryImpl extends Repository {
           .map((json) => SurveyRpRlt.fromJson(json))
           .toList();
       //assignIdSelected(list[0].questionAndPageIds);
-      print("HoangCV: getListActivityReport: ${list[1].survey_id[0].questionAndPageIds.length}");
-      List<int> idSelectedList = List.generate(list[1].survey_id[0].questionAndPageIds.length * 2, (index) => index + 1);
-      assignIdSelected(list[1].survey_id[0].questionAndPageIds, idSelectedList);
-      final hierarchyList = buildReportResult(list[1].survey_id);
+      print("HoangCV: getListActivityReport: ${list[1].surveyId[0].questionAndPageIds.length}");
+      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 2, (index) => index + 1);
+      assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
+      final hierarchyList = buildReportResult(list[1].surveyId);
       hierarchyList.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
       });
+      List<SurveyRpRlt> listResult= [];
+      listResult.add(list[0]);
+      listResult.add(SurveyRpRlt(surveyId:hierarchyList));
       // list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
       //DiaryDB.instance.insertListActivityDiary(list);
-      return hierarchyList;
+      return listResult;
     }
     else {
       DiaLogManager.showDialogHTTPError(

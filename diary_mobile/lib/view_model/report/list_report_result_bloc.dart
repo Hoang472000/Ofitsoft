@@ -1,4 +1,4 @@
-import 'package:diary_mobile/data/entity/report/report_result.dart';
+import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/repository.dart';
@@ -18,10 +18,17 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     emitter(state.copyWith(
         isShowProgress: true,
         formStatus: const InitialFormStatus(),));
-    emitter(state.copyWith(
-        isShowProgress: false,
-        formStatus: const InitialFormStatus(),
-        listReport: event.list));
+    if(event.list.isEmpty){
+      emitter(state.copyWith(
+          isShowProgress: false,
+          formStatus: const InitialFormStatus(),
+          listReport: state.listReport));
+    }else {
+      emitter(state.copyWith(
+          isShowProgress: false,
+          formStatus: const InitialFormStatus(),
+          listReport: event.list));
+    }
   }
 
 }

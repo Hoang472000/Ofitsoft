@@ -6,69 +6,102 @@ class SurveyRpRlt {
   int? id;
   String? state;
   String? nickname;
-  String? create_date;
-  String? write_date;
+  String? createDate;
+  String? writeDate;
   //
-  List<Report> survey_id;
+  List<Report> surveyId;
   //
-  int? farmer_id;
+  int? farmerId;
   String? farmer;
-  String? farmer_code;
-  int? internal_inspector_id;
-  String? internal_inspector;
-  String? monitoring_visit_type;
-  String? visit_date;
+  String? farmerCode;
+  int? internalInspectorId;
+  String? internalInspector;
+  String? monitoringVisitType;
+  String? visitDate;
+  List<People> listFarmers;
+  List<People> listInternalInspector;
+  List<MonitoringVisitType> listMonitoringVisitType;
 
   SurveyRpRlt({
     this.id,
     this.state,
     this.nickname,
-    this.create_date,
-    this.write_date,
-    this.farmer_id,
+    this.createDate,
+    this.writeDate,
+    this.farmerId,
     this.farmer,
-    this.farmer_code,
-    this.internal_inspector_id,
-    this.monitoring_visit_type,
-    this.survey_id = const [],
-    this.visit_date,
+    this.farmerCode,
+    this.internalInspectorId,
+    this.monitoringVisitType,
+    this.surveyId = const [],
+    this.visitDate,
+    //
+    this.listFarmers = const [],
+    this.listInternalInspector = const [],
+    this.listMonitoringVisitType = const [],
   });
 
   SurveyRpRlt.copy(SurveyRpRlt other)
       : id = other.id,
         state = other.state,
         nickname = other.nickname,
-        create_date = other.create_date,
-        write_date = other.write_date,
-        farmer_id = other.farmer_id,
+        createDate = other.createDate,
+        writeDate = other.writeDate,
+        farmerId = other.farmerId,
         farmer = other.farmer,
-        farmer_code = other.farmer_code,
-        internal_inspector_id = other.internal_inspector_id,
-        monitoring_visit_type = other.monitoring_visit_type,
-        survey_id = other.survey_id
+        farmerCode = other.farmerCode,
+        internalInspectorId = other.internalInspectorId,
+        monitoringVisitType = other.monitoringVisitType,
+        surveyId = other.surveyId
             .map((answer) => Report.copy(answer))
             .toList(),
-        visit_date = other.visit_date;
+        visitDate = other.visitDate,
+        listFarmers = other.listFarmers
+            .map((answer) => People.copy(answer))
+            .toList(),
+        listInternalInspector = other.listInternalInspector
+            .map((answer) => People.copy(answer))
+            .toList(),
+        listMonitoringVisitType = other.listMonitoringVisitType
+            .map((answer) => MonitoringVisitType.copy(answer))
+            .toList();
 
   factory SurveyRpRlt.fromJson(Map<String, dynamic> json) {
     return SurveyRpRlt(
       id: json['id'] ?? -1,
       state:  json['state'] ?? '',
       nickname: json['nickname'] ?? '',
-      create_date: json['create_date'] ?? '',
-      write_date: json['write_date'] ?? '',
-      farmer_id: json['farmer_id'] ?? -1,
+      createDate: json['create_date'] ?? '',
+      writeDate: json['write_date'] ?? '',
+      farmerId: json['farmer_id'] ?? -1,
       farmer: json['farmer'] ?? '',
-      farmer_code: json['farmer_code'] ?? '',
-      internal_inspector_id: json['internal_inspector_id'] ?? -1,
-      monitoring_visit_type: json['monitoring_visit_type'] ?? '',
-      survey_id: json['survey_id'] != null
+      farmerCode: json['farmer_code'] ?? '',
+      internalInspectorId: json['internal_inspector_id'] ?? -1,
+      monitoringVisitType: json['monitoring_visit_type'] ?? '',
+      surveyId: json['survey_id'] != null
           ? (json['survey_id'] as List<dynamic>)
           .map((itemJson) => Report.fromJson(itemJson))
           .toList()
           : [],
-      visit_date:
+      visitDate:
       jsonEncode(json['visit_date']) ?? '',
+      listFarmers: json['list_farmers'] != null
+          ? (json['list_farmers'] as List<dynamic>)
+          .map((itemJson) => People.fromJson(itemJson))
+          .toList()
+          : [],
+
+      listInternalInspector: json['list_internal_inspector'] != null
+          ? (json['list_internal_inspector'] as List<dynamic>)
+          .map((itemJson) => People.fromJson(itemJson))
+          .toList()
+          : [],
+
+      listMonitoringVisitType: json['list_monitoring_visit_type'] != null
+          ? (json['list_monitoring_visit_type'] as List<dynamic>)
+          .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
+          .toList()
+          : [],
     );
   }
 
@@ -77,15 +110,18 @@ class SurveyRpRlt {
     data['id'] = id;
     data['state'] = state;
     data['nickname'] = nickname;
-    data['create_date'] = create_date;
-    data['write_date'] = write_date;
-    data['farmer_id'] = farmer_id;
+    data['create_date'] = createDate;
+    data['write_date'] = writeDate;
+    data['farmer_id'] = farmerId;
     data['farmer'] = farmer;
-    data['farmer_code'] = farmer_code;
-    data['internal_inspector_id'] = internal_inspector_id;
-    data['monitoring_visit_type'] = monitoring_visit_type;
-    data['survey_id'] = survey_id;
-    data['visit_date'] = visit_date;
+    data['farmer_code'] = farmerCode;
+    data['internal_inspector_id'] = internalInspectorId;
+    data['monitoring_visit_type'] = monitoringVisitType;
+    data['survey_id'] = surveyId;
+    data['visit_date'] = visitDate;
+    data['list_farmers'] = listFarmers;
+    data['list_internal_inspector'] = listInternalInspector;
+    data['list_monitoring_visit_type'] = listMonitoringVisitType;
     return data;
   }
 }

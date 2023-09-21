@@ -30,9 +30,9 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
     List<Diary> listMonitor = object[2] as List<Diary>;
     //final listDiary = await repository.getListDiary();
     isolate.kill(priority: Isolate.immediate);*/
-    var listFarmerDiary = await repository.getListDiary();
-    var listBackupDiary = await repository.getListBackupDiary();
-    var listMonitorDiary = await repository.getListDiary(monitor: true);
+    var listFarmerDiary = await repository.getListDiary("farmer");
+    var listBackupDiary = await repository.getListBackupDiary("record");
+    var listMonitorDiary = await repository.getListDiary("monitor", monitor: true);
     listBackupDiary.forEach((element) {
       print("HoangCV: listBackupDiary : ${listMonitorDiary.length} :${listBackupDiary.length} : ${element.toJson()}");
     });
@@ -101,9 +101,9 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
     var repository = args[0] as Repository;
     var sendPort = args[1] as SendPort;
     print("HoangCV212312:");
-    var listFarmerDiary = await repository.getListDiary();
-    var listBackupDiary = await repository.getListBackupDiary();
-    var listMonitorDiary = await repository.getListDiary(monitor: true);
+    var listFarmerDiary = await repository.getListDiary("farmer");
+    var listBackupDiary = await repository.getListBackupDiary("record");
+    var listMonitorDiary = await repository.getListDiary("monitor", monitor: true);
     // Send the results back to the main isolate
     sendPort.send([listFarmerDiary, listBackupDiary, listMonitorDiary]);
   }

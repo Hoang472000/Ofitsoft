@@ -14,7 +14,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
-import '../../data/entity/report/report_result.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../utils/widgets/items/item_report_result.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/report/list_report_result_bloc.dart';

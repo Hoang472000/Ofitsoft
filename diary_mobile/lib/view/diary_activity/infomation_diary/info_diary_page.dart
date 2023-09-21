@@ -44,7 +44,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                   child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
               : Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 40),
                   child: SingleChildScrollView(
                     //physics: const NeverScrollableScrollPhysics(),
                     child: state.detailDiary !=null ? Column(
@@ -59,6 +59,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                 mainAxisSpacing: 12.0,
                               ),
                                 itemCount: state.listActivityFarm.length,
+                                padding: EdgeInsets.zero,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemBuilder: (context, index) {

@@ -216,10 +216,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listControllerTable.addAll(listCtrlTable);
-      for (int i = 0; i < report[0].monitoringVisitType.length; i++) {
+      for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(
-            i, false, report[0].monitoringVisitType[i].value,
-            type: report[0].monitoringVisitType[i].type));
+            i, false, report[0].listMonitoringVisitType[i].value,
+            type: report[0].listMonitoringVisitType[i].type));
       }
       /*listFarmer = [
         People(id: 1, name: "Cao Văn Hoàng"),
@@ -230,8 +230,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       ];*/
 
       emitter(state.copyWith(
-        listFarmer: report[0].farmers,
-        listInspector: report[0].internalInspector,
+        listFarmer: report[0].listFarmers,
+        listInspector: report[0].listInternalInspector,
       ));
       _initViewAdd(emitter);
     }
@@ -668,7 +668,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }*/
     int index = event.listSelect.indexWhere((element) => element.id == event.id);
     QuestionUpload questionUpload;
-    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : ${event.listSelect[index].value}");
+    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} ");
     if(state.reportId != null) {
       questionUpload = QuestionUpload(
           user_input_id: state.reportId,
@@ -731,7 +731,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       answer_type: 'table',
       value_text: event.value,
       is_answer_exist: true,
-      table_row_id: event.rowId,
+      table_row_id: event.rowId + 1,
         list_id_suggested: []
     );
     ObjectResult result = await repository.uploadQuestion(questionUpload);

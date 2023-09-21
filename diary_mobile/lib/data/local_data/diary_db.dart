@@ -49,8 +49,8 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(diaryTable, values);
     });
   }
-  Future<List<Diary>> getListDiary(int userId) async {
-    return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId)))
+  Future<List<Diary>> getListDiary(int userId, String action) async {
+    return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId) & tbl.action.equals(action)))
         .get();
   }
   Future<List<Diary>> getInfoDiary(int id) async {

@@ -2,7 +2,7 @@ import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
-import 'package:diary_mobile/data/entity/report/report_result.dart';
+import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/generated/l10n.dart';
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/utils/constants/shared_preferences.dart';

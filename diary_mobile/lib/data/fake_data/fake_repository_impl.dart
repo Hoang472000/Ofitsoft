@@ -9,7 +9,7 @@ import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
-import 'package:diary_mobile/data/entity/report/report_result.dart';
+import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
@@ -18,6 +18,7 @@ import '../entity/diary/diary.dart';
 import '../entity/item_default/item_default.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/monitor/monitor_diary.dart';
+import '../entity/report/survey_report_result.dart';
 import '../entity/setting/user_info.dart';
 import '../repository.dart';
 
@@ -591,7 +592,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<void> getUpdateDiary(int id) {
+  Future<void> getUpdateDiary(String action, int id) {
     // TODO: implement getUpdateDiary
     throw UnimplementedError();
   }
@@ -621,7 +622,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Diary>> getListBackupDiary() {
+  Future<List<Diary>> getListBackupDiary(String action,) {
     // TODO: implement getListBackupDiary
     throw UnimplementedError();
   }
@@ -633,7 +634,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Diary>> getListDiary({bool monitor = false}) {
+  Future<List<Diary>> getListDiary(String action, {bool monitor = false}) {
     // TODO: implement getListDiary
     throw UnimplementedError();
   }
@@ -651,7 +652,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Report>> getDetailReport(int id) {
+  Future<List<SurveyRpRlt>> getDetailReport(int id) {
     // TODO: implement getDetailReport
     throw UnimplementedError();
   }
