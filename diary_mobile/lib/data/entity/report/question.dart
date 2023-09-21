@@ -95,8 +95,8 @@ class Question {
       questionParentTitleId: questionParentTitleId,
       rowId: rowId,
 
-      checkResult: json['checkResult'] ?? false,
-      valueResult: json['valueResult'] ?? '',
+      checkResult: json['check_result'] ?? false,
+      valueResult: json['value_result'] ?? '',
       userInputLines: json['user_input_lines'] != null
           ? (json['user_input_lines'] as List<dynamic>)
           .map((itemJson) => Answer.fromJson(itemJson))
@@ -124,8 +124,8 @@ class Question {
     data['suggested_answer_ids'] = suggestedAnswerIds;
     data['questionAndPageIds'] = questionAndPageIds;
     data['questionParentTitleId'] = questionParentTitleId;
-    data['checkResult'] = checkResult;
-    data['valueResult'] = valueResult;
+    data['check_result'] = checkResult;
+    data['value_result'] = valueResult;
     data['userInputLines'] = userInputLines;
     return data;
   }

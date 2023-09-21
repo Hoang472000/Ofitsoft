@@ -16,6 +16,9 @@ class Answer {
   int? valueRowTable;
   int? suggestedAnswerId;
 
+  bool? checkResult;
+  String? valueResult;
+
   Answer({
     this.id,
     this.idSelected,
@@ -30,6 +33,9 @@ class Answer {
     this.tableRowId,
     this.valueRowTable,
     this.suggestedAnswerId,
+
+    this.checkResult,
+    this.valueResult,
   });
 
   Answer.copy(Answer other)
@@ -45,7 +51,10 @@ class Answer {
 
         tableRowId = other.tableRowId,
         valueRowTable = other.valueRowTable,
-        suggestedAnswerId = other.suggestedAnswerId;
+        suggestedAnswerId = other.suggestedAnswerId,
+
+        checkResult = other.checkResult,
+        valueResult = other.valueResult;
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],
@@ -64,6 +73,9 @@ class Answer {
       tableRowId: json['table_row_id'] ?? -1,
       valueRowTable: json['value_row_table'] ?? -1,
       suggestedAnswerId: json['suggested_answer_id'] ?? -1,
+
+      checkResult: json['check_result'] ?? false,
+      valueResult: json['value_result'] ?? '',
     );
   }
 
@@ -94,6 +106,9 @@ class Answer {
     data['table_row_id'] = tableRowId;
     data['value_row_table'] = valueRowTable;
     data['suggested_answer_id'] = suggestedAnswerId;
+
+    data['check_result'] = checkResult;
+    data['value_result'] = valueResult;
     return data;
   }
 }

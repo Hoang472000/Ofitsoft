@@ -294,7 +294,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       List<Select> selectList = [];
 
       // Thêm Select cho câu hỏi cha
-      selectList.add(Select(question.idSelected!, false, question.title!));
+      selectList.add(Select(question.idSelected!, question.checkResult ?? false, question.title!));
 
       // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
       initSelectValues(question, selectList);
@@ -311,9 +311,9 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       for (Answer answer in item.suggestedAnswerIds) {
         List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
         List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
-        /*print(
-            "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${selectedIdsList.toString()}");
-        */selectList.add(Select(answer.idSelected!, false,
+        print(
+            "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${answer.checkResult}");
+        selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
             answer.value!, listId: selectedIdsList,
             listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
@@ -321,21 +321,21 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
-/*        print(
-            "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected}");*/
-        selectList.add(Select(childQuestion.idSelected!, false,
+        print(
+            "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
+        selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
             childQuestion.title!, listId: [], listSubId: [])); // Thêm Select cho câu hỏi con
         initSelectValues(childQuestion, selectList);
       }
     } else if (item is Answer) {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
-        /*   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
+        //   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
         print(
-            "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${selectedIdsList.toString()}");
-       */ selectList.add(Select(
+            "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
+        selectList.add(Select(
           childQuestion.idSelected!,
-          false,
+          childQuestion.checkResult ?? false,
           childQuestion
               .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
@@ -343,11 +343,11 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        /*   print(
-            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected}");*/
+           print(
+            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult}");
         selectList.add(Select(
             childAnswer.idSelected!,
-            false,
+            childAnswer.checkResult ?? false,
             childAnswer
                 .value!)); // Thêm Select cho câu trả lời con của câu trả lời con
         initSelectValues(childAnswer, selectList);
@@ -397,7 +397,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       final List<Controller> textEditingControllerList = [];
 
       // Thêm TextEditingController cho câu hỏi cha
-      textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(), checkQuestionType(question.questionType ?? ''), question.title!));
+      textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(text: question.valueResult ?? ''), checkQuestionType(question.questionType ?? ''), question.title!));
 
       // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
       initTextControllers(question, textEditingControllerList);
@@ -431,13 +431,13 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     if (item is Question || item is Answer) {
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(), checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ''), checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
         initTextControllers(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(),
+            Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult ?? ''),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
                 idRow: childAnswer.rowId));
         if(item is Question && item.questionType == 'table'){

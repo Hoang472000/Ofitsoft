@@ -36,19 +36,6 @@ class DetailReportViewPage extends StatefulWidget {
 
 class _DetailReportViewPageState extends State<DetailReportViewPage> {
   bool edit = false;
-  List<bool> listSelected = [false, false, false];
-  List<bool> listSelected1 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected2 = [false, false, false];
-  List<bool> listSelected3 = [false, false, false];
-  List<bool> listSelected4 = [false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected5 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected6 = [false, false, false, false];
-  List<bool> listSelected8 = [false, false, false, false, false, false, false];
-  List<bool> listSelected9 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected10 = [false, false, false, false];
-  List<bool> listSelected11 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected12 = [false, false, false, false, false];
-
 
   @override
   void initState() {
