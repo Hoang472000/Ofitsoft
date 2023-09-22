@@ -733,7 +733,14 @@ class RepositoryImpl extends Repository {
           // Recursively assign idSelected values to child questions and answers
           assignIdSelected(item.suggestedAnswerIds, idSelectedList);
           assignIdSelected(item.questionAndPageIds, idSelectedList);
+          if(item is Question) {
+            assignIdSelected(item.userInputLines, idSelectedList);
+          }
         }
+      } else if (item is RowLine) {
+        print("HoangCV: RowLine : ${item.rowId}");
+          // Recursively assign idSelected values to items inside RowLine
+          assignIdSelected(item.userInputLineId, idSelectedList);
       }
     }
   }
@@ -855,9 +862,9 @@ class RepositoryImpl extends Repository {
     }
 
 
-    list3.forEach((element1) {
+  /*  list3.forEach((element1) {
       print("HoangCV: result: ${list3.length} : ${element1.toJson()}");
-    });
+    });*/
     print("HoangCV: ");
     reports[1].questionAndPageIds = List.from(list3);
     return reports;
@@ -968,7 +975,7 @@ class RepositoryImpl extends Repository {
           .toList();
       //assignIdSelected(list[0].questionAndPageIds);
       print("HoangCV: getListActivityReport: ${list[1].surveyId[0].questionAndPageIds.length}");
-      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 2, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 4, (index) => index + 1);
       assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportResult(list[1].surveyId);
       hierarchyList.forEach((element) {
@@ -1053,7 +1060,7 @@ class RepositoryImpl extends Repository {
         if (list2[k].questionAndPageIds[i].questionType == "table") {
           for (int m = 0; m <
               list2[k].questionAndPageIds[i].suggestedAnswerIds.length; m++) {
-            for (int n = m+1; n <
+            for (int n = m + 1; n <
                 list2[k].questionAndPageIds[i].suggestedAnswerIds.length; n++) {
               if ((list2[k].questionAndPageIds[i].suggestedAnswerIds[m].id ==
                   list2[k].questionAndPageIds[i].suggestedAnswerIds[n]
@@ -1074,6 +1081,37 @@ class RepositoryImpl extends Repository {
                 if (indexRemove != -1) {
                   result[k].questionAndPageIds[i].suggestedAnswerIds.removeAt(
                       indexRemove);
+                }
+              }
+            }
+          }
+          for (int b = 0; b <
+              list2[k].questionAndPageIds[i].userInputLines.length; b++) {
+            var userInputLines = list2[k].questionAndPageIds[i].userInputLines[b];
+            List<Answer> listAs = [];
+            for (int m = 0; m <
+                userInputLines.userInputLineId.length; m++) {
+              for (int n = m + 1; n <
+                  userInputLines.userInputLineId
+                      .length; n++) {
+                if ((userInputLines.userInputLineId[m].suggestedAnswerId ==
+                    userInputLines.userInputLineId[n]
+                        .parentColId)) {
+                  int index = result[k].questionAndPageIds[i].userInputLines[b].userInputLineId
+                      .indexWhere((element) => element.suggestedAnswerId ==
+                      userInputLines.userInputLineId[m].suggestedAnswerId);
+                  if (index != -1) {
+                    Answer as = Answer.copy(userInputLines.userInputLineId[n]);
+                    result[k].questionAndPageIds[i].userInputLines[b].userInputLineId[index]
+                        .suggestedAnswerIds.add(userInputLines.userInputLineId[n]);
+                  }
+                  int indexRemove = result[k].questionAndPageIds[i].userInputLines[b].userInputLineId
+                      .indexWhere((element) => element.suggestedAnswerId ==
+                      userInputLines.userInputLineId[n].suggestedAnswerId);
+                  if (indexRemove != -1) {
+                    result[k].questionAndPageIds[i].userInputLines[b].userInputLineId.removeAt(
+                        indexRemove);
+                  }
                 }
               }
             }
@@ -1108,12 +1146,42 @@ class RepositoryImpl extends Repository {
     }
 
 
-    list3.forEach((element1) {
+/*    list3.forEach((element1) {
       print("HoangCV: result: ${list3.length} : ${element1.toJson()}");
-    });
+    });*/
     print("HoangCV: ");
     reports[0].questionAndPageIds = List.from(list3);
     return reports;
+  }
+
+  @override
+  Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    //print("HoangCV: uploadQuestion response: ${questionUpload.list_id_suggested is List}");
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.editFarmerInspector,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: farmerInspector.toJson())));
+    print("HoangCV: editFarmerInspector response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    /*  else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);
+    }*/
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
   }
 
 }

@@ -42,9 +42,10 @@ class ApiConst {
 
   //api get, add 1 activity REPORT, remove, edit
   static const String getListReport = "/get/assessment/";
-  static const String uploadQuestion = "/add/user_input_line/";
+  static const String uploadQuestion = "/add/user_input_line/"; // support add/edit/update
   static const String getListReportResult = "/get/list_result_assessment/";
   static const String getDetailReport = "/get/result_assessment/";
+  static const String editFarmerInspector = "/edit/result_assessment/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

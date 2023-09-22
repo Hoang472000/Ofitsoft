@@ -21,7 +21,7 @@ class Question {
   // result
   bool? checkResult;
   String? valueResult;
-  List<Answer> userInputLines;
+  List<RowLine> userInputLines;
 
   Question({
     this.id,
@@ -69,7 +69,9 @@ class Question {
         checkResult = other.checkResult,
         valueResult = other.valueResult,
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds,
-        userInputLines = other.userInputLines;
+        userInputLines = other.userInputLines
+            .map((row) => RowLine.copy(row))
+            .toList();
 
   factory Question.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],List<Question> questionParentTitleId = const [], int idSelected = -1, int rowId = -1}) {
@@ -99,7 +101,7 @@ class Question {
       valueResult: json['value_result'] ?? '',
       userInputLines: json['user_input_lines'] != null
           ? (json['user_input_lines'] as List<dynamic>)
-          .map((itemJson) => Answer.fromJson(itemJson))
+          .map((itemJson) => RowLine.fromJson(itemJson))
           .toList()
           : [],
     );
@@ -129,4 +131,30 @@ class Question {
     data['userInputLines'] = userInputLines;
     return data;
   }
+}
+
+class RowLine{
+   int? rowId;
+   List<Answer> userInputLineId;
+
+  RowLine({
+    this.rowId,
+    this.userInputLineId = const [],
+  }
+  );
+
+  factory RowLine.fromJson(Map<String, dynamic> json) {
+    return RowLine(
+        rowId: json['row_id'] ?? -1,
+        userInputLineId: json['user_input_line_id'] != null
+    ? (json['user_input_line_id'] as List<dynamic>)
+        .map((itemJson) => Answer.fromJson(itemJson))
+        .toList()
+        : [],
+    );
+  }
+
+  RowLine.copy(RowLine other)
+      : rowId = other.rowId,
+        userInputLineId = other.userInputLineId.map((answer) => Answer.copy(answer)).toList();
 }

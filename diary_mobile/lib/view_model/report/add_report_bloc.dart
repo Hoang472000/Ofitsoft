@@ -262,11 +262,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             List<Answer> listAs = [];
             for (Answer answer in item.suggestedAnswerIds) {
               Answer clonedAnswer = Answer.copy(answer);
-              clonedAnswer.rowId = id;
+              clonedAnswer.tableRowId = id;
               List<Answer> las = [];
               for (Answer as in clonedAnswer.suggestedAnswerIds) {
                 Answer clonedAs = Answer.copy(as);
-                clonedAs.rowId = id;
+                clonedAs.tableRowId = id;
                 las.add(clonedAs);
               }
               if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
@@ -344,7 +344,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             childQuestion.idSelected!,
             false,
             childQuestion
-                .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
+                .title!, /*listId: selectedIdsList*/parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
@@ -446,7 +446,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(),
               checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.rowId));
+                idRow: childAnswer.tableRowId));
         if(item is Question && item.questionType == 'table'){
           //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
         }
@@ -472,7 +472,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.rowId));
+                idRow: childAnswer.tableRowId));
         initTextControllers(childAnswer, textEditingControllerList);
       }
     }
@@ -550,9 +550,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             answer = nestedResult[1] ?? Answer();
             listIdSuggested = nestedResult[2];
             answerType = nestedResult[3];
-            if (question != null) {
-              return [question, answer, listIdSuggested, answerType];
-            }
+            return [question, answer, listIdSuggested, answerType];
           }
         }
       }
@@ -563,9 +561,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         answer = nestedResult[1];
         listIdSuggested = nestedResult[2];
         answerType = nestedResult[3];
-        if (question != null) {
-          return [question, answer, listIdSuggested, answerType];
-        }
+        return [question, answer, listIdSuggested, answerType];
       }
     }
     return [null, null, listIdSuggested, answerType];
@@ -603,8 +599,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
                 answerType = question.questionType ?? "";
-                answer = Answer.copy(
-                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+                /*answer = Answer.copy(
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
               }
             }
             if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].idSelected ==event.id) {
@@ -647,8 +643,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                       question = Question.copy(
                           listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
                       answerType = question.questionType ?? "";
-                      answer = Answer.copy(
-                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
+/*                      answer = Answer.copy(
+                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);*/
                     }
                   }
                 }
@@ -667,25 +663,35 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listIdSuggested = resultUpload[2];
     }*/
     int index = event.listSelect.indexWhere((element) => element.id == event.id);
+    int indexController = event.listController.indexWhere((element) => element.id == event.id);
+    String text = indexController != -1 ? event.listController[indexController].controller.text.toString() : '';
+    if(event.value != null || event.value.isNotEmpty){
+      text = event.value;
+    }
     QuestionUpload questionUpload;
     print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} ");
-    if(state.reportId != null) {
-      questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[1].id,
-          question_id: question.id,
-          suggested_answer_id: answer.id,
-          answer_type: answerType == '' ? null : answerType,
-          value_text: event.value,
-          test_entry: false,
-          // value default ko ro Anh Dung de lam gi
-          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
-          // value khi tich chon va bo tich chon
-          //table_row_id: 1,
-          list_id_suggested: listIdSuggested
-      );
-    } else{
-      questionUpload = QuestionUpload(
+    if(answerType == " check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+
+    }else {
+      if (state.reportId != null) {
+        questionUpload = QuestionUpload(
+            user_input_id: state.reportId,
+            survey_id: state.listReport[1].id,
+            question_id: question.id,
+            suggested_answer_id: answer.id,
+            answer_type: answerType == '' ? null : answerType,
+            value_text: /*event.value*/text,
+            test_entry: false,
+            // value default ko ro Anh Dung de lam gi
+            is_answer_exist: index != -1
+                ? event.listSelect[index].value
+                : false,
+            // value khi tich chon va bo tich chon
+            //table_row_id: 1,
+            list_id_suggested: listIdSuggested
+        );
+      } else {
+        questionUpload = QuestionUpload(
           user_input_id: state.reportId,
           survey_id: state.listReport[1].id,
           question_id: question.id,
@@ -703,18 +709,20 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           internal_inspector_id: state.farmerInspector!.internal_inspector_id,
           monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
           visit_date: state.farmerInspector!.visit_date,
-      );
-    }
+        );
+      }
 
-    ObjectResult result = await repository.uploadQuestion(questionUpload);
-    if (result.responseCode == StatusConst.code00) {
-      emit(state.copyWith(
-          isShowProgress: false,
-          reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(success: result.message)));
-    } else {
-      emit(state.copyWith(
-          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(success: result.message)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 
@@ -780,58 +788,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
 }
 
-class Select {
-  int id;
-  bool value;
-  String title;
-  List<int> listId;
-  List<int> listSubId;
-  String type;
-  String typeSub;
-
-  Select(this.id, this.value, this.title,
-      {this.listId = const [],
-      this.listSubId = const [],
-      this.type = '',
-      this.typeSub = ''});
-}
-
-class Visible {
-  int id;
-  bool value;
-  String title;
-
-  Visible(this.id, this.value, this.title);
-}
-
-class Controller {
-  int id;
-  int? idRow;
-  TextEditingController controller;
-  String type;
-  String value;
-
-  Controller(this.id, this.controller, this.type, this.value, {this.idRow});
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['idRow'] = idRow;
-    //data['controller'] = controller;
-    data['type'] = type;
-    data['value'] = value;
-    return data;
-  }
-}
-
-class TableQuestion {
-  int id;
-  String title;
-  List<Question> listQuestion;
-
-  TableQuestion(this.id, this.title, this.listQuestion);
-}
-
 class AddReportEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
@@ -850,11 +806,12 @@ class UpdateAddReportEvent extends AddReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
+  final List<Controller> listController;
 
-  UpdateAddReportEvent(this.id, this.value, this.listSelect);
+  UpdateAddReportEvent(this.id, this.value, this.listSelect, {this.listController = const []});
 
   @override
-  List<Object?> get props => [id, value, listSelect];
+  List<Object?> get props => [id, value, listSelect, listController];
 }
 
 class UpdateFarmerInspectorEvent extends AddReportEvent {

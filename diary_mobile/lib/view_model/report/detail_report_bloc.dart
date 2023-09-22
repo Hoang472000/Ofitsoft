@@ -18,6 +18,7 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/dialog/toast_widget.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
+import 'add_report_bloc.dart';
 
 class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   final Repository repository;
@@ -206,15 +207,23 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       int i = 0;
       addTableRow(report[1].surveyId[0].questionAndPageIds, listTable, i);
 /*      listTable.forEach((element) {
-        print("HoangCV:listTable:  ${listTable.toString()}");
         element.listQuestion.forEach((e) {
-          print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
           e.suggestedAnswerIds.forEach((el){
-            print("HoangCV:listQuestion:  ${el.toString()} : ${el.rowId}");
+            print("HoangCV:listQuestion:  ${el.toJson()} : ${el.rowId}");
+            el.suggestedAnswerIds.forEach((el1){
+              print("HoangCV:listQuestion1:  ${el1.toJson()} : ${el1.rowId}");
+            });
           });
+
         });
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
+      listCtrlTable.forEach((element) {
+        element.forEach((e) {
+          print("HoangCV: listCtrlTable: ${e.toJson()}");
+        });
+
+      });
       listControllerTable.addAll(listCtrlTable);
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(
@@ -239,11 +248,11 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       listTable: listTable,
       listSelectedInspector: listSelectedInspector,
     ));
-/*    state.listControllerTable.forEach((element) {
+    state.listControllerTable.forEach((element) {
       element.forEach((e) {
         print("HoangCV:listController:  ${e.toJson()}");
       });
-    });*/
+    });
   }
 
   void addTableRow(List<dynamic> items, List<TableQuestion> listTable, int id) {
@@ -251,27 +260,64 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       if (item is Question) {
         if (item.questionType == 'table') {
           List<Question> list = [];
-          for (int i = 0; i < 3; i++) {
-            List<Answer> listAs = [];
-            for (Answer answer in item.suggestedAnswerIds) {
-              Answer clonedAnswer = Answer.copy(answer);
-              clonedAnswer.rowId = id;
-              List<Answer> las = [];
-              for (Answer as in clonedAnswer.suggestedAnswerIds) {
-                Answer clonedAs = Answer.copy(as);
-                clonedAs.rowId = id;
-                las.add(clonedAs);
+          if(item.userInputLines.isNotEmpty) {
+            for (RowLine row in item.userInputLines) {
+              List<Answer> listAs = [];
+              for (Answer answer in row.userInputLineId) {
+                print("HoangCV: answer 1: ${answer.value} : ${answer
+                    .valueRowTable} : ${answer.tableRowId}");
+
+                Answer clonedAnswer = Answer.copy(answer);
+                clonedAnswer.id = clonedAnswer.suggestedAnswerId;
+                if (clonedAnswer.tableRowId == null || clonedAnswer.tableRowId == -1) {
+                  clonedAnswer.tableRowId = id;
+                }
+                print("HoangCV: value_row_table 1: ${clonedAnswer.value} : ${clonedAnswer.valueRowTable} :"
+                    "${clonedAnswer.tableRowId}");
+                List<Answer> las = [];
+                for (Answer as in clonedAnswer.suggestedAnswerIds) {
+                  Answer clonedAs = Answer.copy(as);
+                  clonedAs.id = clonedAs.suggestedAnswerId;
+                  print("HoangCV: value_row_table : ${as.value} : ${as.valueRowTable}");
+                  if (clonedAs.tableRowId == null || clonedAs.tableRowId == -1) {
+                    clonedAs.tableRowId = id;
+                  }
+                  las.add(clonedAs);
+                }
+                if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+                  clonedAnswer.suggestedAnswerIds = las;
+                }
+                listAs.add(clonedAnswer);
               }
-              if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
-                clonedAnswer.suggestedAnswerIds = las;
-              }
-              listAs.add(clonedAnswer);
+              Question qs = Question.copy(item);
+              qs.suggestedAnswerIds = listAs;
+              qs.rowId = id;
+              id++;
+              list.add(qs);
             }
-            Question qs = Question.copy(item);
-            qs.suggestedAnswerIds = listAs;
-            qs.rowId = id;
-            id++;
-            list.add(qs);
+          } else{
+            for (int i = 0; i < 3; i++) {
+              List<Answer> listAs = [];
+              for (Answer answer in item.suggestedAnswerIds) {
+                Answer clonedAnswer = Answer.copy(answer);
+                clonedAnswer.tableRowId = id;
+                List<Answer> las = [];
+                for (Answer as in clonedAnswer.suggestedAnswerIds) {
+                  Answer clonedAs = Answer.copy(as);
+                  clonedAs.tableRowId = id;
+                  las.add(clonedAs);
+                }
+                if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+                  clonedAnswer.suggestedAnswerIds = las;
+                }
+                listAs.add(clonedAnswer);
+              }
+              Question qs = Question.copy(item);
+              qs.suggestedAnswerIds = listAs;
+              qs.rowId = id;
+              id++;
+              list.add(qs);
+            }
           }
           listTable.add(TableQuestion(item.id!, item.title!, list));
         }
@@ -337,14 +383,14 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
           childQuestion.idSelected!,
           childQuestion.checkResult ?? false,
           childQuestion
-              .title!, /*listId: selectedIdsList*/)); // Thêm Select cho câu hỏi con của câu trả lời con
+              .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
            print(
-            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult}");
+            "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
         selectList.add(Select(
             childAnswer.idSelected!,
             childAnswer.checkResult ?? false,
@@ -416,7 +462,8 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         final List<Controller> textEditingControllerList = [];
 
         // Thêm TextEditingController cho câu hỏi cha
-        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(), checkQuestionType(question.questionType ?? ''), question.title!));
+        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(),
+            checkQuestionType(question.questionType ?? ''), question.title!));
 
         // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
         initTextControllersTable(question, textEditingControllerList);
@@ -431,15 +478,17 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     if (item is Question || item is Answer) {
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ''), checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ''),
+                checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
         initTextControllers(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
+        //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult ?? ''),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.rowId));
+                idRow: childAnswer.tableRowId));
         if(item is Question && item.questionType == 'table'){
           //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
         }
@@ -452,21 +501,21 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   }
   void initTextControllersTable(dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
-      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
+      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected} : ${item is Answer ? item.valueRowTable : ''}");
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
             Controller(childQuestion.idSelected!, TextEditingController(),
                 checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
-        initTextControllers(childQuestion, textEditingControllerList);
+        initTextControllersTable(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        //print("HoangCV: childAnswer: ${childAnswer.rowId} : ${childAnswer.idSelected} : ${childAnswer.value}");
+        //print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer.valueRowTable} : ${childAnswer.value}");
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(),
+            Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.rowId));
-        initTextControllers(childAnswer, textEditingControllerList);
+                idRow: childAnswer.tableRowId));
+        initTextControllersTable(childAnswer, textEditingControllerList);
       }
     }
   }
@@ -771,58 +820,6 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       }
     }
   }
-}
-
-class Select {
-  int id;
-  bool value;
-  String title;
-  List<int> listId;
-  List<int> listSubId;
-  String type;
-  String typeSub;
-
-  Select(this.id, this.value, this.title,
-      {this.listId = const [],
-        this.listSubId = const [],
-        this.type = '',
-        this.typeSub = ''});
-}
-
-class Visible {
-  int id;
-  bool value;
-  String title;
-
-  Visible(this.id, this.value, this.title);
-}
-
-class Controller {
-  int id;
-  int? idRow;
-  TextEditingController controller;
-  String type;
-  String value;
-
-  Controller(this.id, this.controller, this.type, this.value, {this.idRow});
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['id'] = id;
-    data['idRow'] = idRow;
-    //data['controller'] = controller;
-    data['type'] = type;
-    data['value'] = value;
-    return data;
-  }
-}
-
-class TableQuestion {
-  int id;
-  String title;
-  List<Question> listQuestion;
-
-  TableQuestion(this.id, this.title, this.listQuestion);
 }
 
 class DetailReportEvent extends BlocEvent {

@@ -13,7 +13,7 @@ class Answer {
 
   // result;
   int? tableRowId;
-  int? valueRowTable;
+  String? valueRowTable;
   int? suggestedAnswerId;
 
   bool? checkResult;
@@ -71,7 +71,7 @@ class Answer {
       rowId: rowId,
 
       tableRowId: json['table_row_id'] ?? -1,
-      valueRowTable: json['value_row_table'] ?? -1,
+      valueRowTable: json['value_row_table'] ?? '',
       suggestedAnswerId: json['suggested_answer_id'] ?? -1,
 
       checkResult: json['check_result'] ?? false,

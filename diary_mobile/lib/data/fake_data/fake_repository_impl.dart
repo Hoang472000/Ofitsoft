@@ -656,4 +656,10 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getDetailReport
     throw UnimplementedError();
   }
+
+  @override
+  Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector) {
+    // TODO: implement editFarmerInspector
+    throw UnimplementedError();
+  }
 }

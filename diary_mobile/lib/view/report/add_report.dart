@@ -196,7 +196,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ),
     );
   }
-  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc, {bool isFirst = false}) {
+  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc,
+      {bool isFirst = false, List<Controller> listController = const []}) {
     int index = listSelected.indexWhere((element) => element.id == id);
     /*print("HoangCV: checkbox: id: $id : $index : ${listSelected[index].title} : ${listSelected.length}");
     */return Container(
@@ -209,7 +210,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
         onChanged: (value) {
-          print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].listId.toString()}");
+          bool checkParent = true;
+          print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].parentId} : ${listSelected[index].listId.toString()}");
           if(value == false){
             for(int i = 0; i< listSelected[index].listSubId.length; i++){
               int id = listSelected.indexWhere((element) => element.id == listSelected[index].listSubId[i]);
@@ -218,27 +220,42 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               });
             }
           } else{
-            for(int i = 0; i< listSelected[index].listId.length; i++){
-              int id = listSelected.indexWhere((element) => element.id == listSelected[index].listId[i]);
-              print("HoangCV: listsub1: ${listSelected[id].id} : ${listSelected[id].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
-              for(int i = 0; i< listSelected[id].listSubId.length; i++){
-                int idSub = listSelected.indexWhere((element) => element.id == listSelected[id].listSubId[i]);
-                print("HoangCV: listsub1: ${idSub} : ${listSelected[idSub].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
+            if(listSelected[index].parentId != -1){
+              int indexParent = listSelected.indexWhere((element) => element.id == listSelected[index].parentId);
+              if(indexParent != -1) {
+                print("HoangCV:listSelected[indexParent].value : ${listSelected[indexParent].value} : ${listSelected[indexParent].title}");
+                checkParent = listSelected[indexParent].value;
+              }
+            }
+              for (int i = 0; i < listSelected[index].listId.length; i++) {
+                int id = listSelected.indexWhere((element) =>
+                element.id == listSelected[index].listId[i]);
+                print("HoangCV: listsub1: ${listSelected[id]
+                    .id} : ${listSelected[id].title} : ${listSelected[id]
+                    .listId} : ${listSelected[id].listSubId}");
+                for (int i = 0; i < listSelected[id].listSubId.length; i++) {
+                  int idSub = listSelected.indexWhere((element) =>
+                  element.id == listSelected[id].listSubId[i]);
+                  print("HoangCV: listsub1: ${idSub} : ${listSelected[idSub]
+                      .title} : ${listSelected[id].listId} : ${listSelected[id]
+                      .listSubId}");
+                  setState(() {
+                    listSelected[idSub].value = false;
+                  });
+                }
                 setState(() {
-                  listSelected[idSub].value = false;
+                  listSelected[id].value = !(value ?? false);
                 });
               }
-              setState(() {
-                listSelected[id].value = !(value ?? false);
-              });
-            }
           }
-          setState(() {
-            listSelected[index].value = value ?? false;
-
-          });
-          contextBloc.read<AddReportBloc>().add(
-              UpdateAddReportEvent(id, '', listSelected));
+          if(checkParent) {
+            setState(() {
+              listSelected[index].value = value ?? false;
+            });
+            contextBloc.read<AddReportBloc>().add(
+                UpdateAddReportEvent(
+                    id, '', listSelected, listController: listController));
+          }
         },
       ),
     );
@@ -286,6 +303,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ),
     ]);
   }
+
   TableRow rowCheckBoxInspector(String title, int id, List<Select> listSelected, BuildContext context, {bool isFirst = false}) {
     return TableRow(children: [
       checkBoxInspector(id, listSelected, context, isFirst: isFirst),
@@ -410,7 +428,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
   TableRow tableRowCheckBoxTextField(String title, int id, List<Select> listSelected, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
-      checkBox(id, listSelected, context, isFirst: isFirst),
+      checkBox(id, listSelected, context, isFirst: isFirst, listController: controller),
       Padding(
         padding: EdgeInsets.only(top: isFirst ? 16 : 4, bottom: 16.0),
         child: RichText(
@@ -455,7 +473,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       )
     ]);
   }
-  TableRow tableRowTextField(String title,int id, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
+  TableRow tableRowTextField(String title,int id, List<Controller> controller, BuildContext context,
+      {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
       Padding(
@@ -472,24 +491,26 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-                    onSubmitted: (str){
+                    keyboardType: controller[index].type == 'text'
+                        ? TextInputType.text
+                        : TextInputType.number,
+                    onSubmitted: (str) {
                       context.read<AddReportBloc>().add(
                           UpdateAddReportEvent(id, str, []));
                     },
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColor.back09),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color:  AppColor.back09),
-                        ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color:  AppColor.back09),
-                        ),
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.back09),
                       ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color:  AppColor.back09),
+                      ),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color:  AppColor.back09),
+                      ),
+                    ),
                     maxLines: 10,
                     minLines: 1,
                   ),
@@ -502,6 +523,82 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       )
     ]);
   }
+
+  TableRow tableRowTextFieldHasCheckbox(String title,int id, List<Controller> controller,
+      BuildContext context, {bool isFirst = false, bool hasCheckbox = false}) {
+    int index = controller.indexWhere((element) => element.id == id);
+    List<Widget> rowChildren = [];
+// Kiểm tra nếu hasCheckbox là true, thêm SizedBox vào danh sách tạm thời
+    if (hasCheckbox) {
+      rowChildren.add( SizedBox.shrink());
+    } else{
+      rowChildren.add( Container(
+        margin: EdgeInsets.only(top:isFirst? 14: 0),
+        height: 24.0,
+        width: 24.0,
+        child: Visibility(
+          visible: hasCheckbox,
+          child: Checkbox(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            visualDensity: VisualDensity.compact,
+            side: BorderSide(color: AppColor.black22),
+            value: false,
+            onChanged: (bool? value) {  },
+          ),
+        ),
+      ));
+    }
+
+    rowChildren.add(
+      Padding(
+        padding: EdgeInsets.only(top: isFirst ? 16 : 4, bottom: 16.0, /*left: 10*/),
+        child: RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: title,
+                style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+              ),
+              WidgetSpan(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 0),
+                  child: TextField(
+                    controller: controller[index].controller,
+                    keyboardType: controller[index].type == 'text'
+                        ? TextInputType.text
+                        : TextInputType.number,
+                    onSubmitted: (str) {
+                      context.read<AddReportBloc>().add(
+                          UpdateAddReportEvent(id, str, []));
+                    },
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: AppColor.back09),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color:  AppColor.back09),
+                      ),
+                      border: UnderlineInputBorder(
+                        borderSide: BorderSide(color:  AppColor.back09),
+                      ),
+                    ),
+                    maxLines: 10,
+                    minLines: 1,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+        ),
+      ),
+    );
+    print("HoangCV: hasCheckbox |: ${hasCheckbox} : ${rowChildren.length}");
+    return TableRow(children: rowChildren);
+  }
+
   Widget tableFooter(){
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, top: 8, left: 0),
@@ -753,34 +850,30 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                         listSelect,
                         context, isFirst: i == 0 ? true : false));
                   }
+                  bool hasCheckBox = listParent[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
                   for (int k = 0; k <
                       listParent[i].suggestedAnswerIds[j].questionAndPageIds
                           .length; k ++) {
                     if (listParent[i].suggestedAnswerIds[j]
-                        .questionAndPageIds[k].questionType ==
-                        "numerical_box" ||
-                        listParent[i].suggestedAnswerIds[j]
-                            .questionAndPageIds[k].questionType == "char_box" ||
-                        (listParent[i].suggestedAnswerIds[j]
-                            .questionAndPageIds[k].questionType ==
-                            "check_box" &&
+                            .questionAndPageIds[k].questionType == "check_box" &&
                             listParent[i].suggestedAnswerIds[j]
-                                .questionAndPageIds[k].commentAnswer == true)
-                    ) {
+                                .questionAndPageIds[k].commentAnswer == true) {
                       tableRowSub.add(tableRowCheckBoxTextField(
-                          "${listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k].title}",
-                          listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k].idSelected ?? -1,
+                          "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                           listSelect, listController, context,
                           isFirst: i == 0 ? true : false));
+                    } else if(listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
+                        listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box"){
+                      tableRowSub.add(tableRowTextFieldHasCheckbox(
+                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
+                           listController, context,
+                           isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
                     } else {
                       tableRowSub.add(tableRowCheckBox(
-                          "${listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k]
-                              .title}",
-                          listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k].idSelected ?? -1,
+                          "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                           listSelect, context,
                           isFirst: i == 0 ? true : false));
                     }
@@ -1004,18 +1097,22 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect,
                     context, isFirst: i == 0 ? true : false));
               }
-            for (int k = 0; k <
+              for (int k = 0; k <
                 list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
-              if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
-                  list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box" ||
-                  (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "check_box" &&
-                      list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true)
-              ) {
+              if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "check_box" &&
+                      list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true) {
                 tableRowSub.add(tableRowCheckBoxTextField(
                     "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                     list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1, listSelect, listController, context,
                     isFirst: i == 0 ? true : false));
-              } else {
+              } else if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
+                  list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box"){
+                bool hasCheckBox = list[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
+                tableRowSub.add(tableRowTextFieldHasCheckbox(
+                "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1, listController, context,
+                isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
+              } else{
                 tableRowSub.add(tableRowCheckBox(
                     "${list[i].suggestedAnswerIds[j].questionAndPageIds[k]
                         .title}",
@@ -1245,8 +1342,11 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             border: TableBorder.all(color: AppColor.black22),
             children: [
               TableRow(
-                  children: [list[i].questionType == "char_box" ? formCharTextField(list[i].title??'', list[i].idSelected ?? -1, listController, context):
-                  tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1, listSelect, listController, context)]),
+                  children: [list[i].questionType == "char_box" ?
+                  formCharTextField(list[i].title??'', list[i].idSelected ?? -1, listController, context):
+                  tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1, listSelect, listController, context)
+                  ]
+              ),
             ],
           ),);
         }

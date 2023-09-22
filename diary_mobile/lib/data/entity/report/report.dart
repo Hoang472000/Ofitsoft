@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diary_mobile/data/entity/report/question.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 class Report implements Insertable<Report> {
   int? id;
@@ -185,3 +186,59 @@ class People {
         name = other.name,
         image = other.image;
 }
+
+
+class Select {
+  int id;
+  bool value;
+  String title;
+  List<int> listId;
+  List<int> listSubId;
+  int parentId;
+  String type;
+  String typeSub;
+
+  Select(this.id, this.value, this.title,
+      {this.listId = const [],
+        this.listSubId = const [],
+        this.parentId = -1,
+        this.type = '',
+        this.typeSub = ''});
+}
+
+class Visible {
+  int id;
+  bool value;
+  String title;
+
+  Visible(this.id, this.value, this.title);
+}
+
+class Controller {
+  int id;
+  int? idRow;
+  TextEditingController controller;
+  String type;
+  String value;
+
+  Controller(this.id, this.controller, this.type, this.value, {this.idRow});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['idRow'] = idRow;
+    data['controller'] = controller;
+    data['type'] = type;
+    data['value'] = value;
+    return data;
+  }
+}
+
+class TableQuestion {
+  int id;
+  String title;
+  List<Question> listQuestion;
+
+  TableQuestion(this.id, this.title, this.listQuestion);
+}
+
