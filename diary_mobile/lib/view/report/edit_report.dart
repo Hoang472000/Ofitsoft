@@ -36,6 +36,19 @@ class EditReportViewPage extends StatefulWidget {
 
 class _EditReportViewPageState extends State<EditReportViewPage> {
   bool edit = false;
+  List<bool> listSelected = [false, false, false];
+  List<bool> listSelected1 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+  List<bool> listSelected2 = [false, false, false];
+  List<bool> listSelected3 = [false, false, false];
+  List<bool> listSelected4 = [false, false, false, false, false, false, false, false, false, false, false];
+  List<bool> listSelected5 = [false, false, false, false, false, false, false, false, false, false, false, false];
+  List<bool> listSelected6 = [false, false, false, false];
+  List<bool> listSelected8 = [false, false, false, false, false, false, false];
+  List<bool> listSelected9 = [false, false, false, false, false, false, false, false, false, false, false, false];
+  List<bool> listSelected10 = [false, false, false, false];
+  List<bool> listSelected11 = [false, false, false, false, false, false, false, false, false, false, false, false];
+  List<bool> listSelected12 = [false, false, false, false, false];
+
 
   @override
   void initState() {
@@ -102,6 +115,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                         SizedBox(height: 10,),
                         tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
                         ListView.builder(
+                            padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             primary: false,
                             itemCount: state.listReport[0].questionAndPageIds.length,
@@ -183,7 +197,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       ),
     );
   }
-  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc, {bool isFirst = false}) {
+  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc,
+      {bool isFirst = false, List<Controller> listController = const []}) {
     int index = listSelected.indexWhere((element) => element.id == id);
     /*print("HoangCV: checkbox: id: $id : $index : ${listSelected[index].title} : ${listSelected.length}");
     */return Container(
@@ -196,7 +211,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
         onChanged: (value) {
-          print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].listId.toString()}");
+          bool checkParent = true;
+          print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].parentId} : ${listSelected[index].listId.toString()}");
           if(value == false){
             for(int i = 0; i< listSelected[index].listSubId.length; i++){
               int id = listSelected.indexWhere((element) => element.id == listSelected[index].listSubId[i]);
@@ -205,12 +221,25 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               });
             }
           } else{
-            for(int i = 0; i< listSelected[index].listId.length; i++){
-              int id = listSelected.indexWhere((element) => element.id == listSelected[index].listId[i]);
-              print("HoangCV: listsub1: ${listSelected[id].id} : ${listSelected[id].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
-              for(int i = 0; i< listSelected[id].listSubId.length; i++){
-                int idSub = listSelected.indexWhere((element) => element.id == listSelected[id].listSubId[i]);
-                print("HoangCV: listsub1: ${idSub} : ${listSelected[idSub].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
+            if(listSelected[index].parentId != -1){
+              int indexParent = listSelected.indexWhere((element) => element.id == listSelected[index].parentId);
+              if(indexParent != -1) {
+                print("HoangCV:listSelected[indexParent].value : ${listSelected[indexParent].value} : ${listSelected[indexParent].title}");
+                checkParent = listSelected[indexParent].value;
+              }
+            }
+            for (int i = 0; i < listSelected[index].listId.length; i++) {
+              int id = listSelected.indexWhere((element) =>
+              element.id == listSelected[index].listId[i]);
+              print("HoangCV: listsub1: ${listSelected[id]
+                  .id} : ${listSelected[id].title} : ${listSelected[id]
+                  .listId} : ${listSelected[id].listSubId}");
+              for (int i = 0; i < listSelected[id].listSubId.length; i++) {
+                int idSub = listSelected.indexWhere((element) =>
+                element.id == listSelected[id].listSubId[i]);
+                print("HoangCV: listsub1: ${idSub} : ${listSelected[idSub]
+                    .title} : ${listSelected[id].listId} : ${listSelected[id]
+                    .listSubId}");
                 setState(() {
                   listSelected[idSub].value = false;
                 });
@@ -220,12 +249,14 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               });
             }
           }
-          setState(() {
-            listSelected[index].value = value ?? false;
-
-          });
-          contextBloc.read<EditReportBloc>().add(
-              UpdateEditReportEvent(id, '', listSelected));
+          if(checkParent) {
+            setState(() {
+              listSelected[index].value = value ?? false;
+            });
+            contextBloc.read<EditReportBloc>().add(
+                UpdateEditReportEvent(
+                    id, '', listSelected));
+          }
         },
       ),
     );
@@ -273,6 +304,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       ),
     ]);
   }
+
   TableRow rowCheckBoxInspector(String title, int id, List<Select> listSelected, BuildContext context, {bool isFirst = false}) {
     return TableRow(children: [
       checkBoxInspector(id, listSelected, context, isFirst: isFirst),
@@ -357,10 +389,13 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         return Padding(
           padding: EdgeInsets.only(bottom: 4, top: 4),
           child: TextField(
-            controller: /*element[index].*/controller,
+            controller: controller,
             keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
             onSubmitted: (str) {
               context.read<EditReportBloc>().add(UpdateEditTableEvent(questionId, answerId, idRow, str));
+              setState(() {
+                element[index].controller.text = str;
+              });
             },
             decoration: const InputDecoration(
               isDense: true,
@@ -397,7 +432,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
   TableRow tableRowCheckBoxTextField(String title, int id, List<Select> listSelected, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
-      checkBox(id, listSelected, context, isFirst: isFirst),
+      checkBox(id, listSelected, context, isFirst: isFirst, listController: controller),
       Padding(
         padding: EdgeInsets.only(top: isFirst ? 16 : 4, bottom: 16.0),
         child: RichText(
@@ -442,7 +477,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       )
     ]);
   }
-  TableRow tableRowTextField(String title,int id, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
+  TableRow tableRowTextField(String title,int id, List<Controller> controller, BuildContext context,
+      {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
       Padding(
@@ -459,8 +495,10 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-                    onSubmitted: (str){
+                    keyboardType: controller[index].type == 'text'
+                        ? TextInputType.text
+                        : TextInputType.number,
+                    onSubmitted: (str) {
                       context.read<EditReportBloc>().add(
                           UpdateEditReportEvent(id, str, []));
                     },
@@ -564,6 +602,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
     print("HoangCV: hasCheckbox |: ${hasCheckbox} : ${rowChildren.length}");
     return TableRow(children: rowChildren);
   }
+
   Widget tableFooter(){
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, top: 8, left: 0),
@@ -828,20 +867,17 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                           listSelect, listController, context,
                           isFirst: i == 0 ? true : false));
-                    }  else if(listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
+                    } else if(listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
                         listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box"){
                       tableRowSub.add(tableRowTextFieldHasCheckbox(
                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                           listController, context,
                           isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
-                    }else {
+                    } else {
                       tableRowSub.add(tableRowCheckBox(
-                          "${listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k]
-                              .title}",
-                          listParent[i].suggestedAnswerIds[j]
-                              .questionAndPageIds[k].idSelected ?? -1,
+                          "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                           listSelect, context,
                           isFirst: i == 0 ? true : false));
                     }
@@ -1068,8 +1104,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                 for (int k = 0; k <
                     list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
                   if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "check_box" &&
-                      list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true)
-                  {
+                      list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true) {
                     tableRowSub.add(tableRowCheckBoxTextField(
                         "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                         list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1, listSelect, listController, context,
@@ -1081,7 +1116,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                         "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                         list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1, listController, context,
                         isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
-                  } else {
+                  } else{
                     tableRowSub.add(tableRowCheckBox(
                         "${list[i].suggestedAnswerIds[j].questionAndPageIds[k]
                             .title}",
@@ -1163,8 +1198,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         element.id == list[i].id
         );
         for(int a = 0 ; a <listTable[index].listQuestion.length; a ++){
-          print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listControllerTable.length}"
-              "${listTable[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId} : ${listTable[index].listQuestion[a].suggestedAnswerIds.length}");
+          //print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listTable[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId}");
 
           List<Widget> tableWidgetNon = [];
           for(int g = 0 ; g <listTable[index].listQuestion[a].suggestedAnswerIds.length; g++){
@@ -1312,8 +1346,11 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           border: TableBorder.all(color: AppColor.black22),
           children: [
             TableRow(
-                children: [list[i].questionType == "char_box" ? formCharTextField(list[i].title??'', list[i].idSelected ?? -1, listController, context):
-                tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1, listSelect, listController, context)]),
+                children: [list[i].questionType == "char_box" ?
+                formCharTextField(list[i].title??'', list[i].idSelected ?? -1, listController, context):
+                tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1, listSelect, listController, context)
+                ]
+            ),
           ],
         ),);
       }
@@ -1354,7 +1391,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       }
       else if(form == 7 && tableWidgetText.isNotEmpty){
         // table
-        print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
+        //print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           columnWidths: {
