@@ -175,8 +175,13 @@ class Utils {
   }
 
   static String formatDate(String time) {
+
+    print("HoangCV: formatDate: $time");
     if (time.isNotEmpty) {
-      DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
+      String result = time.replaceAll('"', "").trim();
+      print("HoangCV: formatDate result: $result");
+     // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
+      DateTime dateTime = DateTime.parse(result);
       final f = DateFormat('dd/MM/yyyy HH:mm:ss');
       return f.format(dateTime);
     } else {

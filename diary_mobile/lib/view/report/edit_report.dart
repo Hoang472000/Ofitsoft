@@ -16,25 +16,25 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
-import '../../view_model/report/detail_report_bloc.dart';
+import '../../view_model/report/edit_report_bloc.dart';
 
-class DetailReportViewPage extends StatefulWidget {
-  DetailReportViewPage({super.key, required this.diary, required this.id});
+class EditReportViewPage extends StatefulWidget {
+  EditReportViewPage({super.key, required this.diary, required this.id});
   final Diary diary;
   final int id;
 
   @override
-  _DetailReportViewPageState createState() => _DetailReportViewPageState();
+  _EditReportViewPageState createState() => _EditReportViewPageState();
 
   static Route route(Diary diary, int id) {
     return Utils.pageRouteBuilder(
-        DetailReportViewPage(diary: diary, id: id,
+        EditReportViewPage(diary: diary, id: id,
         ),
         true);
   }
 }
 
-class _DetailReportViewPageState extends State<DetailReportViewPage> {
+class _EditReportViewPageState extends State<EditReportViewPage> {
   bool edit = false;
 
   @override
@@ -46,8 +46,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DetailReportBloc(context.read<Repository>())
-        ..add(GetDetailReportEvent(widget.diary, widget.id)),
+      create: (context) => EditReportBloc(context.read<Repository>())
+        ..add(GetEditReportEvent(widget.diary, widget.id)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -62,7 +62,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           backgroundColor: AppColor.main,
           actions: [],
         ),
-        body: BlocConsumer<DetailReportBloc, DetailReportState>(
+        body: BlocConsumer<EditReportBloc, EditReportState>(
             listener: (blocContext, state) async {
               final formStatus = state.formStatus;
               if (formStatus is SubmissionFailed) {
@@ -72,15 +72,15 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   Get.back();
                 }, '', S.of(context).close_dialog);
               } else if (formStatus is SubmissionSuccess) {
-                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                        () {
-                      Get.back();
-                      //Navigator.pop(context, [true]);
-                    }, () {
-                      Get.back();
-                      //Navigator.pop(context, [true]);
-                    }, '', S.of(context).close_dialog, dismissible: false);
-              } else if (formStatus is FormSubmitting) {
+            if ((formStatus.success ?? "").isNotEmpty) {
+              DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                  () {
+                Get.back();
+              }, () {
+                Get.back();
+              }, '', S.of(context).close_dialog, dismissible: false);
+            }
+          } else if (formStatus is FormSubmitting) {
                 DiaLogManager.showDialogLoading(context);
               }
             }, builder: (blocContext, state) {
@@ -196,7 +196,6 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
         onChanged: (value) {
-          /*
           print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].listId.toString()}");
           if(value == false){
             for(int i = 0; i< listSelected[index].listSubId.length; i++){
@@ -225,8 +224,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
             listSelected[index].value = value ?? false;
 
           });
-          contextBloc.read<DetailReportBloc>().add(
-              UpdateDetailReportEvent(id, '', listSelected));*/
+          contextBloc.read<EditReportBloc>().add(
+              UpdateEditReportEvent(id, '', listSelected));
         },
       ),
     );
@@ -244,7 +243,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
         onChanged: (value) {
-/*          if(value == true){
+          if(value == true){
             for(int i = 0; i< listSelected.length; i++){
               setState(() {
                 listSelected[i].value = !(value ?? false);
@@ -254,8 +253,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           setState(() {
             listSelected[index].value = value ?? false;
           });
-          contextBloc.read<DetailReportBloc>().add(
-              UpdateFarmerInspectorEvent(id, listSelected[index].type, listSelected));*/
+          contextBloc.read<EditReportBloc>().add(
+              UpdateFarmerInspectorEvent(id, listSelected[index].type, listSelected));
         },
       ),
     );
@@ -359,9 +358,9 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           padding: EdgeInsets.only(bottom: 4, top: 4),
           child: TextField(
             controller: /*element[index].*/controller,
-            keyboardType: TextInputType.none,//type == 'text' ? TextInputType.text : TextInputType.number,
+            keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
             onSubmitted: (str) {
-              //context.read<DetailReportBloc>().add(UpdateDetailTableEvent(questionId, answerId, idRow, str));
+              context.read<EditReportBloc>().add(UpdateEditTableEvent(questionId, answerId, idRow, str));
             },
             decoration: const InputDecoration(
               isDense: true,
@@ -413,10 +412,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,//controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
+                    keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
                     onSubmitted: (str){
-                /*      context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, listSelected));*/
+                      context.read<EditReportBloc>().add(
+                          UpdateEditReportEvent(id, str, listSelected));
                     },
                     decoration: const InputDecoration(
                       isDense: true,
@@ -460,10 +459,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,//controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
+                    keyboardType: controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
                     onSubmitted: (str){
-/*                      context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, []));*/
+                      context.read<EditReportBloc>().add(
+                          UpdateEditReportEvent(id, str, []));
                     },
                     decoration: const InputDecoration(
                       isDense: true,
@@ -531,12 +530,12 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,/*controller[index].type == 'text'
+                    keyboardType: controller[index].type == 'text'
                         ? TextInputType.text
-                        : TextInputType.number,*/
+                        : TextInputType.number,
                     onSubmitted: (str) {
-           /*           context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, []));*/
+                      context.read<EditReportBloc>().add(
+                          UpdateEditReportEvent(id, str, []));
                     },
                     decoration: const InputDecoration(
                       isDense: true,
@@ -616,10 +615,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[3],
               onClick: () {
-       /*         setState(() {});
+                setState(() {});
                 context
-                    .read<DetailReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 3, context));*/
+                    .read<EditReportBloc>()
+                    .add(OnSelectValueEvent(listWidget, 3, context));
               },
             ),
           ),
@@ -654,9 +653,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[0],
               onClick: () {
-    /*            context
-                    .read<DetailReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 0, context));*/
+                setState(() {});
+                context
+                    .read<EditReportBloc>()
+                    .add(OnSelectValueEvent(listWidget, 0, context));
               },
             ),
           ),
@@ -706,9 +706,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[2],
               onClick: () {
-/*                context
-                    .read<DetailReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 2, context));*/
+                setState(() {});
+                context
+                    .read<EditReportBloc>()
+                    .add(OnSelectValueEvent(listWidget, 2, context));
               },
             ),
           ),
@@ -819,9 +820,9 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       listParent[i].suggestedAnswerIds[j].questionAndPageIds
                           .length; k ++) {
                     if (listParent[i].suggestedAnswerIds[j]
-                            .questionAndPageIds[k].questionType == "check_box" &&
-                            listParent[i].suggestedAnswerIds[j]
-                                .questionAndPageIds[k].commentAnswer == true) {
+                        .questionAndPageIds[k].questionType == "check_box" &&
+                        listParent[i].suggestedAnswerIds[j]
+                            .questionAndPageIds[k].commentAnswer == true) {
                       tableRowSub.add(tableRowCheckBoxTextField(
                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
@@ -1067,7 +1068,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                 for (int k = 0; k <
                     list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
                   if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "check_box" &&
-                          list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true)
+                      list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true)
                   {
                     tableRowSub.add(tableRowCheckBoxTextField(
                         "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",

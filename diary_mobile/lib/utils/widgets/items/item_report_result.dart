@@ -15,12 +15,14 @@ class ItemReportResult extends StatefulWidget {
   final ReportResult reportResult;
   final VoidCallback callbackChooseItem;
   final VoidCallback callbackDelete;
+  final VoidCallback callbackEdit;
 
   const ItemReportResult({
     Key? key,
     required this.reportResult,
     required this.callbackChooseItem,
     required this.callbackDelete,
+    required this.callbackEdit,
   }) : super(key: key);
 
   @override
@@ -56,57 +58,67 @@ class _ItemReportResultState extends State<ItemReportResult> {
               borderRadius: BorderRadius.circular(8),
               color: /*widget.isChoose ? Colors.red[100] :*/
               Colors.white),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Row(
             children: [
-              Container(
-                margin: const EdgeInsets.only(bottom: 5),
-                child: Text(
-                  "Khảo sát: ${widget.reportResult.id}",
-                  style:
-                  StyleOfit.textStyleFW500(AppColor.gray57, 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 5),
+                      child: Text(
+                        "Khảo sát: ${widget.reportResult.id}",
+                        style:
+                        StyleOfit.textStyleFW500(AppColor.gray57, 16),
+                      ),
+                    ),
+                    Container(
+                        alignment: Alignment.centerLeft,
+                        margin: const EdgeInsets.only(bottom: 0, top: 0),
+                        child: RichText(
+                          text: Utils.convertText(
+                              "",
+                              "${widget.reportResult.surveyId}",
+                              AppColor.blue15,
+                              14),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        )),
+                    SizedBox(
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(top: 5),
+                          child: RichText(
+                            text: Utils.convertText(
+                                "Thanh tra viên: ",
+                                "${widget.reportResult.internalInspector}",
+                                AppColor.blue15,
+                                14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    ),
+                    SizedBox(
+                      child: Container(
+                          alignment: Alignment.centerLeft,
+                          margin: const EdgeInsets.only(top: 5),
+                          child: RichText(
+                            text: Utils.convertText(
+                                "Ngày thực hiện: ",
+                                "${widget.reportResult.createDate}",
+                                AppColor.blue15,
+                                14),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          )),
+                    )
+                  ],
                 ),
               ),
-              Container(
-                  alignment: Alignment.centerLeft,
-                  margin: const EdgeInsets.only(bottom: 0, top: 0),
-                  child: RichText(
-                    text: Utils.convertText(
-                        "",
-                        "${widget.reportResult.surveyId}",
-                        AppColor.blue15,
-                        14),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  )),
-              SizedBox(
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(top: 5),
-                    child: RichText(
-                      text: Utils.convertText(
-                          "Thanh tra viên: ",
-                          "${widget.reportResult.internalInspector}",
-                          AppColor.blue15,
-                          14),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-              ),
-              SizedBox(
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    margin: const EdgeInsets.only(top: 5),
-                    child: RichText(
-                      text: Utils.convertText(
-                          "Ngày thực hiện: ",
-                          "${widget.reportResult.createDate}",
-                          AppColor.blue15,
-                          14),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    )),
-              )
+              IconButton(icon: Icon(Icons.edit),
+              onPressed: (){
+                widget.callbackEdit();
+              },),
             ],
           ),
         ),

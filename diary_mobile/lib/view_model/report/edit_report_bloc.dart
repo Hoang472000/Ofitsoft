@@ -20,18 +20,18 @@ import '../bloc_event.dart';
 import '../bloc_state.dart';
 import 'add_report_bloc.dart';
 
-class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
+class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
   final Repository repository;
 
-  DetailReportBloc(this.repository) : super(DetailReportState()) {
-    on<GetDetailReportEvent>(_getDetailReport);
+  EditReportBloc(this.repository) : super(EditReportState()) {
+    on<GetEditReportEvent>(_getEditReport);
     on<OnSelectValueEvent>(_onSelectValue);
-    on<UpdateDetailReportEvent>(updateDetailReport);
-    on<UpdateDetailTableEvent>(updateDetailTable);
+    on<UpdateEditReportEvent>(updateEditReport);
+    on<UpdateEditTableEvent>(updateEditTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
   }
 
-  void _initViewDetail(Emitter<DetailReportState> emitter) {
+  void _initViewEdit(Emitter<EditReportState> emitter) {
     List<InputRegisterModel> list= [];
     print("HoangCV: state.listFarmer : ${state.listFarmer.length}");
     if(state.indexFarmer != -1) {
@@ -119,7 +119,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   }
 
   Future<FutureOr<void>> _onSelectValue(
-      OnSelectValueEvent event, Emitter<DetailReportState> emit) async {
+      OnSelectValueEvent event, Emitter<EditReportState> emit) async {
     int result;
     bool checkPass = true;
     if(event.index == 0 && state.listFarmer.isEmpty) {
@@ -181,23 +181,20 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
             emit(state.copyWith(
                 isShowProgress: true, formStatus: const InitialFormStatus()));
 
-            QuestionUpload questionUpload = QuestionUpload(
-              user_input_id: state.reportId,
-              survey_id: state.listReport[1].id,
-              is_answer_exist: true,
-              list_id_suggested: [],
+            FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+              id: state.reportId,
               farmer_id: state.farmerInspector!.farmer_id,
               farmer_code: state.farmerInspector!.farmer_code,
               internal_inspector_id: state.farmerInspector!.internal_inspector_id,
               monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
               visit_date: state.farmerInspector!.visit_date,
             );
-            ObjectResult result = await repository.uploadQuestion(questionUpload);
+            ObjectResult result = await repository.editFarmerInspector(questionUpload);
             if (result.responseCode == StatusConst.code00) {
               emit(state.copyWith(
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
-                  formStatus: SubmissionSuccess(success: result.message)));
+                  formStatus: SubmissionSuccess(/*success: result.message*/)));
             } else {
               emit(state.copyWith(
                   isShowProgress: false, formStatus: SubmissionFailed(result.message)));
@@ -208,15 +205,15 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     }
   }
 
-  void _getDetailReport(
-      GetDetailReportEvent event, Emitter<DetailReportState> emitter) async {
+  void _getEditReport(
+      GetEditReportEvent event, Emitter<EditReportState> emitter) async {
     emitter(state.copyWith(
-      isShowProgress: true,
+        isShowProgress: true,
 /*      startTimeController: TextEditingController(
           text: DateTime.now().toString() *//*.split('.')[0]*//*),*/
-      idFarmerController: TextEditingController(text: ''),
-      farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
-      reportId: event.id
+        idFarmerController: TextEditingController(text: ''),
+        farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
+        reportId: event.id
     ));
     final report = await repository.getDetailReport(event.id);
     List<List<Select>> listSelected = [];
@@ -274,7 +271,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         startTimeController: TextEditingController(
             text: Utils.formatDate(report[0].visitDate ?? "")),
       ));
-      _initViewDetail(emitter);
+      _initViewEdit(emitter);
     }
     emitter(state.copyWith(
       isShowProgress: false,
@@ -419,16 +416,16 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         print(
             "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
         selectList.add(Select(
-          childQuestion.idSelected!,
-          childQuestion.checkResult ?? false,
-          childQuestion
-              .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
+            childQuestion.idSelected!,
+            childQuestion.checkResult ?? false,
+            childQuestion
+                .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-           print(
+        print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
         selectList.add(Select(
             childAnswer.idSelected!,
@@ -653,8 +650,8 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   }
 
 
-  Future<FutureOr<void>> updateDetailReport(
-      UpdateDetailReportEvent event, Emitter<DetailReportState> emit) async {
+  Future<FutureOr<void>> updateEditReport(
+      UpdateEditReportEvent event, Emitter<EditReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
     print("HoanghCV123213412");
@@ -753,7 +750,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     if(state.reportId != null) {
       questionUpload = QuestionUpload(
           user_input_id: state.reportId,
-          survey_id: state.listReport[1].id,
+          survey_id: state.listReport[0].id,
           question_id: question.id,
           suggested_answer_id: answer.id,
           answer_type: answerType == '' ? null : answerType,
@@ -768,7 +765,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     } else{
       questionUpload = QuestionUpload(
         user_input_id: state.reportId,
-        survey_id: state.listReport[1].id,
+        survey_id: state.listReport[0].id,
         question_id: question.id,
         suggested_answer_id: answer.id,
         answer_type: answerType == '' ? null : answerType,
@@ -792,21 +789,21 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       emit(state.copyWith(
           isShowProgress: false,
           reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(success: result.message)));
+          formStatus: SubmissionSuccess(/*success: result.message*/)));
     } else {
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));
     }
   }
 
-  Future<FutureOr<void>> updateDetailTable(
-      UpdateDetailTableEvent event, Emitter<DetailReportState> emit) async {
+  Future<FutureOr<void>> updateEditTable(
+      UpdateEditTableEvent event, Emitter<EditReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
     QuestionUpload questionUpload = QuestionUpload(
         user_input_id: state.reportId,
-        survey_id: state.listReport[1].id,
+        survey_id: state.listReport[0].id,
         question_id: event.questionId,
         suggested_answer_id: event.answerId,
         answer_type: 'table',
@@ -820,14 +817,14 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       emit(state.copyWith(
           isShowProgress: false,
           reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(success: result.message)));
+          formStatus: SubmissionSuccess(/*success: result.message*/)));
     } else {
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));
     }
   }
 
-  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<DetailReportState> emit) async {
+  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<EditReportState> emit) async {
     state.farmerInspector!.monitoring_visit_type = event.value;
     emit(state.copyWith(
         farmerInspector: state.farmerInspector
@@ -836,23 +833,20 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       emit(state.copyWith(
           isShowProgress: true, formStatus: const InitialFormStatus()));
 
-      QuestionUpload questionUpload = QuestionUpload(
-        user_input_id: state.reportId,
-        survey_id: state.listReport[1].id,
-        is_answer_exist: true,
-        list_id_suggested: [],
+      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+        id: state.reportId,
         farmer_id: state.farmerInspector!.farmer_id,
         farmer_code: state.farmerInspector!.farmer_code,
         internal_inspector_id: state.farmerInspector!.internal_inspector_id,
         monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
         visit_date: state.farmerInspector!.visit_date,
       );
-      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      ObjectResult result = await repository.editFarmerInspector(questionUpload);
       if (result.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
+            formStatus: SubmissionSuccess()));
       } else {
         emit(state.copyWith(
             isShowProgress: false, formStatus: SubmissionFailed(result.message)));
@@ -861,33 +855,33 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   }
 }
 
-class DetailReportEvent extends BlocEvent {
+class EditReportEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class GetDetailReportEvent extends DetailReportEvent {
+class GetEditReportEvent extends EditReportEvent {
   final Diary diary;
   final int id;
 
-  GetDetailReportEvent(this.diary, this.id);
+  GetEditReportEvent(this.diary, this.id);
 
   @override
   List<Object?> get props => [diary, id];
 }
 
-class UpdateDetailReportEvent extends DetailReportEvent {
+class UpdateEditReportEvent extends EditReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
 
-  UpdateDetailReportEvent(this.id, this.value, this.listSelect);
+  UpdateEditReportEvent(this.id, this.value, this.listSelect);
 
   @override
   List<Object?> get props => [id, value, listSelect];
 }
 
-class UpdateFarmerInspectorEvent extends DetailReportEvent {
+class UpdateFarmerInspectorEvent extends EditReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
@@ -898,7 +892,7 @@ class UpdateFarmerInspectorEvent extends DetailReportEvent {
   List<Object?> get props => [id, value, listSelect];
 }
 
-class OnSelectValueEvent extends DetailReportEvent {
+class OnSelectValueEvent extends EditReportEvent {
   List<InputRegisterModel> list;
   int index;
   BuildContext context;
@@ -909,19 +903,19 @@ class OnSelectValueEvent extends DetailReportEvent {
   List<Object?> get props => [list, index, context];
 }
 
-class UpdateDetailTableEvent extends DetailReportEvent {
+class UpdateEditTableEvent extends EditReportEvent {
   final int questionId;
   final int answerId;
   final int rowId;
   final String value;
 
-  UpdateDetailTableEvent(this.questionId, this.answerId, this.rowId, this.value);
+  UpdateEditTableEvent(this.questionId, this.answerId, this.rowId, this.value);
 
   @override
   List<Object?> get props => [questionId, answerId, rowId, value];
 }
 
-class DetailReportState extends BlocState {
+class EditReportState extends BlocState {
   @override
   List<Object?> get props => [
     detailDiary,
@@ -967,7 +961,7 @@ class DetailReportState extends BlocState {
   final int? indexFarmer;
   final int? indexInspector;
 
-  DetailReportState({
+  EditReportState({
     this.detailDiary,
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
@@ -991,7 +985,7 @@ class DetailReportState extends BlocState {
     this.indexInspector,
   });
 
-  DetailReportState copyWith({
+  EditReportState copyWith({
     Diary? detailDiary,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
@@ -1014,7 +1008,7 @@ class DetailReportState extends BlocState {
     int? indexFarmer,
     int? indexInspector,
   }) {
-    return DetailReportState(
+    return EditReportState(
         detailDiary: detailDiary ?? this.detailDiary,
         formStatus: formStatus ?? this.formStatus,
         isShowProgress: isShowProgress ?? this.isShowProgress,

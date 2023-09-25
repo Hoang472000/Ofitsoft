@@ -76,7 +76,7 @@ class SurveyRpRlt {
       farmerId: json['farmer_id'] ?? -1,
       farmer: json['farmer'] ?? '',
       farmerCode: json['farmer_code'] ?? '',
-      internalInspectorId: json['internal_inspector_id'] ?? -1,
+      internalInspectorId: json['internal_inspector_id'],
       monitoringVisitType: json['monitoring_visit_type'] ?? '',
       surveyId: json['survey_id'] != null
           ? (json['survey_id'] as List<dynamic>)

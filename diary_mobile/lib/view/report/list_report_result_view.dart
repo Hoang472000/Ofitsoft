@@ -20,6 +20,7 @@ import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/report/list_report_result_bloc.dart';
 import 'add_report.dart';
 import 'detail_report.dart';
+import 'edit_report.dart';
 
 
 class ListReportResultView extends StatefulWidget {
@@ -159,7 +160,11 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                                   GetListReportResultEvent(const []));
                             }
                           },
-                          callbackDelete: () {});
+                          callbackDelete: () {},
+                        callbackEdit: () async {
+                        var result = await Navigator.of(context)
+                            .push(EditReportViewPage.route(widget.diary, state.listReport[index].id??-1));
+                      },);
                     },
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
