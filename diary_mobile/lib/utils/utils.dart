@@ -177,14 +177,18 @@ class Utils {
   static String formatDate(String time) {
 
     print("HoangCV: formatDate: $time");
-    if (time.isNotEmpty) {
-      String result = time.replaceAll('"', "").trim();
-      print("HoangCV: formatDate result: $result");
-     // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
-      DateTime dateTime = DateTime.parse(result);
-      final f = DateFormat('dd/MM/yyyy HH:mm:ss');
-      return f.format(dateTime);
-    } else {
+    try {
+      if (time.isNotEmpty) {
+        String result = time.replaceAll('"', "").trim();
+        print("HoangCV: formatDate result: $result");
+        // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
+        DateTime dateTime = DateTime.parse(result);
+        final f = DateFormat('dd/MM/yyyy HH:mm:ss');
+        return f.format(dateTime);
+      } else {
+        return "";
+      }
+    }catch(_){
       return "";
     }
   }
@@ -213,14 +217,18 @@ class Utils {
     return dateTime/*.toUtc()*/;
   }
   static DateTime stringToDate(String time) {
-    if(time.contains(' ')){
-      DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
-      DateTime dateTime = formatter.parse(time/*.replaceFirst(' ', 'T')*/);
-      return dateTime;
-    } else{
-      DateFormat formatter = DateFormat('dd/MM/yyyy');
-      DateTime dateTime = formatter.parse(time);
-      return dateTime;
+    try {
+      if (time.contains(' ')) {
+        DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+        DateTime dateTime = formatter.parse(time /*.replaceFirst(' ', 'T')*/);
+        return dateTime;
+      } else {
+        DateFormat formatter = DateFormat('dd/MM/yyyy');
+        DateTime dateTime = formatter.parse(time);
+        return dateTime;
+      }
+    } catch(_){
+      return DateTime.now();
     }
 
   }

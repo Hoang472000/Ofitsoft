@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../data/repository.dart';
 import '../../../utils/status/form_submission_status.dart';
+import '../../data/entity/report/report.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 
@@ -40,11 +41,13 @@ class ListReportResultEvent extends BlocEvent {
 
 class GetListReportResultEvent extends ListReportResultEvent {
   final List<ReportResult> list;
+  final List<Report> listSelect;
+  final bool checkUpdate;
 
-  GetListReportResultEvent(this.list);
+  GetListReportResultEvent(this.list, this.listSelect, {this.checkUpdate = false});
 
   @override
-  List<Object?> get props => [list];
+  List<Object?> get props => [list, listSelect, checkUpdate];
 }
 
 class ListReportResultState extends BlocState {

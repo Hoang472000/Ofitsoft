@@ -164,7 +164,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               emit(state.copyWith(
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
-                  formStatus: SubmissionSuccess(success: result.message)));
+                  formStatus: SubmissionSuccess(/*success: result.message*/)));
             } else {
               emit(state.copyWith(
                   isShowProgress: false, formStatus: SubmissionFailed(result.message)));
@@ -184,7 +184,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       idFarmerController: TextEditingController(text: ''),
       farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
     ));
-    final report = await repository.getListActivityReport();
+    final report = await repository.getListActivityReport(event.id);
     List<List<Select>> listSelected = [];
     List<Select> listSelectedInspector = [];
     List<List<Visible>> listVisible = [];
@@ -237,7 +237,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
     emitter(state.copyWith(
       isShowProgress: false,
-      detailDiary: event.diary,
       listReport: report,
       listSelected: listSelected,
       listVisible: listVisible,
@@ -361,7 +360,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
-
 
   List<List<Visible>> createVisibleLists(List<Question> questions) {
     List<List<Visible>> visibleLists = [];
@@ -520,7 +518,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     return [null, null, listIdSuggested];
   }*/
 
-
   List<dynamic> findQuestionAndAnswerById(List<Question> questions, int id, List<int> listIdSuggested, String answerType) {
     Question question = Question();
     Answer answer = Answer();
@@ -567,7 +564,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     return [null, null, listIdSuggested, answerType];
   }
 
-
   Future<FutureOr<void>> updateAddReport(
       UpdateAddReportEvent event, Emitter<AddReportState> emit) async {
     emit(state.copyWith(
@@ -577,11 +573,12 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     Answer answer = Answer();
     List<int> listIdSuggested = [];
     String answerType = '';
+    bool hasCommandAnswer = false;
     List<Question> listQs = state.listReport[1].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
-      print("HoangCV: listQs: ${listQs[i].title}");
+      //print("HoangCV: listQs: ${listQs[i].title}");
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
+        //print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
         if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
           question = Question.copy(listQs[i].questionAndPageIds[h]);
           answerType = question.questionType ?? "";
@@ -599,6 +596,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
                 answerType = question.questionType ?? "";
+                if(question.commentAnswer == true){
+                  hasCommandAnswer = true;
+                }
                 /*answer = Answer.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
               }
@@ -607,6 +607,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               question = Question.copy(listQs[i].questionAndPageIds[h]);
               answer = Answer.copy(
                   listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+              if(answer.commentAnswer == true){
+                hasCommandAnswer = true;
+              }
               answerType = question.questionType ?? "";
               if(answerType == 'simple_choice'){
                 listIdSuggested = listQs[i].questionAndPageIds[h].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
@@ -616,12 +619,15 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           for (int l = 0;
               l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
               l++) {
-            print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
-                " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
+            //print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
+            //    " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
             if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
               question = Question.copy(
                   listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
               answerType = question.questionType ?? "";
+              if(question.commentAnswer == true){
+                hasCommandAnswer = true;
+              }
             } else{
               for (int m = 0;
               m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
@@ -632,6 +638,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     answerType = question.questionType ?? "";
                     answer = Answer.copy(
                         listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
+                    if(answer.commentAnswer == true){
+                      hasCommandAnswer = true;
+                    }
                     if(answerType == 'simple_choice'){
                       listIdSuggested = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
                     }
@@ -643,6 +652,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                       question = Question.copy(
                           listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
                       answerType = question.questionType ?? "";
+                      if(question.commentAnswer == true){
+                        hasCommandAnswer = true;
+                      }
 /*                      answer = Answer.copy(
                           listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);*/
                     }
@@ -669,10 +681,18 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       text = event.value;
     }
     QuestionUpload questionUpload;
-    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} ");
-    if(answerType == " check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : $text : $index : ${event.listSelect[index].value}");
+    if(answerType == "check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
 
-    }else {
+    } else if(answerType == "simple_choice" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+
+    } else if(answerType == "char_box" && text.isEmpty){
+
+    } else if(answerType == "check_box" && text.isEmpty && hasCommandAnswer){
+
+    } else if(answerType == "simple_choice" && text.isEmpty && hasCommandAnswer){
+
+    } else {
       if (state.reportId != null) {
         questionUpload = QuestionUpload(
             user_input_id: state.reportId,
@@ -717,7 +737,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
+            formStatus: SubmissionSuccess(/*success: result.message*/)));
       } else {
         emit(state.copyWith(
             isShowProgress: false,
@@ -747,7 +767,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       emit(state.copyWith(
           isShowProgress: false,
           reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(success: result.message)));
+          formStatus: SubmissionSuccess(/*success: result.message*/)));
     } else {
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));
@@ -763,23 +783,20 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       emit(state.copyWith(
           isShowProgress: true, formStatus: const InitialFormStatus()));
 
-      QuestionUpload questionUpload = QuestionUpload(
-        user_input_id: state.reportId,
-        survey_id: state.listReport[1].id,
-        is_answer_exist: true,
-        list_id_suggested: [],
+      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+        id: state.reportId,
         farmer_id: state.farmerInspector!.farmer_id,
         farmer_code: state.farmerInspector!.farmer_code,
         internal_inspector_id: state.farmerInspector!.internal_inspector_id,
         monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
         visit_date: state.farmerInspector!.visit_date,
       );
-      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      ObjectResult result = await repository.editFarmerInspector(questionUpload);
       if (result.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
+            formStatus: SubmissionSuccess(/*success: result.message*/)));
       } else {
         emit(state.copyWith(
             isShowProgress: false, formStatus: SubmissionFailed(result.message)));
@@ -794,12 +811,13 @@ class AddReportEvent extends BlocEvent {
 }
 
 class GetAddReportEvent extends AddReportEvent {
-  final Diary diary;
 
-  GetAddReportEvent(this.diary);
+  final int id;
+
+  GetAddReportEvent(this.id);
 
   @override
-  List<Object?> get props => [diary];
+  List<Object?> get props => [id];
 }
 
 class UpdateAddReportEvent extends AddReportEvent {

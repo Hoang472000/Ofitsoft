@@ -432,7 +432,7 @@ class _ActivityPageState extends State<ActivityPage> {
                             widget.seasonFarmId, widget.diary))
                             : widget.action.compareTo(
                             "report") == 0 ? await Navigator.of(context)
-                            .push(AddReportViewPage.route(widget.diary)): await Navigator.of(context).push(
+                            .push(AddReportViewPage.route(-1)): await Navigator.of(context).push(
                             AddMonitorPage.route());
                         if (result != null && result[0]) {
                           if(result[1]){

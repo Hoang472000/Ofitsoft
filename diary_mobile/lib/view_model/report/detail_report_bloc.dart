@@ -278,7 +278,6 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     }
     emitter(state.copyWith(
       isShowProgress: false,
-      detailDiary: event.diary,
       listReport: report[1].surveyId,
       listSelected: listSelected,
       listVisible: listVisible,
@@ -867,13 +866,12 @@ class DetailReportEvent extends BlocEvent {
 }
 
 class GetDetailReportEvent extends DetailReportEvent {
-  final Diary diary;
   final int id;
 
-  GetDetailReportEvent(this.diary, this.id);
+  GetDetailReportEvent(this.id);
 
   @override
-  List<Object?> get props => [diary, id];
+  List<Object?> get props => [id];
 }
 
 class UpdateDetailReportEvent extends DetailReportEvent {

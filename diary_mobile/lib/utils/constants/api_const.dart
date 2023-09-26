@@ -46,6 +46,7 @@ class ApiConst {
   static const String getListReportResult = "/get/list_result_assessment/";
   static const String getDetailReport = "/get/result_assessment/";
   static const String editFarmerInspector = "/edit/result_assessment/";
+  static const String getListReportSelect = "/get/list_assessment/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

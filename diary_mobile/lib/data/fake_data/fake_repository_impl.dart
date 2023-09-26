@@ -616,7 +616,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Report>> getListActivityReport() {
+  Future<List<Report>> getListActivityReport(int id) {
     // TODO: implement getListActivityReport
     throw UnimplementedError();
   }
@@ -660,6 +660,12 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector) {
     // TODO: implement editFarmerInspector
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Report>> getListReportSelect() {
+    // TODO: implement getListReportSelect
     throw UnimplementedError();
   }
 }

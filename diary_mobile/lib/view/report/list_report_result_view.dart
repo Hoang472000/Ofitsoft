@@ -14,6 +14,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
+import '../../data/entity/report/report.dart';
 import '../../data/entity/report/report_result_title.dart';
 import '../../utils/widgets/items/item_report_result.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
@@ -21,6 +22,7 @@ import '../../view_model/report/list_report_result_bloc.dart';
 import 'add_report.dart';
 import 'detail_report.dart';
 import 'edit_report.dart';
+import 'list_report_select.dart';
 
 
 class ListReportResultView extends StatefulWidget {
@@ -28,22 +30,25 @@ class ListReportResultView extends StatefulWidget {
       {super.key,
         required this.activityFarm,
         required this.diary,
-        required this.listReportResult});
+        required this.listReportResult, required this.listSelect});
 
   final ActivityFarm activityFarm;
   final Diary diary;
   final List<ReportResult> listReportResult;
+  final List<Report> listSelect;
 
   @override
   _ListReportResultViewState createState() => _ListReportResultViewState();
 
   static Route route(Diary diary,
-      ActivityFarm activityFarm, List<ReportResult> listReportResult) {
+  List<Report> listSelect,
+      ActivityFarm activityFarm, List<ReportResult> listReportResult, ) {
     return Utils.pageRouteBuilder(
         ListReportResultView(
           activityFarm: activityFarm,
           diary: diary,
           listReportResult: listReportResult,
+            listSelect: listSelect
         ),
         true);
   }
@@ -57,7 +62,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListReportResultBloc(context.read<Repository>())..add(GetListReportResultEvent(widget.listReportResult)),
+      create: (context) => ListReportResultBloc(context.read<Repository>())..add(GetListReportResultEvent(widget.listReportResult, widget.listSelect)),
       child: Scaffold(
         appBar: OfitAppBar(context,
             centerTitle: true,
@@ -93,15 +98,10 @@ class _ListReportResultViewState extends State<ListReportResultView> {
             }
                 : () async {
               var result = await Navigator.of(context)
-                  .push(AddReportViewPage.route(widget.diary));
+                  .push(ListReportSelect.route(widget.listSelect));
               if (result != null && result[0]) {
-                if(result[1]){
-                  setState(() {
-                    updateHarvesting = result[1];
-                  });
-                }
                 contextBloc.read<ListReportResultBloc>().add(
-                    GetListReportResultEvent(const []));
+                    GetListReportResultEvent(const [], const [], checkUpdate: true));
               }
             });
           },
@@ -134,7 +134,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
           )
               : RefreshIndicator(
             onRefresh: () async {
-              blocContext.read<ListReportResultBloc>().add(GetListReportResultEvent([]));
+              blocContext.read<ListReportResultBloc>().add(GetListReportResultEvent(const [], const [], checkUpdate: true));
             },
             child: (state.listReport.isEmpty)
                 ? const EmptyWidget()
@@ -147,23 +147,18 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                     itemBuilder: (BuildContext contextBloc, int index) {
                       return ItemReportResult(
                           reportResult: state.listReport[index],
-                          callbackChooseItem: () async {
-                            var result = await Navigator.of(context)
-                                .push(DetailReportViewPage.route(widget.diary, state.listReport[index].id??-1));
-                            if (result != null && result[0]) {
-                              if(result[1]){
-                                setState(() {
-                                  updateHarvesting = result[1];
-                                });
-                              }
-                              contextBloc.read<ListReportResultBloc>().add(
-                                  GetListReportResultEvent(const []));
-                            }
+                          callbackChooseItem: () {
+                            Navigator.of(context)
+                                .push(DetailReportViewPage.route(state.listReport[index].id??-1));
                           },
                           callbackDelete: () {},
                         callbackEdit: () async {
                         var result = await Navigator.of(context)
                             .push(EditReportViewPage.route(widget.diary, state.listReport[index].id??-1));
+                        if (result != null && result[0]) {
+                          contextBloc.read<ListReportResultBloc>().add(
+                              GetListReportResultEvent(const [], const [], checkUpdate: true));
+                        }
                       },);
                     },
                     shrinkWrap: true,

@@ -101,8 +101,8 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                                     .listActivityFarm[index], state.listActivityDiary));
                                         } else if(state.listActivityFarm[index].id == 5){
                                           Navigator.push(context,
-                                              ListReportResultView.route(widget.diary,state
-                                                    .listActivityFarm[index], state.listReportResult));
+                                              ListReportResultView.route(widget.diary, state.listReportSelect,
+                                                  state.listActivityFarm[index], state.listReportResult));
                                         } else if(state.listActivityFarm[index].id == 6){
                                           var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("purchase",

@@ -685,12 +685,12 @@ class RepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Report>> getListActivityReport() async{
+  Future<List<Report>> getListActivityReport(int id) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.getListReport+'1',
+            path: '${ApiConst.getListReport}$id',
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
@@ -1182,6 +1182,33 @@ class RepositoryImpl extends Repository {
       );
     }
     return objectResult;
+  }
+
+  @override
+  Future<List<Report>> getListReportSelect() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListReportSelect,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListReportSelect response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<Report> list = List.from(objectResult.response)
+          .map((json) => Report.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
   }
 
 }

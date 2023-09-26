@@ -19,16 +19,15 @@ import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/detail_report_bloc.dart';
 
 class DetailReportViewPage extends StatefulWidget {
-  DetailReportViewPage({super.key, required this.diary, required this.id});
-  final Diary diary;
+  DetailReportViewPage({super.key, required this.id});
   final int id;
 
   @override
   _DetailReportViewPageState createState() => _DetailReportViewPageState();
 
-  static Route route(Diary diary, int id) {
+  static Route route(int id) {
     return Utils.pageRouteBuilder(
-        DetailReportViewPage(diary: diary, id: id,
+        DetailReportViewPage(id: id,
         ),
         true);
   }
@@ -47,7 +46,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => DetailReportBloc(context.read<Repository>())
-        ..add(GetDetailReportEvent(widget.diary, widget.id)),
+        ..add(GetDetailReportEvent(widget.id)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -55,35 +54,17 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           context,
           centerTitle: true,
           showDefaultBackButton: true,
+          callback: [false],
           title: Text(
-            "Báo cáo đánh giá",
+            "Chi tiết báo cáo đánh giá",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
           actions: [],
         ),
         body: BlocConsumer<DetailReportBloc, DetailReportState>(
-            listener: (blocContext, state) async {
-              final formStatus = state.formStatus;
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                        () {
-                      Get.back();
-                      //Navigator.pop(context, [true]);
-                    }, () {
-                      Get.back();
-                      //Navigator.pop(context, [true]);
-                    }, '', S.of(context).close_dialog, dismissible: false);
-              } else if (formStatus is FormSubmitting) {
-                DiaLogManager.showDialogLoading(context);
-              }
-            }, builder: (blocContext, state) {
+            listener: (blocContext, state) async {},
+            builder: (blocContext, state) {
           return WillPopScope(
             onWillPop: () async{
               Navigator.pop(context);
@@ -98,7 +79,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         tableFooter(),
-                        tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
+                        tableMuc("${state.listReport[0].title}"),
                         SizedBox(height: 10,),
                         tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
                         ListView.builder(
@@ -352,7 +333,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
 
       if (index != -1) {
-        print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
         controller = TextEditingController(text: element[index].controller.text);
         type = element[index].type;
         return Padding(

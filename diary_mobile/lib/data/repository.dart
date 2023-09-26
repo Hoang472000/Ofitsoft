@@ -89,13 +89,15 @@ abstract class Repository {
 
   Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction);
 
-  Future<List<Report>> getListActivityReport();
+  Future<List<Report>> getListActivityReport(int id);
 
   Future<List<Diary>> getListBackupDiary(String action,);
 
   Future<ObjectResult> uploadQuestion(QuestionUpload questionUpload);
 
   Future<List<ReportResult>> getListReportResult();
+
+  Future<List<Report>> getListReportSelect();
 
   Future<List<SurveyRpRlt>> getDetailReport(int id);
 

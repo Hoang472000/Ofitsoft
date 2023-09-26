@@ -853,6 +853,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
     }
   }
+
 }
 
 class EditReportEvent extends BlocEvent {

@@ -36,20 +36,7 @@ class EditReportViewPage extends StatefulWidget {
 
 class _EditReportViewPageState extends State<EditReportViewPage> {
   bool edit = false;
-  List<bool> listSelected = [false, false, false];
-  List<bool> listSelected1 = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected2 = [false, false, false];
-  List<bool> listSelected3 = [false, false, false];
-  List<bool> listSelected4 = [false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected5 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected6 = [false, false, false, false];
-  List<bool> listSelected8 = [false, false, false, false, false, false, false];
-  List<bool> listSelected9 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected10 = [false, false, false, false];
-  List<bool> listSelected11 = [false, false, false, false, false, false, false, false, false, false, false, false];
-  List<bool> listSelected12 = [false, false, false, false, false];
-
-
+  bool checkUpdate = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -68,8 +55,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           context,
           centerTitle: true,
           showDefaultBackButton: true,
+          callback: [checkUpdate],
           title: Text(
-            "Báo cáo đánh giá",
+            "Sửa báo cáo đánh giá",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,
@@ -85,6 +73,11 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                   Get.back();
                 }, '', S.of(context).close_dialog);
               } else if (formStatus is SubmissionSuccess) {
+                if(!checkUpdate){
+                  setState(() {
+                    checkUpdate = true;
+                  });
+                }
             if ((formStatus.success ?? "").isNotEmpty) {
               DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                   () {
@@ -111,7 +104,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         tableFooter(),
-                        tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
+                        tableMuc("${state.listReport[0].title}"),
                         SizedBox(height: 10,),
                         tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
                         ListView.builder(
@@ -654,7 +647,6 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[3],
               onClick: () {
-                setState(() {});
                 context
                     .read<EditReportBloc>()
                     .add(OnSelectValueEvent(listWidget, 3, context));
@@ -692,7 +684,6 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[0],
               onClick: () {
-                setState(() {});
                 context
                     .read<EditReportBloc>()
                     .add(OnSelectValueEvent(listWidget, 0, context));
@@ -745,7 +736,6 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               color: AppColor.background,
               inputRegisterModel: listWidget[2],
               onClick: () {
-                setState(() {});
                 context
                     .read<EditReportBloc>()
                     .add(OnSelectValueEvent(listWidget, 2, context));
