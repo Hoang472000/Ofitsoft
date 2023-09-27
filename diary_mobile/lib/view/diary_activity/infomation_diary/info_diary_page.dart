@@ -100,9 +100,13 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                                 widget.id, widget.diary,state
                                                     .listActivityFarm[index], state.listActivityDiary));
                                         } else if(state.listActivityFarm[index].id == 5){
-                                          Navigator.push(context,
+                                          var result = await Navigator.push(context,
                                               ListReportResultView.route(widget.diary, state.listReportSelect,
                                                   state.listActivityFarm[index], state.listReportResult));
+                                          if(result != null && result[0]){
+                                            blocContext.read<DetailDiaryBloc>().add(
+                                                GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listReport: result[1]));
+                                          }
                                         } else if(state.listActivityFarm[index].id == 6){
                                           var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("purchase",

@@ -34,7 +34,9 @@ class QuestionUpload {
 
   //
   int? farmer_id;
-  int? farmer_code;
+  String? farmer_code;
+  int? farm_id;
+  String? farm_code;
   int? internal_inspector_id;
   String? monitoring_visit_type;
   String? visit_date;
@@ -46,7 +48,8 @@ class QuestionUpload {
     this.answer_score, this.message_main_attachment_id, this.last_displayed_page_id, this.deadline,
     this.scoring_percentage, this.scoring_total, this.scoring_success, this.is_session_answer,
     this.is_answer_exist, this.value_check_box, this.table_row_id, this.list_id_suggested,
-    this.farmer_id, this.farmer_code, this.internal_inspector_id, this.monitoring_visit_type, this.visit_date
+    this.farmer_id, this.farmer_code, this.internal_inspector_id, this.monitoring_visit_type, this.visit_date,
+    this.farm_id, this.farm_code,
   });
 
   Map<String, dynamic> toJson() {
@@ -88,6 +91,8 @@ class QuestionUpload {
     //
     data['farmer_id'] = farmer_id;
     data['farmer_code'] = farmer_code;
+    data['farm_id'] = farm_id;
+    data['farm_code'] = farm_code;
     data['internal_inspector_id'] = internal_inspector_id;
     data['monitoring_visit_type'] = monitoring_visit_type;
     data['visit_date'] = visit_date;
@@ -98,7 +103,9 @@ class QuestionUpload {
 class FarmerInspectorUpload {
   int? id;
   int? farmer_id;
-  int? farmer_code;
+  String? farmer_code;
+  int? farm_id;
+  String? farm_code;
   int? internal_inspector_id;
   String? monitoring_visit_type;
   String? visit_date;
@@ -107,6 +114,8 @@ class FarmerInspectorUpload {
       {this.id,
       this.farmer_id,
       this.farmer_code,
+      this.farm_id,
+      this.farm_code,
       this.internal_inspector_id,
       this.monitoring_visit_type,
       this.visit_date});
@@ -115,7 +124,8 @@ class FarmerInspectorUpload {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['farmer_id'] = farmer_id;
-    data['farmer_code'] = farmer_code;
+    data['farm_id'] = farm_id;
+    //data['farm_code'] = farm_code;
     data['internal_inspector_id'] = internal_inspector_id;
     data['monitoring_visit_type'] = monitoring_visit_type;
     data['visit_date'] = visit_date;

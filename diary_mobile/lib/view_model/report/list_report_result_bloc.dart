@@ -19,11 +19,14 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     emitter(state.copyWith(
         isShowProgress: true,
         formStatus: const InitialFormStatus(),));
-    if(event.list.isEmpty){
-      emitter(state.copyWith(
-          isShowProgress: false,
-          formStatus: const InitialFormStatus(),
-          listReport: state.listReport));
+    if(event.checkUpdate){
+      final listReportResult = await repository.getListReportResult();
+      if(listReportResult.isNotEmpty) {
+        emitter(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionSuccess(),
+            listReport: listReportResult));
+      }
     }else {
       emitter(state.copyWith(
           isShowProgress: false,
@@ -66,6 +69,7 @@ class ListReportResultState extends BlocState {
     this.listReport = const [],
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
+
   });
 
   ListReportResultState copyWith({

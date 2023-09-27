@@ -57,12 +57,13 @@ class ListReportResultView extends StatefulWidget {
 class _ListReportResultViewState extends State<ListReportResultView> {
   bool visible = true;
   bool updateHarvesting = false;
-  List<ActivityDiary> listCallback = const [];
+  List<ReportResult> listCallback = const [];
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ListReportResultBloc(context.read<Repository>())..add(GetListReportResultEvent(widget.listReportResult, widget.listSelect)),
+      create: (context) => ListReportResultBloc(context.read<Repository>())..
+      add(GetListReportResultEvent(widget.listReportResult, widget.listSelect)),
       child: Scaffold(
         appBar: OfitAppBar(context,
             centerTitle: true,
@@ -97,12 +98,26 @@ class _ListReportResultViewState extends State<ListReportResultView> {
               }
             }
                 : () async {
-              var result = await Navigator.of(context)
-                  .push(ListReportSelect.route(widget.listSelect));
-              if (result != null && result[0]) {
-                contextBloc.read<ListReportResultBloc>().add(
-                    GetListReportResultEvent(const [], const [], checkUpdate: true));
-              }
+                  if(widget.listSelect.length > 1) {
+                    var result = await Navigator.of(context)
+                        .push(ListReportSelect.route(widget.listSelect));
+                    if (result != null && result[0]) {
+                      contextBloc.read<ListReportResultBloc>().add(
+                          GetListReportResultEvent(
+                              const [], const [], checkUpdate: true));
+                    }
+                  } else if (widget.listSelect.isNotEmpty) {
+                    var result = await Navigator.of(context)
+                        .push(AddReportViewPage.route(
+                        widget.listSelect[0].id ?? -1));
+                    if (result != null && result[0]) {
+                      contextBloc.read<ListReportResultBloc>().add(
+                          GetListReportResultEvent(
+                              const [], const [], checkUpdate: true));
+                    }
+                  } else{
+
+                  }
             });
           },
         ),
@@ -118,12 +133,16 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                   Get.back();
                 }, '', S.of(context).close_dialog);
               } else if (formStatus is SubmissionSuccess) {
-                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                setState(() {
+                  updateHarvesting = true;
+                  listCallback = state.listReport;
+                });
+                /*DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                         () {
                       Get.back();
                     }, () {
                       Get.back();
-                    }, '', S.of(context).close_dialog);
+                    }, '', S.of(context).close_dialog);*/
               } else if (formStatus is FormSubmitting) {
               }
             }, builder: (blocContext, state) {
@@ -134,7 +153,8 @@ class _ListReportResultViewState extends State<ListReportResultView> {
           )
               : RefreshIndicator(
             onRefresh: () async {
-              blocContext.read<ListReportResultBloc>().add(GetListReportResultEvent(const [], const [], checkUpdate: true));
+              blocContext.read<ListReportResultBloc>().add(
+                  GetListReportResultEvent(const [], const [], checkUpdate: true));
             },
             child: (state.listReport.isEmpty)
                 ? const EmptyWidget()

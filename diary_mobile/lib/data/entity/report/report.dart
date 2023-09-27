@@ -170,23 +170,37 @@ class MonitoringVisitType {
 class People {
   final int id;
   final String name;
+  final String? code;
   final String? image;
+  final List<People> farmIds;
 
-  People({required this.id, required this.name, this.image});
+  People(
+      {required this.id,
+      required this.name,
+      this.code,
+      this.image,
+      this.farmIds = const []});
 
   factory People.fromJson(Map<String, dynamic> json) {
     return People(
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
+      code: json['code'],
+      farmIds: json['farm_ids'] != null
+          ? (json['farm_ids'] as List<dynamic>)
+              .map((itemJson) => People.fromJson(itemJson))
+              .toList()
+          : [],
     );
   }
 
   People.copy(People other)
       : id = other.id,
         name = other.name,
+        code = other.code,
+        farmIds = other.farmIds.map((answer) => People.copy(answer)).toList(),
         image = other.image;
 }
-
 
 class Select {
   int id;

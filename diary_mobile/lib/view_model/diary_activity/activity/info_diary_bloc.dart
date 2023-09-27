@@ -31,7 +31,12 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       GetDetailDiaryEvent event, Emitter<DetailDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
     print("HoangCV: all. ${event.updateHarvesting} : ${event.listTransaction.isNotEmpty} : ${event.list.isNotEmpty}");
-    if (event.updateHarvesting && event.listTransaction.isEmpty) {
+    if (event.updateHarvesting && event.listReport.isNotEmpty) {
+      emitter(state.copyWith(
+          isShowProgress: false,
+          listReportResult: event.listReport));
+      print("HoangCV: update activity harvesting. ${event.updateHarvesting} : ${event.listTransaction.length} : ${event.list.length}");
+    } else if (event.updateHarvesting && event.listTransaction.isEmpty) {
       final detailDiary = await repository.getInfoDiary(event.id);
       emitter(state.copyWith(
           isShowProgress: false,
@@ -119,9 +124,10 @@ class GetDetailDiaryEvent extends DetailDiaryEvent {
   bool updateHarvesting;
   List<ActivityDiary> list;
   List<ActivityTransaction> listTransaction;
+  List<ReportResult> listReport;
 
   GetDetailDiaryEvent(this.id,
-      {this.updateHarvesting = false, this.list = const [], this.listTransaction = const []});
+      {this.updateHarvesting = false, this.list = const [], this.listTransaction = const [], this.listReport = const []});
 }
 
 class UpdateAvatarEvent extends DetailDiaryEvent {

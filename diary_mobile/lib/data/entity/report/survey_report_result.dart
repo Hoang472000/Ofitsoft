@@ -12,8 +12,11 @@ class SurveyRpRlt {
   List<Report> surveyId;
   //
   int? farmerId;
-  String? farmer;
+  String? farmerName;
   String? farmerCode;
+  int? farmId;
+  String? farmName;
+  String? farmCode;
   int? internalInspectorId;
   String? internalInspector;
   String? monitoringVisitType;
@@ -29,8 +32,11 @@ class SurveyRpRlt {
     this.createDate,
     this.writeDate,
     this.farmerId,
-    this.farmer,
+    this.farmerName,
     this.farmerCode,
+    this.farmId,
+    this.farmName,
+    this.farmCode,
     this.internalInspectorId,
     this.monitoringVisitType,
     this.surveyId = const [],
@@ -48,8 +54,11 @@ class SurveyRpRlt {
         createDate = other.createDate,
         writeDate = other.writeDate,
         farmerId = other.farmerId,
-        farmer = other.farmer,
+        farmerName = other.farmerName,
         farmerCode = other.farmerCode,
+        farmId = other.farmId,
+        farmName = other.farmName,
+        farmCode = other.farmCode,
         internalInspectorId = other.internalInspectorId,
         monitoringVisitType = other.monitoringVisitType,
         surveyId = other.surveyId
@@ -74,8 +83,11 @@ class SurveyRpRlt {
       createDate: json['create_date'] ?? '',
       writeDate: json['write_date'] ?? '',
       farmerId: json['farmer_id'],
-      farmer: json['farmer'] ?? '',
+      farmerName: json['farmer_name'] ?? '',
       farmerCode: json['farmer_code'] ?? '',
+      farmId: json['farm_id'],
+      farmName: json['farm_name'] ?? '',
+      farmCode: json['farm_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'],
       monitoringVisitType: json['monitoring_visit_type'] ?? '',
       surveyId: json['survey_id'] != null
@@ -112,8 +124,11 @@ class SurveyRpRlt {
     data['create_date'] = createDate;
     data['write_date'] = writeDate;
     data['farmer_id'] = farmerId;
-    data['farmer'] = farmer;
+    data['farmer_name'] = farmerName;
     data['farmer_code'] = farmerCode;
+    data['farm_id'] = farmId;
+    data['farm_name'] = farmName;
+    data['farm_code'] = farmCode;
     data['internal_inspector_id'] = internalInspectorId;
     data['monitoring_visit_type'] = monitoringVisitType;
     data['survey_id'] = surveyId;

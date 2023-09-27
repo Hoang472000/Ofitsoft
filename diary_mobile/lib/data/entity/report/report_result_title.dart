@@ -2,8 +2,11 @@ class ReportResult {
   int? id;
   String? surveyId;
   int? farmerId;
-  String? farmer;
+  String? farmerName;
   String? farmerCode;
+  int? farmId;
+  String? farmName;
+  String? farmCode;
   int? internalInspectorId;
   String? internalInspector;
   String? monitoringVisitType;
@@ -12,8 +15,11 @@ class ReportResult {
       {this.id,
         this.surveyId,
         this.farmerId,
-        this.farmer,
+        this.farmerName,
         this.farmerCode,
+        this.farmId,
+        this.farmName,
+        this.farmCode,
         this.internalInspectorId,
         this.internalInspector,
         this.monitoringVisitType,
@@ -24,8 +30,11 @@ class ReportResult {
       id: json['id'] ?? -1,
       surveyId: json['survey_id'] ?? '',
       farmerId: json['farmer_id'] ?? -1,
-      farmer: json['farmer'] ?? '',
+      farmerName: json['farmer_name'] ?? '',
       farmerCode: json['farmer_code'] ?? '',
+      farmId: json['farm_id'] ?? -1,
+      farmName: json['farm_name'] ?? '',
+      farmCode: json['farm_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'] ?? -1,
       internalInspector: json['internal_inspector'] ?? '',
       createDate: json['create_date'] ?? '',
@@ -38,8 +47,11 @@ class ReportResult {
     data['id'] = id;
     data['survey_id'] = surveyId;
     data['farmer_id'] = farmerId;
-    data['farmer'] = farmer;
+    data['farmer_name'] = farmerName;
     data['farmer_code'] = farmerCode;
+    data['farm_id'] = farmId;
+    data['farm_name'] = farmName;
+    data['farm_code'] = farmCode;
     data['internal_inspector_id'] = internalInspectorId;
     data['internal_inspector'] = internalInspector;
     data['create_date'] = createDate;

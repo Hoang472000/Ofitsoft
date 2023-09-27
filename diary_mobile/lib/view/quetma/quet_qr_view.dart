@@ -29,7 +29,7 @@ class QRCodeView extends StatefulWidget {
   State<StatefulWidget> createState() => _QRCodeViewState();
 }
 
-class _QRCodeViewState extends State<QRCodeView> {
+class _QRCodeViewState extends State<QRCodeView>{
   final TextEditingController _inputBarCodeController = TextEditingController();
   double cutOutBottomOffsetQr = 100;
   final FocusNode _focusBarCode = FocusNode();
@@ -53,10 +53,34 @@ class _QRCodeViewState extends State<QRCodeView> {
     controller!.resumeCamera();
   }
 
+/*  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    print('state = $state');
+    switch (state) {
+      case AppLifecycleState.resumed:
+        controller!.resumeCamera();
+        break;
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.paused:
+      //case AppLifecycleState.hidden:
+      case AppLifecycleState.detached:
+        controller!.resumeCamera();
+        break;
+    }
+  }*/
+
   @override
   initState() {
-    //controller!.resumeCamera();
+    //WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    //WidgetsBinding.instance.removeObserver(this);
+    controller!.dispose();
+    super.dispose();
   }
 
   @override
@@ -139,6 +163,7 @@ class _QRCodeViewState extends State<QRCodeView> {
                                 color: AppColor.main,
                                 text: "Quét mã",
                                 onPressed: () {
+                                  controller!.resumeCamera();
                                   if (state.qrViewController != null) {
                                     state.qrViewController!.pauseCamera();
                                   }
@@ -233,7 +258,7 @@ class _QRCodeViewState extends State<QRCodeView> {
       }else{
         print("Hoangcv: qrcode: ${scanData.code} : ${scanData.rawBytes}");
         Utils.launchInBrowser(scanData.code??"");
-        controller.pauseCamera();
+        controller.resumeCamera();
 /*        DiaLogManager.displayDialog(
             context, "",scanData.format == BarcodeFormat.qrcode? S.of(context).qrcode:S.of(context).qrcode_error, () {},
                 () async {
@@ -279,11 +304,5 @@ class _QRCodeViewState extends State<QRCodeView> {
         SnackBar(content: Text(S.of(context).no_permission)),
       );
     }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
   }
 }

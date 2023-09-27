@@ -113,6 +113,35 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       //icon: Icons.calendar_today
     ));
 
+    if(state.indexFarm != -1) {
+      list.add(InputRegisterModel<People, People>(
+          title: "",
+          isCompulsory: false,
+          type: TypeInputRegister.Select,
+          icon: Icons.arrow_drop_down,
+          positionSelected: state.indexFarm ?? -1,
+          valueSelected: state.listFarm[state.indexFarm ?? 0],
+          listValue: state.listFarm,
+          typeInputEnum: TypeInputEnum.dmucItem,
+          noBorder: true,
+          hasSearch: true,
+          textAlign: TextAlign.left
+      ));
+    } else{
+      list.add(InputRegisterModel<People, People>(
+          title: "",
+          isCompulsory: false,
+          type: TypeInputRegister.Select,
+          icon: Icons.arrow_drop_down,
+          positionSelected: -1,
+          listValue: state.listFarm,
+          typeInputEnum: TypeInputEnum.dmucItem,
+          noBorder: true,
+          hasSearch: true,
+          textAlign: TextAlign.left
+      ));
+    }
+
     emitter(state.copyWith(
         listWidget: list,
         formStatus: const InitialFormStatus()));
@@ -125,7 +154,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     if(event.index == 0 && state.listFarmer.isEmpty) {
       Toast.showLongTop("Không có danh sách nông hộ");
       checkPass = false;
-    }else if(event.index == 1 && state.listInspector.isEmpty) {
+    }else if(event.index == 4 && state.listFarm.isEmpty) {
+      Toast.showLongTop("Không có danh sách vùng trồng");
+      checkPass = false;
+    }else if(event.index == 2 && state.listInspector.isEmpty) {
       Toast.showLongTop("Không có danh sách thanh tra viên");
       checkPass = false;
     }
@@ -166,16 +198,28 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           if (event.index == 0) {
             event.list[1].controller = TextEditingController(text: "${state.listFarmer[result].id}");
             state.farmerInspector!.farmer_id = state.listFarmer[result].id;
+            state.listWidget[4].listValue = state.listFarmer[result].farmIds;
+            state.farmerInspector!.farm_id = null;
+            state.farmerInspector!.farm_code = null;
+            state.listWidget[4].listValue = state.listFarmer[result].farmIds;
+            state.listWidget[4].valueSelected = null;
+            state.listWidget[4].positionSelected = -1;
             emit(state.copyWith(
-              idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
-              farmerInspector: state.farmerInspector,
+                idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
+                farmerInspector: state.farmerInspector,
+                listFarm: state.listFarmer[result].farmIds
             ));
           } else if (event.index == 2) {
             state.farmerInspector!.internal_inspector_id = state.listInspector[result].id;
             emit(state.copyWith(
               farmerInspector: state.farmerInspector,
             ));
-            print("HoangCV: state.farmerInspector!.internal_inspector_id : ${ state.farmerInspector!.internal_inspector_id} ");
+          } else if (event.index == 4) {
+            state.farmerInspector!.farm_id = state.listFarm[result].id;
+            state.farmerInspector!.farm_code = state.listFarm[result].code;
+            emit(state.copyWith(
+              farmerInspector: state.farmerInspector,
+            ));
           }
           if(state.reportId != null ){
             emit(state.copyWith(
@@ -184,6 +228,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
               id: state.reportId,
               farmer_id: state.farmerInspector!.farmer_id,
+              farm_id: state.farmerInspector!.farm_id,
+              farm_code: state.farmerInspector!.farm_code,
               farmer_code: state.farmerInspector!.farmer_code,
               internal_inspector_id: state.farmerInspector!.internal_inspector_id,
               monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
@@ -262,7 +308,12 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
       int indexFarmer = report[0].listFarmers.indexWhere((element) => element.id == report[0].farmerId);
       int indexInspector = report[0].listInternalInspector.indexWhere((element) => element.id == report[0].internalInspectorId);
+      int indexFarm = -1;
+      if(indexFarmer != -1){
+        indexFarm = report[0].listFarmers[indexFarmer].farmIds.indexWhere((element) => element.id == report[0].farmId);
+      }
       state.farmerInspector!.farmer_id = report[0].farmerId;
+      state.farmerInspector!.farm_id = report[0].farmId;
       state.farmerInspector!.internal_inspector_id = report[0].internalInspectorId;
       state.farmerInspector!.monitoring_visit_type = report[0].monitoringVisitType;
       state.farmerInspector!.visit_date = report[0].visitDate;
@@ -270,9 +321,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,
         listInspector: report[0].listInternalInspector,
+        listFarm: indexFarmer != -1 ? report[0].listFarmers[indexFarmer].farmIds : [],
         farmerInspector: state.farmerInspector,
         indexFarmer: indexFarmer,
         indexInspector: indexInspector,
+        indexFarm: indexFarm,
         idFarmerController: TextEditingController(text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(report[0].visitDate ?? "")),
@@ -940,11 +993,16 @@ class EditReportState extends BlocState {
     listWidget,
     listFarmer,
     listInspector,
+    listFarm,
     startTimeController,
     idFarmerController,
     inspectorController,
     farmerController,
     farmerInspector,
+    indexFarm,
+    indexFarmer,
+    indexInspector,
+    farmController,
   ];
   final Diary? detailDiary;
   final List<Report> listReport;
@@ -958,14 +1016,17 @@ class EditReportState extends BlocState {
   final List<InputRegisterModel> listWidget;
   final List<People> listFarmer;
   final List<People> listInspector;
+  final List<People> listFarm;
   TextEditingController? startTimeController = TextEditingController();
   TextEditingController? idFarmerController = TextEditingController();
   TextEditingController? farmerController = TextEditingController();
   TextEditingController? inspectorController = TextEditingController();
+  TextEditingController? farmController = TextEditingController();
   FarmerInspectorUpload? farmerInspector;
   final bool isShowProgress;
   final int? reportId;
 
+  final int? indexFarm;
   final int? indexFarmer;
   final int? indexInspector;
 
@@ -983,13 +1044,16 @@ class EditReportState extends BlocState {
     this.listWidget = const [],
     this.listFarmer = const [],
     this.listInspector = const [],
+    this.listFarm = const [],
     this.startTimeController,
     this.idFarmerController,
     this.farmerController,
     this.inspectorController,
+    this.farmController,
     this.farmerInspector,
     this.reportId,
     this.indexFarmer,
+    this.indexFarm,
     this.indexInspector,
   });
 
@@ -1007,13 +1071,16 @@ class EditReportState extends BlocState {
     List<InputRegisterModel>? listWidget,
     List<People>? listFarmer,
     List<People>? listInspector,
+    List<People>? listFarm,
     TextEditingController? startTimeController,
     TextEditingController? idFarmerController,
     TextEditingController? farmerController,
+    TextEditingController? farmController,
     TextEditingController? inspectorController,
     FarmerInspectorUpload? farmerInspector,
     int? reportId,
     int? indexFarmer,
+    int? indexFarm,
     int? indexInspector,
   }) {
     return EditReportState(
@@ -1029,14 +1096,17 @@ class EditReportState extends BlocState {
         listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
         listWidget: listWidget ?? this.listWidget,
         listFarmer: listFarmer ?? this.listFarmer,
+        listFarm: listFarm ?? this.listFarm,
         listInspector: listInspector ?? this.listInspector,
         startTimeController: startTimeController ?? this.startTimeController,
         idFarmerController: idFarmerController ?? this.idFarmerController,
         farmerController: farmerController ?? this.farmerController,
         farmerInspector: farmerInspector ?? this.farmerInspector,
         inspectorController: inspectorController ?? this.inspectorController,
+        farmController: farmController ?? this.farmController,
         indexFarmer: indexFarmer ?? this.indexFarmer,
         indexInspector: indexInspector ?? this.indexInspector,
+        indexFarm: indexFarm ?? this.indexFarm,
         reportId: reportId ?? this.reportId);
   }
 }
