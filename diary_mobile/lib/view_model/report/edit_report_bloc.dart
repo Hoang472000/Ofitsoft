@@ -248,12 +248,12 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         });
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
-      listCtrlTable.forEach((element) {
+     /* listCtrlTable.forEach((element) {
         element.forEach((e) {
           print("HoangCV: listCtrlTable: ${e.toJson()}");
         });
 
-      });
+      });*/
       listControllerTable.addAll(listCtrlTable);
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(
@@ -262,9 +262,15 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
       int indexFarmer = report[0].listFarmers.indexWhere((element) => element.id == report[0].farmerId);
       int indexInspector = report[0].listInternalInspector.indexWhere((element) => element.id == report[0].internalInspectorId);
+      state.farmerInspector!.farmer_id = report[0].farmerId;
+      state.farmerInspector!.internal_inspector_id = report[0].internalInspectorId;
+      state.farmerInspector!.monitoring_visit_type = report[0].monitoringVisitType;
+      state.farmerInspector!.visit_date = report[0].visitDate;
+      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].visitDate}");
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,
         listInspector: report[0].listInternalInspector,
+        farmerInspector: state.farmerInspector,
         indexFarmer: indexFarmer,
         indexInspector: indexInspector,
         idFarmerController: TextEditingController(text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
@@ -284,11 +290,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       listTable: listTable,
       listSelectedInspector: listSelectedInspector,
     ));
-    state.listControllerTable.forEach((element) {
+ /*   state.listControllerTable.forEach((element) {
       element.forEach((e) {
         print("HoangCV:listController:  ${e.toJson()}");
       });
-    });
+    });*/
   }
 
   void addTableRow(List<dynamic> items, List<TableQuestion> listTable, int id) {
@@ -300,21 +306,15 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             for (RowLine row in item.userInputLines) {
               List<Answer> listAs = [];
               for (Answer answer in row.userInputLineId) {
-                print("HoangCV: answer 1: ${answer.value} : ${answer
-                    .valueRowTable} : ${answer.tableRowId}");
-
                 Answer clonedAnswer = Answer.copy(answer);
                 clonedAnswer.id = clonedAnswer.suggestedAnswerId;
                 if (clonedAnswer.tableRowId == null || clonedAnswer.tableRowId == -1) {
                   clonedAnswer.tableRowId = id;
                 }
-                print("HoangCV: value_row_table 1: ${clonedAnswer.value} : ${clonedAnswer.valueRowTable} :"
-                    "${clonedAnswer.tableRowId}");
                 List<Answer> las = [];
                 for (Answer as in clonedAnswer.suggestedAnswerIds) {
                   Answer clonedAs = Answer.copy(as);
                   clonedAs.id = clonedAs.suggestedAnswerId;
-                  print("HoangCV: value_row_table : ${as.value} : ${as.valueRowTable}");
                   if (clonedAs.tableRowId == null || clonedAs.tableRowId == -1) {
                     clonedAs.tableRowId = id;
                   }
@@ -393,9 +393,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       for (Answer answer in item.suggestedAnswerIds) {
         List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
         List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
-        print(
+        /*print(
             "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${answer.checkResult}");
-        selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
+        */selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
             answer.value!, listId: selectedIdsList,
             listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
@@ -403,9 +403,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
-        print(
+        /*print(
             "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
+        */selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
             childQuestion.title!, listId: [], listSubId: [])); // Thêm Select cho câu hỏi con
         initSelectValues(childQuestion, selectList);
       }
@@ -413,9 +413,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
         //   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
-        print(
+        /*print(
             "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        selectList.add(Select(
+        */selectList.add(Select(
             childQuestion.idSelected!,
             childQuestion.checkResult ?? false,
             childQuestion
@@ -425,9 +425,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        print(
+        /*print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
-        selectList.add(Select(
+        */selectList.add(Select(
             childAnswer.idSelected!,
             childAnswer.checkResult ?? false,
             childAnswer
@@ -659,11 +659,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     Answer answer = Answer();
     List<int> listIdSuggested = [];
     String answerType = '';
+    bool hasCommandAnswer = false;
     List<Question> listQs = state.listReport[0].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
-      print("HoangCV: listQs: ${listQs[i].title}");
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
         if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
           question = Question.copy(listQs[i].questionAndPageIds[h]);
           answerType = question.questionType ?? "";
@@ -681,14 +680,18 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
                 answerType = question.questionType ?? "";
-                answer = Answer.copy(
-                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+                if(question.commentAnswer == true){
+                  hasCommandAnswer = true;
+                }
               }
             }
             if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].idSelected ==event.id) {
               question = Question.copy(listQs[i].questionAndPageIds[h]);
               answer = Answer.copy(
                   listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+              if(answer.commentAnswer == true){
+                hasCommandAnswer = true;
+              }
               answerType = question.questionType ?? "";
               if(answerType == 'simple_choice'){
                 listIdSuggested = listQs[i].questionAndPageIds[h].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
@@ -698,12 +701,13 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           for (int l = 0;
           l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
           l++) {
-            print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
-                " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
             if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
               question = Question.copy(
                   listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
               answerType = question.questionType ?? "";
+              if(question.commentAnswer == true){
+                hasCommandAnswer = true;
+              }
             } else{
               for (int m = 0;
               m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
@@ -714,6 +718,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                   answerType = question.questionType ?? "";
                   answer = Answer.copy(
                       listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
+                  if(answer.commentAnswer == true){
+                    hasCommandAnswer = true;
+                  }
                   if(answerType == 'simple_choice'){
                     listIdSuggested = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
                   }
@@ -725,8 +732,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     question = Question.copy(
                         listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
                     answerType = question.questionType ?? "";
-                    answer = Answer.copy(
-                        listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
+                    if(question.commentAnswer == true){
+                      hasCommandAnswer = true;
+                    }
+/*                      answer = Answer.copy(
+                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);*/
                   }
                 }
               }
@@ -745,24 +755,24 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       listIdSuggested = resultUpload[2];
     }*/
     int index = event.listSelect.indexWhere((element) => element.id == event.id);
+    int indexController = event.listController.indexWhere((element) => element.id == event.id);
+    String text = indexController != -1 ? event.listController[indexController].controller.text.toString() : '';
+    if(event.value != null || event.value.isNotEmpty){
+      text = event.value;
+    }
     QuestionUpload questionUpload;
     print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : ${event.listSelect[index].value}");
-    if(state.reportId != null) {
-      questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[0].id,
-          question_id: question.id,
-          suggested_answer_id: answer.id,
-          answer_type: answerType == '' ? null : answerType,
-          value_text: event.value,
-          test_entry: false,
-          // value default ko ro Anh Dung de lam gi
-          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
-          // value khi tich chon va bo tich chon
-          //table_row_id: 1,
-          list_id_suggested: listIdSuggested
-      );
-    } else{
+    if(answerType == "check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+
+    } else if(answerType == "simple_choice" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+
+    } else if(answerType == "char_box" && text.isEmpty){
+
+    } else if(answerType == "check_box" && text.isEmpty && hasCommandAnswer){
+
+    } else if(answerType == "simple_choice" && text.isEmpty && hasCommandAnswer){
+
+    } else {
       questionUpload = QuestionUpload(
         user_input_id: state.reportId,
         survey_id: state.listReport[0].id,
@@ -775,24 +785,19 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         is_answer_exist: index != -1 ? event.listSelect[index].value : false,
         // value khi tich chon va bo tich chon
         //table_row_id: 1,
-        list_id_suggested: listIdSuggested,
-        farmer_id: state.farmerInspector!.farmer_id,
-        farmer_code: state.farmerInspector!.farmer_code,
-        internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-        monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-        visit_date: state.farmerInspector!.visit_date,
-      );
-    }
+        list_id_suggested: listIdSuggested);
 
-    ObjectResult result = await repository.uploadQuestion(questionUpload);
-    if (result.responseCode == StatusConst.code00) {
-      emit(state.copyWith(
-          isShowProgress: false,
-          reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(/*success: result.message*/)));
-    } else {
-      emit(state.copyWith(
-          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(/*success: result.message*/)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 
@@ -833,6 +838,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       emit(state.copyWith(
           isShowProgress: true, formStatus: const InitialFormStatus()));
 
+      print("HoangCV: state.farmerInspector: ${state.farmerInspector!.toJson()}");
       FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
         id: state.reportId,
         farmer_id: state.farmerInspector!.farmer_id,
@@ -875,11 +881,12 @@ class UpdateEditReportEvent extends EditReportEvent {
   final int id;
   final String value;
   final List<Select> listSelect;
+  final List<Controller> listController;
 
-  UpdateEditReportEvent(this.id, this.value, this.listSelect);
+  UpdateEditReportEvent(this.id, this.value, this.listSelect, {this.listController = const []});
 
   @override
-  List<Object?> get props => [id, value, listSelect];
+  List<Object?> get props => [id, value, listSelect, listController];
 }
 
 class UpdateFarmerInspectorEvent extends EditReportEvent {

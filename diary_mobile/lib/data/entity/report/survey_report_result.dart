@@ -73,7 +73,7 @@ class SurveyRpRlt {
       nickname: json['nickname'] ?? '',
       createDate: json['create_date'] ?? '',
       writeDate: json['write_date'] ?? '',
-      farmerId: json['farmer_id'] ?? -1,
+      farmerId: json['farmer_id'],
       farmer: json['farmer'] ?? '',
       farmerCode: json['farmer_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'],
@@ -83,8 +83,7 @@ class SurveyRpRlt {
           .map((itemJson) => Report.fromJson(itemJson))
           .toList()
           : [],
-      visitDate:
-      jsonEncode(json['visit_date']) ?? '',
+      visitDate: json['visit_date'] ?? '',
       listFarmers: json['list_farmers'] != null
           ? (json['list_farmers'] as List<dynamic>)
           .map((itemJson) => People.fromJson(itemJson))

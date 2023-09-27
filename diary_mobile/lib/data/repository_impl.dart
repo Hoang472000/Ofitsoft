@@ -726,7 +726,6 @@ class RepositoryImpl extends Repository {
     for (dynamic item in items) {
       if (item is Question || item is Answer) {
         // Assign a unique idSelected value to the current item
-        print("HoangCV: idSelectedList : ${idSelectedList.length}");
         if(idSelectedList.isNotEmpty) {
           item.idSelected = idSelectedList.removeAt(0);
 
@@ -738,7 +737,6 @@ class RepositoryImpl extends Repository {
           }
         }
       } else if (item is RowLine) {
-        print("HoangCV: RowLine : ${item.rowId}");
           // Recursively assign idSelected values to items inside RowLine
           assignIdSelected(item.userInputLineId, idSelectedList);
       }
@@ -754,7 +752,6 @@ class RepositoryImpl extends Repository {
       bool checkQuestion = true;
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
-        print("HoangCV: list1[i].id[j]: ${list1[i].parentTitleId} : ${list2.last.id} : ${list1[i].title}");
         int index = list2.indexWhere((element) => element.id == list1[i].id);
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {
@@ -1007,7 +1004,6 @@ class RepositoryImpl extends Repository {
       bool checkQuestion = true;
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
-        print("HoangCV: list1[i].id[j]: ${list1[i].parentTitleId} : ${list2.last.id} : ${list1[i].title}");
         int index = list2.indexWhere((element) => element.id == list1[i].id);
         for (int j = i + 1; j < list1.length; j++) {
           if (list1[i].id == list1[j].pageId) {

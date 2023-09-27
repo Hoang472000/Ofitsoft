@@ -251,12 +251,12 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         });
       });*/
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
-      listCtrlTable.forEach((element) {
+/*      listCtrlTable.forEach((element) {
         element.forEach((e) {
           print("HoangCV: listCtrlTable: ${e.toJson()}");
         });
 
-      });
+      });*/
       listControllerTable.addAll(listCtrlTable);
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(
@@ -286,11 +286,11 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       listTable: listTable,
       listSelectedInspector: listSelectedInspector,
     ));
-    state.listControllerTable.forEach((element) {
+/*    state.listControllerTable.forEach((element) {
       element.forEach((e) {
         print("HoangCV:listController:  ${e.toJson()}");
       });
-    });
+    });*/
   }
 
   void addTableRow(List<dynamic> items, List<TableQuestion> listTable, int id) {
@@ -395,9 +395,9 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       for (Answer answer in item.suggestedAnswerIds) {
         List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
         List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
-        print(
+        /*print(
             "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${answer.checkResult}");
-        selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
+        */selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
             answer.value!, listId: selectedIdsList,
             listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
@@ -427,9 +427,9 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-           print(
+        /*   print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
-        selectList.add(Select(
+        */selectList.add(Select(
             childAnswer.idSelected!,
             childAnswer.checkResult ?? false,
             childAnswer
