@@ -674,6 +674,40 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
+              "Tên vùng trồng",
+              textAlign: TextAlign.center,
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
+              maxLines: 3,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(left: 8, right: 8),
+            child: ContainerInputWidget(
+              contextParent: context,
+              color: AppColor.background,
+              inputRegisterModel: listWidget[4],
+              onClick: () {
+/*                context
+                    .read<AddReportBloc>()
+                    .add(OnSelectValueEvent(listWidget, 4, context));*/
+              },
+            ),
+          ),
+        ]),
+      ],
+    ),);
+    listTable1.add(Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: const {
+        0: FlexColumnWidth(1),
+        1: FlexColumnWidth(3),
+      },
+      border: TableBorder.all(color: AppColor.black22),
+      children: [
+        TableRow(children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16, top: 16),
+            child: Text(
               "Thanh tra viên nội bộ",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 14),
@@ -688,7 +722,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               inputRegisterModel: listWidget[2],
               onClick: () {
 /*                context
-                    .read<DetailReportBloc>()
+                    .read<AddReportBloc>()
                     .add(OnSelectValueEvent(listWidget, 2, context));*/
               },
             ),

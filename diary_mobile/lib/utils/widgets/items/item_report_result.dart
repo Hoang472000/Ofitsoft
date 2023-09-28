@@ -32,6 +32,7 @@ class ItemReportResult extends StatefulWidget {
 class _ItemReportResultState extends State<ItemReportResult> {
   bool isExpansion = false;
   bool isCheckBox = false;
+  bool checkDelete = false;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,11 @@ class _ItemReportResultState extends State<ItemReportResult> {
       onTap: () async {
         widget.callbackChooseItem();
       },
-      onLongPress: () {},
+      onLongPress: () {
+        setState(() {
+          checkDelete = true;
+        });
+      },
       child: Container(
         padding: const EdgeInsets.only(top: 8),
         child: Container(

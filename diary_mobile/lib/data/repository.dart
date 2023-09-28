@@ -102,4 +102,6 @@ abstract class Repository {
   Future<List<SurveyRpRlt>> getDetailReport(int id);
 
   Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector);
+
+  Future<ObjectResult> deleteReport(int id);
 }

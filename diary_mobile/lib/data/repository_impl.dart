@@ -1159,7 +1159,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.editFarmerInspector,
             method: HttpMethod.GET,
-            body: ObjectData(token: token, params: farmerInspector.toJson())));
+            body: ObjectData(token: token, params: farmerInspector.state != null ? farmerInspector.toJsonSubmit() : farmerInspector.toJson())));
     print("HoangCV: editFarmerInspector response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
@@ -1205,6 +1205,29 @@ class RepositoryImpl extends Repository {
       );
     }
     return [];
+  }
+
+  @override
+  Future<ObjectResult> deleteReport(int id) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.deleteReport,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: deleteReport response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
   }
 
 }

@@ -28,6 +28,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     on<UpdateAddReportEvent>(updateAddReport);
     on<UpdateAddTableEvent>(updateAddTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
+    on<SubmitReportEvent>(submitReport);
   }
 
   void _initViewAdd(Emitter<AddReportState> emitter) {
@@ -705,7 +706,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       text = event.value;
     }
     QuestionUpload questionUpload;
-    print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : $text : $index : ${event.listSelect[index].value}");
+    //print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : $text : $index : ${event.listSelect[index].value}");
     if(answerType == "check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
 
     } else if(answerType == "simple_choice" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
@@ -829,6 +830,26 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
+
+  Future<FutureOr<void>> submitReport(SubmitReportEvent event, Emitter<AddReportState> emit) async {
+    emit(state.copyWith(
+        isShowProgress: true, formStatus: const InitialFormStatus()));
+
+    FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+      id: state.reportId,
+      state: 'done'
+    );
+    ObjectResult result = await repository.editFarmerInspector(questionUpload);
+    if (result.responseCode == StatusConst.code00) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          reportId: result.response is int ? result.response : null,
+          formStatus: SubmissionSuccess(success: result.message)));
+    } else {
+      emit(state.copyWith(
+          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+    }
+  }
 }
 
 class AddReportEvent extends BlocEvent {
@@ -890,6 +911,15 @@ class UpdateAddTableEvent extends AddReportEvent {
 
   @override
   List<Object?> get props => [questionId, answerId, rowId, value];
+}
+
+class SubmitReportEvent extends AddReportEvent {
+
+
+  SubmitReportEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class AddReportState extends BlocState {

@@ -109,6 +109,7 @@ class FarmerInspectorUpload {
   int? internal_inspector_id;
   String? monitoring_visit_type;
   String? visit_date;
+  String? state;
 
   FarmerInspectorUpload(
       {this.id,
@@ -118,7 +119,8 @@ class FarmerInspectorUpload {
       this.farm_code,
       this.internal_inspector_id,
       this.monitoring_visit_type,
-      this.visit_date});
+      this.visit_date,
+      this.state,});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -129,6 +131,13 @@ class FarmerInspectorUpload {
     data['internal_inspector_id'] = internal_inspector_id;
     data['monitoring_visit_type'] = monitoring_visit_type;
     data['visit_date'] = visit_date;
+    //data['state'] = state;
+    return data;
+  }
+  Map<String, dynamic> toJsonSubmit() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['state'] = state;
     return data;
   }
 

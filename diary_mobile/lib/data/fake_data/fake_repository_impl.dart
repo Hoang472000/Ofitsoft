@@ -668,4 +668,10 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getListReportSelect
     throw UnimplementedError();
   }
+
+  @override
+  Future<ObjectResult> deleteReport(int id) {
+    // TODO: implement deleteReport
+    throw UnimplementedError();
+  }
 }

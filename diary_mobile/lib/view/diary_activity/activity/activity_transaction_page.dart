@@ -2,19 +2,13 @@ import 'dart:ui';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
-import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/items/item_transaction.dart';
-import 'package:diary_mobile/view/diary_activity/activity/detail_activity.dart';
 import 'package:diary_mobile/view/diary_activity/activity_sell/activity_select_page.dart';
-import 'package:diary_mobile/view/diary_activity/monitor/add_monitor.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/activity_bloc.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/info_diary_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
@@ -27,12 +21,8 @@ import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/empty_widget.dart';
-import '../../../utils/widgets/items/item_activity.dart';
 import '../activity_sell/add_activity_purchase.dart';
-import '../activity_sell/add_activity_sell.dart';
 import '../activity_sell/detail_activity_transaction.dart';
-import '../monitor/detail_monitor_page.dart';
-import 'add_activity.dart';
 
 class ActivityTransactionPage extends StatefulWidget {
   const ActivityTransactionPage(
@@ -205,7 +195,8 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
           } else if (formStatus is FormSubmitting) {
             //DiaLogManager.showDialogLoading(context);
           }
-        }, builder: (blocContext, state) {
+        },
+            builder: (blocContext, state) {
           return state
                   .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
               ? const Center(
@@ -232,7 +223,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                 action: widget.action,
                                 callbackChooseItem: () async {
                                   //Truyen id de sang man ben goi api hoac DB
-                                  if (widget.action.compareTo('sell') == 0) {
+                                  //if (widget.action.compareTo('sell') == 0) {
                                     var result = await Navigator.push(
                                         context,
                                         DetailActivityTransactionPage.route(
@@ -246,7 +237,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                               widget.action,
                                               result[1], [], []));
                                     }
-                                  }
+                                  //}
                                 },
                                 callbackDelete: () {
                                   blocContext.read<ActivityBloc>().add(

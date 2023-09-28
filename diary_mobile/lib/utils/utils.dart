@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_check_connect.dart';
+import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
@@ -774,6 +776,23 @@ class Utils {
           colorText: Colors.white);*/
     }
     return pathImageSelect;
+  }
+
+  static bool checkPassFarm(FarmerInspectorUpload farmerInspector){
+    if (farmerInspector.farmer_id == null) {
+      Toast.showLongTop("Vui lòng chọn Tên nông dân");
+      return false;
+    } else if (farmerInspector.farm_id == null) {
+      Toast.showLongTop("Vui lòng chọn Tên vùng trồng");
+      return false;
+    } else if (farmerInspector.internal_inspector_id == null) {
+      Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
+      return false;
+    } else if (farmerInspector.monitoring_visit_type == null) {
+      Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
+      return false;
+    }
+    return true;
   }
 
   static Future<List<ImageEntity>> getImagePicker(ImageSource imageSource, {bool multiSelect = true, String type = "camera"}) async {

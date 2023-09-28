@@ -16,6 +16,7 @@ import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/add_report_bloc.dart';
@@ -67,85 +68,106 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           backgroundColor: AppColor.main,
           actions: [],
         ),
-        body: BlocConsumer<AddReportBloc, AddReportState>(
-            listener: (blocContext, state) async {
-              final formStatus = state.formStatus;
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                if(!checkUpdate){
-                  setState(() {
-                    checkUpdate = true;
-                  });
+        body: SafeArea(
+          child: BlocConsumer<AddReportBloc, AddReportState>(
+              listener: (blocContext, state) async {
+                final formStatus = state.formStatus;
+                if (formStatus is SubmissionFailed) {
+                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                    Get.back();
+                  }, () {
+                    Get.back();
+                  }, '', S.of(context).close_dialog);
+                } else if (formStatus is SubmissionSuccess) {
+                  if(!checkUpdate){
+                    setState(() {
+                      checkUpdate = true;
+                    });
+                  }
+                  if ((formStatus.success ?? "").isNotEmpty) {
+                    DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                            () {
+                          Get.back();
+                          Navigator.of(context).pop([checkUpdate]);
+                        }, () {
+                          Get.back();
+                        }, '', S.of(context).close_dialog, dismissible: false);
+                  }
+                } else if (formStatus is FormSubmitting) {
+                  DiaLogManager.showDialogLoading(context);
                 }
-                if ((formStatus.success ?? "").isNotEmpty) {
-                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                          () {
-                        Get.back();
-                      }, () {
-                        Get.back();
-                      }, '', S.of(context).close_dialog, dismissible: false);
-                }
-              } else if (formStatus is FormSubmitting) {
-                DiaLogManager.showDialogLoading(context);
-              }
-            }, builder: (blocContext, state) {
-          return WillPopScope(
-            onWillPop: () async{
-              Navigator.pop(context);
-              return false;
-            },
-            child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                child: SingleChildScrollView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  child:  state.listReport.isEmpty ? Container(): Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        tableFooter(),
-                        tableMuc("${state.listReport[1].title}"),
-                        //tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
-                        SizedBox(height: 10,),
-                        tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
-                        ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: state.listReport[1].questionAndPageIds.length,
-                            itemBuilder: (context, index) {
-                              return  ExpansionTile(
-                                title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
-                                children: [
-                                  tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
-                                      state.listReport[1].questionAndPageIds[index].questionParentTitleId,
-                                      state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
-                                  state.listTable, state.farmerInspector ?? FarmerInspectorUpload()),
-                                ],
-                              );
-                            }),
-                     /*   ExpansionTile(
-                          title: widgetMuc("15)  Chữ ký."),
-                          children: [
-                            tableDetail15(),
-                          ],
-                        ),*/
-                        ExpansionTile(
-                          title: widgetMuc("(*)  Rủi ro"),
-                          children: [
-                            tableDetail16(),
-                          ],
+              }, builder: (blocContext, state) {
+            return WillPopScope(
+              onWillPop: () async{
+                Navigator.pop(context);
+                return false;
+              },
+              child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          //physics: NeverScrollableScrollPhysics(),
+                          child:  state.listReport.isEmpty ? Container(): Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                tableFooter(),
+                                tableMuc("${state.listReport[1].title}"),
+                                //tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
+                                SizedBox(height: 10,),
+                                tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
+                                ListView.builder(
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    primary: false,
+                                    itemCount: state.listReport[1].questionAndPageIds.length,
+                                    itemBuilder: (context, index) {
+                                      return  ExpansionTile(
+                                        title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
+                                        children: [
+                                          tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
+                                              state.listReport[1].questionAndPageIds[index].questionParentTitleId,
+                                              state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
+                                          state.listTable, state.farmerInspector ?? FarmerInspectorUpload()),
+                                        ],
+                                      );
+                                    }),
+                             /*   ExpansionTile(
+                                  title: widgetMuc("15)  Chữ ký."),
+                                  children: [
+                                    tableDetail15(),
+                                  ],
+                                ),*/
+                                ExpansionTile(
+                                  title: widgetMuc("(*)  Rủi ro"),
+                                  children: [
+                                    tableDetail16(),
+                                  ],
+                                ),
+                                tableDetailEnd(),
+                              ]
+                          ),
                         ),
-                        tableDetailEnd(),
-                      ]
-                  ),
-                )),
-          );
-        }),
+                      ),
+                      Container(
+                        alignment: Alignment.bottomCenter,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: OfitButton(
+                            text: "Hoàn Thành",
+                            onPressed: () {
+                              blocContext
+                                  .read<AddReportBloc>()
+                                  .add(SubmitReportEvent());
+                            }),
+                      )
+                    ],
+                  )),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -210,16 +232,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         value: listSelected[index].value,
         onChanged: (value) {
           bool checkPass = true;
-          if (farmerInspector.farmer_id == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Tên nông dân");
-          } else if (farmerInspector.internal_inspector_id == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-          } else if (farmerInspector.monitoring_visit_type == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-          }
+          checkPass = Utils.checkPassFarm(farmerInspector);
           if (checkPass) {
             bool checkParent = true;
             print("HoangC:V listID: $id : $index : ${listSelected[index]
@@ -414,18 +427,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             },
             onChanged: (str) {
               bool checkPass = true;
-              if (farmerInspector.farmer_id == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Tên nông dân");
-              } else if (farmerInspector.internal_inspector_id == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-              } else if (farmerInspector.monitoring_visit_type == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-              }
+              checkPass = Utils.checkPassFarm(farmerInspector);
               if (checkPass) {
-                controller.text = str;
+                //controller.text = str;
               } else{
                 controller.text = '';
               }
@@ -489,18 +493,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }
@@ -557,18 +552,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }
@@ -648,18 +634,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }

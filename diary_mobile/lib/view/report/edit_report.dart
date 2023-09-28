@@ -16,6 +16,7 @@ import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/edit_report_bloc.dart';
@@ -98,48 +99,66 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
             },
             child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                child: SingleChildScrollView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  child:  state.listReport.isEmpty ? Container(): Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        tableFooter(),
-                        tableMuc("${state.listReport[0].title}"),
-                        //tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
-                        SizedBox(height: 10,),
-                        tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
-                        ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: state.listReport[0].questionAndPageIds.length,
-                            itemBuilder: (context, index) {
-                              return  ExpansionTile(
-                                title: widgetMuc("${state.listReport[0].questionAndPageIds[index].title}"),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        //physics: NeverScrollableScrollPhysics(),
+                        child:  state.listReport.isEmpty ? Container(): Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              tableFooter(),
+                              tableMuc("${state.listReport[1].title}"),
+                              //tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
+                              SizedBox(height: 10,),
+                              tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
+                              ListView.builder(
+                                  padding: EdgeInsets.zero,
+                                  shrinkWrap: true,
+                                  primary: false,
+                                  itemCount: state.listReport[1].questionAndPageIds.length,
+                                  itemBuilder: (context, index) {
+                                    return  ExpansionTile(
+                                      title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
+                                      children: [
+                                        tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
+                                            state.listReport[1].questionAndPageIds[index].questionParentTitleId,
+                                            state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
+                                            state.listTable, state.farmerInspector ?? FarmerInspectorUpload()),
+                                      ],
+                                    );
+                                  }),
+                              /*   ExpansionTile(
+                                  title: widgetMuc("15)  Chữ ký."),
+                                  children: [
+                                    tableDetail15(),
+                                  ],
+                                ),*/
+                              ExpansionTile(
+                                title: widgetMuc("(*)  Rủi ro"),
                                 children: [
-                                  tableDetailResult(state.listReport[0].questionAndPageIds[index].questionAndPageIds,
-                                      state.listReport[0].questionAndPageIds[index].questionParentTitleId,
-                                      state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
-                                      state.listTable, state.farmerInspector ?? FarmerInspectorUpload()),
+                                  tableDetail16(),
                                 ],
-                              );
-                            }),
-                        /*   ExpansionTile(
-                          title: widgetMuc("15)  Chữ ký."),
-                          children: [
-                            tableDetail15(),
-                          ],
-                        ),*/
-                        ExpansionTile(
-                          title: widgetMuc("(*)  Rủi ro"),
-                          children: [
-                            tableDetail16(),
-                          ],
+                              ),
+                              tableDetailEnd(),
+                            ]
                         ),
-                        tableDetailEnd(),
-                      ]
-                  ),
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.bottomCenter,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: OfitButton(
+                          text: "Hoàn Thành",
+                          onPressed: () {
+                            blocContext
+                                .read<EditReportBloc>()
+                                .add(SubmitReportEvent());
+                          }),
+                    )
+                  ],
                 )),
           );
         }),
@@ -208,16 +227,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         onChanged: (value) {
           bool checkPass = true;
           print("HOangCV: farmerInspector: ${farmerInspector.toJson()}");
-          if (farmerInspector.farmer_id == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Tên nông dân");
-          } else if (farmerInspector.internal_inspector_id == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-          } else if (farmerInspector.monitoring_visit_type == null) {
-            checkPass = false;
-            Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-          }
+          checkPass = Utils.checkPassFarm(farmerInspector);
           if (checkPass) {
             bool checkParent = true;
             print("HoangC:V listID: $id : $index : ${listSelected[index]
@@ -412,18 +422,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
             },
             onChanged: (str) {
               bool checkPass = true;
-              if (farmerInspector.farmer_id == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Tên nông dân");
-              } else if (farmerInspector.internal_inspector_id == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-              } else if (farmerInspector.monitoring_visit_type == null) {
-                checkPass = false;
-                Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-              }
+              checkPass = Utils.checkPassFarm(farmerInspector);
               if (checkPass) {
-                controller.text = str;
+                //controller.text = str;
               } else{
                 controller.text = '';
               }
@@ -487,18 +488,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                     },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }
@@ -555,18 +547,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                     },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }
@@ -646,18 +629,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                     },
                     onChanged: (str) {
                       bool checkPass = true;
-                      if (farmerInspector.farmer_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Tên nông dân");
-                      } else if (farmerInspector.internal_inspector_id == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
-                      } else if (farmerInspector.monitoring_visit_type == null) {
-                        checkPass = false;
-                        Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
-                      }
+                      checkPass = Utils.checkPassFarm(farmerInspector);
                       if (checkPass) {
-                        controller[index].controller.text = str;
+                        //controller[index].controller.text = str;
                       } else{
                         controller[index].controller.text = '';
                       }

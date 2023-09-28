@@ -54,7 +54,7 @@ class _ListReportSelectState extends State<ListReportSelect> {
           centerTitle: true,
           hasBottom: true,
           showDefaultBackButton: true,
-          callback: [],
+          callback: [false],
           title: Text(
             "Chọn mẫu báo cáo đánh giá",
             style: StyleOfit.textStyleFW700(Colors.white, 20),

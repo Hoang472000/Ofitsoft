@@ -388,7 +388,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                             ),
                                             IconButton(
                                               icon: const Icon(
-                                                Icons.image_outlined,
+                                                Icons.close,
                                                 color: Colors.white,
                                                 size: 20.0,
                                               ),

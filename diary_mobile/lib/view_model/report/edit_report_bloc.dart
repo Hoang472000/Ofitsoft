@@ -29,6 +29,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     on<UpdateEditReportEvent>(updateEditReport);
     on<UpdateEditTableEvent>(updateEditTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
+    on<SubmitReportEvent>(submitReport);
+
   }
 
   void _initViewEdit(Emitter<EditReportState> emitter) {
@@ -913,6 +915,26 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
   }
 
+  Future<FutureOr<void>> submitReport(SubmitReportEvent event, Emitter<EditReportState> emit) async {
+    emit(state.copyWith(
+        isShowProgress: true, formStatus: const InitialFormStatus()));
+
+    FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+        id: state.reportId,
+        state: 'done'
+    );
+    ObjectResult result = await repository.editFarmerInspector(questionUpload);
+    if (result.responseCode == StatusConst.code00) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          reportId: result.response is int ? result.response : null,
+          formStatus: SubmissionSuccess(success: result.message)));
+    } else {
+      emit(state.copyWith(
+          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+    }
+  }
+
 }
 
 class EditReportEvent extends BlocEvent {
@@ -928,6 +950,14 @@ class GetEditReportEvent extends EditReportEvent {
 
   @override
   List<Object?> get props => [diary, id];
+}
+
+class SubmitReportEvent extends EditReportEvent {
+
+  SubmitReportEvent();
+
+  @override
+  List<Object?> get props => [];
 }
 
 class UpdateEditReportEvent extends EditReportEvent {
