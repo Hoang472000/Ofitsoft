@@ -1213,7 +1213,7 @@ class RepositoryImpl extends Repository {
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.deleteReport,
+            path: "${ApiConst.deleteReport}$id",
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     print("HoangCV: deleteReport response: ${objectResult.response}: ${objectResult.isOK}");

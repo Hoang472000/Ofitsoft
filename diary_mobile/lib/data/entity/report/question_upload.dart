@@ -87,6 +87,8 @@ class QuestionUpload {
     data['value_check_box'] = true;
     data['table_row_id'] = table_row_id;
     data['list_id_suggested'] = list_id_suggested;
+    //
+    data['state'] = state;
 
     //
     data['farmer_id'] = farmer_id;

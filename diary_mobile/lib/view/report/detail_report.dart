@@ -130,7 +130,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
             padding: EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
               text,
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 16),
               maxLines: 5,
             ),

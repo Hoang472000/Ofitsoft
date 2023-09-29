@@ -84,6 +84,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                   DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                           () {
                         Get.back();
+                        Navigator.of(context).pop([checkUpdate]);
                       }, () {
                         Get.back();
                       }, '', S.of(context).close_dialog, dismissible: false);
@@ -109,7 +110,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               tableFooter(),
-                              tableMuc("${state.listReport[1].title}"),
+                              tableMuc("${state.listReport[0].title}"),
                               //tableMuc("BÁO CÁO KIỂM SOÁT NỘI BỘ VÀ THỰC ĐỊA NÔNG HỘ"),
                               SizedBox(height: 10,),
                               tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
@@ -117,13 +118,13 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                                   padding: EdgeInsets.zero,
                                   shrinkWrap: true,
                                   primary: false,
-                                  itemCount: state.listReport[1].questionAndPageIds.length,
+                                  itemCount: state.listReport[0].questionAndPageIds.length,
                                   itemBuilder: (context, index) {
                                     return  ExpansionTile(
-                                      title: widgetMuc("${state.listReport[1].questionAndPageIds[index].title}"),
+                                      title: widgetMuc("${state.listReport[0].questionAndPageIds[index].title}"),
                                       children: [
-                                        tableDetailResult(state.listReport[1].questionAndPageIds[index].questionAndPageIds,
-                                            state.listReport[1].questionAndPageIds[index].questionParentTitleId,
+                                        tableDetailResult(state.listReport[0].questionAndPageIds[index].questionAndPageIds,
+                                            state.listReport[0].questionAndPageIds[index].questionParentTitleId,
                                             state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
                                             state.listTable, state.farmerInspector ?? FarmerInspectorUpload()),
                                       ],
@@ -177,7 +178,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
             padding: EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
               text,
-              textAlign: TextAlign.left,
+              textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 16),
               maxLines: 5,
             ),

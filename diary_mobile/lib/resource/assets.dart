@@ -125,6 +125,8 @@ class IconAsset {
   static const String icWatering = "${iConsDiary}watering.svg";
   static const String icSeedling = "${iConsDiary}seedling.svg";
   static const String icLoadOtp = "${iConsDiary}load_otp.svg";
+  static const String icSuccess = "${iConsDiary}ic_success.svg";
+  static const String icLoading = "${iConsDiary}ic_loading.svg";
 }
 
 class ImageAsset {

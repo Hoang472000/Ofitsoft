@@ -170,6 +170,7 @@ class Utils {
   static String formatTime(String time) {
     if (time.isNotEmpty) {
       final dateTime = DateTime.parse(time);
+      return '🌩 🌧 ☔️ ☃️ 🌫 ☀️ ☁️ 🤷‍ 🤩 🤩 🤩';
       return "${dateTime.day}/${dateTime.month}/${dateTime.year}";
     } else {
       return "";

@@ -58,6 +58,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
   bool visible = true;
   bool updateHarvesting = false;
   List<ReportResult> listCallback = const [];
+  OverlayEntry? overlayEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -137,12 +138,14 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                   updateHarvesting = true;
                   listCallback = state.listReport;
                 });
-                /*DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                if ((formStatus.success ?? "").isNotEmpty) {
+                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                         () {
                       Get.back();
                     }, () {
                       Get.back();
-                    }, '', S.of(context).close_dialog);*/
+                    }, '', S.of(context).close_dialog);
+                }
               } else if (formStatus is FormSubmitting) {
               }
             }, builder: (blocContext, state) {
@@ -171,7 +174,10 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                             Navigator.of(context)
                                 .push(DetailReportViewPage.route(state.listReport[index].id??-1));
                           },
-                          callbackDelete: () {},
+                          callbackDelete: () {
+                              contextBloc.read<ListReportResultBloc>().add(
+                                  DeleteReportResultEvent(state.listReport[index].id??-1));
+                          },
                         callbackEdit: () async {
                         var result = await Navigator.of(context)
                             .push(EditReportViewPage.route(widget.diary, state.listReport[index].id??-1));
@@ -179,7 +185,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                           contextBloc.read<ListReportResultBloc>().add(
                               GetListReportResultEvent(const [], const [], checkUpdate: true));
                         }
-                      },);
+                      }, overlayEntry: overlayEntry,);
                     },
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
@@ -250,4 +256,5 @@ class _ListReportResultViewState extends State<ListReportResultView> {
       ],
     );
   }
+
 }

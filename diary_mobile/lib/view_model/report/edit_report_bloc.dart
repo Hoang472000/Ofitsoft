@@ -621,90 +621,6 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
   }
 
-/*  List<dynamic> findQuestionAndAnswerById(List<Question> questions, int id, List<int> listIdSuggested) {
-    for (Question question in questions) {
-      if (question.idSelected == id) {
-        return [question, null, listIdSuggested];
-      }
-      if (question.suggestedAnswerIds.isNotEmpty) {
-        for (Answer answer in question.suggestedAnswerIds) {
-          if (answer.idSelected == id) {
-            return [question, answer, listIdSuggested];
-          }
-          if (answer.questionAndPageIds.isNotEmpty) {
-            List<dynamic> nested = findQuestionAndAnswerById(answer.questionAndPageIds, id, listIdSuggested);
-            if (nested[0] != null) {
-              return nested;
-            }
-          }
-          if (question.questionType == 'simple_choice') {
-            print("HoangCV: simple_choice: ${question.questionAndPageIds.length}: ${question.title}");
-            listIdSuggested = question.questionAndPageIds.map((item) => item.id ?? -1).toList();
-          }
-        }
-      }
-      if (question.questionAndPageIds.isNotEmpty) {
-        List<dynamic> nested = findQuestionAndAnswerById(question.questionAndPageIds, id, listIdSuggested);
-        if (nested[0] != null) {
-          return nested;
-        }
-      }
-    }
-    return [null, null, listIdSuggested];
-  }*/
-
-
-  List<dynamic> findQuestionAndAnswerById(List<Question> questions, int id, List<int> listIdSuggested, String answerType) {
-    Question question = Question();
-    Answer answer = Answer();
-
-    for (Question q in questions) {
-      if (q.idSelected == id) {
-        question = Question.copy(q);
-        answerType = question.questionType ?? "";
-        if (answerType == 'simple_choice') {
-          listIdSuggested = questions.map((item) => item.id ?? -1).toList();
-        }
-        return [question, answer, listIdSuggested, answerType];
-      }
-
-      if (q.suggestedAnswerIds.isNotEmpty) {
-        for (Answer a in q.suggestedAnswerIds) {
-          if (a.idSelected == id) {
-            question = Question.copy(q);
-            answer = Answer.copy(a);
-            answerType = question.questionType ?? "";
-            return [question, answer, listIdSuggested, answerType];
-          }
-
-          if (a.questionAndPageIds.isNotEmpty) {
-            List<dynamic> nestedResult = findQuestionAndAnswerById(a.questionAndPageIds, id, listIdSuggested, answerType);
-            question = nestedResult[0] ?? Question();
-            answer = nestedResult[1] ?? Answer();
-            listIdSuggested = nestedResult[2];
-            answerType = nestedResult[3];
-            if (question != null) {
-              return [question, answer, listIdSuggested, answerType];
-            }
-          }
-        }
-      }
-
-      if (q.questionAndPageIds.isNotEmpty) {
-        List<dynamic> nestedResult = findQuestionAndAnswerById(q.questionAndPageIds, id, listIdSuggested, answerType);
-        question = nestedResult[0];
-        answer = nestedResult[1];
-        listIdSuggested = nestedResult[2];
-        answerType = nestedResult[3];
-        if (question != null) {
-          return [question, answer, listIdSuggested, answerType];
-        }
-      }
-    }
-    return [null, null, listIdSuggested, answerType];
-  }
-
-
   Future<FutureOr<void>> updateEditReport(
       UpdateEditReportEvent event, Emitter<EditReportState> emit) async {
     emit(state.copyWith(
@@ -840,7 +756,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         is_answer_exist: index != -1 ? event.listSelect[index].value : false,
         // value khi tich chon va bo tich chon
         //table_row_id: 1,
-        list_id_suggested: listIdSuggested);
+        list_id_suggested: listIdSuggested,
+      state: 'in_progress');
 
       ObjectResult result = await repository.uploadQuestion(questionUpload);
       if (result.responseCode == StatusConst.code00) {
@@ -870,7 +787,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         value_text: event.value,
         is_answer_exist: true,
         table_row_id: event.rowId,
-        list_id_suggested: []
+        list_id_suggested: [],
+        state: 'in_progress'
     );
     ObjectResult result = await repository.uploadQuestion(questionUpload);
     if (result.responseCode == StatusConst.code00) {
@@ -897,6 +815,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
         id: state.reportId,
         farmer_id: state.farmerInspector!.farmer_id,
+        farm_id: state.farmerInspector!.farm_id,
         farmer_code: state.farmerInspector!.farmer_code,
         internal_inspector_id: state.farmerInspector!.internal_inspector_id,
         monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,

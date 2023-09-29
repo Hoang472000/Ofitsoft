@@ -11,6 +11,7 @@ class ReportResult {
   String? internalInspector;
   String? monitoringVisitType;
   String? createDate;
+  String? state;
   ReportResult(
       {this.id,
         this.surveyId,
@@ -23,6 +24,7 @@ class ReportResult {
         this.internalInspectorId,
         this.internalInspector,
         this.monitoringVisitType,
+        this.state,
         this.createDate});
 
   factory ReportResult.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class ReportResult {
       internalInspectorId: json['internal_inspector_id'] ?? -1,
       internalInspector: json['internal_inspector'] ?? '',
       createDate: json['create_date'] ?? '',
+        state: json['state'] ?? 'in_progress'
     );
   }
 
@@ -55,6 +58,7 @@ class ReportResult {
     data['internal_inspector_id'] = internalInspectorId;
     data['internal_inspector'] = internalInspector;
     data['create_date'] = createDate;
+    data['state'] = state;
     return data;
   }
 
