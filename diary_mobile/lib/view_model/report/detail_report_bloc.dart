@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,6 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/dialog/toast_widget.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
-import 'add_report_bloc.dart';
 
 class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   final Repository repository;
@@ -169,8 +169,9 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listControllerTable.addAll(listCtrlTable);
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
-        listSelectedInspector.add(Select(
-            i, report[0].listMonitoringVisitType[i].type == report[0].monitoringVisitType ? true : false, report[0].listMonitoringVisitType[i].value,
+        listSelectedInspector.add(Select(i,
+            report[0].listMonitoringVisitType[i].type == report[0].monitoringVisitType ? true : false,
+            report[0].listMonitoringVisitType[i].value,
             type: report[0].listMonitoringVisitType[i].type));
       }
       int indexFarmer = report[0].listFarmers.indexWhere((element) => element.id == report[0].farmerId);
@@ -220,23 +221,19 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
             for (RowLine row in item.userInputLines) {
               List<Answer> listAs = [];
               for (Answer answer in row.userInputLineId) {
-                print("HoangCV: answer 1: ${answer.value} : ${answer
-                    .valueRowTable} : ${answer.tableRowId}");
-
                 Answer clonedAnswer = Answer.copy(answer);
                 clonedAnswer.id = clonedAnswer.suggestedAnswerId;
                 if (clonedAnswer.tableRowId == null || clonedAnswer.tableRowId == -1) {
-                  clonedAnswer.tableRowId = id;
+                  clonedAnswer.tableRowId = row.rowId;
+                  clonedAnswer.rowId = row.rowId;
                 }
-                print("HoangCV: value_row_table 1: ${clonedAnswer.value} : ${clonedAnswer.valueRowTable} :"
-                    "${clonedAnswer.tableRowId}");
                 List<Answer> las = [];
                 for (Answer as in clonedAnswer.suggestedAnswerIds) {
                   Answer clonedAs = Answer.copy(as);
                   clonedAs.id = clonedAs.suggestedAnswerId;
-                  print("HoangCV: value_row_table : ${as.value} : ${as.valueRowTable}");
                   if (clonedAs.tableRowId == null || clonedAs.tableRowId == -1) {
-                    clonedAs.tableRowId = id;
+                    clonedAs.tableRowId = row.rowId;
+                    clonedAs.rowId = row.rowId;
                   }
                   las.add(clonedAs);
                 }
@@ -247,7 +244,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
               }
               Question qs = Question.copy(item);
               qs.suggestedAnswerIds = listAs;
-              qs.rowId = id;
+              qs.rowId = row.rowId;
               id++;
               list.add(qs);
             }
@@ -323,9 +320,9 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
-        print(
+        /*print(
             "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
+        */selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
             childQuestion.title!, listId: [], listSubId: [])); // Thêm Select cho câu hỏi con
         initSelectValues(childQuestion, selectList);
       }
@@ -333,19 +330,19 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
         //   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
-        print(
+        /*print(
             "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        selectList.add(Select(
-          childQuestion.idSelected!,
-          childQuestion.checkResult ?? false,
-          childQuestion
-              .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
+        */selectList.add(Select(
+            childQuestion.idSelected!,
+            childQuestion.checkResult ?? false,
+            childQuestion
+                .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
       // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        /*   print(
+        /*print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
         */selectList.add(Select(
             childAnswer.idSelected!,
@@ -356,7 +353,6 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       }
     }
   }
-
 
   List<List<Visible>> createVisibleLists(List<Question> questions) {
     List<List<Visible>> visibleLists = [];
@@ -440,7 +436,6 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult ?? ''),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
@@ -466,11 +461,12 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        //print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer.valueRowTable} : ${childAnswer.value}");
+        print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer.valueRowTable} : ${childAnswer.value}");
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.tableRowId));
+                idRow: childAnswer.tableRowId, title: childAnswer.value,
+                constrMandatory: childAnswer.constrMandatory));
         initTextControllersTable(childAnswer, textEditingControllerList);
       }
     }

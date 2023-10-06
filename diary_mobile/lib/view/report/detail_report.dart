@@ -21,7 +21,6 @@ import '../../view_model/report/detail_report_bloc.dart';
 class DetailReportViewPage extends StatefulWidget {
   DetailReportViewPage({super.key, required this.id});
   final int id;
-
   @override
   _DetailReportViewPageState createState() => _DetailReportViewPageState();
 
@@ -62,60 +61,72 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           backgroundColor: AppColor.main,
           actions: [],
         ),
-        body: BlocConsumer<DetailReportBloc, DetailReportState>(
-            listener: (blocContext, state) async {},
-            builder: (blocContext, state) {
-          return WillPopScope(
-            onWillPop: () async{
-              Navigator.pop(context);
-              return false;
-            },
-            child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                child: SingleChildScrollView(
-                  //physics: NeverScrollableScrollPhysics(),
-                  child:  state.listReport.isEmpty ? Container(): Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        tableFooter(),
-                        tableMuc("${state.listReport[0].title}"),
-                        SizedBox(height: 10,),
-                        tableDetail(state.listSelectedInspector, state.listWidget, blocContext),
-                        ListView.builder(
-                            shrinkWrap: true,
-                            primary: false,
-                            itemCount: state.listReport[0].questionAndPageIds.length,
-                            itemBuilder: (context, index) {
-                              return  ExpansionTile(
-                                title: widgetMuc("${state.listReport[0].questionAndPageIds[index].title}"),
-                                children: [
-                                  tableDetailResult(state.listReport[0].questionAndPageIds[index].questionAndPageIds,
-                                      state.listReport[0].questionAndPageIds[index].questionParentTitleId,
-                                      state.listSelected[index], state.listController[index], state.listControllerTable, blocContext,
-                                      state.listTable),
-                                ],
-                              );
-                            }),
-                        /*ExpansionTile(
-                          title: widgetMuc("15)  Chữ ký."),
-                          children: [
-                            tableDetail15(),
-                          ],
-                        ),*/
-                        ExpansionTile(
-                          title: widgetMuc("(*)  Rủi ro"),
-                          children: [
-                            tableDetail16(),
-                          ],
-                        ),
-                        tableDetailEnd(),
-                      ]
-                  ),
-                )),
-          );
-        }),
+        body: SafeArea(
+          child: BlocConsumer<DetailReportBloc, DetailReportState>(
+              listener: (blocContext, state) async {},
+              builder: (blocContext, state) {
+                return WillPopScope(
+                    onWillPop: () async{
+                      Navigator.pop(context);
+                      return false;
+                    },
+                    child: state.listReport.isEmpty
+                        ? Container()
+                        : ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      //physics: NeverScrollableScrollPhysics(),
+                      itemCount: state.listReport[0].questionAndPageIds.length + 2,
+                      itemBuilder: (context, index) {
+                        return index == 0 ? detailHeader("${state.listReport[0].title}",
+                              state.listSelectedInspector, state.listWidget, blocContext) :
+                          index == state.listReport[0].questionAndPageIds.length + 1 ? detailEnd(blocContext) :
+                          ExpansionTile(
+                            title: widgetMuc("${state.listReport[0].questionAndPageIds[index -1].title}"),
+                            children: [
+                              tableDetailResult(
+                                state.listReport[0].questionAndPageIds[index -1].questionAndPageIds,
+                                state.listReport[0].questionAndPageIds[index -1].questionParentTitleId,
+                                state.listSelected[index-1],
+                                state.listController[index-1],
+                                state.listControllerTable,
+                                blocContext,
+                                state.listTable,
+                              ),
+                            ],
+                          );
+                      },
+                    )
+                );
+              }),
+        ),
       ),
+    );
+  }
+
+  Widget detailHeader(String title, List<Select> listSelect, List<InputRegisterModel> listWidget, BuildContext context){
+    return Column(
+      children: [
+        tableFooter(),
+        tableMuc(title),
+        SizedBox(height: 10,),
+        tableDetail(listSelect, listWidget, context),
+      ],
+    );
+  }
+
+  Widget detailEnd(BuildContext context){
+    return Column(
+      children: [
+        ExpansionTile(
+          title: widgetMuc("(*)  Rủi ro"),
+          children: [
+            tableDetail16(),
+          ],
+        ),
+        tableDetailEnd(),
+      ],
     );
   }
 
@@ -164,7 +175,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       ),
     );
   }
-  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc, {bool isFirst = false}) {
+  Widget checkBox(int id, List<Select> listSelected, BuildContext contextBloc,
+      {bool isFirst = false, List<Controller> listController = const []}) {
     int index = listSelected.indexWhere((element) => element.id == id);
     /*print("HoangCV: checkbox: id: $id : $index : ${listSelected[index].title} : ${listSelected.length}");
     */return Container(
@@ -177,37 +189,6 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
         onChanged: (value) {
-          /*
-          print("HoangC:V listID: $id : $index : ${listSelected[index].title} : ${listSelected[index].listId.toString()}");
-          if(value == false){
-            for(int i = 0; i< listSelected[index].listSubId.length; i++){
-              int id = listSelected.indexWhere((element) => element.id == listSelected[index].listSubId[i]);
-              setState(() {
-                listSelected[id].value = value ?? false;
-              });
-            }
-          } else{
-            for(int i = 0; i< listSelected[index].listId.length; i++){
-              int id = listSelected.indexWhere((element) => element.id == listSelected[index].listId[i]);
-              print("HoangCV: listsub1: ${listSelected[id].id} : ${listSelected[id].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
-              for(int i = 0; i< listSelected[id].listSubId.length; i++){
-                int idSub = listSelected.indexWhere((element) => element.id == listSelected[id].listSubId[i]);
-                print("HoangCV: listsub1: ${idSub} : ${listSelected[idSub].title} : ${listSelected[id].listId} : ${listSelected[id].listSubId}");
-                setState(() {
-                  listSelected[idSub].value = false;
-                });
-              }
-              setState(() {
-                listSelected[id].value = !(value ?? false);
-              });
-            }
-          }
-          setState(() {
-            listSelected[index].value = value ?? false;
-
-          });
-          contextBloc.read<DetailReportBloc>().add(
-              UpdateDetailReportEvent(id, '', listSelected));*/
         },
       ),
     );
@@ -224,20 +205,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
         visualDensity: VisualDensity.compact,
         side: BorderSide(color: AppColor.black22),
         value: listSelected[index].value,
-        onChanged: (value) {
-/*          if(value == true){
-            for(int i = 0; i< listSelected.length; i++){
-              setState(() {
-                listSelected[i].value = !(value ?? false);
-              });
-            }
-          }
-          setState(() {
-            listSelected[index].value = value ?? false;
-          });
-          contextBloc.read<DetailReportBloc>().add(
-              UpdateFarmerInspectorEvent(id, listSelected[index].type, listSelected));*/
-        },
+        onChanged: (value) {},
       ),
     );
   }
@@ -334,16 +302,14 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
 
       if (index != -1) {
         //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
-        controller = TextEditingController(text: element[index].controller.text);
+        controller = element[index].controller;
         type = element[index].type;
         return Padding(
           padding: EdgeInsets.only(bottom: 4, top: 4),
           child: TextField(
-            controller: /*element[index].*/controller,
-            keyboardType: TextInputType.none,//type == 'text' ? TextInputType.text : TextInputType.number,
-            onSubmitted: (str) {
-              //context.read<DetailReportBloc>().add(UpdateDetailTableEvent(questionId, answerId, idRow, str));
-            },
+            controller: controller,
+            keyboardType: TextInputType.none,
+            onSubmitted: (str) {},
             decoration: const InputDecoration(
               isDense: true,
               border: InputBorder.none, // No border or underline
@@ -362,7 +328,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
   Table tableNonHasSub(int questionId, int idRow, List<Answer> list, List<List<Controller>> controller, BuildContext context) {
     List<Widget> tabNonSub = [];
     for (int i = 0; i < list.length; i++) {
-      tabNonSub.add( tableNon(questionId, list[i].id!, list[i].idSelected!, list[i].tableRowId!, controller, context),);
+      tabNonSub.add( tableNon(questionId, list[i].id!, list[i].idSelected!, idRow,
+          controller, context),);
     }
     return Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -379,7 +346,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
   TableRow tableRowCheckBoxTextField(String title, int id, List<Select> listSelected, List<Controller> controller, BuildContext context, {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
-      checkBox(id, listSelected, context, isFirst: isFirst),
+      checkBox(id, listSelected, context, isFirst: isFirst, listController: controller),
       Padding(
         padding: EdgeInsets.only(top: isFirst ? 16 : 4, bottom: 16.0),
         child: RichText(
@@ -394,11 +361,9 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,//controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-                    onSubmitted: (str){
-                /*      context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, listSelected));*/
-                    },
+                    keyboardType: TextInputType.none,
+                    onSubmitted: (str){},
+                    onChanged: (str) {},
                     decoration: const InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -441,11 +406,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,//controller[index].type == 'text' ? TextInputType.text : TextInputType.number,
-                    onSubmitted: (str){
-/*                      context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, []));*/
-                    },
+                    keyboardType: TextInputType.none,
+                    onSubmitted: (str){},
                     decoration: const InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -512,13 +474,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   padding: EdgeInsets.symmetric(horizontal: 0),
                   child: TextField(
                     controller: controller[index].controller,
-                    keyboardType: TextInputType.none,/*controller[index].type == 'text'
+                    keyboardType: controller[index].type == 'text'
                         ? TextInputType.text
-                        : TextInputType.number,*/
-                    onSubmitted: (str) {
-           /*           context.read<DetailReportBloc>().add(
-                          UpdateDetailReportEvent(id, str, []));*/
-                    },
+                        : TextInputType.number,
+                    onSubmitted: (str) {},
                     decoration: const InputDecoration(
                       isDense: true,
                       contentPadding: EdgeInsets.zero,
@@ -596,12 +555,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               contextParent: context,
               color: AppColor.background,
               inputRegisterModel: listWidget[3],
-              onClick: () {
-       /*         setState(() {});
-                context
-                    .read<DetailReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 3, context));*/
-              },
+              onClick: () {},
             ),
           ),
         ]),
@@ -634,11 +588,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               contextParent: context,
               color: AppColor.background,
               inputRegisterModel: listWidget[0],
-              onClick: () {
-    /*            context
-                    .read<DetailReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 0, context));*/
-              },
+              onClick: () {},
             ),
           ),
           Padding(
@@ -655,8 +605,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               contextParent: context,
               color: AppColor.background,
               inputRegisterModel: listWidget[1],
-              onClick: () {
-              },
+              onClick: () {},
             ),
           ),
         ]),
@@ -686,11 +635,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               contextParent: context,
               color: AppColor.background,
               inputRegisterModel: listWidget[4],
-              onClick: () {
-/*                context
-                    .read<AddReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 4, context));*/
-              },
+              onClick: () {},
             ),
           ),
         ]),
@@ -720,11 +665,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               contextParent: context,
               color: AppColor.background,
               inputRegisterModel: listWidget[2],
-              onClick: () {
-/*                context
-                    .read<AddReportBloc>()
-                    .add(OnSelectValueEvent(listWidget, 2, context));*/
-              },
+              onClick: () {},
             ),
           ),
         ]),
@@ -779,7 +720,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
     );
   }
 
-  Widget tableDetailResult(List<Question> list, List<Question> listParent,List<Select> listSelect, List<Controller> listController,
+  Widget tableDetailResult(List<Question> list, List<Question> listParent,
+      List<Select> listSelect, List<Controller> listController,
       List<List<Controller>> listControllerTable, BuildContext context, List<TableQuestion> listTable){
     List<Table> listTable1 =[];
     int form = 0;
@@ -793,7 +735,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       List<List<Widget>> listRow= [];
       form = checkForm(list[i]);
       //print("HoangCV: list title : ${list[i].title} : ${form}");
-      if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"){
+      if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice" || list[i].questionType == "title"){
         if(list[i].questionAndPageIds.length>0){
           checkFormFour = true;
           List<Question> listParent = list[i].questionAndPageIds;
@@ -801,7 +743,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
             List<Table> tableSub = [];
             List<TableRow> tableRow = [];
             List<TableRow> tableRowSub = [];
-            form = checkForm(listParent[i]);
+            form = 5;
             //print("HoangCV: listParent title : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds.length}");
             if (listParent[i].suggestedAnswerIds.length <= 2 ||
                 listParent[i].suggestedAnswerIds.length >= 4) {
@@ -826,8 +768,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                     tableRow.add(tableRowCheckBox(
                         "${listParent[i].suggestedAnswerIds[j].value}",
                         listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect,
-                        context, isFirst: i == 0 ? true : false));
+                        listSelect,context, isFirst: i == 0 ? true : false));
                   }
                   bool hasCheckBox = listParent[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
                   for (int k = 0; k <
@@ -883,20 +824,36 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       return element.commentAnswer == true;
                     });
                     if (hasCommentAnswer) {
-                      form = 2;
-                      //print("HoangCV:hasCommentAnswer $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
+                      if(form != 5) form = 2;
                       if (listParent[i].suggestedAnswerIds[j].commentAnswer ==
                           true) {
-                        tableSub.add(tableForm2TextField(
-                            listParent[i].suggestedAnswerIds[j].value ?? '',
-                            listParent[i].suggestedAnswerIds[j].idSelected ??
-                                -1,
-                            listSelect, listController, context));
+                        if(form == 5){
+                          tableRow.add(tableRowCheckBoxTextField(
+                              "${listParent[i].suggestedAnswerIds[j].value}",
+                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                              listSelect, listController, context,
+                              isFirst: i == 0 ? true : false));
+                        } else{
+                          tableSub.add(tableForm2TextField(
+                              listParent[i].suggestedAnswerIds[j].value ?? '',
+                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                              listSelect, listController, context));
+                        }
                       } else {
-                        tableSub.add(tableForm2(
-                            listParent[i].suggestedAnswerIds[j].value ?? '',
-                            listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                            listSelect, context, isFirst: i == 0 ? true : false));
+                        if(form == 5){
+                          tableRow.add(tableRowCheckBox(
+                              "${listParent[i].suggestedAnswerIds[j].value}",
+                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                              listSelect, context,
+                              isFirst: i == 0 ? true : false));
+                        } else {
+                          tableSub.add(tableForm2(
+                              listParent[i].suggestedAnswerIds[j].value ?? '',
+                              listParent[i].suggestedAnswerIds[j].idSelected ??
+                                  -1,
+                              listSelect, context,
+                              isFirst: i == 0 ? true : false));
+                        }
                       }
                     } else {
                       form = 3;
@@ -904,7 +861,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                           tableRowCheckBox(
                               listParent[i].suggestedAnswerIds[j].value ?? '',
                               listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                              listSelect, context));
+                              listSelect, context, ));
                     }
                   }
                 }
@@ -929,14 +886,15 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                 }
               }
             }
-            if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && form != 7) {
+            if(form == 5){
               tableWidgetFive.add([
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, top: 16),
                   child: Text(
                     "${listParent[i].title}",
                     textAlign: TextAlign.center,
-                    style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                    style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
+                    AppColor.red11 : AppColor.black22, 14),
                     maxLines: 7,
                   ),
                 ),
@@ -961,9 +919,45 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                 ) : Container(),
               ]);
             }
-            else if(tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2 && form != 7){
+            else if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && listParent[i].questionType != "table") {
+              //print("HoangCV: tableRow.isNotEmpty0: ${tableRow.isNotEmpty}");
+              tableWidgetFive.add([
+                Padding(
+                  padding: EdgeInsets.only(bottom: 16, top: 16),
+                  child: Text(
+                    "${listParent[i].title}",
+                    textAlign: TextAlign.center,
+                    style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
+                    AppColor.red11 : AppColor.black22, 14),
+                    maxLines: 7,
+                  ),
+                ),
+                tableRow.isNotEmpty
+                    ? Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  columnWidths: const {
+                    0: FlexColumnWidth(0.7),
+                    1: FlexColumnWidth(2),
+                  },
+                  children: tableRow,
+                )
+                    : Container(),
+                tableRowSub.isNotEmpty ?
+                Table(
+                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                  columnWidths: const {
+                    0: FlexColumnWidth(0.3),
+                    1: FlexColumnWidth(2),
+                  },
+                  children: tableRowSub,
+                ) : Container(),
+              ]);
             }
-            if(tableSub.isNotEmpty && form != 0 && form != 1 && form != 2 && form !=7) {
+            else if(tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2
+                && listParent[i].questionType != "table"){
+            }
+            if(tableSub.isNotEmpty && form != 0 && form != 1 && form != 2
+                && listParent[i].questionType != "table") {
               listTable1.add(Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 columnWidths: {
@@ -979,7 +973,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                 ],
               ),);
             }
-            else if(tableSub.isNotEmpty && form != 0 && form != 1 && form == 2 && form !=7) {
+            else if(tableSub.isNotEmpty && form != 0 && form != 1 && form == 2
+                && listParent[i].questionType != "table") {
               listTable1.add(Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 columnWidths: {
@@ -1002,7 +997,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 16, top: 16),
                                 child: Text(
-                                  "${list[i].title}",
+                                  "${listParent[i].title}",
                                   textAlign: TextAlign.center,
                                   style: StyleOfit.textStyleFW400(AppColor.black22, 14),
                                   maxLines: 6,
@@ -1066,7 +1061,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                   //print("HoangCV:commentAnswer1 $i : $j : ${list[i].title} :  ${listController.last.id}");
                   tableRow.add(tableRowCheckBoxTextField(
                       "${list[i].suggestedAnswerIds[j].value}",
-                      list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect, listController, context,
+                      list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                      listSelect, listController, context,
                       isFirst: i == 0 ? true : false));
                 } else {
                   //print("HoangCV: $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
@@ -1088,14 +1084,15 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                     bool hasCheckBox = list[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
                     tableRowSub.add(tableRowTextFieldHasCheckbox(
                         "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
-                        list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1, listController, context,
+                        list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
+                        listController, context,
                         isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
                   } else{
                     tableRowSub.add(tableRowCheckBox(
-                        "${list[i].suggestedAnswerIds[j].questionAndPageIds[k]
-                            .title}",
+                        "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                         list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                        listSelect, context, isFirst: i == 0 ? true : false));
+                        listSelect, context,
+                        isFirst: i == 0 ? true : false));
                   }
                 }
               } else{
@@ -1114,16 +1111,18 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                     return element.commentAnswer == true;
                   });
                   if(hasCommentAnswer) {
-                    form = 2;
+                    if(form != 5) form = 2;
                     //print("HoangCV:hasCommentAnswer $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
 
                     if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
                       tableSub.add(tableForm2TextField(
-                          list[i].suggestedAnswerIds[j].value ?? '', list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                          list[i].suggestedAnswerIds[j].value ?? '',
+                          list[i].suggestedAnswerIds[j].idSelected ?? -1,
                           listSelect, listController, context));
                     } else {
                       tableSub.add(tableForm2(
-                          list[i].suggestedAnswerIds[j].value ?? '', list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                          list[i].suggestedAnswerIds[j].value ?? '',
+                          list[i].suggestedAnswerIds[j].idSelected ?? -1,
                           listSelect, context, isFirst: i == 0 ? true : false));
                     }
                   }else{
@@ -1132,7 +1131,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                     form = 3;
                     tableRow.add(
                         tableRowCheckBox(
-                            list[i].suggestedAnswerIds[j].value ?? '', list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                            list[i].suggestedAnswerIds[j].value ?? '',
+                            list[i].suggestedAnswerIds[j].idSelected ?? -1,
                             listSelect, context));
                   }
                 }
@@ -1146,11 +1146,13 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               if (list[i].suggestedAnswerIds[j]
                   .commentAnswer == true) {
                 tableSub.add(tableForm2TextField(
-                    list[i].suggestedAnswerIds[j].value ?? '', list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                    list[i].suggestedAnswerIds[j].value ?? '',
+                    list[i].suggestedAnswerIds[j].idSelected ?? -1,
                     listSelect, listController, context));
               } else {
                 tableSub.add(tableForm2(
-                    list[i].suggestedAnswerIds[j].value ?? '', list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                    list[i].suggestedAnswerIds[j].value ?? '',
+                    list[i].suggestedAnswerIds[j].idSelected ?? -1,
                     listSelect, context));
               }
             }
@@ -1165,14 +1167,16 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                 list[i].suggestedAnswerIds[j].value ?? '',
                 list[i].suggestedAnswerIds[j].suggestedAnswerIds));
           } else {
-            tableWidgetText
-                .add(tableRowText(list[i].suggestedAnswerIds[j].value ?? ''));
+            tableWidgetText.add(tableRowText(
+              list[i].suggestedAnswerIds[j].value ?? '',));
           }
         }
         int index = listTable.indexWhere((element) =>
         element.id == list[i].id
         );
         for(int a = 0 ; a <listTable[index].listQuestion.length; a ++){
+          //print("HoangCV: listQuestion[a]:  ${a} : ${listTable[index].listQuestion[a].idSelected} : ${listTable[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId}");
+
           List<Widget> tableWidgetNon = [];
           for(int g = 0 ; g <listTable[index].listQuestion[a].suggestedAnswerIds.length; g++){
             if (listTable[index].listQuestion[a].suggestedAnswerIds[g].suggestedAnswerIds.isNotEmpty) {
@@ -1192,7 +1196,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       }
       if(!checkFormFour) {
         if (tableSub.isEmpty && form != 0 && form != 1 && form != 2 &&
-            form != 7) {
+            list[i].questionType != "table") {
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             columnWidths: {
@@ -1236,9 +1240,9 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           ),);
         }
         else if (tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2 &&
-            form != 7) {}
+            list[i].questionType != "table") {}
         if (tableSub.isNotEmpty && form != 0 && form != 1 && form != 2 &&
-            form != 7) {
+            list[i].questionType != "table") {
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             columnWidths: {
@@ -1255,7 +1259,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           ),);
         }
         else if (tableSub.isNotEmpty && form != 0 && form != 1 && form == 2 &&
-            form != 7) {
+            list[i].questionType != "table") {
           // form 5. thu hoach
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -1300,11 +1304,13 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       }
       if(form == 0){
         for(int j = 0 ; j< list[i].suggestedAnswerIds.length; j++){
-          if(list[i].questionType == "char_box"){
-            tableSub.add(formCharTextField(list[i].title??'', list[i].idSelected ?? -1,
+          if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+            tableSub.add(formCharTextField(list[i].title??'',
+                list[i].idSelected ?? -1,
                 listController, context));
           }else{
-            tableSub.add(tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1,
+            tableSub.add(tableForm2TextField(list[i].title ?? '',
+                list[i].idSelected ?? -1,
                 listSelect, listController, context));
           }
         }
@@ -1319,10 +1325,12 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           border: TableBorder.all(color: AppColor.black22),
           children: [
             TableRow(
-                children: [list[i].questionType == "char_box" ?
-                formCharTextField(list[i].title??'', list[i].idSelected ?? -1,
+                children: [list[i].questionType == "char_box" || list[i].questionType =="numerical_box" ?
+                formCharTextField(list[i].title??'',
+                    list[i].idSelected ?? -1,
                     listController, context):
-                tableForm2TextField(list[i].title ?? '', list[i].idSelected ?? -1,
+                tableForm2TextField(list[i].title ?? '',
+                    list[i].idSelected ?? -1,
                     listSelect, listController, context)
                 ]
             ),
@@ -1364,7 +1372,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           ],
         ),);
       }
-      else if(form == 7 && tableWidgetText.isNotEmpty){
+      else if(list[i].questionType  == "table" && tableWidgetText.isNotEmpty){
         // table
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -1461,12 +1469,12 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       List<Answer> as = qs.suggestedAnswerIds;
       bool checkAdd = true;
       for(int i = 0 ; i< as.length ; i++){
-        if(as[i].questionAndPageIds.isEmpty){
+        /*if(as[i].questionAndPageIds.isEmpty){
           count++;
           if(as[i].commentAnswer == true){
             count = count + 4;
           }
-        }
+        }*/
         if(as[i].questionAndPageIds.isNotEmpty && checkAdd){
           checkAdd = false;
           count++;

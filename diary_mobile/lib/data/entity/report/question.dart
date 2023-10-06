@@ -16,12 +16,16 @@ class Question {
   List<Question> questionAndPageIds;
   List<Question> questionParentTitleId;
   String? stringSuggestedAnswerIds;
+  //check color
+  bool? isError;
 
   int? rowId;
   // result
   bool? checkResult;
   String? valueResult;
   List<RowLine> userInputLines;
+  // validate
+  bool? constrMandatory;
 
   Question({
     this.id,
@@ -39,10 +43,13 @@ class Question {
     this.stringSuggestedAnswerIds,
     this.rowId,
     this.questionParentTitleId = const [],
+    this.isError,
 
     this.checkResult,
     this.valueResult,
     this.userInputLines = const [],
+
+    this.constrMandatory,
   });
 
   Question.copy(Question other)
@@ -71,7 +78,9 @@ class Question {
         stringSuggestedAnswerIds = other.stringSuggestedAnswerIds,
         userInputLines = other.userInputLines
             .map((row) => RowLine.copy(row))
-            .toList();
+            .toList(),
+        constrMandatory = other.constrMandatory,
+        isError= other.isError;
 
   factory Question.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],List<Question> questionParentTitleId = const [], int idSelected = -1, int rowId = -1}) {
@@ -104,6 +113,8 @@ class Question {
           .map((itemJson) => RowLine.fromJson(itemJson))
           .toList()
           : [],
+        constrMandatory: json['constr_mandatory'] ?? false,
+        isError: json['isError'] ?? false,
     );
   }
 
@@ -129,6 +140,8 @@ class Question {
     data['check_result'] = checkResult;
     data['value_result'] = valueResult;
     data['userInputLines'] = userInputLines;
+    data['constr_mandatory'] = constrMandatory;
+    data['isError'] = isError;
     return data;
   }
 }

@@ -7,26 +7,26 @@ import '../../../resource/style.dart';
 import '../../utils.dart';
 import '../../../view/diary/detail_diary/detail_diary_page.dart';
 
-///item diary
-class ItemActivitySelect extends StatefulWidget {
-  final ActivityDiary diary;
+///Bkav Nhungltk: item diary
+class ItemTest extends StatefulWidget {
+  final int index;
   final int amountSelected; // xac dinh xem item co dang duoc chon khong
   final bool isChoose; // xac dinh xem item co dang duoc chon khong
-  final Function(bool, ActivityDiary) callbackChooseItem;
+  final Function(bool) callbackChooseItem;
 
-  const ItemActivitySelect(
+  const ItemTest(
       {Key? key,
-      required this.diary,
-      required this.amountSelected,
-      required this.isChoose,
-      required this.callbackChooseItem})
+        required this.index,
+        required this.amountSelected,
+        required this.isChoose,
+        required this.callbackChooseItem})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ItemActivitySelectState();
+  State<StatefulWidget> createState() => _ItemTestState();
 }
 
-class _ItemActivitySelectState extends State<ItemActivitySelect> {
+class _ItemTestState extends State<ItemTest> {
   bool isExpansion = false;
   bool isCheckBox = false;
 
@@ -36,7 +36,7 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
 /*        if (widget.amountSelected > 0) {*/
-        widget.callbackChooseItem(widget.isChoose, widget.diary);
+        widget.callbackChooseItem(widget.isChoose);
         /*       } else {
           Navigator.push(context,
               DetailDiaryPage.route(widget.diary.id ?? -1, widget.diary));
@@ -44,7 +44,7 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
       },
       onLongPress: () {
         setState(() {
-          widget.callbackChooseItem(widget.isChoose, widget.diary);
+          widget.callbackChooseItem(widget.isChoose);
         });
       },
       child: Container(
@@ -62,20 +62,20 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                         onPressed: () {
                           setState(() {
                             widget.callbackChooseItem(
-                                widget.isChoose, widget.diary);
+                                widget.isChoose);
                           });
                         },
                         icon: widget.isChoose
                             ? const Icon(
-                                Icons.check_box_outlined,
-                                color: AppColor.main,
-                                size: 20,
-                              )
+                          Icons.check_box_outlined,
+                          color: AppColor.main,
+                          size: 20,
+                        )
                             : const Icon(
-                                Icons.check_box_outline_blank,
-                                color: AppColor.main,
-                                size: 20,
-                              ),
+                          Icons.check_box_outline_blank,
+                          color: AppColor.main,
+                          size: 20,
+                        ),
                         padding: EdgeInsets.zero),
                   ),
                 )),
@@ -84,8 +84,8 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                     top: 8, bottom: 8, left: 20, right: 16),
                 margin: /*widget.amountSelected > 0 ? */
                 const EdgeInsets.only(
-                        left: 50, right: 16, top: 4, bottom: 4),
-                   /* : const EdgeInsets.only(
+                    left: 50, right: 16, top: 4, bottom: 4),
+                /* : const EdgeInsets.only(
                         left: 20, right: 16, top: 4, bottom: 4),*/
                 /*            margin: const EdgeInsets.only(
                   left: 20, right: 16, top: 4, bottom: 4),*/
@@ -99,14 +99,14 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                     ],
                     borderRadius: BorderRadius.circular(8),
                     color: /*widget.isChoose ? Colors.red[100] :*/
-                        Colors.white),
+                    Colors.white),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       margin: const EdgeInsets.only(bottom: 5),
                       child: Text(
-                        widget.diary.activityName ?? "",
+                        '${widget.index}',
                         style: StyleOfit.textStyleFW700(AppColor.gray500, 16),
                       ),
                     ),
@@ -116,7 +116,7 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                         child: RichText(
                           text: Utils.convertText(
                               "Thời gian thu hoạch: ",
-                              "${widget.diary.actionTime}",
+                              "",
                               AppColor.blue15,
                               14),
                           maxLines: 1,
@@ -129,7 +129,7 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                           child: RichText(
                             text: Utils.convertText(
                                 "Diện tích: ",
-                                "${widget.diary.actionArea ?? ''} ${widget.diary.actionAreaUnitName}",
+                                "",
                                 AppColor.blue15,
                                 14),
                             maxLines: 1,
@@ -143,7 +143,7 @@ class _ItemActivitySelectState extends State<ItemActivitySelect> {
                           child: RichText(
                             text: Utils.convertText(
                                 "Sản lượng thu hoạch: ",
-                                "${widget.diary.amount ?? ''} ${widget.diary.amountUnitName}",
+                                "",
                                 AppColor.blue15,
                                 14),
                             maxLines: 1,

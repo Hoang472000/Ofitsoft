@@ -234,8 +234,10 @@ class Controller {
   TextEditingController controller;
   String type;
   String value;
+  String? title;
+  bool? constrMandatory;
 
-  Controller(this.id, this.controller, this.type, this.value, {this.idRow});
+  Controller(this.id, this.controller, this.type, this.value, {this.idRow, this.title, this.constrMandatory});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -244,6 +246,8 @@ class Controller {
     data['controller'] = controller;
     data['type'] = type;
     data['value'] = value;
+    data['title'] = title;
+    data['constrMandatory'] = constrMandatory;
     return data;
   }
 }

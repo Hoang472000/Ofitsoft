@@ -95,6 +95,7 @@ class IconAsset {
   static const String icChangePassword = "${iCons}ic_change_password.svg";
   static const String icUserManual = "${iCons}ic_user_manual.svg";
   static const String icContact = "${iCons}ic_contact.svg";
+  static const String icContactMessage = "${iCons}ic_contact_message.svg";
   static const String icHistory = "${iCons}ic_history.svg";
   static const String icPerson = "${iCons}ic_person.svg";
   static const String icPassword = "${iCons}ic_password.svg";

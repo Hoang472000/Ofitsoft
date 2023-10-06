@@ -125,7 +125,7 @@ class _ContactPageState extends State<ContactPage> {
                                           color: Colors.transparent,
                                           child: InkWell(
                                             onTap: () {
-                                              Utils.launchPhoneUrl("0989426911");
+                                              Utils.launchPhoneUrl("+84 877055568");
                                             },
                                             child: Column(
                                               crossAxisAlignment:
@@ -144,98 +144,12 @@ class _ContactPageState extends State<ContactPage> {
                                                       top: 5.0,
                                                       bottom: 10),
                                                   child: Text(
-                                                    "0989426911",
+                                                    "+84 877055568",
                                                     style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor.black22,
                                                         15),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              Utils.launchPhoneUrl(
-                                                  "1900 54 54 14");
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 10.0),
-                                                  child: Text(
-                                                    "Đăng ký dịch vụ:",
-                                                    style: StyleOfit
-                                                        .textStyleFW400(
-                                                        AppColor.main,
-                                                        15),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .only(
-                                                      top: 5.0,
-                                                      bottom: 10),
-                                                  child: Text(
-                                                    "1900 54 54 14",
-                                                    style: StyleOfit
-                                                        .textStyleFW400(
-                                                        AppColor
-                                                            .black22,
-                                                        15),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Material(
-                                          color: Colors.transparent,
-                                          child: InkWell(
-                                            onTap: () {
-                                              Utils.launchPhoneUrl(
-                                                  "+84 24 560 5552");
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                              CrossAxisAlignment
-                                                  .start,
-                                              mainAxisSize:
-                                              MainAxisSize.max,
-                                              children: [
-                                                Padding(
-                                                  padding: const EdgeInsets.only(top: 10.0),
-                                                  child: Text(
-                                                    "Fax:",
-                                                    style: StyleOfit
-                                                        .textStyleFW400(
-                                                        AppColor.main,
-                                                        15),
-                                                  ),
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                  const EdgeInsets
-                                                      .only(
-                                                      top: 5.0,
-                                                      bottom: 18),
-                                                  child: Text(
-                                                      "+84 24 560 5552",
-                                                      style: StyleOfit
-                                                          .textStyleFW400(
-                                                          AppColor
-                                                              .black22,
-                                                          15,
-                                                          overflow:
-                                                          TextOverflow
-                                                              .visible)),
                                                 ),
                                               ],
                                             ),
@@ -257,20 +171,20 @@ class _ContactPageState extends State<ContactPage> {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  Utils.launchMailUrl("ofitsoft@gmail.com");
+                                  Utils.launchMailUrl("info@ofitsoft.com");
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      SvgPicture.asset(IconAsset.icContact),
+                                      SvgPicture.asset(IconAsset.icContactMessage),
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.only(
                                               left: 16),
                                           child: Text(
-                                              "ofitsoft@gmail.com",
+                                              "info@ofitsoft.com",
                                               style: StyleOfit.textStyleFW400(
                                                   AppColor.black22, 15, overflow: TextOverflow.visible)
                                           ),
@@ -290,7 +204,7 @@ class _ContactPageState extends State<ContactPage> {
                             const SizedBox(height: 8,),
                             InkWell(
                               onTap: () {
-                                Utils.launchMapUrl("108A Lò Đúc, Đồng Xuân, Hai Bà Trưng, Hà Nội");
+                                Utils.launchMapUrl("số 4 ngõ 12 phố Lương Khánh Thiện, phường Tân Mai, quận Hoàng Mai, Hà Nội");
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -303,7 +217,7 @@ class _ContactPageState extends State<ContactPage> {
                                         padding: const EdgeInsets.only(
                                             left: 16),
                                         child: Text(
-                                          "108A Lò Đúc, Đồng Xuân, Hai Bà Trưng, Hà Nội",
+                                          "số 4/12 phố Lương Khánh Thiện, phường Tân Mai, quận Hoàng Mai, Hà Nội",
                                           style: const TextStyle(
                                               color: AppColor.black22,
                                               fontSize: 15,

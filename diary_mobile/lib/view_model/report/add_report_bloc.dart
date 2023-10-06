@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:ffi';
 
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../data/entity/report/answer.dart';
@@ -259,6 +261,17 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         listFarm: [],
       ));
       _initViewAdd(emitter);
+
+      List<GlobalExpand> expansionTileKeys = List.generate(
+        report[1].questionAndPageIds.length,
+            (index) => GlobalExpand(false,GlobalKey()),
+      );
+      print("HoangCV: expansionTileKeys: ${expansionTileKeys.length} :  ${expansionTileKeys[0]} : ${report[1].questionAndPageIds.length}");
+      emitter(state.copyWith(expansionTileKeys: expansionTileKeys,
+          scrollController: AutoScrollController(
+              viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, 0),
+              axis: Axis.vertical
+          )));
     }
     emitter(state.copyWith(
       isShowProgress: false,
@@ -487,7 +500,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         textEditingControllerList.add(
             Controller(childQuestion.idSelected!, TextEditingController(),
                 checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
-        initTextControllers(childQuestion, textEditingControllerList);
+        initTextControllersTable(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
@@ -495,8 +508,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         textEditingControllerList.add(
             Controller(childAnswer.idSelected!, TextEditingController(),
                 checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.tableRowId));
-        initTextControllers(childAnswer, textEditingControllerList);
+                idRow: childAnswer.tableRowId, title: childAnswer.value,
+                constrMandatory: childAnswer.constrMandatory));
+        initTextControllersTable(childAnswer, textEditingControllerList);
       }
     }
   }
@@ -510,38 +524,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         break;
     }
   }
-
-/*  List<dynamic> findQuestionAndAnswerById(List<Question> questions, int id, List<int> listIdSuggested) {
-    for (Question question in questions) {
-      if (question.idSelected == id) {
-        return [question, null, listIdSuggested];
-      }
-      if (question.suggestedAnswerIds.isNotEmpty) {
-        for (Answer answer in question.suggestedAnswerIds) {
-          if (answer.idSelected == id) {
-            return [question, answer, listIdSuggested];
-          }
-          if (answer.questionAndPageIds.isNotEmpty) {
-            List<dynamic> nested = findQuestionAndAnswerById(answer.questionAndPageIds, id, listIdSuggested);
-            if (nested[0] != null) {
-              return nested;
-            }
-          }
-          if (question.questionType == 'simple_choice') {
-            print("HoangCV: simple_choice: ${question.questionAndPageIds.length}: ${question.title}");
-            listIdSuggested = question.questionAndPageIds.map((item) => item.id ?? -1).toList();
-          }
-        }
-      }
-      if (question.questionAndPageIds.isNotEmpty) {
-        List<dynamic> nested = findQuestionAndAnswerById(question.questionAndPageIds, id, listIdSuggested);
-        if (nested[0] != null) {
-          return nested;
-        }
-      }
-    }
-    return [null, null, listIdSuggested];
-  }*/
 
   List<dynamic> findQuestionAndAnswerById(List<Question> questions, int id, List<int> listIdSuggested, String answerType) {
     Question question = Question();
@@ -601,10 +583,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     bool hasCommandAnswer = false;
     List<Question> listQs = state.listReport[1].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
-      //print("HoangCV: listQs: ${listQs[i].title}");
+      print("HoangCV: listQs: ${listQs[i].title}");
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-        //print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
+        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
         if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
+          listQs[i].questionAndPageIds[h].isError = false;
           question = Question.copy(listQs[i].questionAndPageIds[h]);
           answerType = question.questionType ?? "";
           if(answerType == 'simple_choice'){
@@ -618,6 +601,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds.length;
                 k++) {
               if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
+                listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].isError = false;
+                listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].isError = false;
                 question = Question.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
                 answerType = question.questionType ?? "";
@@ -629,6 +614,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               }
             }
             if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].idSelected ==event.id) {
+              listQs[i].questionAndPageIds[h].isError = false;
               question = Question.copy(listQs[i].questionAndPageIds[h]);
               answer = Answer.copy(
                   listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
@@ -647,6 +633,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             //print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
             //    " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
             if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
+              listQs[i].questionAndPageIds[h].questionAndPageIds[l].isError = false;
               question = Question.copy(
                   listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
               answerType = question.questionType ?? "";
@@ -658,6 +645,8 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
               m++) {
                   if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].idSelected == event.id) {
+                    listQs[i].questionAndPageIds[h].questionAndPageIds[l].isError = false;
+                    listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].isError = false;
                     question = Question.copy(
                         listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
                     answerType = question.questionType ?? "";
@@ -674,6 +663,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                   n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
                   n++) {
                     if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].idSelected == event.id) {
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].isError = false;
                       question = Question.copy(
                           listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
                       answerType = question.questionType ?? "";
@@ -778,26 +768,55 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
-    QuestionUpload questionUpload = QuestionUpload(
-      user_input_id: state.reportId,
-      survey_id: state.listReport[1].id,
-      question_id: event.questionId,
-      suggested_answer_id: event.answerId,
-      answer_type: 'table',
-      value_text: event.value,
-      is_answer_exist: true,
-      table_row_id: event.rowId + 1,
-        list_id_suggested: []
-    );
-    ObjectResult result = await repository.uploadQuestion(questionUpload);
-    if (result.responseCode == StatusConst.code00) {
-      emit(state.copyWith(
-          isShowProgress: false,
-          reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(/*success: result.message*/)));
-    } else {
-      emit(state.copyWith(
-          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    bool checkBreak = false;
+    for (int i = 0; i < listQs.length; i++) {
+      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+        if (listQs[i].questionAndPageIds[h].questionType == "table") {
+          for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
+            print("HoangCV: table controller: ${event.answerId} : ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id} ");
+            if (event.answerId == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id) {
+              if(event.value.isNotEmpty) {
+                listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError =
+                false;
+              }
+              checkBreak = true;
+              break;
+            }
+          }
+        }
+        if (checkBreak) {
+          break;
+        }
+      }
+      if (checkBreak) {
+        break;
+      }
+    }
+
+    if(event.value.isNotEmpty) {
+      QuestionUpload questionUpload = QuestionUpload(
+          user_input_id: state.reportId,
+          survey_id: state.listReport[1].id,
+          question_id: event.questionId,
+          suggested_answer_id: event.answerId,
+          answer_type: 'table',
+          value_text: event.value,
+          is_answer_exist: true,
+          table_row_id: event.rowId + 1,
+          list_id_suggested: []
+      );
+      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(/*success: result.message*/)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 
@@ -835,19 +854,580 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
-    FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
-      id: state.reportId,
-      state: 'done'
-    );
-    ObjectResult result = await repository.editFarmerInspector(questionUpload);
-    if (result.responseCode == StatusConst.code00) {
-      emit(state.copyWith(
-          isShowProgress: false,
-          reportId: result.response is int ? result.response : null,
-          formStatus: SubmissionSuccess(success: result.message)));
-    } else {
-      emit(state.copyWith(
-          isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+    bool submit = true;
+    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    for (int i = 0; i < listQs.length; i++) {
+      bool checkBreak = false;
+      print("HoangCV: title: ${listQs[i].title}");
+      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].constrMandatory}");
+        if (listQs[i].questionAndPageIds[h].constrMandatory == true) {
+          print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].title}");
+          String qsType = listQs[i].questionAndPageIds[h].questionType ?? "";
+          Question qs = listQs[i].questionAndPageIds[h];
+          if(qsType == "check_box"){
+            int indexQs = -1;
+            state.listSelected.forEach((element) {
+              indexQs = element.indexWhere((el) => el.id == qs.idSelected);
+              if(indexQs != -1){
+                //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                if(qs.commentAnswer == true){
+                  if(!element[indexQs].value){
+
+                    checkBreak = true;
+                    listQs[i].questionAndPageIds[h].isError = true;
+                    Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                    submit = false;
+                  } else{
+                    int indexCtrl = -1;
+                    state.listController.forEach((element) {
+                      indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
+                      if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                        checkBreak = true;
+                        listQs[i].questionAndPageIds[h].isError = true;
+                        Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                        submit = false;
+                      }
+                    });
+                  }
+                }
+              }
+            });
+          }
+          else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+            int indexAs = -1;
+            bool checkPass = false;
+            state.listSelected.forEach((element) {
+              for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
+                indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
+                if(indexAs != -1) {
+                  if(element[indexAs].value){
+                    print("HoangCVqs.suggestedAnswerIds[a]: ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
+                    checkPass = true;
+                    if(qs.suggestedAnswerIds[a].commentAnswer == true){
+                      int indexCtrl = -1;
+                      state.listController.forEach((element) {
+                        indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
+                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                          checkBreak = true;
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].isError = true;
+                          Toast.showLongTop(
+                              "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
+                          submit = false;
+                        }
+                      });
+                    }
+                    for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
+                      int indexQS;
+                      state.listSelected.forEach((element) {
+                        for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
+                          indexQS = element.indexWhere((el) => el.id ==
+                              qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                          if (indexQS != -1) {
+                            print("HoangCASCSDV:");
+                            if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
+                              if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                  .commentAnswer == true) {
+                                if (element[indexAs].value) {
+                                  int indexCtrl = -1;
+                                  state.listController.forEach((element) {
+                                    indexCtrl = element.indexWhere((el) =>
+                                    el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                                    if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                                      checkBreak = true;
+                                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
+                                      print("HoangCVqs.questionAndPageIds[b]: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                      Toast.showLongTop(
+                                          "Vui lòng nhập đáp án cho câu "
+                                              "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                      submit = false;
+                                    }
+                                  });
+                                }
+                                if (!submit) {
+                                  break;
+                                }
+                              }
+                            }
+                            else {
+                              if (!element[indexQS].value) {
+                                checkBreak = true;
+                                listQs[i].questionAndPageIds[h].isError = true;
+                                print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title}");
+                                Toast.showLongTop(
+                                    "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                        .questionAndPageIds[h].title}");
+                                submit = false;
+                                break;
+                              }
+                            }
+                          }
+                        }
+                      });
+                    }
+                  }
+                }
+              }
+            });
+            if(!checkPass) {
+              print("HjoangCV : ${qs.title}");
+              state.listSelected.forEach((element) {
+                for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                  indexAs = element.indexWhere((el) => el.id ==
+                      qs.suggestedAnswerIds[a].idSelected);
+                  if (indexAs != -1) {
+                    //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                    if (qs.suggestedAnswerIds[a].commentAnswer == true) {
+                      if (!element[indexAs].value) {
+                        checkBreak = true;
+                        listQs[i].questionAndPageIds[h].isError = true;
+                        Toast.showLongTop(
+                            "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                .questionAndPageIds[h].title}");
+                        submit = false;
+                      } else {
+                        int indexCtrl = -1;
+                        state.listController.forEach((element) {
+                          indexCtrl = element.indexWhere((el) =>
+                          el.id == qs.idSelected);
+                          if (indexCtrl != -1 &&
+                              element[indexCtrl].controller.text.isEmpty) {
+                            checkBreak = true;
+                            listQs[i].questionAndPageIds[h].isError = true;
+                            Toast.showLongTop(
+                                "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                    .questionAndPageIds[h].title}");
+                            submit = false;
+                          }
+                        });
+                      }
+                      if (!submit) {
+                        break;
+                      }
+                    }
+                    else {
+                      if (!element[indexAs].value) {
+                        (state.scrollController?? AutoScrollController()).scrollToIndex(
+                          i,
+                          preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
+                          //duration: Duration(seconds: 1), // Duration of the scroll animation
+                        );
+                        checkBreak = true;
+                        listQs[i].questionAndPageIds[h].isError = true;
+
+                        print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title} : "
+                            "$i : ${state.scrollController}");
+
+                        Toast.showLongTop(
+                            "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                .questionAndPageIds[h].title}");
+                        submit = false;
+                        break;
+                      }
+                    }
+                  }
+                }
+              });
+            }
+          }
+          else{
+            int indexCtrl = -1;
+            state.listController.forEach((element) {
+              indexCtrl = element.indexWhere((el) =>
+              el.id == qs.idSelected);
+              if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                checkBreak = true;
+                listQs[i].questionAndPageIds[h].isError = true;
+                Toast.showLongTop(
+                    "Vui lòng nhập đáp án cho câu ${listQs[i]
+                        .questionAndPageIds[h].title}");
+                submit = false;
+              }
+            });
+          }
+          if(!submit){
+            break;
+          }
+        } else {
+          for (int l = 0;
+          l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
+          l++) {
+            print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
+                " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory} ");
+            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory == true) {
+              String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].questionType ?? "";
+              Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l];
+              print("HoanmgCV:l: ${qs.title} : ${qsType}");
+              if(qsType == "check_box"){
+                int indexQs = -1;
+                state.listSelected.forEach((element) {
+                  indexQs = element.indexWhere((el) => el.id == qs.idSelected);
+                  if(indexQs != -1){
+                    //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                    if(qs.commentAnswer == true){
+                      if(!element[indexQs].value){
+                        checkBreak = true;
+                        listQs[i].questionAndPageIds[h].isError = true;
+                        Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                        submit = false;
+                      } else{
+                        int indexCtrl = -1;
+                        state.listController.forEach((element) {
+                          indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
+                          if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                            checkBreak = true;
+                            listQs[i].questionAndPageIds[h].isError = true;
+                            Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                            submit = false;
+                          }
+                        });
+                      }
+                    }
+                  }
+                });
+              } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+                int indexAs = -1;
+                bool checkPass = false;
+                state.listSelected.forEach((element) {
+                  for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
+                    indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
+                    if(indexAs != -1) {
+                      if(element[indexAs].value){
+                        print("HoangCVqs.suggestedAnswerIds[a] sub : ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
+                        checkPass = true;
+                        if(qs.suggestedAnswerIds[a].commentAnswer == true){
+                          int indexCtrl = -1;
+                          state.listController.forEach((element) {
+                            indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
+                            if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                              checkBreak = true;
+                              qs.suggestedAnswerIds[a].isError = true;
+                              Toast.showLongTop(
+                                  "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
+                              submit = false;
+                            }
+                          });
+                        }
+                        for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
+                          int indexQS;
+                          state.listSelected.forEach((element) {
+                            for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
+                              indexQS = element.indexWhere((el) => el.id ==
+                                  qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                              if (indexQS != -1) {
+                                print("HoangCASCSDV sub:");
+                                if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
+                                  if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                      .commentAnswer == true) {
+                                    if (element[indexAs].value) {
+                                      int indexCtrl = -1;
+                                      state.listController.forEach((element) {
+                                        indexCtrl = element.indexWhere((el) =>
+                                        el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                                          checkBreak = true;
+                                          qs.suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
+                                          print("HoangCVqs.questionAndPageIds[b] sub : ${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                          Toast.showLongTop(
+                                              "Vui lòng nhập đáp án cho câu "
+                                                  "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                          submit = false;
+                                        }
+                                      });
+                                    }
+                                    if (!submit) {
+                                      break;
+                                    }
+                                  }
+                                }
+                                else {
+                                  if (!element[indexQS].value) {
+                                    checkBreak = true;
+                                    qs.isError = true;
+                                    print("HoangCV:buubu sub: ${qs.title}");
+                                    Toast.showLongTop(
+                                        "Vui lòng chọn đáp án cho câu ${qs.title}");
+                                    submit = false;
+                                    break;
+                                  }
+                                }
+                              }
+                            }
+                          });
+                        }
+                      }
+                    }
+                  }
+                });
+                if(!checkPass) {
+                  print("HjoangCV sub : ${qs.title}");
+                  state.listSelected.forEach((element) {
+                    for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                      indexAs = element.indexWhere((el) => el.id ==
+                          qs.suggestedAnswerIds[a].idSelected);
+                      if (indexAs != -1) {
+                        //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                        if (qs.suggestedAnswerIds[a].commentAnswer == true) {
+                          if (!element[indexAs].value) {
+                            checkBreak = true;
+                            qs.isError = true;
+                            Toast.showLongTop(
+                                "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                    .questionAndPageIds[h].title}");
+                            submit = false;
+                          } else {
+                            int indexCtrl = -1;
+                            state.listController.forEach((element) {
+                              indexCtrl = element.indexWhere((el) =>
+                              el.id == qs.idSelected);
+                              if (indexCtrl != -1 &&
+                                  element[indexCtrl].controller.text.isEmpty) {
+                                checkBreak = true;
+                                qs.isError = true;
+                                Toast.showLongTop(
+                                    "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                        .questionAndPageIds[h].title}");
+                                submit = false;
+                              }
+                            });
+                          }
+                          if (!submit) {
+                            break;
+                          }
+                        }
+                        else {
+                          if (!element[indexAs].value) {
+                            (state.scrollController?? AutoScrollController()).scrollToIndex(
+                              i,
+                              preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
+                              //duration: Duration(seconds: 1), // Duration of the scroll animation
+                            );
+                            checkBreak = true;
+                            qs.isError = true;
+
+                            print("HoangCV:buubu sub 1: ${qs.title} : "
+                                "$i : ${state.scrollController}");
+
+                            Toast.showLongTop(
+                                "Vui lòng chọn đáp án cho câu ${qs.title}");
+                            submit = false;
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+              else{
+                checkBreak = true;
+                qs.isError = true;
+                Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                submit = false;
+              }
+            } else{
+              for (int m = 0;
+              m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
+              m++) {
+                for (int n = 0;
+                n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
+                n++) {
+                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].
+                  questionAndPageIds[n].constrMandatory == true) {
+                    print("HoanmgCV:n: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                    String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].questionType ?? "";
+                    Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n];
+                    if(qsType == "simple_choice" || qsType == "multi_choice" || qsType == "check_box"){
+                      int indexQs = -1;
+                      state.listSelected.forEach((element) {
+                        indexQs = element.indexWhere((el) => el.id == qs.idSelected);
+                        if(indexQs != -1){
+                          //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                          if(qs.commentAnswer == true){
+                            if(!element[indexQs].value){
+                              checkBreak = true;
+                              listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
+                              Toast.showLongTop("Vui lòng chọn đáp án cho câu "
+                                  "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                              submit = false;
+                            } else{
+                              int indexCtrl = -1;
+                              state.listController.forEach((element) {
+                                indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
+                                if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                                  checkBreak = true;
+                                  listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
+                                  Toast.showLongTop("Vui lòng nhập đáp án cho câu "
+                                      "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                                  submit = false;
+                                }
+                              });
+                            }
+                          }
+                        }
+                      });
+                    } else{
+                      checkBreak = true;
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
+                      Toast.showLongTop("Vui lòng nhập đáp án cho câu "
+                          "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                      submit = false;
+                    }
+                  }
+                }
+              }
+            }
+          }
+          for (int l = 0;
+          l < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
+          l++) {
+            print("HoangCV: listQs[i].suggestedAnswerIds: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].value}");
+            int indexAsSub = -1;
+            state.listSelected.forEach((element) {
+              indexAsSub = element.indexWhere((el) => el.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].idSelected);
+              if(indexAsSub != -1){
+                if(element[indexAsSub].value){
+                  for (int u = 0; u < listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds.length; u++) {
+                      print("HoangCV: listQs[i].questionAndPageIds u:: "
+                          "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title} : "
+                          "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory}");
+                      if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory == true) {
+                        print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title}");
+                        String qsType = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].questionType ?? "";
+                        Question qs = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u];
+                        if(qsType == "check_box"){
+                          int indexQs = -1;
+                          //check box: ko tích thì vẫn là ko , còn nếu tích thì phải check comment answer
+                          state.listSelected.forEach((element) {
+                            indexQs = element.indexWhere((el) => el.id == qs.idSelected);
+                            if(indexQs != -1){
+                              //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                              if(qs.commentAnswer == true){
+                                if(!element[indexQs].value){
+                                  checkBreak = true;
+                                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
+                                  Toast.showLongTop("Vui lòng chọn đáp án cho câu ${qs.title}");
+                                  submit = false;
+                                } else{
+                                  int indexCtrl = -1;
+                                  state.listController.forEach((element) {
+                                    indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
+                                    if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                                      checkBreak = true;
+                                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
+                                      Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
+                                      submit = false;
+                                    }
+                                  });
+                                }
+                              }
+                            }
+                          });
+                        } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+
+                        } else{
+                          int indexCtrl = -1;
+                          state.listController.forEach((element) {
+                            indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
+                            if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                              checkBreak = true;
+                              listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
+                              Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
+                              submit = false;
+                            }
+                          });
+                        }
+                        if(!submit){
+                          break;
+                        }
+                      }
+                    }
+                }
+              }
+            });
+          }
+        }
+      }
+      if(checkBreak){
+        print("HoangCV: index: $i");
+        state.scrollController!.scrollToIndex(i+1, preferPosition: AutoScrollPosition.begin);
+        break;
+      }
+    }
+    if(submit){
+      bool checkBreak = false;
+      for (var element in state.listControllerTable) {
+        for (var e in element) {
+          print("HoangCV: table controller: ${e.title} : ${e.value} : ${e.controller.text.isEmpty} : ${e.constrMandatory}");
+          if (e.constrMandatory == true && e.controller.text.isEmpty) {
+            for (int i = 0; i < listQs.length; i++) {
+              for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+                if (listQs[i].questionAndPageIds[h].questionType == "table") {
+                  for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
+                    print("HoangCV: table controller: ${e.value} : ${e.idRow} : ${e.id} :"
+                        " ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].idSelected} : $checkBreak");
+                    if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].idSelected) {
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError = true;
+                      if (!checkBreak) {
+                        Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
+                      }
+                      submit = false;
+                      checkBreak = true;
+                    }
+                    else {
+                      for (int l = 0; l < listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds.length; l++) {
+                        print("HoangCV: table controller:sub ${e.value} : ${e.idRow} : ${e.id} : "
+                            "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected} : $checkBreak");
+                        if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected) {
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].isError = true;
+                          if (!checkBreak) {
+                            Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
+                          }
+                          submit = false;
+                          checkBreak = true;
+                        }
+                      }
+                    }
+                  }
+                  if (checkBreak) {
+                    break;
+                  }
+                }
+              }
+              if (checkBreak) {
+                print("HoangCV: run wat: $i ${listQs[i].title}");
+                state.scrollController!.scrollToIndex(i + 1, preferPosition: AutoScrollPosition.begin);
+                break;
+              }
+            }
+          }
+          if (checkBreak) {
+            break;
+          }
+        }
+        if (checkBreak) {
+          break;
+        }
+      }
+    }
+    emit(state.copyWith(
+        scrollController: state.scrollController));
+    print("HoangCV: submit: ${submit} : ${state.scrollController}");
+    if(submit){
+      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+        id: state.reportId,
+        state: 'done'
+      );
+      ObjectResult result = await repository.editFarmerInspector(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(success: result.message)));
+      } else {
+        emit(state.copyWith(
+            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+      }
     }
   }
 }
@@ -943,6 +1523,8 @@ class AddReportState extends BlocState {
         startTimeController,
         idFarmerController,
         farmerInspector,
+    expansionTileKeys,
+    scrollController,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
@@ -962,6 +1544,8 @@ class AddReportState extends BlocState {
   FarmerInspectorUpload? farmerInspector;
   final bool isShowProgress;
   final int? reportId;
+  final List<GlobalExpand> expansionTileKeys;
+  AutoScrollController? scrollController = AutoScrollController();
 
   AddReportState({
     this.detailDiary,
@@ -982,6 +1566,8 @@ class AddReportState extends BlocState {
     this.idFarmerController,
     this.farmerInspector,
     this.reportId,
+    this.expansionTileKeys = const [],
+    this.scrollController,
   });
 
   AddReportState copyWith({
@@ -1003,6 +1589,8 @@ class AddReportState extends BlocState {
     TextEditingController? idFarmerController,
     FarmerInspectorUpload? farmerInspector,
     int? reportId,
+    List<GlobalExpand>? expansionTileKeys,
+    AutoScrollController? scrollController,
   }) {
     return AddReportState(
         detailDiary: detailDiary ?? this.detailDiary,
@@ -1022,6 +1610,15 @@ class AddReportState extends BlocState {
         startTimeController: startTimeController ?? this.startTimeController,
         idFarmerController: idFarmerController ?? this.idFarmerController,
         farmerInspector: farmerInspector ?? this.farmerInspector,
-        reportId: reportId ?? this.reportId);
+        reportId: reportId ?? this.reportId,
+        expansionTileKeys: expansionTileKeys ?? this.expansionTileKeys,
+        scrollController: scrollController ?? this.scrollController,);
   }
+}
+
+class GlobalExpand{
+  bool expand;
+  GlobalKey key;
+
+  GlobalExpand(this.expand, this.key);
 }

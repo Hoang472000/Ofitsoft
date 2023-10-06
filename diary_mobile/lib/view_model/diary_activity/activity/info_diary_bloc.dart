@@ -73,17 +73,20 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           iconActivity: ImageAsset.imageSelling));
       if (check[0]) {
       }
-      if (check[1]) {
+      if (check[4]) {
         list.add(ActivityFarm(
             id: 6,
             nameActivity: "HOẠT ĐỘNG THU MUA",
             iconActivity: ImageAsset.imageSelling));
+      }
+      if (check[1]) {
         list.add(ActivityFarm(
             id: 4,
             nameActivity: "HOẠT ĐỘNG GIÁM SÁT",
             iconActivity: ImageAsset.imageSpyware));
 
-      }      if (check[3]) {
+      }
+      if (check[3]) {
         list.add(ActivityFarm(
             id: 5,
             nameActivity: "BÁO CÁO ĐÁNH GIÁ THỰC ĐỊA",

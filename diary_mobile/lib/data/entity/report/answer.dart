@@ -18,6 +18,9 @@ class Answer {
 
   bool? checkResult;
   String? valueResult;
+  //check color
+  bool? isError;
+  bool? constrMandatory;
 
   Answer({
     this.id,
@@ -36,6 +39,9 @@ class Answer {
 
     this.checkResult,
     this.valueResult,
+
+    this.isError,
+    this.constrMandatory,
   });
 
   Answer.copy(Answer other)
@@ -54,7 +60,10 @@ class Answer {
         suggestedAnswerId = other.suggestedAnswerId,
 
         checkResult = other.checkResult,
-        valueResult = other.valueResult;
+        valueResult = other.valueResult,
+
+        constrMandatory = other.constrMandatory,
+        isError = other.isError;
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],
@@ -76,20 +85,9 @@ class Answer {
 
       checkResult: json['check_result'] ?? false,
       valueResult: json['value_result'] ?? '',
-    );
-  }
 
-  factory Answer.fromJson11(Answer json,
-      {List<Question> questionAndPageIds = const [],
-      List<Answer> suggestedAnswerIds = const []}) {
-    return Answer(
-      id: json.id,
-      questionId: json.questionId,
-      parentColId: json.parentColId,
-      value: json.value,
-      commentAnswer: json.commentAnswer,
-      questionAndPageIds: questionAndPageIds,
-      suggestedAnswerIds: suggestedAnswerIds,
+      constrMandatory: json['constr_mandatory'] ?? false,
+      isError: json['isError'] ?? false,
     );
   }
 
@@ -109,6 +107,9 @@ class Answer {
 
     data['check_result'] = checkResult;
     data['value_result'] = valueResult;
+
+    data['constr_mandatory'] = constrMandatory;
+    data['isError'] = isError;
     return data;
   }
 }
