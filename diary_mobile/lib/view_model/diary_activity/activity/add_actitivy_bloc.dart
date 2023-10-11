@@ -39,23 +39,63 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
   bool edit = false;
 
-  void _initViewAdd(Emitter<AddActivityState> emitter) {
+  void _initViewAdd(Emitter<AddActivityState> emitter, String action) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
     print(
         "HoangCV:state.listUnitArea: ${state.listUnitArea.length} : ${state.indexArea}  ");
-    list.add(InputRegisterModel<Activity, Activity>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: state.listActivity,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        hasSearch: true,
-        image: ImageAsset.imageActivityFarm));
+    int indexHarvesting = -1;
+    if(action == "harvesting"){
+      indexHarvesting = state.listActivity
+          .indexWhere((element) => element.harvesting == true);
+    }
+    if(indexHarvesting != -1){
+      list.add(InputRegisterModel<Activity, Activity>(
+          title: "Tên công việc",
+          isCompulsory: true,
+          type: TypeInputRegister.Select,
+          icon: Icons.arrow_drop_down,
+          positionSelected: indexHarvesting,
+          valueSelected: state.listActivity[indexHarvesting],
+          listValue: state.listActivity,
+          typeInputEnum: TypeInputEnum.dmucItem,
+          hasSearch: true,
+          image: ImageAsset.imageActivityFarm));
+        List<InputRegisterModel> listYield = [];
+        listYield.add(InputRegisterModel(
+          title: "Sản lượng",
+          isCompulsory: false,
+          type: TypeInputRegister.TextField,
+          typeInput: TextInputType.number,
+          controller: state.yieldController,
+          maxLengthTextInput: 10,
+          image: ImageAsset.imageBudget,
+        ));
+
+        listYield.add(InputRegisterModel(
+          title: "Đơn vị",
+          isCompulsory: false,
+          type: TypeInputRegister.Select,
+          icon: Icons.arrow_drop_down,
+          positionSelected: -1,
+          listValue: state.listUnitYield,
+          typeInputEnum: TypeInputEnum.dmucItem,
+        ));
+        emit(state.copyWith(listWidgetYield: listYield, indexActivity: indexHarvesting));
+  } else {
+      list.add(InputRegisterModel<Activity, Activity>(
+          title: "Tên công việc",
+          isCompulsory: true,
+          type: TypeInputRegister.Select,
+          icon: Icons.arrow_drop_down,
+          positionSelected: -1,
+          listValue: state.listActivity,
+          typeInputEnum: TypeInputEnum.dmucItem,
+          hasSearch: true,
+          image: ImageAsset.imageActivityFarm));
+    }
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
         isCompulsory: false,
@@ -180,6 +220,11 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 /*    listActivity.forEach((element) {
       print("HoangCV: indexArea:`11 ${element.toolIds} : ${element.materialIds}");
     });*/
+    if(event.action == "harvesting"){
+      listActivity.removeWhere((element) => element.harvesting == false);
+    } else {
+      listActivity.removeWhere((element) => element.harvesting == true);
+    }
     int indexAreaUnit = listUnitArea
         .indexWhere((element) => element.id == event.diary.areaUnitId);
     print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId}");
@@ -213,7 +258,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         indexActivity: index,
         imageWidth: imageWidth, imageHeight: imageHeight*/
     ));
-    _initViewAdd(emitter);
+    _initViewAdd(emitter, event.action);
     state.listWidgetArea[1].valueSelected = state.listUnitArea[indexAreaUnit];
     state.listWidgetArea[1].positionSelected = indexAreaUnit;
     emit(state.copyWith(listWidgetArea: state.listWidgetArea, indexArea: indexAreaUnit,       isShowProgress: false,));
@@ -285,7 +330,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
               nameController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
               indexActivity: result));
-          if (event.list[event.index].listValue[result].id == 20) {
+          if (event.list[event.index].listValue[result].harvesting == true) {
             List<InputRegisterModel> listYield = [];
             listYield.add(InputRegisterModel(
               title: "Sản lượng",
@@ -507,11 +552,12 @@ class AddActivityEvent extends BlocEvent {
 class InitAddActivityEvent extends AddActivityEvent {
   int seasonId;
   final Diary diary;
+  String action;
 
-  InitAddActivityEvent(this.seasonId, this.diary);
+  InitAddActivityEvent(this.seasonId, this.diary, this.action);
 
   @override
-  List<Object?> get props => [seasonId, diary];
+  List<Object?> get props => [seasonId, diary, action];
 }
 
 class ChangeEditActivityEvent extends AddActivityEvent {

@@ -213,11 +213,15 @@ class Utils {
   }
 
   static DateTime formatStringToDate(String time) {
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
+    try {
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
+      DateTime dateTime = DateTime.parse(time.replaceFirst(' ', 'T'));
 /*    DateTime dateTime = formatter.parse(time);
     DateTime dateTime1 = DateTime.parse(dateTime.toString());*/
-    return dateTime/*.toUtc()*/;
+      return dateTime /*.toUtc()*/;
+    }catch(e){
+      return DateTime.now();
+    }
   }
   static DateTime stringToDate(String time) {
     try {
@@ -246,6 +250,18 @@ class Utils {
     DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
     DateTime dateTime = formatter.parse(time.replaceFirst(' ', 'T'));
     return dateTime;
+  }
+
+  static String stringToFormattedString(String time) {
+    try {
+      DateFormat inputFormatter = DateFormat('MM/dd/yyyy HH:mm:ss');
+      DateFormat outputFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+      DateTime dateTime = inputFormatter.parse(time);
+      String formattedString = outputFormatter.format(dateTime);
+      return formattedString;
+    } catch (e){
+      return time;
+    }
   }
 
   static Future<void> launchInBrowser(String url) async {
@@ -585,10 +601,14 @@ class Utils {
   }
 
   static DateTime formatStringToDateTime(String time) {
-    DateFormat formatter = DateFormat('dd/MM/yyyy');
-    DateTime dateTime = formatter.parse(time);
-    DateTime dateTime1 = DateTime.parse(dateTime.toString());
-    return dateTime1;
+    try {
+      DateFormat formatter = DateFormat('dd/MM/yyyy');
+      DateTime dateTime = formatter.parse(time);
+      DateTime dateTime1 = DateTime.parse(dateTime.toString());
+      return dateTime1;
+    }catch(_){
+      return DateTime.now();
+    }
   }
 
   static String formatDateTimeToStringFull(DateTime dateTime) {
@@ -786,13 +806,13 @@ class Utils {
     } else if (farmerInspector.farm_id == null) {
       Toast.showLongTop("Vui lòng chọn Tên vùng trồng");
       return false;
-    } else if (farmerInspector.internal_inspector_id == null) {
+    }/* else if (farmerInspector.internal_inspector_id == null) {
       Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
       return false;
     } else if (farmerInspector.monitoring_visit_type == null) {
       Toast.showLongTop("Vui lòng chọn Hình thức chuyển kiểm soát nội bộ");
       return false;
-    }
+    }*/
     return true;
   }
 

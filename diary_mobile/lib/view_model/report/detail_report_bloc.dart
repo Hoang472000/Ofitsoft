@@ -105,7 +105,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         valueSelected: Utils.stringToDate(state.startTimeController!.text),
         controller: state.startTimeController,
         noBorder: true,
-        textAlign: TextAlign.center
+        textAlign: TextAlign.left
       //icon: Icons.calendar_today
     ));
 
@@ -149,10 +149,10 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       isShowProgress: true,
       idFarmerController: TextEditingController(text: ''),
       farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
-      reportId: event.id
     ));
     final report = await repository.getDetailReport(event.id);
     List<List<Select>> listSelected = [];
+    List<List<ListInputModel>> listInputModel = [];
     List<Select> listSelectedInspector = [];
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
@@ -162,6 +162,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     List<People> listInspector = [];
     if (report[1].surveyId.isNotEmpty) {
       listSelected = createSelectLists(report[1].surveyId[0].questionAndPageIds);
+      listInputModel = createInputLists(report[1].surveyId[0].questionAndPageIds);
       listVisible = createVisibleLists(report[1].surveyId[0].questionAndPageIds);
       listController = createTextEditingControllerLists(report[1].surveyId[0].questionAndPageIds);
       int i = 0;
@@ -209,6 +210,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       listControllerTable: listControllerTable,
       listTable: listTable,
       listSelectedInspector: listSelectedInspector,
+      listInputModel: listInputModel,
     ));
   }
 
@@ -350,6 +352,137 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
             childAnswer
                 .value!)); // Thêm Select cho câu trả lời con của câu trả lời con
         initSelectValues(childAnswer, selectList);
+      }
+    }
+  }
+
+  List<List<ListInputModel>> createInputLists(List<Question> questions) {
+    List<List<ListInputModel>> selectLists = [];
+
+    for (Question question in questions) {
+      List<ListInputModel> selectList = [];
+
+      // Thêm Select cho câu hỏi cha
+      if(question.questionType == 'date' || question.questionType == 'datetime' ) {
+        InputRegisterModel inputRegisterModel;
+        print("HoangCV: question.valueResult: ${question.valueResult} : ${question.title}");
+        if(question.valueResult != null) {
+          inputRegisterModel = InputRegisterModel<String, DateTime>(
+              title: "",
+              isCompulsory: false,
+              typeInputEnum: TypeInputEnum.date,
+              type: TypeInputRegister.Select,
+              valueSelected: Utils.formatStringToDate(question.valueResult!),
+              //controller: state.startTimeController,
+              noBorder: true,
+              textAlign: TextAlign.left
+            //icon: Icons.calendar_today
+          );
+        } else{
+          inputRegisterModel = InputRegisterModel<String, DateTime>(
+              title: "",
+              isCompulsory: false,
+              typeInputEnum: TypeInputEnum.date,
+              type: TypeInputRegister.Select,
+              //controller: state.startTimeController,
+              noBorder: true,
+              textAlign: TextAlign.left
+            //icon: Icons.calendar_today
+          );
+        }
+        selectList.add(ListInputModel(question.idSelected!, inputRegisterModel, TextEditingController()));
+      }
+
+      // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
+      initInputValues(question, selectList);
+
+      selectLists.add(selectList);
+    }
+
+    return selectLists;
+  }
+
+  void initInputValues(dynamic item, List<ListInputModel> selectList) {
+    if (item is Question) {
+      // Gọi hàm đệ quy cho danh sách câu trả lời con
+      for (Answer answer in item.suggestedAnswerIds) {
+        initInputValues(answer, selectList);
+      }
+
+      // Gọi hàm đệ quy cho danh sách câu hỏi con
+      for (Question childQuestion in item.questionAndPageIds) {
+        if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+          InputRegisterModel inputRegisterModel;
+          print("HoangCV: childQuestion.valueResult: ${childQuestion.valueResult}");
+          if(childQuestion.valueResult != null){
+            inputRegisterModel = InputRegisterModel<String, DateTime>(
+                title: "",
+                isCompulsory: false,
+                typeInputEnum: TypeInputEnum.date,
+                type: TypeInputRegister.Select,
+                valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                //controller: state.startTimeController,
+                noBorder: true,
+                textAlign: TextAlign.left
+              //icon: Icons.calendar_today
+            );
+          } else{
+            inputRegisterModel = InputRegisterModel<String, DateTime>(
+                title: "",
+                isCompulsory: false,
+                typeInputEnum: TypeInputEnum.date,
+                type: TypeInputRegister.Select,
+                //valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                //controller: state.startTimeController,
+                noBorder: true,
+                textAlign: TextAlign.left
+              //icon: Icons.calendar_today
+            );
+          }
+          selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+        }
+        initInputValues(childQuestion, selectList);
+      }
+    }
+    else if (item is Answer) {
+      // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
+      for (Question childQuestion in item.questionAndPageIds) {
+        if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+          InputRegisterModel inputRegisterModel;
+          print("HoangCV: childQuestion.valueResult: ${childQuestion.valueResult}");
+          if(childQuestion.valueResult != null){
+            inputRegisterModel = InputRegisterModel<String, DateTime>(
+                title: "",
+                isCompulsory: false,
+                typeInputEnum: TypeInputEnum.date,
+                type: TypeInputRegister.Select,
+                valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                //controller: state.startTimeController,
+                noBorder: true,
+                textAlign: TextAlign.left
+              //icon: Icons.calendar_today
+            );
+          } else{
+            inputRegisterModel = InputRegisterModel<String, DateTime>(
+                title: "",
+                isCompulsory: false,
+                typeInputEnum: TypeInputEnum.date,
+                type: TypeInputRegister.Select,
+                //valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                //controller: state.startTimeController,
+                noBorder: true,
+                textAlign: TextAlign.left
+              //icon: Icons.calendar_today
+            );
+          }
+          selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+        }
+        initInputValues(childQuestion, selectList);
+      }
+
+      // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        initInputValues(childAnswer, selectList);
       }
     }
   }
@@ -521,10 +654,7 @@ class DetailReportState extends BlocState {
     inspectorController,
     farmerController,
     farmerInspector,
-    indexFarm,
-    indexFarmer,
-    indexInspector,
-    farmController,
+    nameInspector,
   ];
   final Diary? detailDiary;
   final List<Report> listReport;
@@ -536,6 +666,7 @@ class DetailReportState extends BlocState {
   final List<TableQuestion> listTable;
   final FormSubmissionStatus formStatus;
   final List<InputRegisterModel> listWidget;
+  final List<List<ListInputModel>> listInputModel;
   final List<People> listFarmer;
   final List<People> listInspector;
   final List<People> listFarm;
@@ -551,6 +682,7 @@ class DetailReportState extends BlocState {
   final int? indexFarm;
   final int? indexFarmer;
   final int? indexInspector;
+  final String? nameInspector;
 
   DetailReportState({
     this.detailDiary,
@@ -564,6 +696,7 @@ class DetailReportState extends BlocState {
     this.listControllerTable = const [],
     this.listSelectedInspector = const [],
     this.listWidget = const [],
+    this.listInputModel = const [],
     this.listFarmer = const [],
     this.listInspector = const [],
     this.listFarm = const [],
@@ -577,6 +710,7 @@ class DetailReportState extends BlocState {
     this.indexFarmer,
     this.indexFarm,
     this.indexInspector,
+    this.nameInspector,
   });
 
   DetailReportState copyWith({
@@ -591,6 +725,7 @@ class DetailReportState extends BlocState {
     List<List<Controller>>? listControllerTable,
     List<Select>? listSelectedInspector,
     List<InputRegisterModel>? listWidget,
+    List<List<ListInputModel>>? listInputModel,
     List<People>? listFarmer,
     List<People>? listInspector,
     List<People>? listFarm,
@@ -604,6 +739,8 @@ class DetailReportState extends BlocState {
     int? indexFarmer,
     int? indexFarm,
     int? indexInspector,
+    String? nameInspector,
+
   }) {
     return DetailReportState(
         detailDiary: detailDiary ?? this.detailDiary,
@@ -617,6 +754,7 @@ class DetailReportState extends BlocState {
         listControllerTable: listControllerTable ?? this.listControllerTable,
         listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
         listWidget: listWidget ?? this.listWidget,
+        listInputModel: listInputModel ?? this.listInputModel,
         listFarmer: listFarmer ?? this.listFarmer,
         listFarm: listFarm ?? this.listFarm,
         listInspector: listInspector ?? this.listInspector,
@@ -629,6 +767,15 @@ class DetailReportState extends BlocState {
         indexFarmer: indexFarmer ?? this.indexFarmer,
         indexInspector: indexInspector ?? this.indexInspector,
         indexFarm: indexFarm ?? this.indexFarm,
-        reportId: reportId ?? this.reportId);
+        reportId: reportId ?? this.reportId,
+        nameInspector: nameInspector ?? this.nameInspector);
   }
+}
+
+class ListInputModel {
+  int id;
+  InputRegisterModel inputModel;
+  TextEditingController controller;
+
+  ListInputModel(this.id, this.inputModel, this.controller);
 }

@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:ffi';
 
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
+import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../data/entity/report/answer.dart';
@@ -79,7 +81,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         valueSelected: DateTime.now(),
         controller: state.startTimeController,
         noBorder: true,
-        textAlign: TextAlign.center
+        textAlign: TextAlign.left
         //icon: Icons.calendar_today
     ));
 
@@ -112,10 +114,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }else if(event.index == 4 && state.listFarm.isEmpty) {
       Toast.showLongTop("Không có danh sách vùng trồng");
       checkPass = false;
-    }else if(event.index == 2 && state.listInspector.isEmpty) {
+    }/*else if(event.index == 2 && state.listInspector.isEmpty) {
       Toast.showLongTop("Không có danh sách thanh tra viên");
       checkPass = false;
-    }
+    }*/
     if(checkPass) {
       if (event.list[event.index].valueSelected.runtimeType == DateTime ||
           event.list[event.index].typeInputEnum == TypeInputEnum.date) {
@@ -132,6 +134,92 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     event.list[event.index].valueSelected)),
             farmerInspector: state.farmerInspector,
           ));
+          if(state.reportId != null ) {
+            if (event.id == -1) {
+              emit(state.copyWith(
+                  isShowProgress: true, formStatus: const InitialFormStatus()));
+
+              FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
+                id: state.reportId,
+                farmer_id: state.farmerInspector!.farmer_id,
+                farm_id: state.farmerInspector!.farm_id,
+                farm_code: state.farmerInspector!.farm_code,
+                farmer_code: state.farmerInspector!.farmer_code,
+                internal_inspector_id: state.farmerInspector!
+                    .internal_inspector_id,
+                monitoring_visit_type: state.farmerInspector!
+                    .monitoring_visit_type,
+                visit_date: state.farmerInspector!.visit_date,
+              );
+              ObjectResult result = await repository.editFarmerInspector(
+                  questionUpload);
+              if (result.responseCode == StatusConst.code00) {
+                emit(state.copyWith(
+                    isShowProgress: false,
+                    reportId: result.response is int ? result.response : null,
+                    formStatus: SubmissionSuccess(/*success: result.message*/)));
+              } else {
+                emit(state.copyWith(
+                    isShowProgress: false,
+                    formStatus: SubmissionFailed(result.message)));
+              }
+            } else{
+              print("HoangCV:  uplaods asdsaj 1121");
+              QuestionUpload questionUpload = QuestionUpload(
+                    user_input_id: state.reportId,
+                    survey_id: state.listReport[1].id,
+                    question_id: event.id,
+                    answer_type: event.type,
+                    value_text: Utils.stringToFormattedString(Utils.formatDateTimeToString(
+                        event.list[event.index].valueSelected)),
+                    test_entry: false,
+                    list_id_suggested: [],
+                    is_answer_exist: true,
+                );
+              ObjectResult result = await repository.uploadQuestion(questionUpload);
+              if (result.responseCode == StatusConst.code00) {
+                emit(state.copyWith(
+                    isShowProgress: false,
+                    reportId: result.response is int ? result.response : null,
+                    formStatus: SubmissionSuccess(/*success: result.message*/)));
+              } else {
+                emit(state.copyWith(
+                    isShowProgress: false,
+                    formStatus: SubmissionFailed(result.message)));
+              }
+            }
+          }else if(state.reportId == null && event.id == 1){
+            print("HoangCV:  uplaods asdsaj");
+            QuestionUpload questionUpload = QuestionUpload(
+            user_input_id: state.reportId,
+            survey_id: state.listReport[1].id,
+              question_id: event.id,
+              answer_type: event.type,
+              value_text: Utils.stringToFormattedString(Utils.formatDateTimeToString(
+                  event.list[event.index].valueSelected)),
+              list_id_suggested: [],
+            test_entry: false,
+            is_answer_exist: true,
+            farmer_id: state.farmerInspector!.farmer_id,
+            farmer_code: state.farmerInspector!.farmer_code,
+            farm_id: state.farmerInspector!.farm_id,
+            farm_code: state.farmerInspector!.farm_code,
+            internal_inspector_id: state.farmerInspector!.internal_inspector_id,
+            monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
+            visit_date: state.farmerInspector!.visit_date,
+          );
+            ObjectResult result = await repository.uploadQuestion(questionUpload);
+            if (result.responseCode == StatusConst.code00) {
+              emit(state.copyWith(
+                  isShowProgress: false,
+                  reportId: result.response is int ? result.response : null,
+                  formStatus: SubmissionSuccess(/*success: result.message*/)));
+            } else {
+              emit(state.copyWith(
+                  isShowProgress: false,
+                  formStatus: SubmissionFailed(result.message)));
+            }
+        }
         }
       } else {
         print("HoangCV: event.list[event.index].listValue: ${event.index} : ${event.list[event.index].toString()} : ${event.list[event.index].listValue.length} ");
@@ -219,6 +307,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     ));
     final report = await repository.getListActivityReport(event.id);
     List<List<Select>> listSelected = [];
+    List<List<ListInputModel>> listInputModel = [];
     List<Select> listSelectedInspector = [];
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
@@ -226,14 +315,22 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<TableQuestion> listTable = [];
     List<People> listFarmer = [];
     List<People> listInspector = [];
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? nameInspector = sharedPreferences.getString(SharedPreferencesKey.fullName);
+    int? idInspector = sharedPreferences.getInt(SharedPreferencesKey.userId);
+    state.farmerInspector!.internal_inspector_id = idInspector;
+    emit(state.copyWith(
+      nameInspector: nameInspector,
+    ));
     if (report.isNotEmpty) {
       listSelected = createSelectLists(report[1].questionAndPageIds);
+      listInputModel = createInputLists(report[1].questionAndPageIds);
       listVisible = createVisibleLists(report[1].questionAndPageIds);
       listController = createTextEditingControllerLists(report[1].questionAndPageIds);
-/*      listSelected.forEach((element) {
-        print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
+      listInputModel.forEach((element) {
+        print("HoangCV:listInputModel:  ${element.length} : ${element.toString()}");
       });
-      listController.forEach((element) {
+ /*     listController.forEach((element) {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });*/
       int i = 0;
@@ -282,6 +379,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listControllerTable: listControllerTable,
       listTable: listTable,
       listSelectedInspector: listSelectedInspector,
+      listInputModel: listInputModel,
     ));
 /*    state.listControllerTable.forEach((element) {
       element.forEach((e) {
@@ -395,6 +493,90 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             childAnswer
                 .value!)); // Thêm Select cho câu trả lời con của câu trả lời con
         initSelectValues(childAnswer, selectList);
+      }
+    }
+  }
+
+  List<List<ListInputModel>> createInputLists(List<Question> questions) {
+    List<List<ListInputModel>> selectLists = [];
+
+    for (Question question in questions) {
+      List<ListInputModel> selectList = [];
+
+      // Thêm Select cho câu hỏi cha
+      if(question.questionType == 'date' || question.questionType == 'datetime' ) {
+        InputRegisterModel inputRegisterModel = InputRegisterModel<String, DateTime>(
+            title: "",
+            isCompulsory: false,
+            typeInputEnum: TypeInputEnum.date,
+            type: TypeInputRegister.Select,
+            //valueSelected: DateTime.now(),
+            //controller: state.startTimeController,
+            noBorder: true,
+            textAlign: TextAlign.left
+          //icon: Icons.calendar_today
+        );
+        selectList.add(ListInputModel(question.idSelected!, inputRegisterModel, TextEditingController()));
+      }
+
+      // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
+      initInputValues(question, selectList);
+
+      selectLists.add(selectList);
+    }
+
+    return selectLists;
+  }
+
+  void initInputValues(dynamic item, List<ListInputModel> selectList) {
+    if (item is Question) {
+      // Gọi hàm đệ quy cho danh sách câu trả lời con
+      for (Answer answer in item.suggestedAnswerIds) {
+        initInputValues(answer, selectList);
+      }
+
+      // Gọi hàm đệ quy cho danh sách câu hỏi con
+      for (Question childQuestion in item.questionAndPageIds) {
+          if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+            InputRegisterModel inputRegisterModel = InputRegisterModel<String, DateTime>(
+                title: "",
+                isCompulsory: false,
+                typeInputEnum: TypeInputEnum.date,
+                type: TypeInputRegister.Select,
+                //valueSelected: DateTime.now(),
+                //controller: state.startTimeController,
+                noBorder: true,
+                textAlign: TextAlign.left
+              //icon: Icons.calendar_today
+            );
+            selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+          }
+          initInputValues(childQuestion, selectList);
+        }
+      }
+     else if (item is Answer) {
+      // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
+      for (Question childQuestion in item.questionAndPageIds) {
+        if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+          InputRegisterModel inputRegisterModel = InputRegisterModel<String, DateTime>(
+              title: "",
+              isCompulsory: false,
+              typeInputEnum: TypeInputEnum.date,
+              type: TypeInputRegister.Select,
+              //valueSelected: DateTime.now(),
+              //controller: state.startTimeController,
+              noBorder: true,
+              textAlign: TextAlign.left
+            //icon: Icons.calendar_today
+          );
+          selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+        }
+        initInputValues(childQuestion, selectList);
+      }
+
+      // Gọi hàm đệ quy cho danh sách câu trả lời con của câu trả lời con
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        initInputValues(childAnswer, selectList);
       }
     }
   }
@@ -584,90 +766,118 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<Question> listQs = state.listReport[1].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
       print("HoangCV: listQs: ${listQs[i].title}");
-      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].idSelected} : ${event.id}");
-        if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
-          listQs[i].questionAndPageIds[h].isError = false;
-          question = Question.copy(listQs[i].questionAndPageIds[h]);
-          answerType = question.questionType ?? "";
-          if(answerType == 'simple_choice'){
-            listIdSuggested = listQs[i].questionAndPageIds.map((item) => item.id ?? -1).toList();
-          }
-        } else {
-          for (int j = 0;
-              j < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
-              j++) {
-            for (int k = 0;
-                k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds.length;
-                k++) {
-              if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
-                listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].isError = false;
-                listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k].isError = false;
-                question = Question.copy(
-                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].questionAndPageIds[k]);
-                answerType = question.questionType ?? "";
-                if(question.commentAnswer == true){
+      if(listQs[i].questionAndPageIds.isNotEmpty) {
+        for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+          print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i]
+              .questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h]
+              .idSelected} : ${event.id}");
+          if (listQs[i].questionAndPageIds[h].idSelected == event.id) {
+            listQs[i].questionAndPageIds[h].isError = false;
+            question = Question.copy(listQs[i].questionAndPageIds[h]);
+            answerType = question.questionType ?? "";
+            if (answerType == 'simple_choice') {
+              listIdSuggested =
+                  listQs[i].questionAndPageIds.map((item) => item.id ?? -1)
+                      .toList();
+            }
+          } else {
+            for (int j = 0;
+            j < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
+            j++) {
+              for (int k = 0;
+              k < listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                  .questionAndPageIds.length;
+              k++) {
+                if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                    .questionAndPageIds[k].idSelected == event.id) {
+                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                      .isError = false;
+                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                      .questionAndPageIds[k].isError = false;
+                  question = Question.copy(
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                          .questionAndPageIds[k]);
+                  answerType = question.questionType ?? "";
+                  if (question.commentAnswer == true) {
+                    hasCommandAnswer = true;
+                  }
+                  /*answer = Answer.copy(
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
+                }
+              }
+              if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]
+                  .idSelected == event.id) {
+                listQs[i].questionAndPageIds[h].isError = false;
+                question = Question.copy(listQs[i].questionAndPageIds[h]);
+                answer = Answer.copy(
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
+                if (answer.commentAnswer == true) {
                   hasCommandAnswer = true;
                 }
-                /*answer = Answer.copy(
-                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
+                answerType = question.questionType ?? "";
+                if (answerType == 'simple_choice') {
+                  listIdSuggested =
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds.map((
+                          item) => item.id ?? -1).toList();
+                }
               }
             }
-            if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[j].idSelected ==event.id) {
-              listQs[i].questionAndPageIds[h].isError = false;
-              question = Question.copy(listQs[i].questionAndPageIds[h]);
-              answer = Answer.copy(
-                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);
-              if(answer.commentAnswer == true){
-                hasCommandAnswer = true;
-              }
-              answerType = question.questionType ?? "";
-              if(answerType == 'simple_choice'){
-                listIdSuggested = listQs[i].questionAndPageIds[h].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
-              }
-            }
-          }
-          for (int l = 0;
-              l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
-              l++) {
-            //print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
-            //    " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
-            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected == event.id) {
-              listQs[i].questionAndPageIds[h].questionAndPageIds[l].isError = false;
-              question = Question.copy(
-                  listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
-              answerType = question.questionType ?? "";
-              if(question.commentAnswer == true){
-                hasCommandAnswer = true;
-              }
-            } else{
-              for (int m = 0;
-              m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
-              m++) {
-                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].idSelected == event.id) {
-                    listQs[i].questionAndPageIds[h].questionAndPageIds[l].isError = false;
-                    listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].isError = false;
+            for (int l = 0;
+            l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
+            l++) {
+              //print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
+              //    " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].idSelected} : ${event.id}");
+              if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                  .idSelected == event.id) {
+                listQs[i].questionAndPageIds[h].questionAndPageIds[l].isError =
+                false;
+                question = Question.copy(
+                    listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
+                answerType = question.questionType ?? "";
+                if (question.commentAnswer == true) {
+                  hasCommandAnswer = true;
+                }
+              } else {
+                for (int m = 0;
+                m < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                    .suggestedAnswerIds.length;
+                m++) {
+                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                      .suggestedAnswerIds[m].idSelected == event.id) {
+                    listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                        .isError = false;
+                    listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                        .suggestedAnswerIds[m].isError = false;
                     question = Question.copy(
                         listQs[i].questionAndPageIds[h].questionAndPageIds[l]);
                     answerType = question.questionType ?? "";
                     answer = Answer.copy(
-                        listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m]);
-                    if(answer.commentAnswer == true){
+                        listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                            .suggestedAnswerIds[m]);
+                    if (answer.commentAnswer == true) {
                       hasCommandAnswer = true;
                     }
-                    if(answerType == 'simple_choice'){
-                      listIdSuggested = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
+                    if (answerType == 'simple_choice') {
+                      listIdSuggested =
+                          listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                              .suggestedAnswerIds.map((item) => item.id ?? -1)
+                              .toList();
                     }
                   }
                   for (int n = 0;
-                  n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
+                  n < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                      .suggestedAnswerIds[m].questionAndPageIds.length;
                   n++) {
-                    if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].idSelected == event.id) {
-                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].isError = false;
+                    if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                        .suggestedAnswerIds[m].questionAndPageIds[n]
+                        .idSelected == event.id) {
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                          .suggestedAnswerIds[m].isError = false;
                       question = Question.copy(
-                          listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n]);
+                          listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                              .suggestedAnswerIds[m].questionAndPageIds[n]);
                       answerType = question.questionType ?? "";
-                      if(question.commentAnswer == true){
+                      if (question.commentAnswer == true) {
                         hasCommandAnswer = true;
                       }
 /*                      answer = Answer.copy(
@@ -679,6 +889,41 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             }
           }
         }
+      } else{
+        for (int j = 0;
+        j < listQs[i].suggestedAnswerIds.length;
+        j++) {
+          for (int k = 0;
+          k < listQs[i].suggestedAnswerIds[j].questionAndPageIds.length;
+          k++) {
+            if (listQs[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
+              listQs[i].suggestedAnswerIds[j].isError = false;
+              listQs[i].suggestedAnswerIds[j].questionAndPageIds[k].isError = false;
+              question = Question.copy(
+                  listQs[i].suggestedAnswerIds[j].questionAndPageIds[k]);
+              answerType = question.questionType ?? "";
+              if(question.commentAnswer == true){
+                hasCommandAnswer = true;
+              }
+              /*answer = Answer.copy(
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
+            }
+          }
+          if (listQs[i].suggestedAnswerIds[j].idSelected ==event.id) {
+            listQs[i].isError = false;
+            question = Question.copy(listQs[i]);
+            answer = Answer.copy(
+                listQs[i].suggestedAnswerIds[j]);
+            if(answer.commentAnswer == true){
+              hasCommandAnswer = true;
+            }
+            answerType = question.questionType ?? "";
+            if(answerType == 'simple_choice'){
+              listIdSuggested = listQs[i].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
+            }
+          }
+        }
+      }
       }
     //List<dynamic> resultUpload = findQuestionAndAnswerById(state.listReport[1].questionAndPageIds, event.id, listIdSuggested, answerType);
 /*    findQuestionAndAnswerById(state.listReport[1].questionAndPageIds, event.id, question,
@@ -1474,11 +1719,13 @@ class OnSelectValueEvent extends AddReportEvent {
   List<InputRegisterModel> list;
   int index;
   BuildContext context;
+  int id;
+  String type;
 
-  OnSelectValueEvent(this.list, this.index, this.context);
+  OnSelectValueEvent(this.list, this.index, this.context, {this.id = -1, this.type = 'date'});
 
   @override
-  List<Object?> get props => [list, index, context];
+  List<Object?> get props => [list, index, context, id, type];
 }
 
 class UpdateAddTableEvent extends AddReportEvent {
@@ -1523,8 +1770,9 @@ class AddReportState extends BlocState {
         startTimeController,
         idFarmerController,
         farmerInspector,
-    expansionTileKeys,
-    scrollController,
+        expansionTileKeys,
+        scrollController,
+        nameInspector,
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
@@ -1536,6 +1784,7 @@ class AddReportState extends BlocState {
   final List<TableQuestion> listTable;
   final FormSubmissionStatus formStatus;
   final List<InputRegisterModel> listWidget;
+  final List<List<ListInputModel>> listInputModel;
   final List<People> listFarmer;
   final List<People> listInspector;
   final List<People> listFarm;
@@ -1546,6 +1795,7 @@ class AddReportState extends BlocState {
   final int? reportId;
   final List<GlobalExpand> expansionTileKeys;
   AutoScrollController? scrollController = AutoScrollController();
+  final String? nameInspector;
 
   AddReportState({
     this.detailDiary,
@@ -1559,6 +1809,7 @@ class AddReportState extends BlocState {
     this.listControllerTable = const [],
     this.listSelectedInspector = const [],
     this.listWidget = const [],
+    this.listInputModel = const [],
     this.listFarmer = const [],
     this.listInspector = const [],
     this.listFarm = const [],
@@ -1568,6 +1819,7 @@ class AddReportState extends BlocState {
     this.reportId,
     this.expansionTileKeys = const [],
     this.scrollController,
+    this.nameInspector,
   });
 
   AddReportState copyWith({
@@ -1582,6 +1834,7 @@ class AddReportState extends BlocState {
     List<List<Controller>>? listControllerTable,
     List<Select>? listSelectedInspector,
     List<InputRegisterModel>? listWidget,
+    List<List<ListInputModel>>? listInputModel,
     List<People>? listFarmer,
     List<People>? listInspector,
     List<People>? listFarm,
@@ -1591,6 +1844,7 @@ class AddReportState extends BlocState {
     int? reportId,
     List<GlobalExpand>? expansionTileKeys,
     AutoScrollController? scrollController,
+    String? nameInspector,
   }) {
     return AddReportState(
         detailDiary: detailDiary ?? this.detailDiary,
@@ -1604,6 +1858,7 @@ class AddReportState extends BlocState {
         listControllerTable: listControllerTable ?? this.listControllerTable,
         listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
         listWidget: listWidget ?? this.listWidget,
+        listInputModel: listInputModel ?? this.listInputModel,
         listFarmer: listFarmer ?? this.listFarmer,
         listFarm: listFarm ?? this.listFarm,
         listInspector: listInspector ?? this.listInspector,
@@ -1612,7 +1867,8 @@ class AddReportState extends BlocState {
         farmerInspector: farmerInspector ?? this.farmerInspector,
         reportId: reportId ?? this.reportId,
         expansionTileKeys: expansionTileKeys ?? this.expansionTileKeys,
-        scrollController: scrollController ?? this.scrollController,);
+        scrollController: scrollController ?? this.scrollController,
+        nameInspector: nameInspector ?? this.nameInspector);
   }
 }
 
@@ -1621,4 +1877,12 @@ class GlobalExpand{
   GlobalKey key;
 
   GlobalExpand(this.expand, this.key);
+}
+
+class ListInputModel {
+  int id;
+  InputRegisterModel inputModel;
+  TextEditingController controller;
+
+  ListInputModel(this.id, this.inputModel, this.controller);
 }

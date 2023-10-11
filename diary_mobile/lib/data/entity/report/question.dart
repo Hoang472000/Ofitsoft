@@ -5,6 +5,7 @@ class Question {
   int? id;
   int? idSelected;
   int? pageId;
+  bool? isPage;
   int? parentTitleId;
   String? title;
   String? questionsSelection;
@@ -31,6 +32,7 @@ class Question {
     this.id,
     this.idSelected,
     this.pageId,
+    this.isPage,
     this.parentTitleId,
     this.title,
     this.commentAnswer,
@@ -55,6 +57,7 @@ class Question {
   Question.copy(Question other)
       : id = other.id,
         pageId = other.pageId,
+        isPage = other.isPage,
         parentTitleId = other.parentTitleId,
         title = other.title,
         idSelected = other.idSelected,
@@ -88,6 +91,7 @@ class Question {
       id: json['id'] ?? -1,
       idSelected: idSelected,
       pageId: json['page_id'] ?? -1,
+      isPage: json['is_page'] ?? false,
       parentTitleId: json['parent_title_id'] ?? -1,
       title: json['title'] ?? '',
       commentAnswer: json['comment_answer'] ?? false,
@@ -107,7 +111,7 @@ class Question {
       rowId: rowId,
 
       checkResult: json['check_result'] ?? false,
-      valueResult: json['value_result'] ?? '',
+      valueResult: json['value_result'],
       userInputLines: json['user_input_lines'] != null
           ? (json['user_input_lines'] as List<dynamic>)
           .map((itemJson) => RowLine.fromJson(itemJson))
@@ -128,6 +132,7 @@ class Question {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['title'] = title;
+    data['is_page'] = isPage;
     data['parent_title_id'] = parentTitleId;
     data['comment_answer'] = commentAnswer;
     data['triggering_question_id'] = triggeringQuestionId;

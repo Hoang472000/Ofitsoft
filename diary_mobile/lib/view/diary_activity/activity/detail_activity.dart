@@ -529,7 +529,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                     });
                                                   },
                                                 ),
-                                                GestureDetector(
+                                            /*    GestureDetector(
                                                   child: Column(
                                                     children: [
                                                       const Image(
@@ -568,7 +568,7 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
                                                     });
                                                     //HoangCV pick camera
                                                   },
-                                                ),
+                                                ),*/
                                               ],
                                             ),
                                           ),

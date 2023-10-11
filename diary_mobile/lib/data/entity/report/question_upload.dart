@@ -1,3 +1,5 @@
+import '../../../utils/utils.dart';
+
 class QuestionUpload {
   int? user_input_id;
   int? survey_id;
@@ -132,7 +134,7 @@ class FarmerInspectorUpload {
     //data['farm_code'] = farm_code;
     data['internal_inspector_id'] = internal_inspector_id;
     data['monitoring_visit_type'] = monitoring_visit_type;
-    data['visit_date'] = visit_date;
+    data['visit_date'] = Utils.stringToFormattedString(visit_date ?? "");
     //data['state'] = state;
     return data;
   }

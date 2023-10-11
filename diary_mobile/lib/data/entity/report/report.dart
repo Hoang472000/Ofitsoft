@@ -218,6 +218,14 @@ class Select {
         this.parentId = -1,
         this.type = '',
         this.typeSub = ''});
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['value'] = value;
+    data['title'] = title;
+    return data;
+  }
 }
 
 class Visible {

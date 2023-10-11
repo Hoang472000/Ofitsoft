@@ -179,13 +179,13 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                         amountSelected: state.amountSelected,
                                         isChoose: state.listSelected[indexParent][index],
                                         callbackChooseItem: (isChoose, diary)  {
-                                          setState(() {
-                                            //selectAll=false;
-                                          });
+                                      if(widget.action == "record"){
                                           blocContext.read<DiaryMonitorChildBloc>().add(
                                               AddChooseDiary(
                                                   indexParent, index, !isChoose, diary));
-                                        });
+                                          }
+                                        }
+                                      );
                                   },
                                 ),
                                 Padding(

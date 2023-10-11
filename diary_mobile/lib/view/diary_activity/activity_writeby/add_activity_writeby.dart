@@ -484,7 +484,7 @@ class _AddActWriteByPageState extends State<AddActWriteByPage> {
                                                 });
                                               },
                                             ),
-                                            GestureDetector(
+                                         /*   GestureDetector(
                                               child: Column(
                                                 children: [
                                                   const Image(
@@ -523,7 +523,7 @@ class _AddActWriteByPageState extends State<AddActWriteByPage> {
                                                 });
                                                 //HoangCV pick camera
                                               },
-                                            ),
+                                            ),*/
                                           ],
                                         ),
                                       ),
