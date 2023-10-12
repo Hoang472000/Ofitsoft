@@ -19,19 +19,21 @@ import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/detail_activity_transaction_bloc.dart';
 
 class DetailActivityTransactionPage extends StatefulWidget {
-  DetailActivityTransactionPage({super.key, required this.activityDiary, required this.diary});
+  DetailActivityTransactionPage({super.key, required this.activityDiary, required this.diary, required this.action});
 
   final ActivityTransaction activityDiary;
   final Diary diary;
+  final String action;
 
   @override
   _DetailActivityTransactionPageState createState() => _DetailActivityTransactionPageState();
 
-  static Route route(ActivityTransaction activityDiary, Diary diary) {
+  static Route route(ActivityTransaction activityDiary, Diary diary, String action) {
     return Utils.pageRouteBuilder(
         DetailActivityTransactionPage(
             activityDiary: activityDiary,
-            diary: diary
+            diary: diary,
+            action: action
         ),
         true);
   }
@@ -202,7 +204,7 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                                           Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Text(
-                                              "Chi tiết đơn bán",
+                                              widget.action.compareTo("sell") == 0 ? "Chi tiết đơn bán" :"Chi tiết đơn mua",
                                               style: StyleOfit.textStyleFW500(
                                                   AppColor.gray57, 18),
                                               overflow: TextOverflow.ellipsis,

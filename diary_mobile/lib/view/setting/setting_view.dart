@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
@@ -15,6 +16,7 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
+import '../../utils/widgets/pdf/pdf_viewer.dart';
 import '../home/home_page.dart';
 import '../login/login_page.dart';
 import 'account/account_information_page.dart';
@@ -171,7 +173,8 @@ class _SettingViewState extends State<SettingView> {
 
                 itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
-                      DiaLogManager.showDialogDevelopingFeature();
+                      Navigator.push(context, PDFScreen.route("assets/pdf/XoaTaiKhoan"));
+                      //DiaLogManager.showDialogDevelopingFeature();
                   /*          Navigator.push(context, UserManualPage.route());*/
                 }, icon: IconAsset.icUserManual),
                 itemAccount(context, text: "Liên hệ", voidCallback: () {
@@ -201,6 +204,7 @@ class _SettingViewState extends State<SettingView> {
           )),
     );
   }
+
 
   Widget itemAccount(BuildContext context,
       {required String icon,

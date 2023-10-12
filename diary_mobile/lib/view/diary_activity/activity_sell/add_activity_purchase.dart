@@ -204,7 +204,7 @@ class _AddActivityPurchasePageState extends State<AddActivityPurchasePage> {
                                         Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Text(
-                                            "Chi tiết đơn bán",
+                                            "Chi tiết đơn mua",
                                             style: StyleOfit.textStyleFW500(
                                                 AppColor.gray57, 18),
                                             overflow: TextOverflow.ellipsis,

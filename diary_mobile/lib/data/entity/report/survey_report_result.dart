@@ -38,6 +38,7 @@ class SurveyRpRlt {
     this.farmName,
     this.farmCode,
     this.internalInspectorId,
+    this.internalInspector,
     this.monitoringVisitType,
     this.surveyId = const [],
     this.visitDate,
@@ -60,6 +61,7 @@ class SurveyRpRlt {
         farmName = other.farmName,
         farmCode = other.farmCode,
         internalInspectorId = other.internalInspectorId,
+        internalInspector = other.internalInspector,
         monitoringVisitType = other.monitoringVisitType,
         surveyId = other.surveyId
             .map((answer) => Report.copy(answer))
@@ -89,6 +91,7 @@ class SurveyRpRlt {
       farmName: json['farm_name'] ?? '',
       farmCode: json['farm_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'],
+      internalInspector: json['internal_inspector'],
       monitoringVisitType: json['monitoring_visit_type'] ?? '',
       surveyId: json['survey_id'] != null
           ? (json['survey_id'] as List<dynamic>)

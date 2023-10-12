@@ -65,6 +65,7 @@ dependencies:
   audioplayers:
   fluttertoast:
   scroll_to_index:
+  flutter_pdfview:
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,8 @@ flutter:
     - assets/icons/
     - assets/icons/icons_diary/
     - assets/images/
+    - assets/pdf/XoaTaiKhoan
+    - assets/pdf/HDSDAppQLVT
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

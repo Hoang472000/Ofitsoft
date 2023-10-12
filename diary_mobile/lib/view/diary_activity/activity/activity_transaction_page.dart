@@ -229,7 +229,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                         DetailActivityTransactionPage.route(
                                             state
                                                 .listActivityTransaction[index],
-                                            widget.diary));
+                                            widget.diary, widget.action));
                                     if (result != null && result[0]) {
                                       contextBloc.read<ActivityBloc>().add(
                                           GetListActivityEvent(

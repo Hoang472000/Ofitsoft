@@ -361,12 +361,13 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       state.farmerInspector!.internal_inspector_id = report[0].internalInspectorId;
       state.farmerInspector!.monitoring_visit_type = report[0].monitoringVisitType;
       state.farmerInspector!.visit_date = report[0].visitDate;
-      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].visitDate}");
+      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].internalInspector}");
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,
         listInspector: report[0].listInternalInspector,
         listFarm: indexFarmer != -1 ? report[0].listFarmers[indexFarmer].farmIds : [],
         farmerInspector: state.farmerInspector,
+        nameInspector: report[0].internalInspector,
         indexFarmer: indexFarmer,
         indexInspector: indexInspector,
         indexFarm: indexFarm,
@@ -1321,8 +1322,29 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               });
             }
           }
-          else{
+          else if(qsType == "datetime" || qsType == "date" ){
             int indexCtrl = -1;
+            print("Hoangcv111 : ${qs.idSelected} ${qs.id} : ");
+            state.listInputModel.forEach((element) {
+              indexCtrl = element.indexWhere((el) =>
+              el.id == qs.idSelected);
+              print("Hoangcv11113213 : ${element.length> 0 ?element.first.id : 0} : ${indexCtrl} ");
+              if(indexCtrl != -1){
+                print("indexCtrl : ${element[indexCtrl].inputModel.valueSelected!.toString().isNotEmpty} : ${indexCtrl} ");
+              }
+              if (indexCtrl != -1 && element[indexCtrl].inputModel.valueSelected!.toString().isEmpty) {
+
+                checkBreak = true;
+                listQs[i].questionAndPageIds[h].isError = true;
+                Toast.showLongTop(
+                    "Vui lòng nhập đáp án cho câu ${listQs[i]
+                        .questionAndPageIds[h].title}");
+                submit = false;
+              }
+            });
+          }else{
+            int indexCtrl = -1;
+            print("Hoangcv111");
             state.listController.forEach((element) {
               indexCtrl = element.indexWhere((el) =>
               el.id == qs.idSelected);
@@ -1558,6 +1580,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                         }
                       });
                     } else{
+                      print("asdasdj");
                       checkBreak = true;
                       listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
                       Toast.showLongTop("Vui lòng nhập đáp án cho câu "
@@ -1618,6 +1641,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
                       } else{
                         int indexCtrl = -1;
+                        print("12312");
                         state.listController.forEach((element) {
                           indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
                           if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
