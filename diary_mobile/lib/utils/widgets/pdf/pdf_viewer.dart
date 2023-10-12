@@ -26,46 +26,33 @@ class PDFScreen extends StatefulWidget {
 }
 
 class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
-  final Completer<PDFViewController> _controller =
-  Completer<PDFViewController>();
+  final Completer<PDFViewController> _controller = Completer<PDFViewController>();
   int pages = 0;
   int currentPage = 0;
   bool isReady = false;
   String errorMessage = '';
   String base64Data = '';
 
-/*  Future<String> readPDF(String file, String fileName) async {
-    if (fileName.contains('/')) {
-      fileName = fileName.replaceAll("/", "");
-    }
-    String base64 = await rootBundle.loadString(file);
-    return base64;
-  }*/
-  Future<String> loadBase64Data(String assetPath) async {
-    String base64 = await rootBundle.loadString(assetPath);
-    return base64;
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _initializeData();
   }
 
   Future<void> _initializeData() async {
-    base64Data = await loadBase64Data(widget.base64Data);
+    base64Data = await rootBundle.loadString(widget.base64Data);
   }
+
   @override
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
       resizeToAvoidBottomInset: true,
-     // backgroundColor: AppColor.background,
       appBar: OfitAppBar(
         context,
         centerTitle: true,
@@ -79,78 +66,69 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
       ),
       body: Stack(
         children: <Widget>[
-          Container(
-            // padding: EdgeInsets.all(16),
-            child:  PDFView(
-              // filePath: widget.path,
-              pdfData: base64Decode(base64Data),
-              enableSwipe: true,
-              swipeHorizontal: false,
-              autoSpacing: false,
-              pageFling: true,
-              pageSnap: true,
-              fitPolicy: FitPolicy.BOTH,
-              fitEachPage: true,
-              preventLinkNavigation:
-              false, // if set to true the link is handled in flutter
-              onRender: (pagess) {
-                setState(() {
-                  pages = pagess!;
-                  isReady = true;
-                });
-              },
-              onError: (error) {
-                setState(() {
-                  errorMessage = error.toString();
-                });
-                print(error.toString());
-              },
-              onPageError: (page, error) {
-                setState(() {
-                  errorMessage = '$page: ${error.toString()}';
-                });
-                print('$page: ${error.toString()}');
-              },
-              onViewCreated: (PDFViewController pdfViewController) {
-                _controller.complete(pdfViewController);
-              },
-              onLinkHandler: (uri) {
-                print('goto uri: $uri');
-              },
-              onPageChanged: (page, total) {
-                print('page change: $page/$total');
-                setState(() {
-                  currentPage = page!;
-                });
-              },
-            ),
+          FutureBuilder<String>(
+            future: rootBundle.loadString(widget.base64Data),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return Container(
+                    child: PDFView(
+                      pdfData: base64Decode(snapshot.data!),
+                      enableSwipe: true,
+                      swipeHorizontal: false,
+                      autoSpacing: false,
+                      pageFling: true,
+                      pageSnap: true,
+                      fitPolicy: FitPolicy.BOTH,
+                      fitEachPage: true,
+                      preventLinkNavigation: false,
+                      onRender: (pagess) {
+                        setState(() {
+                          pages = pagess!;
+                          isReady = true;
+                        });
+                      },
+                      onError: (error) {
+                        setState(() {
+                          errorMessage = error.toString();
+                        });
+                        print(error.toString());
+                      },
+                      onPageError: (page, error) {
+                        setState(() {
+                          errorMessage = '$page: ${error.toString()}';
+                        });
+                        print('$page: ${error.toString()}');
+                      },
+                      onViewCreated: (PDFViewController pdfViewController) {
+                        _controller.complete(pdfViewController);
+                      },
+                      onLinkHandler: (uri) {
+                        print('goto uri: $uri');
+                      },
+                      onPageChanged: (page, total) {
+                        print('page change: $page/$total');
+                        setState(() {
+                          currentPage = page!;
+                        });
+                      },
+                    ),
+                  );
+                } else {
+                  return Text("Không thể tải dữ liệu PDF");
+                }
+              } else {
+                return Center(child: CircularProgressIndicator());
+              }
+            },
           ),
           errorMessage.isEmpty
               ? !isReady
-              ? Center(
-            child: CircularProgressIndicator(),
-          )
+              ? Center(child: CircularProgressIndicator())
               : Container()
-              : Center(
-            child: Text(errorMessage),
-          )
+              : Center(child: Text(errorMessage)),
         ],
       ),
-      // floatingActionButton: FutureBuilder<PDFViewController>(
-      //   future: _controller.future,
-      //   builder: (context, AsyncSnapshot<PDFViewController> snapshot) {
-      //     if (snapshot.hasData) {
-      //       return FloatingActionButton.extended(
-      //         label: Text("Trang ${pages ~/ 2}"),
-      //         onPressed: () async {
-      //           await snapshot.data.setPage(pages ~/ 2);
-      //         },
-      //       );
-      //     }
-      //
-      //     return Container();
-      //   },
-      // ),
     );
   }
 }

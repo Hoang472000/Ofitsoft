@@ -173,7 +173,7 @@ class _SettingViewState extends State<SettingView> {
 
                 itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/XoaTaiKhoan"));
+                      Navigator.push(context, PDFScreen.route("assets/pdf/HDSDAppQLVT"));
                       //DiaLogManager.showDialogDevelopingFeature();
                   /*          Navigator.push(context, UserManualPage.route());*/
                 }, icon: IconAsset.icUserManual),
