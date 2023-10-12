@@ -388,6 +388,7 @@ class DetailActivityTransactionBloc
         .indexWhere((element) => element.id == detailActivity.quantityUnitId);
 /*    int indexYield = listUnitYield
         .indexWhere((element) => element.id == detailActivity.actionAreaUnitId);*/
+    print("HoangcV:_getDetailActivityTransaction: ${event.activityDiary.toJson()} ");
     emitter(state.copyWith(
         isShowProgress: false,
         detailActivity: detailActivity,
@@ -477,7 +478,7 @@ class DetailActivityTransactionBloc
       print(
           "HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
       if (result1 == 1) {
-        if (event.list[event.index].title.compareTo("Thời gian mua bán") == 0) {
+        if (event.list[event.index].title.compareTo("Thời gian") == 0) {
           print(
               "HoangCV:1 event.list[event.index].valueSelected: ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
           emit(state.copyWith(
@@ -580,31 +581,6 @@ class DetailActivityTransactionBloc
     List<InputRegisterModel> list = List.from(state.listWidget);
     List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
-    if (state.indexActivity == -1) {
-      validate = false;
-      state.listWidget[0].error = "Vui lòng chọn tên công việc";
-    }
-    else if(state.areaController!.text.isEmpty){
-      validate = false;
-      state.listWidgetArea[0].error = "Vui lòng nhập diện tích";
-    }else if(state.areaController!.text.isNotEmpty && double.parse(state.areaController!.text)<=0){
-      validate = false;
-      state.listWidgetArea[0].error = "Vui lòng nhập diện tích > 0";
-    }
-    else if (state.areaController!.text.isNotEmpty &&
-        double.parse(state.areaController!.text) > 0 &&
-        state.listWidgetArea[1].valueSelected == null) {
-      validate = false;
-      state.listWidgetArea[1].error = "Vui lòng chọn đơn vị";
-    }else if(state.areaController!.text.isNotEmpty &&
-        state.listWidgetArea[1].valueSelected != null){
-      if((double.parse(state.areaController!.text.isNotEmpty ? state.areaController!.text : "0") * double.parse('${state.listUnitArea[state.listWidgetArea[1].positionSelected].convert}')) > state.areaMax){
-        validate = false;
-        state.listWidgetArea[0].error = "Diện tích phải nhỏ hơn diện tích lô trồng";
-      } else{
-        state.listWidgetArea[0].error = null;
-      }
-    }
     if(validate) {
       if ((state.listActivity[state.indexActivity].harvesting ??
           false) && state.yieldController!.text.isEmpty) {
@@ -619,33 +595,19 @@ class DetailActivityTransactionBloc
     }
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
-      print("HoangCV: state.indexActivity: ${state.indexActivity}");
+      print("HoangCV: state.indexActivity: ${state.indexActivity} : ${state.startTimeController!.text}");
     } else {
       emit(state.copyWith(formStatus: FormSubmitting()));
-      ActivityDiary diary = ActivityDiary(
+      ActivityTransaction activityTransaction = ActivityTransaction(
         id: state.detailActivity!.id,
-        activityId: state.listActivity[state.indexActivity].id,
-        activityName: state.listActivity[state.indexActivity].name,
-        actionTime: state.listWidget[2].valueSelected.toString().split('.')[
-        0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
-        actionArea: state.areaController!.text.isNotEmpty
-            ? double.parse(state.areaController!.text)
-            : null,
-        actionAreaUnitId: state.listWidgetArea[1].valueSelected?.id,
-        actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name,
-        description: state.moTaController!.text,
-        harvesting: state.listActivity[state.indexActivity].harvesting,
-        amount: state.yieldController!.text.isNotEmpty
-            ? double.parse(state.yieldController!.text)
-            : null,
-        amountUnitId: state.listWidgetYield.isNotEmpty ? state.listWidgetYield[1].valueSelected?.id : null,
-        amountUnitName: state.listWidgetYield.isNotEmpty ? state.listWidgetYield[1].valueSelected?.name : null,
-        tool: state.listCongCuAdd,
-        material: state.listVatTuAdd,
-        media: state.listImage,
+        transactionDate: state.startTimeController!.text,
+        quantity: Utils.convertStringToDouble(state.soLuongController!.text),
+        quantityUnitId: state.listUnitYield[state.indexYield].id,
+        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text),
+        person: state.buyerController!.text,
       );
-      //"is_shown": true,
-      ObjectResult objectResult = await repository.updateActivityDiary(diary);
+      ObjectResult objectResult =
+      await repository.updateActivityTransaction(activityTransaction);
       if (objectResult.responseCode == StatusConst.code00) {
         // _changeViewDetail(emit);
       }

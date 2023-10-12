@@ -685,6 +685,51 @@ class RepositoryImpl extends Repository {
   }
 
   @override
+  Future<ObjectResult> updateActivityTransaction(ActivityTransaction transaction)async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.updateActivityTransaction}${transaction.id}",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: transaction.toJson())));
+    print("HoangCV: updateActivityTransaction response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<ObjectResult> removeActivityTransaction(int id) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.removeActivityTransaction}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+
+    print("HoangCV: removeActivityTransaction response: ${objectResult.response}: ${objectResult.isOK} : id: $id");
+    if (objectResult.responseCode == StatusConst.code00) {
+      DiaryDB.instance.removeActivityDiary(id);
+    }
+/*      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    return objectResult;
+  }
+
+  @override
   Future<List<Report>> getListActivityReport(int id) async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";

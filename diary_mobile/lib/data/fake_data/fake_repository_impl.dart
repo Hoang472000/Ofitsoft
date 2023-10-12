@@ -674,4 +674,16 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement deleteReport
     throw UnimplementedError();
   }
+
+  @override
+  Future<ObjectResult> updateActivityTransaction(ActivityTransaction transaction) {
+    // TODO: implement updateActivityTransaction
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> removeActivityTransaction(int id) {
+    // TODO: implement removeActivityTransaction
+    throw UnimplementedError();
+  }
 }

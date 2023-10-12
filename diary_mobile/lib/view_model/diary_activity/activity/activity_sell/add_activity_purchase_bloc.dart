@@ -205,7 +205,7 @@ class AddActivityPurchaseBloc
       print(
           "HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
       if (result1 == 1) {
-        if (event.list[event.index].title.compareTo("Thời gian mua bán") == 0) {
+        if (event.list[event.index].title.compareTo("Thời gian") == 0) {
           print(
               "HoangCV:1 event.list[event.index].valueSelected: ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
           emit(state.copyWith(

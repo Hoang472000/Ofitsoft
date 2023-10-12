@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/item_default/material_entity.dart';
 import '../../../data/local_data/diary_db.dart';
+import '../../../data/remote_data/object_model/object_result.dart';
 import '../../../data/repository.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../bloc_event.dart';
@@ -56,7 +57,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     } else if (event.action.compareTo("sell") == 0) {
       listDiaryActivity.addAll(event.list);
       listDiaryActivity.removeWhere((element) => element.harvesting == false);
-      if (event.harvesting) {
+      /*if (event.harvesting) {*/
         emitter(state.copyWith(
             isShowProgress: true));
         listActivityTransaction
@@ -69,18 +70,18 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             listActivityTransaction: listActivityTransaction,
             listCallbackTransaction: listCallbackTransaction,
             listDiaryActivity: listDiaryActivity));
-      } else {
+      /*} else {
         listActivityTransaction.addAll(event.listTransaction);
         listActivityTransaction.removeWhere((element) => element.isPurchase == true);
         emitter(state.copyWith(
             isShowProgress: false,
             listActivityTransaction: listActivityTransaction,
             listDiaryActivity: listDiaryActivity));
-      }
+      }*/
     } else if (event.action.compareTo("purchase") == 0) {
       listDiaryActivity.addAll(event.list);
       listDiaryActivity.removeWhere((element) => element.harvesting == false);
-      if (event.harvesting) {
+      /*if (event.harvesting) {*/
         emitter(state.copyWith(
             isShowProgress: true));
         listActivityTransaction
@@ -93,14 +94,14 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             listActivityTransaction: listActivityTransaction,
             listCallbackTransaction: listCallbackTransaction,
             listDiaryActivity: listDiaryActivity));
-      } else {
+   /*`   } else {
         listActivityTransaction.addAll(event.listTransaction);
         listActivityTransaction.removeWhere((element) => element.isPurchase == false);
         emitter(state.copyWith(
             isShowProgress: false,
             listActivityTransaction: listActivityTransaction,
             listDiaryActivity: listDiaryActivity));
-      }
+      }*/
     }else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
 
@@ -118,7 +119,12 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
   FutureOr<void> _removeActivity(
       RemoveActivityEvent event, Emitter<ActivityState> emit) async {
     emit(state.copyWith(isShowProgress: true, formStatus: FormSubmitting()));
-    final objectResult = await repository.removeActivityDiary(event.id);
+    ObjectResult objectResult;
+    if(event.action.compareTo('sell') == 0 || event.action.compareTo('purchase') == 0) {
+      objectResult = await repository.removeActivityTransaction(event.id);
+    } else{
+      objectResult = await repository.removeActivityDiary(event.id);
+    }
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
       add(GetListActivityEvent(

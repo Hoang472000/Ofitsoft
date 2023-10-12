@@ -235,7 +235,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           GetListActivityEvent(
                                               widget.seasonFarmId,
                                               widget.action,
-                                              result[1], [], []));
+                                              result[1], widget.listActivityDiary, []));
                                     }
                                   //}
                                 },

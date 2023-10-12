@@ -1,3 +1,5 @@
+import '../../../utils/utils.dart';
+
 class ActivityTransaction {
   int? id;
   int? seasonFarmId;
@@ -45,7 +47,7 @@ class ActivityTransaction {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;
     data['season_farm_id'] = seasonFarmId;
-    data['transaction_date'] = transactionDate;
+    data['transaction_date'] = Utils.stringToFormattedString(transactionDate ?? "");
     data['quantity'] = quantity;
     data['quantity_unit_id'] = quantityUnitId;
     data['quantity_unit_name'] = quantityUnitName;

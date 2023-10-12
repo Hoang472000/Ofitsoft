@@ -104,4 +104,8 @@ abstract class Repository {
   Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector);
 
   Future<ObjectResult> deleteReport(int id);
+
+  Future<ObjectResult> updateActivityTransaction(ActivityTransaction transaction);
+
+  Future<ObjectResult> removeActivityTransaction(int id);
 }

@@ -37,7 +37,7 @@ class ApiConst {
   //api get, add 1 activity diary SELL, PURCHASE, remove, edit
   static const String getListActivityTransaction = "/get/diary_transaction/";
   static const String addActivityTransaction = "/add/diary_transaction/";
-  //static const String removeActivityDiary = "/delete/item/diary_farmer/";
+  static const String removeActivityTransaction = "/delete/diary_transaction/";
   static const String updateActivityTransaction = "/edit/diary_transaction/";
 
   //api get, add 1 activity REPORT, remove, edit

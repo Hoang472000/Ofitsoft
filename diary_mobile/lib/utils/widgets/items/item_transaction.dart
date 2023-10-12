@@ -138,7 +138,9 @@ class _ItemTransactionState extends State<ItemTransaction> {
                               DiaLogManager.displayDialog(context, "",
                                   "Bạn có muốn xóa hoạt động này không.", () {
                                 Get.back();
-                                if (widget.action.compareTo('activity') == 0) {
+                                if (widget.action.compareTo('activity') == 0 /*||
+                                    widget.action.compareTo('sell') == 0 ||
+                                    widget.action.compareTo('purchase') == 0*/) {
                                   widget.callbackDelete();
                                 } else {
                                   DiaLogManager.showDialogSuccess(context,
