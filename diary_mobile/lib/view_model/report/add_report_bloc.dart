@@ -158,10 +158,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else {
+              } else if (result.responseCode == StatusConst.code01){
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed(result.message)));
+                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
             } else{
               print("HoangCV:  uplaods asdsaj 1121");
@@ -176,16 +176,16 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     list_id_suggested: [],
                     is_answer_exist: true,
                 );
-              ObjectResult result = await repository.uploadQuestion(questionUpload);
-              if (result.responseCode == StatusConst.code00) {
+              ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
+              if (objectResult.responseCode == StatusConst.code00) {
                 emit(state.copyWith(
                     isShowProgress: false,
-                    reportId: result.response is int ? result.response : null,
+                    reportId: objectResult.response is int ? objectResult.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else {
+              } else if (objectResult.responseCode == StatusConst.code01){
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed(result.message)));
+                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
             }
           }else if(state.reportId == null && event.id == 1){
@@ -214,10 +214,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
                   formStatus: SubmissionSuccess(/*success: result.message*/)));
-            } else {
+            } else if (result.responseCode == StatusConst.code01){
               emit(state.copyWith(
                   isShowProgress: false,
-                  formStatus: SubmissionFailed(result.message)));
+                  formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
             }
         }
         }
@@ -286,9 +286,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
                   formStatus: SubmissionSuccess(/*success: result.message*/)));
-            } else {
+            } else if (result.responseCode == StatusConst.code01){
               emit(state.copyWith(
-                  isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+                  isShowProgress: false,
+                  formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
             }
           }
         }
@@ -1000,10 +1001,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1057,10 +1058,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1088,9 +1089,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else {
+      }else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
-            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1669,9 +1671,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(success: result.message)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
-            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }

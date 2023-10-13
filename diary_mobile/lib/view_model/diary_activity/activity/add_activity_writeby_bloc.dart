@@ -509,15 +509,19 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
       );
       print("HoangCV: activityDiary: ${activityDiary.toJson()}");
       //"is_shown": true,
-      ObjectResult listObject = await repository.addManyActivityDiary(activityDiary);
-      if(listObject.responseCode == StatusConst.code00){
+      ObjectResult objectResult = await repository.addManyActivityDiary(activityDiary);
+      if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: listObject.message)));
-      } else{
+            formStatus: SubmissionSuccess(success: "Ghi hộ hoạt động thành công.")));
+      }else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(listObject.message)));
+            formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
+      } else if (objectResult.responseCode == StatusConst.code01){
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }

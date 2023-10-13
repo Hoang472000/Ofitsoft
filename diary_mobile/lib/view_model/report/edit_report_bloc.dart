@@ -204,10 +204,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else {
+              } else if (result.responseCode == StatusConst.code01){
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed(result.message)));
+                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
             } else{
               print("HoangCV:  uplaods asdsaj 1121");
@@ -228,10 +228,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else {
+              } else if (result.responseCode == StatusConst.code01){
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed(result.message)));
+                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
             }
           }
@@ -299,9 +299,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
                   formStatus: SubmissionSuccess(/*success: result.message*/)));
-            } else {
+            } else if (result.responseCode == StatusConst.code01){
               emit(state.copyWith(
-                  isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+                  isShowProgress: false,
+                  formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
             }
           }
         }
@@ -1045,10 +1046,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1103,10 +1104,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1135,9 +1136,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess()));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
-            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -1737,9 +1739,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(success: result.message)));
-      } else {
+      } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
-            isShowProgress: false, formStatus: SubmissionFailed(result.message)));
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }

@@ -33,10 +33,10 @@ class ChangePasswordBloc
     var objectResult = await repository.changePassword(event.passwordOld, event.passwordNew);
     if (objectResult.responseCode == StatusConst.code00) {
       emit(state.copyWith(
-          formStatus: ChangePasswordSuccess(objectResult.message)));
+          formStatus: ChangePasswordSuccess("Thay đổi mật khẩu thành công.")));
     } else if (objectResult.responseCode == StatusConst.code01) {
       emit(state.copyWith(
-          formStatus: ChangePasswordFailed(objectResult.message)));
+          formStatus: ChangePasswordFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại mật khẩu")));
     }
 /*    emit(state.copyWith(
         formStatus: ChangePasswordSuccess(""),

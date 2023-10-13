@@ -162,7 +162,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                       ),
                                       child: FloatingActionButton(
                                         backgroundColor: Colors.transparent,
-                                        child: Icon(Icons.monetization_on),
+                                        child: Icon(Icons.add),
                                           onPressed: () {
                                             callback(true);
                                           }),
@@ -372,7 +372,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   Visibility(
                     visible: !visible,
                     child: floatingActionButton(
-                        "Ghi mua bán", Icons.monetization_on,
+                        "Ghi mua bán", Icons.add,
                           (widget.diary.status??'').compareTo("done") == 0 ||
                               (widget.diary.status??'').compareTo("cancelled") == 0 ?
                               () {

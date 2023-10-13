@@ -65,7 +65,7 @@ class RepositoryImpl extends Repository {
     final Map<String, Object> object1 = {
       //'login': "managervis2",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
-      'login': "adminvisimex",
+      'login': "0385672922",
       'password': "Abcd@1234",
     };
     var headers = {'Content-Type': 'application/json'};
@@ -75,7 +75,7 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.login,
             //method: HttpMethod.POST,
-            body: ObjectData(params: object1, isLogin: true),
+            body: ObjectData(params: object, isLogin: true),
             header: headers),
         isLogin: true);
 
@@ -103,6 +103,13 @@ class RepositoryImpl extends Repository {
       getListUnits(9);
       getListUnits(8);
       getListTools();
+    }
+    else if (objectResult.responseCode == StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Đăng nhập thất bại! \n Tên đăng nhập hoặc mật khẩu không chính xác.",
+      );
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -379,6 +386,12 @@ class RepositoryImpl extends Repository {
       Diary list = Diary.fromJson(objectResult.response, userId, action);
       DiaryDB.instance.insertListDiary([list]);
       //return list;
+    }else if (objectResult.responseCode == StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
     }
    /* else {
       DiaLogManager.showDialogHTTPError(
@@ -441,6 +454,12 @@ class RepositoryImpl extends Repository {
         resultStatus: objectResult.status,
         resultObject: objectResult.message,
       );*/
+    }else if (objectResult.responseCode == StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
     }
     else{
       DiaLogManager.showDialogHTTPError(
@@ -464,8 +483,13 @@ class RepositoryImpl extends Repository {
     print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
-    }
-    else {
+    }else if (objectResult.responseCode == StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
+    }else {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
@@ -538,14 +562,20 @@ class RepositoryImpl extends Repository {
             method: HttpMethod.GET,
             body: ObjectData(token: token, params: userInfo.toJson())));
     print("HoangCV: updateUserInfo response: ${objectResult.response}: ${objectResult.isOK}");
-    DiaLogManager.showDialogHTTPError(
-      status: objectResult.status,
-      resultStatus: objectResult.status,
-      resultObject: objectResult.message,
-    );
     if (objectResult.responseCode == StatusConst.code00) {
       //UserInfo list = UserInfo.fromJson(objectResult.response);
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Cập nhật thông tin tài khoản thành công.",
+      );
       return objectResult;
+    }else if (objectResult.responseCode == StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
     }
     else {
 
@@ -674,7 +704,7 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
       DiaryDB.instance.insertListActivityDiary([diary]);
     }*/
-    else{
+    else if (objectResult.responseCode != StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
@@ -697,7 +727,7 @@ class RepositoryImpl extends Repository {
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
     }
-    else {
+    else if (objectResult.responseCode != StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
@@ -962,7 +992,7 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
       DiaryDB.instance.insertListActivityDiary([diary]);
     }*/
-    else{
+    else if (objectResult.responseCode != StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
@@ -1215,7 +1245,7 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
       DiaryDB.instance.insertListActivityDiary([diary]);
     }*/
-    else{
+    else if (objectResult.responseCode != StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,

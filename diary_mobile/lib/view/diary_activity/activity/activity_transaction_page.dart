@@ -105,7 +105,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                       widget.action.compareTo("sell") == 0
                           ? "Ghi bán hàng"
                           : "Ghi thu mua",
-                      Icons.monetization_on,
+                      Icons.add,
                       (widget.diary.status ?? '').compareTo("done") == 0 ||
                               (widget.diary.status ?? '')
                                       .compareTo("cancelled") ==

@@ -507,11 +507,14 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       if (objectResult.responseCode == StatusConst.code00) {
         //_changeViewEdit(emit);
       }
-      if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code06) {
-        //_changeViewEdit(emit);
+      if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: objectResult.message)));
+            formStatus: SubmissionSuccess(success: "Thêm hoạt động thành công.")));
+      }else if (objectResult.responseCode == StatusConst.code06) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
       } else if (objectResult.responseCode == StatusConst.code01) {
         //_changeViewEdit(emit);
         emit(state.copyWith(

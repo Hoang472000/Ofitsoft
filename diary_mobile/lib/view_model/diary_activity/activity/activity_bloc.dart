@@ -131,7 +131,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
           state.seasonFarmId ?? 0, event.action, false, [], []));
       emit(state.copyWith(
           isShowProgress: false,
-          formStatus: SubmissionSuccess(success: objectResult.message)));
+          formStatus: SubmissionSuccess(success: "Xóa hoạt động thành công.")));
     } else if (objectResult.responseCode == StatusConst.code01) {
       emit(state.copyWith(
           isShowProgress: false,

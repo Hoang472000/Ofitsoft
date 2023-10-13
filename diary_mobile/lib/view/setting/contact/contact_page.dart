@@ -125,7 +125,7 @@ class _ContactPageState extends State<ContactPage> {
                                           color: Colors.transparent,
                                           child: InkWell(
                                             onTap: () {
-                                              Utils.launchPhoneUrl("+84 877055568");
+                                              Utils.launchPhoneUrl("+84 989426911");
                                             },
                                             child: Column(
                                               crossAxisAlignment:
@@ -144,7 +144,7 @@ class _ContactPageState extends State<ContactPage> {
                                                       top: 5.0,
                                                       bottom: 10),
                                                   child: Text(
-                                                    "+84 877055568",
+                                                    "+84 989426911",
                                                     style: StyleOfit
                                                         .textStyleFW400(
                                                         AppColor.black22,

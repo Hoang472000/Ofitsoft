@@ -330,16 +330,20 @@ class AddActivityPurchaseBloc
         person: state.buyerController!.text,
         isPurchase: true,
       );
-      ObjectResult result =
+      ObjectResult objectResult =
           await repository.addActivityTransaction(activityTransaction);
-      if (result.responseCode == StatusConst.code00) {
+      if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: result.message)));
-      } else {
+            formStatus: SubmissionSuccess(success: "Ghi hộ hoạt động thành công.")));
+      }else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
+      } else if (objectResult.responseCode == StatusConst.code01){
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }

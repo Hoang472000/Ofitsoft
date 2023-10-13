@@ -311,11 +311,11 @@ class AccountInformationBloc
         sharedPreferences.setString(SharedPreferencesKey.imageProfile, userInfo.mediaContent??"");
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: objectResult.message), userInfo: userInfo));
+            formStatus: SubmissionSuccess(success: "Thay đổi thông tin tài khoàn thành công."), userInfo: userInfo));
       } else if (objectResult.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(objectResult.message)));
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
