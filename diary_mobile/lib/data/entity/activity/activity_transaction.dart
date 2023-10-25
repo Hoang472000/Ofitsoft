@@ -3,6 +3,7 @@ import '../../../utils/utils.dart';
 class ActivityTransaction {
   int? id;
   int? seasonFarmId;
+  String? seasonFarmName;
   String? transactionDate;
   double? quantity;
   int? quantityUnitId;
@@ -16,6 +17,7 @@ class ActivityTransaction {
   ActivityTransaction({
     this.id,
     this.seasonFarmId,
+    this.seasonFarmName,
     this.transactionDate,
     this.quantity,
     this.quantityUnitId,
@@ -31,6 +33,7 @@ class ActivityTransaction {
     return ActivityTransaction(
       id: json['id'] ?? -1,
       seasonFarmId: json['season_farm_id'] ?? -1,
+      seasonFarmName: json['season_farm_name'] ?? '',
       transactionDate: json['transaction_date'] ?? '',
       quantity: json['quantity'] ?? 0,
       quantityUnitId: json['quantity_unit_id'] ?? -1,
@@ -47,6 +50,7 @@ class ActivityTransaction {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = id;
     data['season_farm_id'] = seasonFarmId;
+    data['season_farm_name'] = seasonFarmName;
     data['transaction_date'] = Utils.stringToFormattedString(transactionDate ?? "");
     data['quantity'] = quantity;
     data['quantity_unit_id'] = quantityUnitId;

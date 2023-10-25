@@ -46,144 +46,14 @@ class DetailActivityTransactionBloc
 
   bool edit = false;
 
-  void _changeViewDetail(Emitter<DetailActivityTransactionState> emitter) {
-    List<InputRegisterModel> list = [];
-    List<InputRegisterModel> listCC = [];
-    List<InputRegisterModel> listVT = [];
-    List<InputRegisterModel> listArea = [];
-    list.add(InputRegisterModel<Activity, Activity>(
-        title: "Tên công việc",
-        isCompulsory: true,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: state.listActivity,
-        controller: state.nameController,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageActivityFarm));
-
-    list.add(InputRegisterModel(
-        title: "Chi tiết công việc",
-        isCompulsory: false,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.Non,
-        typeInput: TextInputType.text,
-        controller: state.moTaController,
-        image: ImageAsset.imageFile));
-
-/*    list.add(InputRegisterModel(
-      title: "Người liên quan",
-      isCompulsory: false,
-      maxLengthTextInput: 200,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.text,
-      controller: state.peopleController,
-      image: ImageAsset.imageMan,
-    ));*/
-
-    list.add(InputRegisterModel<String, DateTime>(
-        title: "Thời gian thực hiện",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        controller: state.startTimeController,
-        image: ImageAsset.imageCalendarBegin,
-        icon: Icons.calendar_today));
-
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Non,
-        controller: state.endTimeController,
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
-
-    listArea.add(InputRegisterModel(
-      title: "Diện tích",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      typeInput: TextInputType.number,
-      controller: state.areaController,
-      image: ImageAsset.imageManagement,
-    ));
-
-    listArea.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitArea,
-      typeInputEnum: TypeInputEnum.dmucItem,
-      controller: state.donViController,
-    ));
-
-    listVT.add(InputRegisterModel<MaterialEntity, MaterialEntity>(
-        title: "Vật tư liên quan",
-        isCompulsory: false,
-        type: TypeInputRegister.Non,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        listValue: state.listMaterial,
-        image: ImageAsset.imageGardening));
-
-    listCC.add(InputRegisterModel<Tool, Tool>(
-      title: "Công cụ sử dụng",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listTool,
-      typeInputEnum: TypeInputEnum.dmucItem,
-      image: ImageAsset.imageTools,
-    ));
-
-    listVT.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    listCC.add(InputRegisterModel(
-      title: "Đơn vị",
-      isCompulsory: false,
-      type: TypeInputRegister.Non,
-      icon: Icons.arrow_drop_down,
-      positionSelected: -1,
-      listValue: state.listUnitAmount,
-      typeInputEnum: TypeInputEnum.dmucItem,
-    ));
-
-    emitter(state.copyWith(
-        formStatus: const InitialFormStatus(),
-        listWidget: list,
-        listWidgetVT: listVT,
-        listWidgetCC: listCC,
-        listWidgetArea: listArea));
-  }
-
   void _initViewDetail(Emitter<DetailActivityTransactionState> emitter) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listYield = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-/*    list.add(InputRegisterModel<String, String>(
-        title: "Tên công ty",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: state.listActivity,
-        //typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageCompany));*/
+
     list.add(InputRegisterModel(
-        title: "Người thực hiện",
+        title: "Người mua",
         isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.Non,
@@ -233,12 +103,13 @@ class DetailActivityTransactionBloc
 
     List<InputRegisterModel> inputDonGia = [
       InputRegisterModel(
-        title: " ",
+        title: "Đơn giá                   ",
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.Non,
         typeInput: TextInputType.number,
         controller: state.donGiaController,
+        isFormatText: true,
         noUnder: true,
         noBorder: true,
 /*        noBorder: true,
@@ -261,31 +132,14 @@ class DetailActivityTransactionBloc
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
 
-/*    list.add(InputRegisterModel<String, String>(
-        title: "Tên công ty",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: state.listActivity,
-        //typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageCompany));*/
     list.add(InputRegisterModel(
-        title: "Người thực hiện ",
+        title: "Người mua",
         isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.text,
         controller: state.buyerController,
         image: ImageAsset.imageActivityFarm));
-/*    list.add(InputRegisterModel(
-        title: "Chi tiết mua bán",
-        isCompulsory: false,
-        maxLengthTextInput: 2000,
-        type: TypeInputRegister.TextField,
-        typeInput: TextInputType.text,
-        controller: state.moTaController,
-        image: ImageAsset.imageFile));*/
 
     list.add(InputRegisterModel<String, DateTime>(
         title: "Thời gian",
@@ -330,12 +184,13 @@ class DetailActivityTransactionBloc
 
     List<InputRegisterModel> inputDonGia = [
       InputRegisterModel(
-        title: " ",
+        title: "Đơn giá                   ",
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.number,
         controller: state.donGiaController,
+        isFormatText: true,
         noUnder: true,
         noBorder: true,
       )
@@ -397,11 +252,11 @@ class DetailActivityTransactionBloc
         listUnitArea: listUnitArea,
         listUnitYield: listUnitYield,
       buyerController:
-      TextEditingController(text: "${event.diary.farmerName ?? 0}"),
+      TextEditingController(text: "${detailActivity.person}"),
       productController:
-      TextEditingController(text: "${event.diary.productName}"),
+      TextEditingController(text: "${detailActivity.productName}"),
       donGiaController: TextEditingController(
-          text: "${detailActivity.unitPrice}"),
+          text: Utils.convertNumber(detailActivity.unitPrice??0)),
       donViController: TextEditingController(
           text: "${detailActivity.quantityUnitName}"),
       soLuongController:
@@ -421,7 +276,7 @@ class DetailActivityTransactionBloc
         state.listWidget[i].controller = state.nameController;
         //state.listWidget[i].valueSelected = state.listActivity[index];
       }
-      if (state.listWidget[i].title.compareTo("Người thực hiện") == 0) {
+      if (state.listWidget[i].title.compareTo("Người mua") == 0) {
         state.listWidget[i].controller = state.buyerController;
       }
       if (state.listWidget[i].title.compareTo("Thời gian") == 0) {
@@ -440,7 +295,7 @@ class DetailActivityTransactionBloc
       }
     }
     for (int i = 0; i < state.inputDonGia.length; i++) {
-      if (state.inputDonGia[i].title.compareTo(" ") == 0) {
+      if (state.inputDonGia[i].title.compareTo("Đơn giá                   ") == 0) {
         state.inputDonGia[i].controller = state.donGiaController;
       }
     }
@@ -508,12 +363,7 @@ class DetailActivityTransactionBloc
         event.list[event.index].listValue[result];
         event.list[event.index].error = null;
         // });
-    /*    if (event.list[event.index].title.compareTo("Tên công ty") == 0) {
-          emit(state.copyWith(
-              companyController: TextEditingController(
-                  text: event.list[event.index].valueSelected),
-              indexActivity: result));
-        }*/
+
         if (event.list[event.index].title.compareTo("Chi tiết mua bán") == 0) {
           emit(state.copyWith(
             moTaController: event.list[event.index].controller,
@@ -537,7 +387,7 @@ class DetailActivityTransactionBloc
               total: total));
           state.listWidgetArea[0].controller = state.soLuongController;
         }
-        if (event.list[event.index].title.compareTo("Người thực hiện") == 0) {
+        if (event.list[event.index].title.compareTo("Người mua") == 0) {
           emit(state.copyWith(
             buyerController: event.list[event.index].controller,
           ));
@@ -560,13 +410,13 @@ class DetailActivityTransactionBloc
       emit(state.copyWith(
           soLuongController: TextEditingController(text: event.text),
           total: total));
-    } else if (event.inputRegisterModel.title.compareTo(" ") == 0) {
+    } else if (event.inputRegisterModel.title.compareTo("Đơn giá                   ") == 0) {
       print(
           "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
       event.inputRegisterModel.error = null;
       double total = 0;
       total = double.parse(state.soLuongController!.text) *
-          double.parse(event.text);
+          double.parse(event.text.replaceAll('.', ''));
       emit(state.copyWith(
           donGiaController: TextEditingController(text: event.text),
           total: total));
@@ -600,10 +450,12 @@ class DetailActivityTransactionBloc
       emit(state.copyWith(formStatus: FormSubmitting()));
       ActivityTransaction activityTransaction = ActivityTransaction(
         id: state.detailActivity!.id,
+        seasonFarmId: state.detailActivity!.seasonFarmId,
+        productId: state.detailActivity!.productId,
         transactionDate: state.startTimeController!.text,
         quantity: Utils.convertStringToDouble(state.soLuongController!.text),
         quantityUnitId: state.listUnitYield[state.indexYield].id,
-        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text),
+        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text.replaceAll('.', '')),
         person: state.buyerController!.text,
       );
       ObjectResult objectResult =
@@ -611,7 +463,7 @@ class DetailActivityTransactionBloc
       if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: "Ghi hộ hoạt động thành công.")));
+            formStatus: SubmissionSuccess(success: "Ghi hoạt động thành công.")));
       }else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,

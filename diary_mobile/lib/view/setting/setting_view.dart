@@ -22,6 +22,7 @@ import '../login/login_page.dart';
 import 'account/account_information_page.dart';
 import 'change_password/change_password_page.dart';
 import 'contact/contact_page.dart';
+import 'mananger/list_pdf_page.dart';
 
 ///Bkav HoangCV: GD tai khoan
 class SettingView extends StatefulWidget {
@@ -147,7 +148,7 @@ class _SettingViewState extends State<SettingView> {
                         }
                   }, icon: IconAsset.icPersonSetting),
                 ),
-                Container(
+                /*Container(
                   padding: const EdgeInsets.only(top: 0),
                   child: itemAccount(context, text: "Tra cứu mùa vụ",
                       voidCallback: () {
@@ -162,7 +163,7 @@ class _SettingViewState extends State<SettingView> {
                         DiaLogManager.showDialogDevelopingFeature();
                     /*                Navigator.push(context, HistoryActivityPage.route());*/
                   }, icon: IconAsset.icHistoryActivity),
-                ),
+                ),*/
                 Container(
                   padding: const EdgeInsets.only(top: 0),
                   child: itemAccount(context,
@@ -173,7 +174,7 @@ class _SettingViewState extends State<SettingView> {
 
                 itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/HDSDAppQLVT"));
+                      Navigator.push(context, ListPDFPage.route());
                       //DiaLogManager.showDialogDevelopingFeature();
                   /*          Navigator.push(context, UserManualPage.route());*/
                 }, icon: IconAsset.icUserManual),

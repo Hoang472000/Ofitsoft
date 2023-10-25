@@ -22,15 +22,14 @@ import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/edit_report_bloc.dart';
 
 class EditReportViewPage extends StatefulWidget {
-  EditReportViewPage({super.key, required this.diary, required this.id});
-  final Diary diary;
+  EditReportViewPage({super.key, required this.id});
   final int id;
   @override
   _EditReportViewPageState createState() => _EditReportViewPageState();
 
-  static Route route(Diary diary, int id) {
+  static Route route(int id) {
     return Utils.pageRouteBuilder(
-        EditReportViewPage(diary: diary, id: id,
+        EditReportViewPage( id: id,
         ),
         true);
   }
@@ -49,7 +48,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => EditReportBloc(context.read<Repository>())
-        ..add(GetEditReportEvent(widget.diary, widget.id)),
+        ..add(GetEditReportEvent(widget.id)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -1655,14 +1654,55 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Container(
-          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width* (list.length == 1 ? 1.1 : 1.3 )),
+          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width* checkTable(list)),
           child: Column(
-              children: listTable1
-          ),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+                children: listTable1
+            ),
+            isTable(list) == true ? TextButton(
+              style: TextButton.styleFrom(
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () {
+                context.read<EditReportBloc>().add(AddTableRowEvent(list, listTable.indexWhere((element) =>
+                element.id == list.first.id
+                )));
+              },
+              child: const Icon(
+                Icons.add_circle_outline,
+                color: AppColor.main,
+              ),
+            ): SizedBox(),
+          ],
+        ),
         ),
       ),
     );
   }
+
+  double checkTable(List<Question> list){
+    if(list.length == 1 && list.first.questionType == "table"){
+      if(list.first.suggestedAnswerIds.length > 4){
+        return 1.5;
+      } else if(list.first.suggestedAnswerIds.length > 2) {
+        return 1.3;
+      } else{
+        return 1.0;
+      }
+    } else if(list.length == 1 && list.first.questionType != "table"){
+      return 1.1;
+    }
+    return 1.3;
+  }
+  bool isTable(List<Question> list){
+    if(list.length == 1 && list.first.questionType == "table"){
+      return true;
+    }
+    return false;
+  }
+
 
   Table tableForm2TextField(String title, bool isError, int id, List<Select> listSelected, List<Controller> listController, BuildContext context, FarmerInspectorUpload farmerInspector, {bool isFirst = false}){
     return Table(

@@ -86,7 +86,7 @@ class ContainerInputWidget extends StatelessWidget {
                   inputRegisterModel.focusNode.requestFocus();
                   break;
                 case TypeInputRegister.TextFieldMoney:
-                  inputRegisterModel.focusNode.requestFocus();
+                  //inputRegisterModel.focusNode.requestFocus();
                   break;
                 case TypeInputRegister.TextFieldRemark:
                   inputRegisterModel.focusNode.requestFocus();
@@ -357,13 +357,14 @@ class ContainerInputWidget extends StatelessWidget {
                                   .length <=
                               inputRegisterModel.maxLengthTextInput! &&
                           inputRegisterModel.isFormatText) {
+
+                        String str = Utils.convertNumber(double.parse(inputRegisterModel.controller!
+                            .text.replaceAll('.', '')));
+
                         inputRegisterModel.controller!.value = TextEditingValue(
-                          text: Utils.formatCurrency(
-                              inputRegisterModel.controller!.text),
+                          text: str,
                           selection: TextSelection.collapsed(
-                              offset: Utils.formatCurrency(
-                                      inputRegisterModel.controller!.text)
-                                  .length),
+                              offset: str.length),
                         );
                       }
                       // print(inputRegisterModel.controller.text);
@@ -428,6 +429,74 @@ class ContainerInputWidget extends StatelessWidget {
                 : Container()
           ],
         );
+        break;
+
+    // các text container bình thường show số tiền và loại tiền input có 2 tham số các nhau bằng /
+
+// các input dạng có nhập bình thường nhưng có thêm icon đằng sau
+
+
+// các input dạng Nhập tiền
+      case TypeInputRegister.TextFieldMoney:
+        return TextField(
+          keyboardType: TextInputType.number,
+          controller: inputRegisterModel.controller,
+          textAlign: TextAlign.right,
+          autofocus: false,
+          // onTap: () {
+          //   inputRegisterModel.controller.selection =
+          //       new TextSelection.fromPosition(new TextPosition(
+          //           offset: inputRegisterModel.controller.text.length));
+          // },
+          onChanged: (newText) {
+            try {
+              setTrailingSpaceWhenInput(inputRegisterModel);
+              if (inputRegisterModel.controller!
+                  .text
+                  .replaceAll('\D', '')
+                  .length <=
+                  inputRegisterModel.maxLengthTextInput! &&
+                  inputRegisterModel.isFormatText) {
+
+                String str = Utils.convertNumber(double.parse(inputRegisterModel.controller!
+                    .text.replaceAll('.', '')));
+      
+                inputRegisterModel.controller!.value = TextEditingValue(
+                  text: inputRegisterModel.isDecimalCurrency
+                      ? Utils.formatDecimalCurrency(
+                      inputRegisterModel.controller!.text, false)
+                      : str,
+                  selection: TextSelection.collapsed(
+                      offset: inputRegisterModel.isDecimalCurrency
+                          ? Utils
+                          .formatDecimalCurrency(
+                          inputRegisterModel.controller!.text, false)
+                          .length
+                          :str.length),
+                );
+              }
+            } catch(e){
+              print("Lỗi money: ${e}");
+            }
+            // onChangeText(newText);
+          },
+          onSubmitted: onSubmittedText,
+          //onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
+          style: TextStyle(
+              color: inputRegisterModel.unit == null
+                  ? Colors.black
+                  : Color(0xFFA3A3A3),
+              fontSize: 14),
+          decoration: InputDecoration(
+            contentPadding:
+            EdgeInsets.symmetric(vertical: 6, horizontal: 0),
+            isDense: true,
+            border: InputBorder.none,
+            counterText: '',
+          ),
+          maxLength: inputRegisterModel.maxLengthTextInput,
+        );
+
         break;
       case TypeInputRegister.Balance:
         return Container();
@@ -582,66 +651,6 @@ class ContainerInputWidget extends StatelessWidget {
             maxLines: 2,
           );
         }
-        break;
-// các text container bình thường show số tiền và loại tiền input có 2 tham số các nhau bằng /
-
-// các input dạng có nhập bình thường nhưng có thêm icon đằng sau
-
-
-// các input dạng Nhập tiền
-      case TypeInputRegister.TextFieldMoney:
-        return TextField(
-          keyboardType: TextInputType.number,
-          controller: inputRegisterModel.controller,
-          textAlign: TextAlign.right,
-          autofocus: true,
-          // onTap: () {
-          //   inputRegisterModel.controller.selection =
-          //       new TextSelection.fromPosition(new TextPosition(
-          //           offset: inputRegisterModel.controller.text.length));
-          // },
-          onChanged: (newText) {
-            setTrailingSpaceWhenInput(inputRegisterModel);
-            if (inputRegisterModel.controller!.text
-                        .replaceAll('\D', '')
-                        .length <=
-                    inputRegisterModel.maxLengthTextInput! &&
-                inputRegisterModel.isFormatText) {
-              inputRegisterModel.controller!.value = TextEditingValue(
-                text: inputRegisterModel.isDecimalCurrency
-                    ? Utils.formatDecimalCurrency(
-                        inputRegisterModel.controller!.text, false)
-                    : Utils.formatCurrency(inputRegisterModel.controller!.text),
-                selection: TextSelection.collapsed(
-                    offset: inputRegisterModel.isDecimalCurrency
-                        ? Utils.formatDecimalCurrency(
-                                inputRegisterModel.controller!.text, false)
-                            .length
-                        : Utils.formatCurrency(
-                                inputRegisterModel.controller!.text)
-                            .length),
-              );
-            }
-
-            // onChangeText(newText);
-          },
-          onSubmitted: onSubmittedText,
-          onEditingComplete: onEditingComplete!(inputRegisterModel.controller!=null? inputRegisterModel.controller!.text : ''),
-          style: TextStyle(
-              color: inputRegisterModel.unit == null
-                  ? Colors.black
-                  : Color(0xFFA3A3A3),
-              fontSize: 14),
-          decoration: InputDecoration(
-            contentPadding:
-                EdgeInsets.symmetric(vertical: 6, horizontal: 0),
-            isDense: true,
-            border: InputBorder.none,
-            counterText: '',
-          ),
-          maxLength: inputRegisterModel.maxLengthTextInput,
-        );
-
         break;
 
       // các input dạng nhiều dong như nội dung

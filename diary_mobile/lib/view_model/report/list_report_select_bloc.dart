@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/repository.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_select.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
 import '../bloc_event.dart';
@@ -35,7 +36,7 @@ class ListReportSelectBloc extends Bloc<ListReportSelectEvent, ListReportSelectS
       emitter(state.copyWith(
           isShowProgress: false,
           formStatus: const InitialFormStatus(),
-          listReport: event.list));
+          listReport: event.listSelect));
     }
   }
 
@@ -47,14 +48,13 @@ class ListReportSelectEvent extends BlocEvent {
 }
 
 class GetListReportSelectEvent extends ListReportSelectEvent {
-  final List<Report> list;
-  final List<Report> listSelect;
+  final List<ReportSelect> listSelect;
   final bool checkUpdate;
 
-  GetListReportSelectEvent(this.list, this.listSelect, {this.checkUpdate = false});
+  GetListReportSelectEvent( this.listSelect, {this.checkUpdate = false});
 
   @override
-  List<Object?> get props => [list, listSelect, checkUpdate];
+  List<Object?> get props => [ listSelect, checkUpdate];
 }
 
 
@@ -66,7 +66,7 @@ class ListReportSelectState extends BlocState {
     formStatus,
     isShowProgress,
   ];
-  final List<Report> listReport;
+  final List<ReportSelect> listReport;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
 
@@ -79,7 +79,7 @@ class ListReportSelectState extends BlocState {
   });
 
   ListReportSelectState copyWith({
-    List<Report>? listReport,
+    List<ReportSelect>? listReport,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
   }) {

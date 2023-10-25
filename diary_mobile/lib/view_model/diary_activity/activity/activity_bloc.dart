@@ -70,18 +70,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             listActivityTransaction: listActivityTransaction,
             listCallbackTransaction: listCallbackTransaction,
             listDiaryActivity: listDiaryActivity));
-      /*} else {
-        listActivityTransaction.addAll(event.listTransaction);
-        listActivityTransaction.removeWhere((element) => element.isPurchase == true);
-        emitter(state.copyWith(
-            isShowProgress: false,
-            listActivityTransaction: listActivityTransaction,
-            listDiaryActivity: listDiaryActivity));
-      }*/
     } else if (event.action.compareTo("purchase") == 0) {
-      listDiaryActivity.addAll(event.list);
-      listDiaryActivity.removeWhere((element) => element.harvesting == false);
-      /*if (event.harvesting) {*/
         emitter(state.copyWith(
             isShowProgress: true));
         listActivityTransaction
@@ -92,8 +81,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
         emitter(state.copyWith(
             isShowProgress: false,
             listActivityTransaction: listActivityTransaction,
-            listCallbackTransaction: listCallbackTransaction,
-            listDiaryActivity: listDiaryActivity));
+            listCallbackTransaction: listCallbackTransaction,));
    /*`   } else {
         listActivityTransaction.addAll(event.listTransaction);
         listActivityTransaction.removeWhere((element) => element.isPurchase == false);

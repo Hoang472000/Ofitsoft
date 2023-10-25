@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/entity/report/report.dart';
+import '../../../data/entity/report/report_select.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
@@ -13,7 +14,7 @@ import '../../../utils/utils.dart';
 import '../dialog/dialog_manager.dart';
 
 class ItemReportSelect extends StatefulWidget {
-  final Report report;
+  final ReportSelect report;
   final VoidCallback callbackChooseItem;
 
   const ItemReportSelect({

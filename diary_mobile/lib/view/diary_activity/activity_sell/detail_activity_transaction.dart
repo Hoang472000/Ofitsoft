@@ -28,11 +28,11 @@ class DetailActivityTransactionPage extends StatefulWidget {
   @override
   _DetailActivityTransactionPageState createState() => _DetailActivityTransactionPageState();
 
-  static Route route(ActivityTransaction activityDiary, Diary diary, String action) {
+  static Route route(ActivityTransaction activityDiary, String action, {Diary? diary,}) {
     return Utils.pageRouteBuilder(
         DetailActivityTransactionPage(
             activityDiary: activityDiary,
-            diary: diary,
+            diary: diary ?? Diary(),
             action: action
         ),
         true);
@@ -218,70 +218,40 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                                       MainAxisAlignment.spaceBetween,
                                       children: [
                                         Expanded(
-                                          child: Text(
-                                            "Đơn giá",
-                                            style: StyleOfit.textStyleFW500(
-                                                AppColor.gray57, 16),
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        Row(
-                                          children: [
-                                            SizedBox(
-                                              width: 120,
-                                              height: 40,
-                                              child: ListView.builder(
-                                                padding: EdgeInsets.zero,
-                                                physics: const NeverScrollableScrollPhysics(),
-                                                shrinkWrap: true,
-                                                itemCount: state.inputDonGia.length,
-                                                itemBuilder: (_, index) => ContainerInputWidget(
-                                                  contextParent: context,
-                                                  inputRegisterModel: state.inputDonGia[index],
-                                                  onClick: () {},
-                                                  onMutiChoice: (id) {},
-                                                  onChangeText: (text) {
-                                                    blocContext.read<DetailActivityTransactionBloc>().add(
+                                          child: Row(
+                                            children: [
+                                              Expanded(
+                                                child: ListView.builder(
+                                                  padding: EdgeInsets.zero,
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  shrinkWrap: true,
+                                                  itemCount: state.inputDonGia.length,
+                                                  itemBuilder: (_, index) => ContainerInputWidget(
+                                                    titleStyle: StyleOfit.textStyleFW500(AppColor.black22, 16),
+                                                    contextParent: context,
+                                                    inputRegisterModel: state.inputDonGia[index],
+                                                    onClick: () {},
+                                                    onMutiChoice: (id) {},
+                                                    onChangeText: (text) {
+                                                      blocContext.read<DetailActivityTransactionBloc>().add(
+                                                          SaveValueTextFieldEvent(
+                                                              text, state.inputDonGia[index], index));
+                                                    },
+                                                    onEditingComplete: (text) {
+                                                      /*    blocContext.read<DetailActivityTransactionBloc>().add(
                                                         SaveValueTextFieldEvent(
-                                                            text, state.inputDonGia[index], index));
-                                                  },
-                                                  onEditingComplete: (text) {
-                                                    blocContext.read<DetailActivityTransactionBloc>().add(
-                                                        SaveValueTextFieldEvent(
-                                                            text, state.inputDonGia[index], index));
-                                                  },
+                                                            text, state.inputDonGia[index], index));*/
+                                                    },
+                                                  ),
                                                 ),
                                               ),
-                                              /*Focus(
-                                              child: TextFormFieldInput(
-                                                  '',
-                                                  state.donGiaController ??
-                                                      TextEditingController(),
-                                                  false,
-                                                  false,
-                                                  focusNode,
-                                                  '',
-                                                  (lostFocus) {},
-                                                  true,
-                                                  isPhone: true,
-                                                  isNotValidStart: true,
-                                                  noBorder: true,
-                                                  underLine: true,
-                                                  onChangeCallBack: (text) {
-                                                         blocContext
-                                                        .read<
-                                                             AddActivitySellBloc>()
-                                                        .add(OnChangeDonGiaEvent(
-                                                        text));
-                                              }, isChangeCallBack: true),
-                                            ),*/
-                                            ),
-                                            Text(
-                                              " VND/${state.donViController?.text}",
-                                              style: StyleOfit.textStyleFW500(
-                                                  AppColor.gray57, 16),
-                                            )
-                                          ],
+                                              Text(
+                                                " VND/${state.donViController?.text}",
+                                                style: StyleOfit.textStyleFW500(
+                                                    AppColor.gray57, 16),
+                                              )
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -340,7 +310,8 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                               child: Expanded(
                                 child: OfitButton(
                                     text: "Sửa hoạt động",
-                                    onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
+                                    onPressed: widget.action == "sell" && (
+                                        (widget.diary.status??'').compareTo("done") == 0 ||
                                         (widget.diary.status??'').compareTo("cancelled") == 0)?
                                         () {
                                       if((widget.diary.status??'').compareTo("done") == 0 ) {

@@ -515,7 +515,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
-      } else if (objectResult.responseCode == StatusConst.code01) {
+      } else if (objectResult.responseCode != StatusConst.code01) {
         //_changeViewEdit(emit);
         emit(state.copyWith(
             isShowProgress: false,

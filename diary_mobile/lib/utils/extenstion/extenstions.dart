@@ -1,3 +1,4 @@
+import 'package:diary_mobile/data/entity/activity/season_farm.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/item_default.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
@@ -69,6 +70,7 @@ class Extension {
       case Item:
       case Gender:
       case People:
+      case SeasonFarm:
         return model.name;
 /*
       case People:

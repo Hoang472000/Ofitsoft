@@ -10,6 +10,8 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../view_model/home_bloc.dart';
+import '../diary_activity/activity/activity_transaction_page.dart';
+import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../report/add_report_view.dart';
 import '../setting/contact/contact_page.dart';
 
@@ -74,42 +76,6 @@ class HomeView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          DiaLogManager.showDialogDevelopingFeature();
-             /*             Navigator.of(context)
-                              .push(AddReportViewPage.route());*/
-                        },
-                        child: Container(
-                            margin: const EdgeInsets.symmetric(vertical: 15),
-                            height: 250,
-                            width: MediaQuery.of(context).size.width,
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20),
-                                image: DecorationImage(
-                                    image: AssetImage(ImageAsset.imageFarmer),
-                                    fit: BoxFit.fill ,
-                                  colorFilter: ColorFilter.mode(
-                                Colors.black.withOpacity(0.2),
-                                BlendMode.darken
-                            ),)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Image(image: AssetImage(ImageAsset.imageTree), opacity: const AlwaysStoppedAnimation(.8),height: 50,),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "Trồng trọt",
-                                    style: StyleOfit.textStyleFW600(
-                                        Colors.white, 18),
-                                  ),
-                                ),
-                              ],
-                            )),
-                      ),
                       GestureDetector(
                         onTap: (){
                           Navigator.push(context, ContactPage.route());

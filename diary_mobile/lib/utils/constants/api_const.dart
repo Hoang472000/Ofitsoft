@@ -14,7 +14,7 @@ class ApiConst {
   static const String getListActivities = "/get/activites_farmer/";
   static const String getListUnits = "/get/units_farmer/";
   //api danh sach diary
-  static const String getListDiary = "/get/diaries/farmer/";
+  static const String getListDiary = "/get/diaries/farmer/";//
   //api danh sach backup diary
   static const String getListBackupDiary = "/get/backup_dairies/";
   //api get, update user info
@@ -35,10 +35,12 @@ class ApiConst {
   static const String changePassword = "/edit/password/";
 
   //api get, add 1 activity diary SELL, PURCHASE, remove, edit
-  static const String getListActivityTransaction = "/get/diary_transaction/";
+  static const String getListActivityTransaction = "/get/sale_transaction/";
   static const String addActivityTransaction = "/add/diary_transaction/";
   static const String removeActivityTransaction = "/delete/diary_transaction/";
   static const String updateActivityTransaction = "/edit/diary_transaction/";
+  static const String getSeasonFarm = "/get/season_farm";
+  static const String getListActivityPurchase = "/get/purchase_transaction";
 
   //api get, add 1 activity REPORT, remove, edit
   static const String getListReport = "/get/assessment/";
@@ -48,6 +50,10 @@ class ApiConst {
   static const String editFarmerInspector = "/edit/result_assessment/";
   static const String getListReportSelect = "/get/list_assessment/";
   static const String deleteReport = "/delete/item/result_assessment/";
+  //offline
+  static const String editFarmerInspectorOffline = "/edit/result_assessment_offline/";
+  static const String uploadQuestionOffline = "/add/user_input_line_offline/";
+
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

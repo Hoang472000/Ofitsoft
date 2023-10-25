@@ -148,7 +148,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     emitter(state.copyWith(
       isShowProgress: true,
       idFarmerController: TextEditingController(text: ''),
-      farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
+      farmerInspector: FarmerInspectorUpload(visitDate: DateTime.now().toString().split('.')[0]),
     ));
     final report = await repository.getDetailReport(event.id);
     List<List<Select>> listSelected = [];
@@ -181,11 +181,11 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       if(indexFarmer != -1){
         indexFarm = report[0].listFarmers[indexFarmer].farmIds.indexWhere((element) => element.id == report[0].farmId);
       }
-      state.farmerInspector!.farmer_id = report[0].farmerId;
-      state.farmerInspector!.farm_id = report[0].farmId;
-      state.farmerInspector!.internal_inspector_id = report[0].internalInspectorId;
-      state.farmerInspector!.monitoring_visit_type = report[0].monitoringVisitType;
-      state.farmerInspector!.visit_date = report[0].visitDate;
+      state.farmerInspector!.farmerId = report[0].farmerId;
+      state.farmerInspector!.farmId = report[0].farmId;
+      state.farmerInspector!.internalInspectorId = report[0].internalInspectorId;
+      state.farmerInspector!.monitoringVisitType = report[0].monitoringVisitType;
+      state.farmerInspector!.visitDate = report[0].visitDate;
       print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].visitDate}");
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,

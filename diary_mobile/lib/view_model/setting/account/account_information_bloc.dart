@@ -98,16 +98,24 @@ class AccountInformationBloc
         maxLengthTextInput: 200,
         controller: state.nameController,
         image: ImageAsset.imageFarmerProfile));
-    list.add(InputRegisterModel(
-        title: "Giới tính:",
-        isCompulsory: false,
-        type: TypeInputRegister.Select,
-        typeInput: TextInputType.text,
-        maxLengthTextInput: 200,
-        valueSelected: state.listGender[state.indexSex],
-        listValue: state.listGender,
-        icon: Icons.arrow_drop_down,
-        image: ImageAsset.imageSex));
+    if(state.indexSex != -1) {
+      list.add(InputRegisterModel(
+          title: "Giới tính:",
+          isCompulsory: false,
+          type: TypeInputRegister.Select,
+          valueSelected: state.listGender[state.indexSex],
+          listValue: state.listGender,
+          icon: Icons.arrow_drop_down,
+          image: ImageAsset.imageSex));
+    } else {
+      list.add(InputRegisterModel(
+          title: "Giới tính:",
+          isCompulsory: false,
+          type: TypeInputRegister.Select,
+          listValue: state.listGender,
+          icon: Icons.arrow_drop_down,
+          image: ImageAsset.imageSex));
+    }
     if(state.dateController!.text.isNotEmpty) {
       list.add(InputRegisterModel(
           title: "Ngày sinh:",
@@ -224,8 +232,6 @@ class AccountInformationBloc
         event.list[event.index].typeInputEnum == TypeInputEnum.date) {
       int result1 = await ServiceInfoExtension()
           .selectValue(event.list[event.index], event.context, (modelInput) {});
-      print(
-          "HoangCV: result1: ${result1} : ${Utils.formatDateTimeToString(event.list[event.index].valueSelected)}");
       if (result1 == 1) {
         if (event.list[event.index].title.compareTo("Ngày sinh:") == 0) {
           print(

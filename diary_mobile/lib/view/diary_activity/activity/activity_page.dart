@@ -505,6 +505,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                   action: widget.action,
                                   callbackChooseItem: () async {
                                     //Truyen id de sang man ben goi api hoac DB
+                                    print("HoangCV: state.listDiaryActivity[index]: ${state.listDiaryActivity[index].toJson()}");
                                     if (widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0) {
                                       var result = await Navigator.push(
                                           context,

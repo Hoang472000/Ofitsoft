@@ -45,19 +45,8 @@ class AddActivitySellBloc
     List<InputRegisterModel> listYield = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-    print(
-        "HoangCV:state.listUnitArea: ${state.listUnitArea.length} : ${state.indexArea}  ");
-    list.add(InputRegisterModel<String, String>(
-        title: "Tên công ty",
-        isCompulsory: true,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: -1,
-        listValue: state.listActivity,
-        //typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageCompany));
     list.add(InputRegisterModel(
-        title: "Người thực hiện",
+        title: "Người mua",
         isCompulsory: false,
         maxLengthTextInput: 2000,
         type: TypeInputRegister.TextField,
@@ -118,12 +107,13 @@ class AddActivitySellBloc
     ));
     List<InputRegisterModel> inputDonGia = [
       InputRegisterModel(
-        title: " ",
+        title: "Đơn giá                   ",
         isCompulsory: false,
         maxLengthTextInput: 15,
         type: TypeInputRegister.TextField,
         typeInput: TextInputType.number,
         controller: state.donGiaController,
+        isFormatText: true,
         noUnder: true,
         noBorder: true,
 /*        noBorder: true,
@@ -189,7 +179,8 @@ class AddActivitySellBloc
       startTimeController:
           TextEditingController(text: DateTime.now().toString().split('.')[0]),
       buyerController:
-          TextEditingController(text: "${event.diary.farmerName ?? 0}"),
+          TextEditingController(),
+      buyerPurchaseController: TextEditingController(),
       productController:
           TextEditingController(text: "${event.diary.productName}"),
       moTaController: TextEditingController(),
@@ -277,12 +268,14 @@ class AddActivitySellBloc
           emit(state.copyWith(
               donViController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
+              indexYield: event.list[event.index].positionSelected,
               soLuongController:
                   TextEditingController(text: "$formattedResult"),
               total: total));
           state.listWidgetArea[0].controller = state.soLuongController;
+          print("event.list[event.index].positionSelected: ${event.list[event.index].positionSelected}");
         }
-        if (event.list[event.index].title.compareTo("Người thực hiện") == 0) {
+        if (event.list[event.index].title.compareTo("Người mua") == 0) {
           emit(state.copyWith(
             buyerController: event.list[event.index].controller,
           ));
@@ -301,10 +294,7 @@ class AddActivitySellBloc
       state.listWidgetArea[1].error = null;
       state.inputDonGia[0].error = null;
     }
-    if (state.indexActivity == -1) {
-      validate = false;
-      state.listWidget[0].error = "Vui lòng chọn tên công ty";
-    } else if (state.soLuongController!.text.isEmpty) {
+    if (state.soLuongController!.text.isEmpty) {
       validate = false;
       state.listWidgetArea[0].error = "Vui lòng nhập sản lượng";
     } else if (state.soLuongController!.text.isNotEmpty &&
@@ -339,20 +329,24 @@ class AddActivitySellBloc
         transactionDate: state.startTimeController!.text,
         quantity: Utils.convertStringToDouble(state.soLuongController!.text),
         quantityUnitId: state.listUnitYield[state.indexYield].id,
-        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text),
+        unitPrice: Utils.convertStringToDouble(state.donGiaController!.text.replaceAll('.', '')),
         person: state.buyerController!.text,
         isPurchase: false,
       );
-      ObjectResult result =
+      ObjectResult objectResult =
           await repository.addActivityTransaction(activityTransaction);
-      if (result.responseCode == StatusConst.code00) {
+      if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: result.message)));
-      } else {
+            formStatus: SubmissionSuccess(success: "Thêm hoạt động thành công.")));
+      }else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed(result.message)));
+            formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
+      } else if (objectResult.responseCode == StatusConst.code01){
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
@@ -371,13 +365,13 @@ class AddActivitySellBloc
       emit(state.copyWith(
           soLuongController: TextEditingController(text: event.text),
           total: total));
-    } else if (event.inputRegisterModel.title.compareTo(" ") == 0) {
+    } else if (event.inputRegisterModel.title.compareTo("Đơn giá                   ") == 0) {
       print(
           "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
       event.inputRegisterModel.error = null;
       double total = 0;
       total = double.parse(state.soLuongController!.text) *
-          double.parse(event.text);
+          double.parse(event.text.replaceAll('.', ''));
       emit(state.copyWith(
           donGiaController: TextEditingController(text: event.text),
           total: total));
@@ -534,6 +528,7 @@ class AddActivitySellState extends BlocState {
   TextEditingController? donGiaController = TextEditingController();
   TextEditingController? donViController = TextEditingController();
   TextEditingController? buyerController = TextEditingController();
+  TextEditingController? buyerPurchaseController = TextEditingController();
   TextEditingController? startTimeController = TextEditingController();
   List<InputRegisterModel> listWidgetYield;
   final List<Unit> listUnitYield;
@@ -571,6 +566,7 @@ class AddActivitySellState extends BlocState {
     this.moTaController,
     this.donViController,
     this.buyerController,
+    this.buyerPurchaseController,
     this.startTimeController,
     this.donGiaController,
     this.productController,
@@ -611,6 +607,7 @@ class AddActivitySellState extends BlocState {
     TextEditingController? donGiaController,
     TextEditingController? donViController,
     TextEditingController? buyerController,
+    TextEditingController? buyerPurchaseController,
     TextEditingController? productController,
     TextEditingController? startTimeController,
     List<InputRegisterModel>? listWidgetYield,
@@ -652,6 +649,7 @@ class AddActivitySellState extends BlocState {
       startTimeController: startTimeController ?? this.startTimeController,
       productController: productController ?? this.productController,
       buyerController: buyerController ?? this.buyerController,
+      buyerPurchaseController: buyerPurchaseController ?? this.buyerPurchaseController,
       isEdit: isEdit ?? this.isEdit,
       imageWidth: imageWidth ?? this.imageWidth,
       imageHeight: imageHeight ?? this.imageHeight,

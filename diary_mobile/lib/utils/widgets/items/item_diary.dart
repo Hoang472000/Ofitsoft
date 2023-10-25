@@ -99,55 +99,47 @@ class _ItemDiaryState extends State<ItemDiary> {
               ], borderRadius: BorderRadius.circular(8), color: Colors.white),
               child: Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                          child: Text(
-                            Utils.formatTime(widget.diary.startDate ?? ""),
-                            style:
-                                StyleOfit.textStyleFW400(AppColor.black22, 14),
-                          ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                        child: Text(
+                          Utils.formatTime(widget.diary.startDate ?? ""),
+                          style:
+                              StyleOfit.textStyleFW400(AppColor.black22, 14),
                         ),
-                        Text(widget.diary.name.toString(),
-                            style: StyleOfit.textStyleFW500(AppColor.main, 16),
-                            maxLines: 3,
-                            overflow: TextOverflow.visible),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                          child: RichText(
-                            text: Utils.convertText(
-                                "Cây trồng: ",
-                                "${widget.diary.cropName}",
-                                AppColor.blue15,
-                                14),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                      ),
+                      Text(widget.diary.name.toString(),
+                          style: StyleOfit.textStyleFW500(AppColor.main, 16),
+                          maxLines: 3,
+                          overflow: TextOverflow.visible),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                        child: RichText(
+                          text: Utils.convertText(
+                              "Cây trồng: ",
+                              "${widget.diary.cropName}",
+                              AppColor.blue15,
+                              14),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: RichText(
-                            text: Utils.convertText(
-                                "Thực hiện: ",
-                                "${widget.diary.farmerName}",
-                                AppColor.blue15,
-                                12),
-                            maxLines: 3,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: RichText(
+                          text: Utils.convertText(
+                              "Thực hiện: ",
+                              "${widget.diary.farmerName}",
+                              AppColor.blue15,
+                              12),
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      )
+                    ],
                   ),
-                  Image(
-                    image: AssetImage(ImageAsset.imageOfitsoftText),
-                    width: 75,
-                    fit: BoxFit.contain,
-                  ),
-                  //Icon(tasksForMonthAndYear[index].icon, color: AppColor.main,),
                 ],
               ),
             ),

@@ -23,24 +23,30 @@ class Report implements Insertable<Report> {
   List<People> listFarmers;
   List<People> listInternalInspector;
   List<MonitoringVisitType> listMonitoringVisitType;
+  String? stringListFarmers;
+  String? stringListInternalInspector;
+  String? stringListMonitoringVisitType;
 
-  Report(
-      {this.id,
-      this.isPage,
-      this.pageId,
-      this.surveyId,
-      this.title,
-      this.userId,
-      this.active,
-      this.hasConditionalQuestions,
-      this.questionsSelection,
-      this.timeLimit,
-      this.questionAndPageIds = const [],
-      this.stringQuestionAndPageIds,
-      //
-      this.listFarmers = const [],
-      this.listInternalInspector = const [],
-      this.listMonitoringVisitType = const [],
+  Report({this.id,
+    this.isPage,
+    this.pageId,
+    this.surveyId,
+    this.title,
+    this.userId,
+    this.active,
+    this.hasConditionalQuestions,
+    this.questionsSelection,
+    this.timeLimit,
+    this.questionAndPageIds = const [],
+    this.stringQuestionAndPageIds,
+    //
+    this.listFarmers = const [],
+    this.listInternalInspector = const [],
+    this.listMonitoringVisitType = const [],
+    //
+    this.stringListFarmers,
+    this.stringListInternalInspector,
+    this.stringListMonitoringVisitType,
   });
 
   factory Report.fromJson(Map<String, dynamic> json) {
@@ -57,8 +63,8 @@ class Report implements Insertable<Report> {
       timeLimit: json['time_limit'] ?? 0,
       questionAndPageIds: json['question_and_page_ids'] != null
           ? (json['question_and_page_ids'] as List<dynamic>)
-              .map((itemJson) => Question.fromJson(itemJson))
-              .toList()
+          .map((itemJson) => Question.fromJson(itemJson))
+          .toList()
           : [],
       //
       listFarmers: json['list_farmers'] != null
@@ -78,17 +84,23 @@ class Report implements Insertable<Report> {
           .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
           .toList()
           : [],
-      stringQuestionAndPageIds:
-          jsonEncode(json['question_and_page_ids']) ?? '[]',
-
+      stringQuestionAndPageIds: jsonEncode(json['question_and_page_ids']) ?? '[]',
+      stringListFarmers: jsonEncode(json['list_farmers']) ?? '[]',
     );
   }
 
   String convertQuestionsListToJson() {
     final List<Map<String, dynamic>> questionListJson =
-        questionAndPageIds.map((question) => question.toJson()).toList();
+    questionAndPageIds.map((question) => question.toJson()).toList();
     return jsonEncode(questionListJson);
   }
+
+  String convertListFarmersListToJson() {
+    final List<Map<String, dynamic>> listFarmersListJson =
+    listFarmers.map((listFarmer) => listFarmer.toJson()).toList();
+    return jsonEncode(listFarmersListJson);
+  }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -102,6 +114,7 @@ class Report implements Insertable<Report> {
     data['has_conditional_questions'] = hasConditionalQuestions;
     data['questions_selection'] = questionsSelection;
     data['time_limit'] = timeLimit;
+    //data['list_farmers'] = stringListFarmers;
     data['question_and_page_ids'] = questionAndPageIds;
     return data;
   }
@@ -128,20 +141,24 @@ class Report implements Insertable<Report> {
             .map((answer) => People.copy(answer))
             .toList(),
         listMonitoringVisitType = other.listMonitoringVisitType
-      .map((answer) => MonitoringVisitType.copy(answer))
-      .toList();
+            .map((answer) => MonitoringVisitType.copy(answer))
+            .toList();
 
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ReportTableCompanion(
             id: Value(id),
+            isPage: Value(isPage),
+            pageId: Value(pageId),
+            surveyId: Value(surveyId),
             title: Value(title),
             userId: Value(userId),
             active: Value(active),
             hasConditionalQuestions: Value(hasConditionalQuestions),
             questionsSelection: Value(questionsSelection),
             timeLimit: Value(timeLimit),
-            stringQuestionAndPageIds: Value(stringQuestionAndPageIds))
+            stringQuestionAndPageIds: Value(stringQuestionAndPageIds),
+            stringListFarmers: Value(stringListFarmers))
         .toColumns(nullToAbsent);
   }
 }
@@ -160,6 +177,13 @@ class MonitoringVisitType {
         type: json['type'],
         value: json['value']
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['value'] = value;
+    return data;
   }
 
   MonitoringVisitType.copy(MonitoringVisitType other)
@@ -185,13 +209,26 @@ class People {
     return People(
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
-      code: json['code'],
+      code: json['code'] == false ? null : json['code'],
       farmIds: json['farm_ids'] != null
           ? (json['farm_ids'] as List<dynamic>)
               .map((itemJson) => People.fromJson(itemJson))
               .toList()
           : [],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    List<Map> listFarm = [];
+    for (int i = 0; i < (farmIds??[]).length; i++) {
+      listFarm.add((farmIds??[])[i].toJson());
+    }
+    data['id'] = id;
+    data['name'] = name;
+    data['code'] = code;
+    data['farm_ids'] = listFarm;
+    return data;
   }
 
   People.copy(People other)

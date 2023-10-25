@@ -89,7 +89,7 @@ class SurveyRpRlt {
       farmerCode: json['farmer_code'] ?? '',
       farmId: json['farm_id'],
       farmName: json['farm_name'] ?? '',
-      farmCode: json['farm_code'] ?? '',
+      farmCode: json['farm_code'] == false ? '' : json['farm_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'],
       internalInspector: json['internal_inspector'],
       monitoringVisitType: json['monitoring_visit_type'] ?? '',

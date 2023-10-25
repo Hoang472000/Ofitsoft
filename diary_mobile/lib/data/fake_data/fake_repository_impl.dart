@@ -14,10 +14,12 @@ import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import '../../resource/assets.dart';
+import '../entity/activity/season_farm.dart';
 import '../entity/diary/diary.dart';
 import '../entity/item_default/item_default.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/monitor/monitor_diary.dart';
+import '../entity/report/report_select.dart';
 import '../entity/report/survey_report_result.dart';
 import '../entity/setting/user_info.dart';
 import '../repository.dart';
@@ -664,7 +666,7 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<Report>> getListReportSelect() {
+  Future<List<ReportSelect>> getListReportSelect() {
     // TODO: implement getListReportSelect
     throw UnimplementedError();
   }
@@ -684,6 +686,18 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> removeActivityTransaction(int id) {
     // TODO: implement removeActivityTransaction
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<SeasonFarm>> getSeasonFarm() {
+    // TODO: implement getSeasonFarm
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ActivityTransaction>> getListActivityPurchase() {
+    // TODO: implement getListActivityPurchase
     throw UnimplementedError();
   }
 }

@@ -14,6 +14,9 @@ import 'package:diary_mobile/data/local_data/table/item_default/material_table.d
 import 'package:diary_mobile/data/local_data/table/item_default/tool_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/unit_table.dart';
 import 'package:diary_mobile/data/local_data/table/monitor_diary_table.dart';
+import 'package:diary_mobile/data/local_data/table/report/farmer_inspector_upload_no_network_table.dart';
+import 'package:diary_mobile/data/local_data/table/report/question_upload_no_network_table.dart';
+import 'package:diary_mobile/data/local_data/table/report/report_select_table.dart';
 import 'package:diary_mobile/data/local_data/table/report/report_table.dart';
 import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
 import 'package:drift/drift.dart';
@@ -27,10 +30,15 @@ import '../entity/item_default/activity_monitor.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/item_default/unit.dart';
 import '../entity/monitor/monitor_diary.dart';
+import '../entity/report/question_upload.dart';
 import '../entity/report/report.dart';
+import '../entity/report/report_select.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable, ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable, ActDiaryNoNetworkTable, ReportTable ])
+@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable,
+  ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
+  ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
+  ReportSelectTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -60,12 +68,9 @@ class DiaryDB extends _$DiaryDB {
 
   ///Thêm, sửa, xóa, lấy Activity Diary
   Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
- /*   await batch((batch) {
-      batch.insertAllOnConflictUpdate(activityDiaryTable, values);
-    });*/
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.convertToolsListToJson()}");
+        print("HoangCV: entry: ${entry.toJson()}");
         final ActivityDiaryTableCompanion entryCompanion = ActivityDiaryTableCompanion(
           id: Value(entry.id),
           seasonFarmId: Value(entry.seasonFarmId),
@@ -107,7 +112,7 @@ class DiaryDB extends _$DiaryDB {
     final List<ActivityDiary> diaryEntriesList = [];
 
     for (final queriedEntry in query) {
-      print('Diary Entry Tools String: ${queriedEntry.tool.length} : ${query}');
+      print('Diary Entry Tools String: ${queriedEntry.tool.length} : ${queriedEntry.toJson()} : ${queriedEntry.activityId}');
       final diaryEntry = ActivityDiary.fromJson({
         'id': queriedEntry.id,
         'season_farm_id': queriedEntry.seasonFarmId,
@@ -325,15 +330,6 @@ class DiaryDB extends _$DiaryDB {
 
     return activitiesList;
   }
-/*  Future<void> insertListActivity(List<Activity> values) async{
-    //final insertables = values.map((activity) => activityTable.map(activity.toMap())).toList();
-    await batch((batch) {
-      batch.insertAllOnConflictUpdate(activityTable, values );
-    });
-  }
-  Future<List<Activity>> getListActivity() async {
-    return await select(activityTable).get();
-  }*/
 
   /// Unit
   Future<void> insertListUnit(List<Unit> values) async{
@@ -344,6 +340,130 @@ class DiaryDB extends _$DiaryDB {
   Future<List<Unit>> getListUnit(int categoryIdUnitAmount) async {
     return await (select(unitTable)..where((tbl) => tbl.categoryId.equals(categoryIdUnitAmount)))
         .get();
+  }
+
+  ///report
+  ///
+  ///insert report no network
+  Future<void> insertListReport(List<Report> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry: ${entry.toJson()}");
+        final ReportTableCompanion entryCompanion = ReportTableCompanion(
+            id: Value(entry.id),
+            isPage: Value(entry.isPage),
+            pageId: Value(entry.pageId),
+            surveyId: Value(entry.surveyId),
+            title: Value(entry.title),
+            userId: Value(entry.userId),
+            active: Value(entry.active),
+            hasConditionalQuestions: Value(entry.hasConditionalQuestions),
+            questionsSelection: Value(entry.questionsSelection),
+            timeLimit: Value(entry.timeLimit),
+            stringQuestionAndPageIds: Value(entry.convertQuestionsListToJson()),
+            stringListFarmers: Value(entry.convertListFarmersListToJson()),
+      );
+      batch.insertAllOnConflictUpdate(reportTable, [entryCompanion]);
+    }
+    });
+  }
+  ///get report no network
+  Future<List<Report>> getListReport(int id) async {
+    final query = await (select(reportTable)..where((tbl) => tbl.id.equals(id)))
+        .get();
+
+    print('getListReport no network String: ${query.length}');
+    final List<Report> diaryEntriesList = [];
+    for (final queriedEntry in query) {
+      print('getListReport no network String: ${queriedEntry.toJson()}');
+      final diaryEntry = Report.fromJson({
+        'id': queriedEntry.id,
+        'is_page': queriedEntry.isPage,
+        'page_id': queriedEntry.pageId,
+        'survey_id': queriedEntry.surveyId,
+        'title': queriedEntry.title,
+        'user_id': queriedEntry.userId,
+        'active': queriedEntry.active,
+        'has_conditional_questions': queriedEntry.hasConditionalQuestions,
+        'questions_selection': queriedEntry.questionsSelection,
+        'time_limit': queriedEntry.timeLimit,
+        'string_question_and_page_ids': queriedEntry.stringQuestionAndPageIds,
+        'question_and_page_ids': jsonDecode(queriedEntry.stringQuestionAndPageIds??'[]'),
+        'list_farmers': jsonDecode(queriedEntry.stringListFarmers??'[]'),
+        'string_list_farmers': queriedEntry.stringListFarmers,
+      });
+      //print("HoangCV: líst QS: ${diaryEntry.questionAndPageIds}");
+      diaryEntriesList.add(diaryEntry);
+    }
+    return diaryEntriesList;
+  }
+  ///Thêm, sửa, report no network
+  Future<void> insertQuestionUploadNoNetWork(List<QuestionUpload> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry:");
+        final QuestionUploadNoNetworkTableCompanion entryCompanion = QuestionUploadNoNetworkTableCompanion(
+          api: Value(entry.api),
+          idOffline: Value(entry.idOffline),
+          userInputId: Value(entry.userInputId),
+          surveyId: Value(entry.surveyId),
+          questionId: Value(entry.questionId),
+          suggestedAnswerId: Value(entry.suggestedAnswerId),
+          matrixRowId: Value(entry.matrixRowId),
+          answerType: Value(entry.answerType),
+          valueText: Value(entry.valueText),
+          state: Value(entry.state),
+          skipped: Value(entry.skipped),
+          isAnswerExist: Value(entry.isAnswerExist),
+          valueCheckBox: Value(entry.valueCheckBox),
+          tableRowId: Value(entry.tableRowId),
+          stringListIdSuggested: Value(entry.stringListIdSuggested),
+          farmerId: Value(entry.farmerId),
+          farmerCode: Value(entry.farmerCode),
+          farmId: Value(entry.farmId),
+          farmCode: Value(entry.farmCode),
+          internalInspectorId: Value(entry.internalInspectorId),
+          monitoringVisitType: Value(entry.monitoringVisitType),
+          visitDate: Value(entry.visitDate),
+        );
+        batch.insertAllOnConflictUpdate(questionUploadNoNetworkTable, [entryCompanion]);
+      }
+    });
+  }
+  ///report
+  ///Thêm, sửa, xóa, lấy report no network
+  Future<void> insertFarmerInspectorUploaddNoNetWork(List<FarmerInspectorUpload> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry:");
+        final FarmerInspectorUploadNoNetworkTableCompanion entryCompanion = FarmerInspectorUploadNoNetworkTableCompanion(
+          api: Value(entry.api),
+          idOffline: Value(entry.idOffline),
+          id: Value(entry.id),
+          state: Value(entry.state),
+          farmerId: Value(entry.farmerId),
+          farmerCode: Value(entry.farmerCode),
+          farmId: Value(entry.farmId),
+          farmCode: Value(entry.farmCode),
+          internalInspectorId: Value(entry.internalInspectorId),
+          monitoringVisitType: Value(entry.monitoringVisitType),
+          visitDate: Value(entry.visitDate),
+        );
+        batch.insertAllOnConflictUpdate(farmerInspectorUploadNoNetworkTable, [entryCompanion]);
+      }
+    });
+  }
+
+  ///Report Select
+  ///
+  ///insert, get, Report Select
+  Future<void> insertListReportSelect(List<ReportSelect> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(reportSelectTable, values);
+    });
+  }
+  Future<List<ReportSelect>> getListReportSelect() async {
+    return await select(reportSelectTable).get();
   }
 
   SingleSelectable<UserInfo> singleUser(int userId) {

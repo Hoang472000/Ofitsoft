@@ -133,6 +133,7 @@ class Question {
     data['id'] = id;
     data['title'] = title;
     data['is_page'] = isPage;
+    data['page_id'] = pageId;
     data['parent_title_id'] = parentTitleId;
     data['comment_answer'] = commentAnswer;
     data['triggering_question_id'] = triggeringQuestionId;

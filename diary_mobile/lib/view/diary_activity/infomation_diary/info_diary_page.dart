@@ -89,8 +89,10 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                         } else if(state.listActivityFarm[index].id == 3){
                                           var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("sell",
-                                                widget.id, widget.diary,state
-                                                    .listActivityFarm[index], state.listActivityTransaction, state.listActivityDiary));
+                                                seasonFarmId: widget.id,
+                                                  diary: widget.diary,
+                                                  listActivityTransaction: state.listActivityTransaction,
+                                                  listActivityDiary: state.listActivityDiary));
                                           if(result != null && result[0]){
                                             blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
                                           }
@@ -99,22 +101,6 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                               ActivityPage.route("monitor",
                                                 widget.id, widget.diary,state
                                                     .listActivityFarm[index], state.listActivityDiary));
-                                        } else if(state.listActivityFarm[index].id == 5){
-                                          var result = await Navigator.push(context,
-                                              ListReportResultView.route(widget.diary, state.listReportSelect,
-                                                  state.listActivityFarm[index], state.listReportResult));
-                                          if(result != null && result[0]){
-                                            blocContext.read<DetailDiaryBloc>().add(
-                                                GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listReport: result[1]));
-                                          }
-                                        } else if(state.listActivityFarm[index].id == 6){
-                                          var result = await Navigator.push(context,
-                                              ActivityTransactionPage.route("purchase",
-                                                  widget.id, widget.diary, state
-                                                      .listActivityFarm[index], state.listActivityTransaction, state.listActivityDiary));
-                                          if(result != null && result[0]){
-                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
-                                          }
                                         }
                                       });
                                 }),
@@ -123,6 +109,23 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             label: "Tên nhật ký",
                             value: "${state.detailDiary!.name}",
                         image: ImageAsset.imageDiary),
+                        CardTile(
+                            label: "Tên nông hộ",
+                            value: "${state.detailDiary!.farmerName}",
+                            image: ImageAsset.imageFarmerProfile),
+                        CardTile(
+                            label: "Tên vùng trồng",
+                            value: "${state.detailDiary!.areaName} ${state.detailDiary!.areaCode}",
+                            image: ImageAsset.imageManagement),
+                        CardTile(
+                            label: "Tên lô trồng",
+                            value: "${state.detailDiary!.farmName} ${state.detailDiary!.farmCode}",
+                            image: ImageAsset.imageManagement),
+                        if((state.detailDiary!.googleMap??"").isNotEmpty)
+                        cardUrl(
+                            label: "Bản đồ",
+                            value: "${state.detailDiary!.googleMap}",
+                            image: ImageAsset.imageLocation),
        /*                 CardTile(
                             label: "Địa chỉ",
                             value:
@@ -217,6 +220,58 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget cardUrl(
+      {required String image,
+        required String label,
+        required String value}) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Row(
+        //crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4,right: 8.0),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    label,
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  //padding: const EdgeInsets.all(4),
+                  child:
+                  TextButton(
+                    child: Text(
+                      value,
+                      style: StyleOfit.textStyleFW400(AppColor.blue15, 16, decoration:
+                        TextDecoration.underline,),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,),
+                    onPressed: () {
+                      Utils.launchBrowserUrl(value);
+                    },
                   ),
                 )
               ],

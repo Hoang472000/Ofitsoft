@@ -31,13 +31,13 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     on<UpdateEditTableEvent>(updateEditTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
     on<SubmitReportEvent>(submitReport);
-
+    on<AddTableRowEvent>(addNewTableRow);
   }
 
   void _initViewEdit(Emitter<EditReportState> emitter) {
-    List<InputRegisterModel> list= [];
+    List<InputRegisterModel> list = [];
     print("HoangCV: state.listFarmer : ${state.listFarmer.length}");
-    if(state.indexFarmer != -1) {
+    if (state.indexFarmer != -1) {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -51,7 +51,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           hasSearch: true,
           textAlign: TextAlign.left
       ));
-    } else{
+    } else {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -75,7 +75,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         textAlign: TextAlign.center
     ));
 
-    if(state.indexInspector != -1) {
+    if (state.indexInspector != -1) {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -89,7 +89,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           noBorder: true,
           textAlign: TextAlign.left
       ));
-    } else{
+    } else {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -116,7 +116,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       //icon: Icons.calendar_today
     ));
 
-    if(state.indexFarm != -1) {
+    if (state.indexFarm != -1) {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -130,7 +130,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           hasSearch: true,
           textAlign: TextAlign.left
       ));
-    } else{
+    } else {
       list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
@@ -150,21 +150,22 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         formStatus: const InitialFormStatus()));
   }
 
-  Future<FutureOr<void>> _onSelectValue(
-      OnSelectValueEvent event, Emitter<EditReportState> emit) async {
+  Future<FutureOr<void>> _onSelectValue(OnSelectValueEvent event,
+      Emitter<EditReportState> emit) async {
     int result;
     bool checkPass = true;
-    if(event.index == 0 && state.listFarmer.isEmpty) {
+    if (event.index == 0 && state.listFarmer.isEmpty) {
       Toast.showLongTop("Không có danh sách nông hộ");
       checkPass = false;
-    }else if(event.index == 4 && state.listFarm.isEmpty) {
+    } else if (event.index == 4 && state.listFarm.isEmpty) {
       Toast.showLongTop("Không có danh sách vùng trồng");
       checkPass = false;
-    }/*else if(event.index == 2 && state.listInspector.isEmpty) {
+    }
+    /*else if(event.index == 2 && state.listInspector.isEmpty) {
       Toast.showLongTop("Không có danh sách thanh tra viên");
       checkPass = false;
     }*/
-    if(checkPass) {
+    if (checkPass) {
       if (event.list[event.index].valueSelected.runtimeType == DateTime ||
           event.list[event.index].typeInputEnum == TypeInputEnum.date) {
         //     setState(() {
@@ -172,7 +173,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             .selectValue(
             event.list[event.index], event.context, (modelInput) {});
         if (result1 == 1) {
-          state.farmerInspector!.visit_date = Utils.formatDateTimeToString(
+          state.farmerInspector!.visitDate = Utils.formatDateTimeToString(
               event.list[event.index].valueSelected);
           emit(state.copyWith(
             startTimeController: TextEditingController(
@@ -180,22 +181,22 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     event.list[event.index].valueSelected)),
             farmerInspector: state.farmerInspector,
           ));
-          if(state.reportId != null ) {
+          if (state.reportId != null) {
             if (event.id == -1) {
               emit(state.copyWith(
                   isShowProgress: true, formStatus: const InitialFormStatus()));
 
               FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
                 id: state.reportId,
-                farmer_id: state.farmerInspector!.farmer_id,
-                farm_id: state.farmerInspector!.farm_id,
-                farm_code: state.farmerInspector!.farm_code,
-                farmer_code: state.farmerInspector!.farmer_code,
-                internal_inspector_id: state.farmerInspector!
-                    .internal_inspector_id,
-                monitoring_visit_type: state.farmerInspector!
-                    .monitoring_visit_type,
-                visit_date: state.farmerInspector!.visit_date,
+                farmerId: state.farmerInspector!.farmerId,
+                farmId: state.farmerInspector!.farmId,
+                farmCode: state.farmerInspector!.farmCode,
+                farmerCode: state.farmerInspector!.farmerCode,
+                internalInspectorId: state.farmerInspector!
+                    .internalInspectorId,
+                monitoringVisitType: state.farmerInspector!
+                    .monitoringVisitType,
+                visitDate: state.farmerInspector!.visitDate,
               );
               ObjectResult result = await repository.editFarmerInspector(
                   questionUpload);
@@ -204,40 +205,45 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else if (result.responseCode == StatusConst.code01){
+              } else if (result.responseCode == StatusConst.code01) {
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+                    formStatus: SubmissionFailed(
+                        "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
-            } else{
+            } else {
               print("HoangCV:  uplaods asdsaj 1121");
               QuestionUpload questionUpload = QuestionUpload(
-                user_input_id: state.reportId,
-                survey_id: state.listReport[0].id,
-                question_id: event.id,
-                answer_type: event.type,
-                value_text: Utils.stringToFormattedString(Utils.formatDateTimeToString(
-                    event.list[event.index].valueSelected)),
-                test_entry: false,
-                list_id_suggested: [],
-                is_answer_exist: true,
+                userInputId: state.reportId,
+                surveyId: state.listReport[0].id,
+                questionId: event.id,
+                answerType: event.type,
+                valueText: Utils.stringToFormattedString(
+                    Utils.formatDateTimeToString(
+                        event.list[event.index].valueSelected)),
+                listIdSuggested: [],
+                isAnswerExist: true,
               );
-              ObjectResult result = await repository.uploadQuestion(questionUpload);
+              ObjectResult result = await repository.uploadQuestion(
+                  questionUpload);
               if (result.responseCode == StatusConst.code00) {
                 emit(state.copyWith(
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
-              } else if (result.responseCode == StatusConst.code01){
+              } else if (result.responseCode == StatusConst.code01) {
                 emit(state.copyWith(
                     isShowProgress: false,
-                    formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+                    formStatus: SubmissionFailed(
+                        "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
               }
             }
           }
         }
       } else {
-        print("HoangCV: event.list[event.index].listValue: ${event.index} : ${event.list[event.index].toString()} : ${event.list[event.index].listValue.length} ");
+        print("HoangCV: event.list[event.index].listValue: ${event
+            .index} : ${event.list[event.index].toString()} : ${event.list[event
+            .index].listValue.length} ");
         result = await Extension().showBottomSheetSelection(
             event.context,
             event.list[event.index].listValue,
@@ -254,55 +260,62 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           // });
 
           if (event.index == 0) {
-            event.list[1].controller = TextEditingController(text: "${state.listFarmer[result].id}");
-            state.farmerInspector!.farmer_id = state.listFarmer[result].id;
-            state.farmerInspector!.farmer_code = state.listFarmer[result].code;
-            state.farmerInspector!.farm_id = null;
-            state.farmerInspector!.farm_code = null;
+            event.list[1].controller =
+                TextEditingController(text: "${state.listFarmer[result].id}");
+            state.farmerInspector!.farmerId = state.listFarmer[result].id;
+            state.farmerInspector!.farmerCode = state.listFarmer[result].code;
+            state.farmerInspector!.farmId = null;
+            state.farmerInspector!.farmCode = null;
             state.listWidget[4].listValue = state.listFarmer[result].farmIds;
             state.listWidget[4].valueSelected = null;
             state.listWidget[4].positionSelected = -1;
             emit(state.copyWith(
-              idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
-              farmerInspector: state.farmerInspector,
-              listFarm: state.listFarmer[result].farmIds
+                idFarmerController: TextEditingController(
+                    text: "${state.listFarmer[result].id}"),
+                farmerInspector: state.farmerInspector,
+                listFarm: state.listFarmer[result].farmIds
             ));
           } else if (event.index == 2) {
-            state.farmerInspector!.internal_inspector_id = state.listInspector[result].id;
+            state.farmerInspector!.internalInspectorId =
+                state.listInspector[result].id;
             emit(state.copyWith(
               farmerInspector: state.farmerInspector,
             ));
           } else if (event.index == 4) {
-            state.farmerInspector!.farm_id = state.listFarm[result].id;
-            state.farmerInspector!.farm_code = state.listFarm[result].code;
+            state.farmerInspector!.farmId = state.listFarm[result].id;
+            state.farmerInspector!.farmCode = state.listFarm[result].code;
             emit(state.copyWith(
               farmerInspector: state.farmerInspector,
             ));
           }
-          if(state.reportId != null ){
+          if (state.reportId != null) {
             emit(state.copyWith(
                 isShowProgress: true, formStatus: const InitialFormStatus()));
 
-            FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+            FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
               id: state.reportId,
-              farmer_id: state.farmerInspector!.farmer_id,
-              farm_id: state.farmerInspector!.farm_id,
-              farm_code: state.farmerInspector!.farm_code,
-              farmer_code: state.farmerInspector!.farmer_code,
-              internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-              monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-              visit_date: state.farmerInspector!.visit_date,
+              farmerId: state.farmerInspector!.farmerId,
+              farmId: state.farmerInspector!.farmId,
+              farmCode: state.farmerInspector!.farmCode,
+              farmerCode: state.farmerInspector!.farmerCode,
+              internalInspectorId: state.farmerInspector!
+                  .internalInspectorId,
+              monitoringVisitType: state.farmerInspector!
+                  .monitoringVisitType,
+              visitDate: state.farmerInspector!.visitDate,
             );
-            ObjectResult result = await repository.editFarmerInspector(questionUpload);
+            ObjectResult result = await repository.editFarmerInspector(
+                questionUpload);
             if (result.responseCode == StatusConst.code00) {
               emit(state.copyWith(
                   isShowProgress: false,
                   reportId: result.response is int ? result.response : null,
                   formStatus: SubmissionSuccess(/*success: result.message*/)));
-            } else if (result.responseCode == StatusConst.code01){
+            } else if (result.responseCode == StatusConst.code01) {
               emit(state.copyWith(
                   isShowProgress: false,
-                  formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+                  formStatus: SubmissionFailed(
+                      "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
             }
           }
         }
@@ -310,14 +323,15 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
   }
 
-  void _getEditReport(
-      GetEditReportEvent event, Emitter<EditReportState> emitter) async {
+  void _getEditReport(GetEditReportEvent event,
+      Emitter<EditReportState> emitter) async {
     emitter(state.copyWith(
         isShowProgress: true,
 /*      startTimeController: TextEditingController(
-          text: DateTime.now().toString() *//*.split('.')[0]*//*),*/
+          text: DateTime.now().toString() */ /*.split('.')[0]*/ /*),*/
         idFarmerController: TextEditingController(text: ''),
-        farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
+        farmerInspector: FarmerInspectorUpload(
+            visitDate: DateTime.now().toString().split('.')[0]),
         reportId: event.id
     ));
     final report = await repository.getDetailReport(event.id);
@@ -331,10 +345,14 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     List<People> listFarmer = [];
     List<People> listInspector = [];
     if (report[1].surveyId.isNotEmpty) {
-      listSelected = createSelectLists(report[1].surveyId[0].questionAndPageIds);
-      listInputModel = createInputLists(report[1].surveyId[0].questionAndPageIds);
-      listVisible = createVisibleLists(report[1].surveyId[0].questionAndPageIds);
-      listController = createTextEditingControllerLists(report[1].surveyId[0].questionAndPageIds);
+      listSelected =
+          createSelectLists(report[1].surveyId[0].questionAndPageIds);
+      listInputModel =
+          createInputLists(report[1].surveyId[0].questionAndPageIds);
+      listVisible =
+          createVisibleLists(report[1].surveyId[0].questionAndPageIds);
+      listController = createTextEditingControllerLists(
+          report[1].surveyId[0].questionAndPageIds);
 /*      listSelected.forEach((element) {
         print("HoangCV:listSelected:  ${element.length} : ${element[0].id}");
       });
@@ -347,32 +365,42 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       listControllerTable.addAll(listCtrlTable);
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(i,
-            report[0].listMonitoringVisitType[i].type == report[0].monitoringVisitType ? true : false,
+            report[0].listMonitoringVisitType[i].type ==
+                report[0].monitoringVisitType ? true : false,
             report[0].listMonitoringVisitType[i].value,
             type: report[0].listMonitoringVisitType[i].type));
       }
-      int indexFarmer = report[0].listFarmers.indexWhere((element) => element.id == report[0].farmerId);
-      int indexInspector = report[0].listInternalInspector.indexWhere((element) => element.id == report[0].internalInspectorId);
+      int indexFarmer = report[0].listFarmers.indexWhere((element) =>
+      element.id == report[0].farmerId);
+      int indexInspector = report[0].listInternalInspector.indexWhere((
+          element) => element.id == report[0].internalInspectorId);
       int indexFarm = -1;
-      if(indexFarmer != -1){
-        indexFarm = report[0].listFarmers[indexFarmer].farmIds.indexWhere((element) => element.id == report[0].farmId);
+      if (indexFarmer != -1) {
+        indexFarm = report[0].listFarmers[indexFarmer].farmIds.indexWhere((
+            element) => element.id == report[0].farmId);
       }
-      state.farmerInspector!.farmer_id = report[0].farmerId;
-      state.farmerInspector!.farm_id = report[0].farmId;
-      state.farmerInspector!.internal_inspector_id = report[0].internalInspectorId;
-      state.farmerInspector!.monitoring_visit_type = report[0].monitoringVisitType;
-      state.farmerInspector!.visit_date = report[0].visitDate;
-      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].internalInspector}");
+      state.farmerInspector!.farmerId = report[0].farmerId;
+      state.farmerInspector!.farmId = report[0].farmId;
+      state.farmerInspector!.internalInspectorId =
+          report[0].internalInspectorId;
+      state.farmerInspector!.monitoringVisitType =
+          report[0].monitoringVisitType;
+      state.farmerInspector!.visitDate = report[0].visitDate;
+      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!
+          .toJson()} : ${report[0].internalInspector}");
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,
         listInspector: report[0].listInternalInspector,
-        listFarm: indexFarmer != -1 ? report[0].listFarmers[indexFarmer].farmIds : [],
+        listFarm: indexFarmer != -1
+            ? report[0].listFarmers[indexFarmer].farmIds
+            : [],
         farmerInspector: state.farmerInspector,
         nameInspector: report[0].internalInspector,
         indexFarmer: indexFarmer,
         indexInspector: indexInspector,
         indexFarm: indexFarm,
-        idFarmerController: TextEditingController(text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
+        idFarmerController: TextEditingController(
+            text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(report[0].visitDate ?? "")),
       ));
@@ -380,9 +408,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
       List<GlobalExpand> expansionTileKeys = List.generate(
         report[1].surveyId[0].questionAndPageIds.length,
-            (index) => GlobalExpand(false,GlobalKey()),
+            (index) => GlobalExpand(false, GlobalKey()),
       );
-      print("HoangCV: expansionTileKeys: ${expansionTileKeys.length} :  ${expansionTileKeys[0]} : ${report[1].surveyId[0].questionAndPageIds.length}");
+      print("HoangCV: expansionTileKeys: ${expansionTileKeys
+          .length} :  ${expansionTileKeys[0]} : ${report[1].surveyId[0]
+          .questionAndPageIds.length}");
       emitter(state.copyWith(expansionTileKeys: expansionTileKeys,
           scrollController: AutoScrollController(
               viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, 0),
@@ -391,7 +421,6 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
     emitter(state.copyWith(
       isShowProgress: false,
-      detailDiary: event.diary,
       listReport: report[1].surveyId,
       listSelected: listSelected,
       listVisible: listVisible,
@@ -408,13 +437,14 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       if (item is Question) {
         if (item.questionType == 'table') {
           List<Question> list = [];
-          if(item.userInputLines.isNotEmpty) {
+          if (item.userInputLines.isNotEmpty) {
             for (RowLine row in item.userInputLines) {
               List<Answer> listAs = [];
               for (Answer answer in row.userInputLineId) {
                 Answer clonedAnswer = Answer.copy(answer);
                 clonedAnswer.id = clonedAnswer.suggestedAnswerId;
-                if (clonedAnswer.tableRowId == null || clonedAnswer.tableRowId == -1) {
+                if (clonedAnswer.tableRowId == null ||
+                    clonedAnswer.tableRowId == -1) {
                   clonedAnswer.tableRowId = row.rowId;
                   clonedAnswer.rowId = row.rowId;
                 }
@@ -422,7 +452,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                 for (Answer as in clonedAnswer.suggestedAnswerIds) {
                   Answer clonedAs = Answer.copy(as);
                   clonedAs.id = clonedAs.suggestedAnswerId;
-                  if (clonedAs.tableRowId == null || clonedAs.tableRowId == -1) {
+                  if (clonedAs.tableRowId == null ||
+                      clonedAs.tableRowId == -1) {
                     clonedAs.tableRowId = row.rowId;
                     clonedAs.rowId = row.rowId;
                   }
@@ -439,7 +470,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               id++;
               list.add(qs);
             }
-            for (int i = item.userInputLines.last.rowId! + 1; i < item.userInputLines.last.rowId! + 2; i++) {
+            for (int i = item.userInputLines.last.rowId! + 1; i <
+                item.userInputLines.last.rowId! + 2; i++) {
               List<Answer> listAs = [];
               for (Answer answer in item.suggestedAnswerIds) {
                 Answer clonedAnswer = Answer.copy(answer);
@@ -460,7 +492,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               qs.rowId = i;
               list.add(qs);
             }
-          } else{
+          } else {
             for (int i = 0; i < 3; i++) {
               List<Answer> listAs = [];
               for (Answer answer in item.suggestedAnswerIds) {
@@ -505,7 +537,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       List<Select> selectList = [];
 
       // Thêm Select cho câu hỏi cha
-      selectList.add(Select(question.idSelected!, question.checkResult ?? false, question.title!));
+      selectList.add(Select(question.idSelected!, question.checkResult ?? false,
+          question.title!));
 
       // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
       initSelectValues(question, selectList);
@@ -523,10 +556,13 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       List<ListInputModel> selectList = [];
 
       // Thêm Select cho câu hỏi cha
-      if(question.questionType == 'date' || question.questionType == 'datetime' ) {
+      if (question.questionType == 'date' ||
+          question.questionType == 'datetime') {
         InputRegisterModel inputRegisterModel;
-        print("HoangCV: question.valueResult: ${question.valueResult} : ${question.title}");
-        if(question.valueResult != null) {
+        print(
+            "HoangCV: question.valueResult: ${question.valueResult} : ${question
+                .title}");
+        if (question.valueResult != null) {
           inputRegisterModel = InputRegisterModel<String, DateTime>(
               title: "",
               isCompulsory: false,
@@ -538,7 +574,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               textAlign: TextAlign.left
             //icon: Icons.calendar_today
           );
-        } else{
+        } else {
           inputRegisterModel = InputRegisterModel<String, DateTime>(
               title: "",
               isCompulsory: false,
@@ -550,7 +586,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             //icon: Icons.calendar_today
           );
         }
-        selectList.add(ListInputModel(question.idSelected!, inputRegisterModel, TextEditingController()));
+        selectList.add(ListInputModel(
+            question.idSelected!, inputRegisterModel, TextEditingController()));
       }
 
       // Gọi hàm đệ quy để thêm Select cho câu hỏi và câu trả lời con
@@ -571,22 +608,25 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
       // Gọi hàm đệ quy cho danh sách câu hỏi con
       for (Question childQuestion in item.questionAndPageIds) {
-        if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+        if (childQuestion.questionType == 'date' ||
+            childQuestion.questionType == 'datetime') {
           InputRegisterModel inputRegisterModel;
-          print("HoangCV: childQuestion.valueResult: ${childQuestion.valueResult}");
-          if(childQuestion.valueResult != null){
+          print("HoangCV: childQuestion.valueResult: ${childQuestion
+              .valueResult}");
+          if (childQuestion.valueResult != null) {
             inputRegisterModel = InputRegisterModel<String, DateTime>(
                 title: "",
                 isCompulsory: false,
                 typeInputEnum: TypeInputEnum.date,
                 type: TypeInputRegister.Select,
-                valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                valueSelected: Utils.formatStringToDate(
+                    childQuestion.valueResult!),
                 //controller: state.startTimeController,
                 noBorder: true,
                 textAlign: TextAlign.left
               //icon: Icons.calendar_today
             );
-          } else{
+          } else {
             inputRegisterModel = InputRegisterModel<String, DateTime>(
                 title: "",
                 isCompulsory: false,
@@ -599,7 +639,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               //icon: Icons.calendar_today
             );
           }
-          selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+          selectList.add(ListInputModel(
+              childQuestion.idSelected!, inputRegisterModel,
+              TextEditingController()));
         }
         initInputValues(childQuestion, selectList);
       }
@@ -607,22 +649,25 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     else if (item is Answer) {
       // Gọi hàm đệ quy cho danh sách câu hỏi con của câu trả lời con
       for (Question childQuestion in item.questionAndPageIds) {
-        if(childQuestion.questionType == 'date' || childQuestion.questionType == 'datetime' ) {
+        if (childQuestion.questionType == 'date' ||
+            childQuestion.questionType == 'datetime') {
           InputRegisterModel inputRegisterModel;
-          print("HoangCV: childQuestion.valueResult: ${childQuestion.valueResult}");
-          if(childQuestion.valueResult != null){
+          print("HoangCV: childQuestion.valueResult: ${childQuestion
+              .valueResult}");
+          if (childQuestion.valueResult != null) {
             inputRegisterModel = InputRegisterModel<String, DateTime>(
                 title: "",
                 isCompulsory: false,
                 typeInputEnum: TypeInputEnum.date,
                 type: TypeInputRegister.Select,
-                valueSelected: Utils.formatStringToDate(childQuestion.valueResult!),
+                valueSelected: Utils.formatStringToDate(
+                    childQuestion.valueResult!),
                 //controller: state.startTimeController,
                 noBorder: true,
                 textAlign: TextAlign.left
               //icon: Icons.calendar_today
             );
-          } else{
+          } else {
             inputRegisterModel = InputRegisterModel<String, DateTime>(
                 title: "",
                 isCompulsory: false,
@@ -635,7 +680,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               //icon: Icons.calendar_today
             );
           }
-          selectList.add(ListInputModel(childQuestion.idSelected!, inputRegisterModel, TextEditingController()));
+          selectList.add(ListInputModel(
+              childQuestion.idSelected!, inputRegisterModel,
+              TextEditingController()));
         }
         initInputValues(childQuestion, selectList);
       }
@@ -651,13 +698,17 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     if (item is Question) {
       // Gọi hàm đệ quy cho danh sách câu trả lời con
       for (Answer answer in item.suggestedAnswerIds) {
-        List<int> selectedIdsList = item.suggestedAnswerIds.map((answer) => answer.idSelected!).toList();
-        List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) => qs.idSelected!).toList();
+        List<int> selectedIdsList = item.suggestedAnswerIds.map((
+            answer) => answer.idSelected!).toList();
+        List<int> selectedIdsListSub = answer.questionAndPageIds.map((qs) =>
+        qs.idSelected!).toList();
         /*print(
             "HoangCV: Question:1 ${item.title} : ${item.questionType} : ${answer.value} : ${answer.idSelected} : ${answer.checkResult}");
-        */selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
+        */
+        selectList.add(Select(answer.idSelected!, answer.checkResult ?? false,
             answer.value!, listId: selectedIdsList,
-            listSubId: selectedIdsListSub, type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
+            listSubId: selectedIdsListSub,
+            type: item.questionType ?? '')); // Thêm Select cho câu trả lời con
         initSelectValues(answer, selectList);
       }
 
@@ -665,8 +716,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       for (Question childQuestion in item.questionAndPageIds) {
         /*print(
             "HoangCV: childQuestion:1 ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        */selectList.add(Select(childQuestion.idSelected!, childQuestion.checkResult ?? false,
-            childQuestion.title!, listId: [], listSubId: [])); // Thêm Select cho câu hỏi con
+        */ selectList.add(Select(
+            childQuestion.idSelected!, childQuestion.checkResult ?? false,
+            childQuestion.title!, listId: [],
+            listSubId: [])); // Thêm Select cho câu hỏi con
         initSelectValues(childQuestion, selectList);
       }
     } else if (item is Answer) {
@@ -675,11 +728,12 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         //   List<int> selectedIdsList = item.questionAndPageIds.map((answer) => answer.idSelected!).toList();
         /*print(
             "HoangCV: childQuestion: ${item.value} : ${childQuestion.title} : ${childQuestion.idSelected} : ${childQuestion.checkResult}");
-        */selectList.add(Select(
+        */ selectList.add(Select(
             childQuestion.idSelected!,
             childQuestion.checkResult ?? false,
             childQuestion
-                .title!, /*listId: selectedIdsList*/ parentId: item.idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
+                .title!, /*listId: selectedIdsList*/parentId: item
+            .idSelected!)); // Thêm Select cho câu hỏi con của câu trả lời con
         initSelectValues(childQuestion, selectList);
       }
 
@@ -687,7 +741,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       for (Answer childAnswer in item.suggestedAnswerIds) {
         /*print(
             "HoangCV: childAnswer: ${item.value} : ${childAnswer.value} : ${childAnswer.idSelected} : ${childAnswer.checkResult} : ${childAnswer.valueRowTable}");
-        */selectList.add(Select(
+        */ selectList.add(Select(
             childAnswer.idSelected!,
             childAnswer.checkResult ?? false,
             childAnswer
@@ -719,17 +773,20 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     if (item is Question || item is Answer) {
       for (Answer childAnswer in item.suggestedAnswerIds) {
         //print("HoangCV: Visible: ${item.title} : ${childAnswer.value} : ${childAnswer.idSelected}");
-        selectList.add(Visible(childAnswer.idSelected!, false, childAnswer.value!));
+        selectList.add(
+            Visible(childAnswer.idSelected!, false, childAnswer.value!));
         initVisibleValues(childAnswer, selectList);
       }
 
       for (Question childQuestion in item.questionAndPageIds) {
         //print("HoangCV: Visible: ${item.title} : ${childQuestion.title} : ${childQuestion.idSelected}");
-        selectList.add(Visible(childQuestion.idSelected!, false, childQuestion.title!));
+        selectList.add(
+            Visible(childQuestion.idSelected!, false, childQuestion.title!));
         initVisibleValues(childQuestion, selectList);
       }
     }
   }
+
   List<List<Controller>> createTextEditingControllerLists(
       List<Question> questions) {
     final List<List<Controller>> textEditingControllerLists = [];
@@ -738,7 +795,9 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       final List<Controller> textEditingControllerList = [];
 
       // Thêm TextEditingController cho câu hỏi cha
-      textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(text: question.valueResult ?? ''), checkQuestionType(question.questionType ?? ''), question.title!));
+      textEditingControllerList.add(Controller(question.idSelected!,
+          TextEditingController(text: question.valueResult ?? ''),
+          checkQuestionType(question.questionType ?? ''), question.title!));
 
       // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
       initTextControllers(question, textEditingControllerList);
@@ -749,16 +808,17 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     return textEditingControllerLists;
   }
 
-  List<List<Controller>> createTECTBLists(
-      List<TableQuestion> tableQs) {
+  List<List<Controller>> createTECTBLists(List<TableQuestion> tableQs) {
     final List<List<Controller>> textEditingControllerLists = [];
     tableQs.forEach((questions) {
       for (Question question in questions.listQuestion) {
         final List<Controller> textEditingControllerList = [];
 
         // Thêm TextEditingController cho câu hỏi cha
-        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(),
-            checkQuestionType(question.questionType ?? ''), question.title!));
+        textEditingControllerList.add(
+            Controller(question.idSelected!, TextEditingController(),
+                checkQuestionType(question.questionType ?? ''),
+                question.title!));
 
         // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
         initTextControllersTable(question, textEditingControllerList);
@@ -769,21 +829,26 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     return textEditingControllerLists;
   }
 
-  void initTextControllers(dynamic item, List<Controller> textEditingControllerList) {
+  void initTextControllers(dynamic item,
+      List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ''),
-                checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+            Controller(childQuestion.idSelected!,
+                TextEditingController(text: childQuestion.valueResult ?? ''),
+                checkQuestionType(childQuestion.questionType ?? ''),
+                childQuestion.title!));
         initTextControllers(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult ?? ''),
-                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
+            Controller(childAnswer.idSelected!,
+                TextEditingController(text: childAnswer.valueResult ?? ''),
+                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''),
+                childAnswer.value!,
                 idRow: childAnswer.tableRowId));
-        if(item is Question && item.questionType == 'table'){
+        if (item is Question && item.questionType == 'table') {
           //print("HoangCV: qs table: ${childAnswer.value} : ${childAnswer.rowId} : ${childAnswer.idSelected}");
         }
         /*if(item is Question && item.questionType == 'table'){
@@ -793,29 +858,36 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
     }
   }
-  void initTextControllersTable(dynamic item, List<Controller> textEditingControllerList) {
+
+  void initTextControllersTable(dynamic item,
+      List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
       //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected} : ${item is Answer ? item.valueRowTable : ''}");
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
             Controller(childQuestion.idSelected!, TextEditingController(),
-                checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+                checkQuestionType(childQuestion.questionType ?? ''),
+                childQuestion.title!));
         initTextControllersTable(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer.valueRowTable} : ${childAnswer.value}");
+        print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer
+            .valueRowTable} : ${childAnswer.value}");
         textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
-                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
+            Controller(childAnswer.idSelected!,
+                TextEditingController(text: childAnswer.valueRowTable ?? ''),
+                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''),
+                childAnswer.value!,
                 idRow: childAnswer.tableRowId, title: childAnswer.value,
                 constrMandatory: childAnswer.constrMandatory));
         initTextControllersTable(childAnswer, textEditingControllerList);
       }
     }
   }
-  String checkQuestionType(String type){
-    switch(type){
+
+  String checkQuestionType(String type) {
+    switch (type) {
       case 'numerical_box':
         return 'number';
         break;
@@ -825,8 +897,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
   }
 
-  Future<FutureOr<void>> updateEditReport(
-      UpdateEditReportEvent event, Emitter<EditReportState> emit) async {
+  Future<FutureOr<void>> updateEditReport(UpdateEditReportEvent event,
+      Emitter<EditReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
     print("HoanghCV123213412");
@@ -838,7 +910,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     List<Question> listQs = state.listReport[0].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
       print("HoangCV: listQs: ${listQs[i].title}");
-      if(listQs[i].questionAndPageIds.isNotEmpty) {
+      if (listQs[i].questionAndPageIds.isNotEmpty) {
         for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
           print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i]
               .questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h]
@@ -961,37 +1033,41 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             }
           }
         }
-      } else{
+      } else {
         for (int j = 0;
         j < listQs[i].suggestedAnswerIds.length;
         j++) {
           for (int k = 0;
           k < listQs[i].suggestedAnswerIds[j].questionAndPageIds.length;
           k++) {
-            if (listQs[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected == event.id) {
+            if (listQs[i].suggestedAnswerIds[j].questionAndPageIds[k]
+                .idSelected == event.id) {
               listQs[i].suggestedAnswerIds[j].isError = false;
-              listQs[i].suggestedAnswerIds[j].questionAndPageIds[k].isError = false;
+              listQs[i].suggestedAnswerIds[j].questionAndPageIds[k].isError =
+              false;
               question = Question.copy(
                   listQs[i].suggestedAnswerIds[j].questionAndPageIds[k]);
               answerType = question.questionType ?? "";
-              if(question.commentAnswer == true){
+              if (question.commentAnswer == true) {
                 hasCommandAnswer = true;
               }
               /*answer = Answer.copy(
                     listQs[i].questionAndPageIds[h].suggestedAnswerIds[j]);*/
             }
           }
-          if (listQs[i].suggestedAnswerIds[j].idSelected ==event.id) {
+          if (listQs[i].suggestedAnswerIds[j].idSelected == event.id) {
             listQs[i].isError = false;
             question = Question.copy(listQs[i]);
             answer = Answer.copy(
                 listQs[i].suggestedAnswerIds[j]);
-            if(answer.commentAnswer == true){
+            if (answer.commentAnswer == true) {
               hasCommandAnswer = true;
             }
             answerType = question.questionType ?? "";
-            if(answerType == 'simple_choice'){
-              listIdSuggested = listQs[i].suggestedAnswerIds.map((item) => item.id ?? -1).toList();
+            if (answerType == 'simple_choice') {
+              listIdSuggested =
+                  listQs[i].suggestedAnswerIds.map((item) => item.id ?? -1)
+                      .toList();
             }
           }
         }
@@ -1006,39 +1082,45 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       answerType = question.questionType ?? "";
       listIdSuggested = resultUpload[2];
     }*/
-    int index = event.listSelect.indexWhere((element) => element.id == event.id);
-    int indexController = event.listController.indexWhere((element) => element.id == event.id);
-    String text = indexController != -1 ? event.listController[indexController].controller.text.toString() : '';
-    if(event.value != null || event.value.isNotEmpty){
+    int index = event.listSelect.indexWhere((element) =>
+    element.id == event.id);
+    int indexController = event.listController.indexWhere((element) =>
+    element.id == event.id);
+    String text = indexController != -1 ? event.listController[indexController]
+        .controller.text.toString() : '';
+    if (event.value != null || event.value.isNotEmpty) {
       text = event.value;
     }
     QuestionUpload questionUpload;
     //print("HoangCV: question: ${question.id} : ${question.idSelected} : ${question.title} : ${answer.id} : ${answerType} : ${listIdSuggested} : $text : $index : ${event.listSelect[index].value}");
-    if(answerType == "check_box" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+    if (answerType == "check_box" && text.isNotEmpty && index != -1 &&
+        event.listSelect[index].value == false) {
 
-    } else if(answerType == "simple_choice" && text.isNotEmpty && index != -1 && event.listSelect[index].value == false){
+    } else
+    if (answerType == "simple_choice" && text.isNotEmpty && index != -1 &&
+        event.listSelect[index].value == false) {
 
-    } else if(answerType == "char_box" && text.isEmpty){
+    } else if (answerType == "char_box" && text.isEmpty) {
 
-    } else if(answerType == "check_box" && text.isEmpty && hasCommandAnswer){
+    } else if (answerType == "check_box" && text.isEmpty && hasCommandAnswer) {
 
-    } else if(answerType == "simple_choice" && text.isEmpty && hasCommandAnswer){
+    } else
+    if (answerType == "simple_choice" && text.isEmpty && hasCommandAnswer) {
 
     } else {
       questionUpload = QuestionUpload(
-        user_input_id: state.reportId,
-        survey_id: state.listReport[0].id,
-        question_id: question.id,
-        suggested_answer_id: answer.id,
-        answer_type: answerType == '' ? null : answerType,
-        value_text: event.value,
-        test_entry: false,
-        // value default ko ro Anh Dung de lam gi
-        is_answer_exist: index != -1 ? event.listSelect[index].value : false,
-        // value khi tich chon va bo tich chon
-        //table_row_id: 1,
-        list_id_suggested: listIdSuggested,
-      state: 'in_progress');
+          userInputId: state.reportId,
+          surveyId: state.listReport[0].id,
+          questionId: question.id,
+          suggestedAnswerId: answer.id,
+          answerType: answerType == '' ? null : answerType,
+          valueText: event.value,
+          // value default ko ro Anh Dung de lam gi
+          isAnswerExist: index != -1 ? event.listSelect[index].value : false,
+          // value khi tich chon va bo tich chon
+          //table_row_id: 1,
+          listIdSuggested: listIdSuggested,
+          state: 'in_progress');
 
       ObjectResult result = await repository.uploadQuestion(questionUpload);
       if (result.responseCode == StatusConst.code00) {
@@ -1046,16 +1128,17 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else if (result.responseCode == StatusConst.code01){
+      } else if (result.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+            formStatus: SubmissionFailed(
+                "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
 
-  Future<FutureOr<void>> updateEditTable(
-      UpdateEditTableEvent event, Emitter<EditReportState> emit) async {
+  Future<FutureOr<void>> updateEditTable(UpdateEditTableEvent event,
+      Emitter<EditReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
@@ -1064,10 +1147,13 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     for (int i = 0; i < listQs.length; i++) {
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
         if (listQs[i].questionAndPageIds[h].questionType == "table") {
-          for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
-            print("HoangCV: table controller: ${event.answerId} : ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id} ");
-            if (event.answerId == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id) {
-              if(event.value.isNotEmpty) {
+          for (int k = 0; k <
+              listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
+            print("HoangCV: table controller: ${event.answerId} : ${listQs[i]
+                .questionAndPageIds[h].suggestedAnswerIds[k].id} ");
+            if (event.answerId ==
+                listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id) {
+              if (event.value.isNotEmpty) {
                 listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError =
                 false;
               }
@@ -1085,18 +1171,18 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
     }
 
-    if(event.value.isNotEmpty) {
+    if (event.value.isNotEmpty) {
       QuestionUpload questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[0].id,
-          question_id: event.questionId,
-          suggested_answer_id: event.answerId,
-          answer_type: 'table',
-          value_text: event.value,
-          is_answer_exist: true,
-          table_row_id: event.rowId,
-          list_id_suggested: [],
-        state: 'in_progress'
+          userInputId: state.reportId,
+          surveyId: state.listReport[0].id,
+          questionId: event.questionId,
+          suggestedAnswerId: event.answerId,
+          answerType: 'table',
+          valueText: event.value,
+          isAnswerExist: true,
+          tableRowId: event.rowId,
+          listIdSuggested: [],
+          state: 'in_progress'
       );
       ObjectResult result = await repository.uploadQuestion(questionUpload);
       if (result.responseCode == StatusConst.code00) {
@@ -1104,47 +1190,52 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else if (result.responseCode == StatusConst.code01){
+      } else if (result.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+            formStatus: SubmissionFailed(
+                "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
 
-  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<EditReportState> emit) async {
-    state.farmerInspector!.monitoring_visit_type = event.value;
+  Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event,
+      Emitter<EditReportState> emit) async {
+    state.farmerInspector!.monitoringVisitType = event.value;
     emit(state.copyWith(
         farmerInspector: state.farmerInspector
     ));
-    if(state.reportId != null ){
+    if (state.reportId != null) {
       emit(state.copyWith(
           isShowProgress: true, formStatus: const InitialFormStatus()));
 
-      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+      FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
         id: state.reportId,
-        farmer_id: state.farmerInspector!.farmer_id,
-        farm_id: state.farmerInspector!.farm_id,
-        farmer_code: state.farmerInspector!.farmer_code,
-        internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-        monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-        visit_date: state.farmerInspector!.visit_date,
+        farmerId: state.farmerInspector!.farmerId,
+        farmId: state.farmerInspector!.farmId,
+        farmerCode: state.farmerInspector!.farmerCode,
+        internalInspectorId: state.farmerInspector!.internalInspectorId,
+        monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+        visitDate: state.farmerInspector!.visitDate,
       );
-      ObjectResult result = await repository.editFarmerInspector(questionUpload);
+      ObjectResult result = await repository.editFarmerInspector(
+          questionUpload);
       if (result.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess()));
-      } else if (result.responseCode == StatusConst.code01){
+      } else if (result.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+            formStatus: SubmissionFailed(
+                "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
 
-  Future<FutureOr<void>> submitReport(SubmitReportEvent event, Emitter<EditReportState> emit) async {
+  Future<FutureOr<void>> submitReport(SubmitReportEvent event,
+      Emitter<EditReportState> emit) async {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
@@ -1159,27 +1250,31 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           //print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].title}");
           String qsType = listQs[i].questionAndPageIds[h].questionType ?? "";
           Question qs = listQs[i].questionAndPageIds[h];
-          if(qsType == "check_box"){
+          if (qsType == "check_box") {
             int indexQs = -1;
             state.listSelected.forEach((element) {
               indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-              if(indexQs != -1){
+              if (indexQs != -1) {
                 //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                if(qs.commentAnswer == true){
-                  if(!element[indexQs].value){
-
+                if (qs.commentAnswer == true) {
+                  if (!element[indexQs].value) {
                     checkBreak = true;
                     listQs[i].questionAndPageIds[h].isError = true;
-                    Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                    Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i]
+                        .questionAndPageIds[h].title}");
                     submit = false;
-                  } else{
+                  } else {
                     int indexCtrl = -1;
                     state.listController.forEach((element) {
-                      indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                      if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                      indexCtrl =
+                          element.indexWhere((el) => el.id == qs.idSelected);
+                      if (indexCtrl != -1 &&
+                          element[indexCtrl].controller.text.isEmpty) {
                         checkBreak = true;
                         listQs[i].questionAndPageIds[h].isError = true;
-                        Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                        Toast.showLongTop(
+                            "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                .questionAndPageIds[h].title}");
                         submit = false;
                       }
                     });
@@ -1188,52 +1283,75 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               }
             });
           }
-          else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+          else if (qsType == "simple_choice" || qsType == "multi_choice") {
             int indexAs = -1;
             bool checkPass = false;
             state.listSelected.forEach((element) {
-              for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
-                indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                if(indexAs != -1) {
-                  if(element[indexAs].value){
-                    print("HoangCVqs.suggestedAnswerIds[a]: ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
+              for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                indexAs = element.indexWhere((el) => el.id ==
+                    qs.suggestedAnswerIds[a].idSelected);
+                if (indexAs != -1) {
+                  if (element[indexAs].value) {
+                    print("HoangCVqs.suggestedAnswerIds[a]: ${qs
+                        .suggestedAnswerIds[a].value} : ${qs
+                        .suggestedAnswerIds[a].commentAnswer}");
                     checkPass = true;
-                    if(qs.suggestedAnswerIds[a].commentAnswer == true){
+                    if (qs.suggestedAnswerIds[a].commentAnswer == true) {
                       int indexCtrl = -1;
                       state.listController.forEach((element) {
-                        indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                        indexCtrl = element.indexWhere((el) =>
+                        el.id == qs.suggestedAnswerIds[a].idSelected);
+                        if (indexCtrl != -1 && element[indexCtrl].controller
+                            .text.isEmpty) {
                           checkBreak = true;
-                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].isError = true;
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[a]
+                              .isError = true;
                           Toast.showLongTop(
-                              "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
+                              "Vui lòng nhập đáp án cho câu ${qs
+                                  .suggestedAnswerIds[a].value}");
                           submit = false;
                         }
                       });
                     }
-                    for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
+                    for (int b = 0; b <
+                        qs.suggestedAnswerIds[a].questionAndPageIds
+                            .length; b++) {
                       int indexQS;
                       state.listSelected.forEach((element) {
-                        for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
-                          indexQS = element.indexWhere((el) => el.id ==
-                              qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                        for (int a = 0; a < qs.suggestedAnswerIds[a]
+                            .questionAndPageIds.length; a++) {
+                          indexQS = element.indexWhere((el) =>
+                          el.id ==
+                              qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                  .idSelected);
                           if (indexQS != -1) {
                             print("HoangCASCSDV:");
-                            if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
+                            if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                .questionType == "check_box") {
                               if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
                                   .commentAnswer == true) {
                                 if (element[indexAs].value) {
                                   int indexCtrl = -1;
                                   state.listController.forEach((element) {
                                     indexCtrl = element.indexWhere((el) =>
-                                    el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                                    if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                                    el.id == qs.suggestedAnswerIds[a]
+                                        .questionAndPageIds[b].idSelected);
+                                    if (indexCtrl != -1 &&
+                                        element[indexCtrl].controller.text
+                                            .isEmpty) {
                                       checkBreak = true;
-                                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
-                                      print("HoangCVqs.questionAndPageIds[b]: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                      listQs[i].questionAndPageIds[h]
+                                          .suggestedAnswerIds[a]
+                                          .questionAndPageIds[b].isError = true;
+                                      print(
+                                          "HoangCVqs.questionAndPageIds[b]: ${listQs[i]
+                                              .questionAndPageIds[h]
+                                              .suggestedAnswerIds[a]
+                                              .questionAndPageIds[b].title}");
                                       Toast.showLongTop(
                                           "Vui lòng nhập đáp án cho câu "
-                                              "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                              "${qs.suggestedAnswerIds[a]
+                                              .questionAndPageIds[b].title}");
                                       submit = false;
                                     }
                                   });
@@ -1247,7 +1365,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                               if (!element[indexQS].value) {
                                 checkBreak = true;
                                 listQs[i].questionAndPageIds[h].isError = true;
-                                print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title}");
+                                print("HoangCV:buubu ${listQs[i]
+                                    .questionAndPageIds[h].title}");
                                 Toast.showLongTop(
                                     "Vui lòng chọn đáp án cho câu ${listQs[i]
                                         .questionAndPageIds[h].title}");
@@ -1263,11 +1382,12 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                 }
               }
             });
-            if(!checkPass) {
+            if (!checkPass) {
               print("HjoangCV : ${qs.title}");
               state.listSelected.forEach((element) {
                 for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
-                  indexAs = element.indexWhere((el) => el.id ==
+                  indexAs = element.indexWhere((el) =>
+                  el.id ==
                       qs.suggestedAnswerIds[a].idSelected);
                   if (indexAs != -1) {
                     //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
@@ -1301,15 +1421,18 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     }
                     else {
                       if (!element[indexAs].value) {
-                        (state.scrollController?? AutoScrollController()).scrollToIndex(
+                        (state.scrollController ?? AutoScrollController())
+                            .scrollToIndex(
                           i,
-                          preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
+                          preferPosition: AutoScrollPosition
+                              .begin, // Scroll position (begin, middle, end)
                           //duration: Duration(seconds: 1), // Duration of the scroll animation
                         );
                         checkBreak = true;
                         listQs[i].questionAndPageIds[h].isError = true;
 
-                        print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title} : "
+                        print("HoangCV:buubu ${listQs[i].questionAndPageIds[h]
+                            .title} : "
                             "$i : ${state.scrollController}");
 
                         Toast.showLongTop(
@@ -1324,18 +1447,23 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               });
             }
           }
-          else if(qsType == "datetime" || qsType == "date" ){
+          else if (qsType == "datetime" || qsType == "date") {
             int indexCtrl = -1;
             print("Hoangcv111 : ${qs.idSelected} ${qs.id} : ");
             state.listInputModel.forEach((element) {
               indexCtrl = element.indexWhere((el) =>
               el.id == qs.idSelected);
-              print("Hoangcv11113213 : ${element.length> 0 ?element.first.id : 0} : ${indexCtrl} ");
-              if(indexCtrl != -1){
-                print("indexCtrl : ${element[indexCtrl].inputModel.valueSelected!.toString().isNotEmpty} : ${indexCtrl} ");
+              print("Hoangcv11113213 : ${element.length > 0
+                  ? element.first.id
+                  : 0} : ${indexCtrl} ");
+              if (indexCtrl != -1) {
+                print(
+                    "indexCtrl : ${element[indexCtrl].inputModel.valueSelected!
+                        .toString().isNotEmpty} : ${indexCtrl} ");
               }
-              if (indexCtrl != -1 && element[indexCtrl].inputModel.valueSelected!.toString().isEmpty) {
-
+              if (indexCtrl != -1 &&
+                  element[indexCtrl].inputModel.valueSelected!
+                      .toString().isEmpty) {
                 checkBreak = true;
                 listQs[i].questionAndPageIds[h].isError = true;
                 Toast.showLongTop(
@@ -1344,13 +1472,14 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                 submit = false;
               }
             });
-          }else{
+          } else {
             int indexCtrl = -1;
             print("Hoangcv111");
             state.listController.forEach((element) {
               indexCtrl = element.indexWhere((el) =>
               el.id == qs.idSelected);
-              if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+              if (indexCtrl != -1 &&
+                  element[indexCtrl].controller.text.isEmpty) {
                 checkBreak = true;
                 listQs[i].questionAndPageIds[h].isError = true;
                 Toast.showLongTop(
@@ -1360,39 +1489,51 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               }
             });
           }
-          if(!submit){
+          if (!submit) {
             break;
           }
         } else {
           for (int l = 0;
           l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
           l++) {
-            print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
-                " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory} ");
-            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory == true) {
-              String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].questionType ?? "";
-              Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l];
+            print(
+                "HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i]
+                    .questionAndPageIds[h].questionAndPageIds[l].title} :"
+                    " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                    .constrMandatory} ");
+            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                .constrMandatory == true) {
+              String qsType = listQs[i].questionAndPageIds[h]
+                  .questionAndPageIds[l].questionType ?? "";
+              Question qs = listQs[i].questionAndPageIds[h]
+                  .questionAndPageIds[l];
               print("HoanmgCV:l: ${qs.title} : ${qsType}");
-              if(qsType == "check_box"){
+              if (qsType == "check_box") {
                 int indexQs = -1;
                 state.listSelected.forEach((element) {
                   indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                  if(indexQs != -1){
+                  if (indexQs != -1) {
                     //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                    if(qs.commentAnswer == true){
-                      if(!element[indexQs].value){
+                    if (qs.commentAnswer == true) {
+                      if (!element[indexQs].value) {
                         checkBreak = true;
                         listQs[i].questionAndPageIds[h].isError = true;
-                        Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                        Toast.showLongTop(
+                            "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                .questionAndPageIds[h].title}");
                         submit = false;
-                      } else{
+                      } else {
                         int indexCtrl = -1;
                         state.listController.forEach((element) {
-                          indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                          if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                          indexCtrl = element.indexWhere((el) =>
+                          el.id == qs.idSelected);
+                          if (indexCtrl != -1 && element[indexCtrl].controller
+                              .text.isEmpty) {
                             checkBreak = true;
                             listQs[i].questionAndPageIds[h].isError = true;
-                            Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                            Toast.showLongTop(
+                                "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                    .questionAndPageIds[h].title}");
                             submit = false;
                           }
                         });
@@ -1400,52 +1541,79 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     }
                   }
                 });
-              } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+              } else
+              if (qsType == "simple_choice" || qsType == "multi_choice") {
                 int indexAs = -1;
                 bool checkPass = false;
                 state.listSelected.forEach((element) {
-                  for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
-                    indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                    if(indexAs != -1) {
-                      if(element[indexAs].value){
-                        print("HoangCVqs.suggestedAnswerIds[a] sub : ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
+                  for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                    indexAs = element.indexWhere((el) => el.id ==
+                        qs.suggestedAnswerIds[a].idSelected);
+                    if (indexAs != -1) {
+                      if (element[indexAs].value) {
+                        print("HoangCVqs.suggestedAnswerIds[a] sub : ${qs
+                            .suggestedAnswerIds[a].value} : ${qs
+                            .suggestedAnswerIds[a].commentAnswer}");
                         checkPass = true;
-                        if(qs.suggestedAnswerIds[a].commentAnswer == true){
+                        if (qs.suggestedAnswerIds[a].commentAnswer == true) {
                           int indexCtrl = -1;
                           state.listController.forEach((element) {
-                            indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                            if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                            indexCtrl = element.indexWhere((el) => el.id ==
+                                qs.suggestedAnswerIds[a].idSelected);
+                            if (indexCtrl != -1 &&
+                                element[indexCtrl].controller.text.isEmpty) {
                               checkBreak = true;
                               qs.suggestedAnswerIds[a].isError = true;
                               Toast.showLongTop(
-                                  "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
+                                  "Vui lòng nhập đáp án cho câu ${qs
+                                      .suggestedAnswerIds[a].value}");
                               submit = false;
                             }
                           });
                         }
-                        for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
+                        for (int b = 0; b <
+                            qs.suggestedAnswerIds[a].questionAndPageIds
+                                .length; b++) {
                           int indexQS;
                           state.listSelected.forEach((element) {
-                            for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
-                              indexQS = element.indexWhere((el) => el.id ==
-                                  qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
+                            for (int a = 0; a <
+                                qs.suggestedAnswerIds[a].questionAndPageIds
+                                    .length; a++) {
+                              indexQS = element.indexWhere((el) =>
+                              el.id ==
+                                  qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                      .idSelected);
                               if (indexQS != -1) {
                                 print("HoangCASCSDV sub:");
-                                if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
-                                  if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                if (qs.suggestedAnswerIds[a]
+                                    .questionAndPageIds[b].questionType ==
+                                    "check_box") {
+                                  if (qs.suggestedAnswerIds[a]
+                                      .questionAndPageIds[b]
                                       .commentAnswer == true) {
                                     if (element[indexAs].value) {
                                       int indexCtrl = -1;
                                       state.listController.forEach((element) {
                                         indexCtrl = element.indexWhere((el) =>
-                                        el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                                        el.id == qs.suggestedAnswerIds[a]
+                                            .questionAndPageIds[b].idSelected);
+                                        if (indexCtrl != -1 &&
+                                            element[indexCtrl].controller.text
+                                                .isEmpty) {
                                           checkBreak = true;
-                                          qs.suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
-                                          print("HoangCVqs.questionAndPageIds[b] sub : ${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                          qs.suggestedAnswerIds[a]
+                                              .questionAndPageIds[b].isError =
+                                          true;
+                                          print(
+                                              "HoangCVqs.questionAndPageIds[b] sub : ${qs
+                                                  .suggestedAnswerIds[a]
+                                                  .questionAndPageIds[b]
+                                                  .title}");
                                           Toast.showLongTop(
                                               "Vui lòng nhập đáp án cho câu "
-                                                  "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
+                                                  "${qs.suggestedAnswerIds[a]
+                                                  .questionAndPageIds[b]
+                                                  .title}");
                                           submit = false;
                                         }
                                       });
@@ -1461,7 +1629,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                                     qs.isError = true;
                                     print("HoangCV:buubu sub: ${qs.title}");
                                     Toast.showLongTop(
-                                        "Vui lòng chọn đáp án cho câu ${qs.title}");
+                                        "Vui lòng chọn đáp án cho câu ${qs
+                                            .title}");
                                     submit = false;
                                     break;
                                   }
@@ -1474,11 +1643,12 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     }
                   }
                 });
-                if(!checkPass) {
+                if (!checkPass) {
                   print("HjoangCV sub : ${qs.title}");
                   state.listSelected.forEach((element) {
                     for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
-                      indexAs = element.indexWhere((el) => el.id ==
+                      indexAs = element.indexWhere((el) =>
+                      el.id ==
                           qs.suggestedAnswerIds[a].idSelected);
                       if (indexAs != -1) {
                         //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
@@ -1512,9 +1682,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                         }
                         else {
                           if (!element[indexAs].value) {
-                            (state.scrollController?? AutoScrollController()).scrollToIndex(
+                            (state.scrollController ?? AutoScrollController())
+                                .scrollToIndex(
                               i,
-                              preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
+                              preferPosition: AutoScrollPosition
+                                  .begin, // Scroll position (begin, middle, end)
                               //duration: Duration(seconds: 1), // Duration of the scroll animation
                             );
                             checkBreak = true;
@@ -1534,46 +1706,72 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                   });
                 }
               }
-              else{
+              else {
                 checkBreak = true;
                 qs.isError = true;
-                Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+                Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i]
+                    .questionAndPageIds[h].title}");
                 submit = false;
               }
-            } else{
+            } else {
               for (int m = 0;
-              m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
+              m < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                  .suggestedAnswerIds.length;
               m++) {
                 for (int n = 0;
-                n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
+                n < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                    .suggestedAnswerIds[m].questionAndPageIds.length;
                 n++) {
-                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].
+                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                      .suggestedAnswerIds[m].
                   questionAndPageIds[n].constrMandatory == true) {
-                    print("HoanmgCV:n: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
-                    String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].questionType ?? "";
-                    Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n];
-                    if(qsType == "simple_choice" || qsType == "multi_choice" || qsType == "check_box"){
+                    print("HoanmgCV:n: ${listQs[i].questionAndPageIds[h]
+                        .questionAndPageIds[l].suggestedAnswerIds[m]
+                        .questionAndPageIds[n].title}");
+                    String qsType = listQs[i].questionAndPageIds[h]
+                        .questionAndPageIds[l].suggestedAnswerIds[m]
+                        .questionAndPageIds[n].questionType ?? "";
+                    Question qs = listQs[i].questionAndPageIds[h]
+                        .questionAndPageIds[l].suggestedAnswerIds[m]
+                        .questionAndPageIds[n];
+                    if (qsType == "simple_choice" || qsType == "multi_choice" ||
+                        qsType == "check_box") {
                       int indexQs = -1;
                       state.listSelected.forEach((element) {
-                        indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                        if(indexQs != -1){
+                        indexQs =
+                            element.indexWhere((el) => el.id == qs.idSelected);
+                        if (indexQs != -1) {
                           //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                          if(qs.commentAnswer == true){
-                            if(!element[indexQs].value){
+                          if (qs.commentAnswer == true) {
+                            if (!element[indexQs].value) {
                               checkBreak = true;
-                              listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
+                              listQs[i].questionAndPageIds[h]
+                                  .questionAndPageIds[l].suggestedAnswerIds[m]
+                                  .questionAndPageIds[n].isError = true;
                               Toast.showLongTop("Vui lòng chọn đáp án cho câu "
-                                  "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                                  "${listQs[i].questionAndPageIds[h]
+                                  .questionAndPageIds[l].suggestedAnswerIds[m]
+                                  .questionAndPageIds[n].title}");
                               submit = false;
-                            } else{
+                            } else {
                               int indexCtrl = -1;
                               state.listController.forEach((element) {
-                                indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                                if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                                indexCtrl = element.indexWhere((el) => el.id ==
+                                    qs.idSelected);
+                                if (indexCtrl != -1 &&
+                                    element[indexCtrl].controller.text
+                                        .isEmpty) {
                                   checkBreak = true;
-                                  listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
-                                  Toast.showLongTop("Vui lòng nhập đáp án cho câu "
-                                      "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                                  listQs[i].questionAndPageIds[h]
+                                      .questionAndPageIds[l]
+                                      .suggestedAnswerIds[m]
+                                      .questionAndPageIds[n].isError = true;
+                                  Toast.showLongTop(
+                                      "Vui lòng nhập đáp án cho câu "
+                                          "${listQs[i].questionAndPageIds[h]
+                                          .questionAndPageIds[l]
+                                          .suggestedAnswerIds[m]
+                                          .questionAndPageIds[n].title}");
                                   submit = false;
                                 }
                               });
@@ -1581,12 +1779,16 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                           }
                         }
                       });
-                    } else{
+                    } else {
                       print("asdasdj");
                       checkBreak = true;
-                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
+                      listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                          .suggestedAnswerIds[m].questionAndPageIds[n].isError =
+                      true;
                       Toast.showLongTop("Vui lòng nhập đáp án cho câu "
-                          "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
+                          "${listQs[i].questionAndPageIds[h]
+                          .questionAndPageIds[l].suggestedAnswerIds[m]
+                          .questionAndPageIds[n].title}");
                       submit = false;
                     }
                   }
@@ -1600,38 +1802,61 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             //print("HoangCV: listQs[i].suggestedAnswerIds: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].value}");
             int indexAsSub = -1;
             state.listSelected.forEach((element) {
-              indexAsSub = element.indexWhere((el) => el.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].idSelected);
-              if(indexAsSub != -1){
-                if(element[indexAsSub].value){
-                  for (int u = 0; u < listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds.length; u++) {
+              indexAsSub = element.indexWhere((el) => el.id ==
+                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                      .idSelected);
+              if (indexAsSub != -1) {
+                if (element[indexAsSub].value) {
+                  for (int u = 0; u <
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                          .questionAndPageIds.length; u++) {
                     print("HoangCV: listQs[i].questionAndPageIds u:: "
-                        "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title} : "
-                        "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory}");
-                    if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory == true) {
-                      print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title}");
-                      String qsType = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].questionType ?? "";
-                      Question qs = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u];
-                      if(qsType == "check_box"){
+                        "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                        .questionAndPageIds[u].title} : "
+                        "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                        .questionAndPageIds[u].constrMandatory}");
+                    if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                        .questionAndPageIds[u].constrMandatory == true) {
+                      print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[l].questionAndPageIds[u].title}");
+                      String qsType = listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[l].questionAndPageIds[u]
+                          .questionType ?? "";
+                      Question qs = listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[l].questionAndPageIds[u];
+                      if (qsType == "check_box") {
                         int indexQs = -1;
                         //check box: ko tích thì vẫn là ko , còn nếu tích thì phải check comment answer
                         state.listSelected.forEach((element) {
-                          indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                          if(indexQs != -1){
+                          indexQs = element.indexWhere((el) =>
+                          el.id == qs.idSelected);
+                          if (indexQs != -1) {
                             //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                            if(qs.commentAnswer == true){
-                              if(!element[indexQs].value){
+                            if (qs.commentAnswer == true) {
+                              if (!element[indexQs].value) {
                                 checkBreak = true;
-                                listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                                Toast.showLongTop("Vui lòng chọn đáp án cho câu ${qs.title}");
+                                listQs[i].questionAndPageIds[h]
+                                    .suggestedAnswerIds[l].questionAndPageIds[u]
+                                    .isError = true;
+                                Toast.showLongTop(
+                                    "Vui lòng chọn đáp án cho câu ${qs.title}");
                                 submit = false;
-                              } else{
+                              } else {
                                 int indexCtrl = -1;
                                 state.listController.forEach((element) {
-                                  indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                                  if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
+                                  indexCtrl =
+                                      element.indexWhere((el) => el.id ==
+                                          qs.idSelected);
+                                  if (indexCtrl != -1 &&
+                                      element[indexCtrl].controller.text
+                                          .isEmpty) {
                                     checkBreak = true;
-                                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                                    Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
+                                    listQs[i].questionAndPageIds[h]
+                                        .suggestedAnswerIds[l]
+                                        .questionAndPageIds[u].isError = true;
+                                    Toast.showLongTop(
+                                        "Vui lòng nhập đáp án cho câu ${qs
+                                            .title}");
                                     submit = false;
                                   }
                                 });
@@ -1639,22 +1864,28 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                             }
                           }
                         });
-                      } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
+                      } else if (qsType == "simple_choice" ||
+                          qsType == "multi_choice") {
 
-                      } else{
+                      } else {
                         int indexCtrl = -1;
                         print("12312");
                         state.listController.forEach((element) {
-                          indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                          if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                          indexCtrl = element.indexWhere((el) =>
+                          el.id == qs.idSelected);
+                          if (indexCtrl != -1 &&
+                              element[indexCtrl].controller.text.isEmpty) {
                             checkBreak = true;
-                            listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                            Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
+                            listQs[i].questionAndPageIds[h]
+                                .suggestedAnswerIds[l].questionAndPageIds[u]
+                                .isError = true;
+                            Toast.showLongTop(
+                                "Vui lòng nhập đáp án cho câu ${qs.title}");
                             submit = false;
                           }
                         });
                       }
-                      if(!submit){
+                      if (!submit) {
                         break;
                       }
                     }
@@ -1665,38 +1896,55 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           }
         }
       }
-      if(checkBreak){
-       // print("HoangCV: index: $i");
-        state.scrollController!.scrollToIndex(i+1, preferPosition: AutoScrollPosition.begin);
+      if (checkBreak) {
+        // print("HoangCV: index: $i");
+        state.scrollController!.scrollToIndex(
+            i + 1, preferPosition: AutoScrollPosition.begin);
         break;
       }
     }
-    if(submit){
+    if (submit) {
       bool checkBreak = false;
       for (var element in state.listControllerTable) {
         for (var e in element) {
-          print("HoangCV: table controller: ${e.title} : ${e.value} : ${e.controller.text.isEmpty} : ${e.constrMandatory}");
+          print("HoangCV: table controller: ${e.title} : ${e.value} : ${e
+              .controller.text.isEmpty} : ${e.constrMandatory}");
           if (e.constrMandatory == true && e.controller.text.isEmpty) {
             for (int i = 0; i < listQs.length; i++) {
               for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
                 if (listQs[i].questionAndPageIds[h].questionType == "table") {
-                  for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
-                    if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].idSelected) {
-                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError = true;
+                  for (int k = 0; k <
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds
+                          .length; k++) {
+                    if (e.id ==
+                        listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                            .idSelected) {
+                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                          .isError = true;
                       if (!checkBreak) {
-                        Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
+                        Toast.showLongTop(
+                            "Vui lòng nhập đáp án cho cột ${e.value}");
                       }
                       submit = false;
                       checkBreak = true;
                     }
                     else {
-                      for (int l = 0; l < listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds.length; l++) {
-                        print("HoangCV: table controller:sub ${e.value} : ${e.idRow} : ${e.id} : "
-                            "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected} : $checkBreak");
-                        if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected) {
-                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].isError = true;
+                      for (int l = 0; l <
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                              .suggestedAnswerIds.length; l++) {
+                        print("HoangCV: table controller:sub ${e.value} : ${e
+                            .idRow} : ${e.id} : "
+                            "${listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[k].suggestedAnswerIds[l]
+                            .idSelected} : $checkBreak");
+                        if (e.id == listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[k].suggestedAnswerIds[l]
+                            .idSelected) {
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                              .suggestedAnswerIds[l].isError = true;
                           if (!checkBreak) {
-                            Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
+                            Toast.showLongTop(
+                                "Vui lòng nhập đáp án cho cột ${e.value}");
                           }
                           submit = false;
                           checkBreak = true;
@@ -1711,7 +1959,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
               }
               if (checkBreak) {
                 print("HoangCV: run wat: $i ${listQs[i].title}");
-                state.scrollController!.scrollToIndex(i + 1, preferPosition: AutoScrollPosition.begin);
+                state.scrollController!.scrollToIndex(
+                    i + 1, preferPosition: AutoScrollPosition.begin);
                 break;
               }
             }
@@ -1728,24 +1977,109 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     emit(state.copyWith(
         scrollController: state.scrollController));
     print("HoangCV: submit: ${submit} : ${state.scrollController}");
-    if(submit){
-      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+    if (submit) {
+      FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
           id: state.reportId,
           state: 'done'
       );
-      ObjectResult result = await repository.editFarmerInspector(questionUpload);
+      ObjectResult result = await repository.editFarmerInspector(
+          questionUpload);
       if (result.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
             formStatus: SubmissionSuccess(success: result.message)));
-      } else if (result.responseCode == StatusConst.code01){
+      } else if (result.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+            formStatus: SubmissionFailed(
+                "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
       }
     }
   }
+
+  FutureOr<void> addNewTableRow(AddTableRowEvent event,
+      Emitter<EditReportState> emit) {
+    emit(state.copyWith(
+        isShowProgress: true
+    ));
+    List<TableQuestion> listTable = state.listTable;
+    //int indexTable = listTable.indexWhere((element) => element.id == event.idTable);
+    int i = state.listTable[event.idTable].listQuestion.length;
+    addNewRow(event.list, listTable, i, event.idTable);
+    listTable.forEach((element) {
+      print("HoangCV:listTable:  ${listTable.toString()}");
+      element.listQuestion.forEach((e) {
+        print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
+      });
+    });
+    List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
+    state.listControllerTable.addAll(listCtrlTable);
+    emit(state.copyWith(
+        listTable: listTable,
+        listControllerTable: state.listControllerTable,
+        isShowProgress: false
+      // listReport: state.listReport
+    ));
+    state.listTable.forEach((element) {
+      print("HoangCV:state.listTable:  ${listTable.toString()}");
+      element.listQuestion.forEach((e) {
+        print("HoangCV:state.listTable e:  ${element.listQuestion.toString()}");
+      });
+    });
+  }
+
+  void addNewRow(List<dynamic> items, List<TableQuestion> listTable, int id,
+      int idTable) {
+    for (dynamic item in items) {
+      if (item is Question) {
+        if (item.questionType == 'table') {
+          print("HaongCV: item: ${item.title}");
+          List<Question> list = [];
+          List<Answer> listAs = [];
+          for (Answer answer in item.suggestedAnswerIds) {
+            print("HaongCV: answer: ${answer.value}");
+            Answer clonedAnswer = Answer.copy(answer);
+            clonedAnswer.tableRowId = id;
+            List<Answer> las = [];
+            for (Answer as in clonedAnswer.suggestedAnswerIds) {
+              Answer clonedAs = Answer.copy(as);
+              clonedAs.tableRowId = id;
+              las.add(clonedAs);
+            }
+            if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+              clonedAnswer.suggestedAnswerIds = las;
+            }
+            listAs.add(clonedAnswer);
+          }
+          Question qs = Question.copy(item);
+          qs.suggestedAnswerIds = listAs;
+          qs.rowId = id;
+          id++;
+          list.add(qs);
+          listTable[idTable].listQuestion.add(qs);
+        }
+      }
+    }
+
+    // Gọi đệ quy sau khi xử lý toàn bộ danh sách items
+    for (dynamic item in items) {
+      if (item is Question) {
+        addNewRow(item.questionAndPageIds, listTable, id, idTable);
+      }
+    }
+  }
+
+}
+
+class AddTableRowEvent extends EditReportEvent {
+  final List<Question> list;
+  int idTable;
+
+  AddTableRowEvent(this.list, this.idTable);
+
+  @override
+  List<Object?> get props => [list, idTable];
 }
 
 class EditReportEvent extends BlocEvent {
@@ -1754,13 +2088,12 @@ class EditReportEvent extends BlocEvent {
 }
 
 class GetEditReportEvent extends EditReportEvent {
-  final Diary diary;
   final int id;
 
-  GetEditReportEvent(this.diary, this.id);
+  GetEditReportEvent(this.id);
 
   @override
-  List<Object?> get props => [diary, id];
+  List<Object?> get props => [id];
 }
 
 class SubmitReportEvent extends EditReportEvent {

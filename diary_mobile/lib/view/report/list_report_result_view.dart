@@ -27,29 +27,14 @@ import 'list_report_select.dart';
 
 class ListReportResultView extends StatefulWidget {
   const ListReportResultView(
-      {super.key,
-        required this.activityFarm,
-        required this.diary,
-        required this.listReportResult, required this.listSelect});
-
-  final ActivityFarm activityFarm;
-  final Diary diary;
-  final List<ReportResult> listReportResult;
-  final List<Report> listSelect;
+      {super.key,});
 
   @override
   _ListReportResultViewState createState() => _ListReportResultViewState();
 
-  static Route route(Diary diary,
-  List<Report> listSelect,
-      ActivityFarm activityFarm, List<ReportResult> listReportResult, ) {
+  static Route route() {
     return Utils.pageRouteBuilder(
-        ListReportResultView(
-          activityFarm: activityFarm,
-          diary: diary,
-          listReportResult: listReportResult,
-            listSelect: listSelect
-        ),
+        ListReportResultView(),
         true);
   }
 }
@@ -64,7 +49,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ListReportResultBloc(context.read<Repository>())..
-      add(GetListReportResultEvent(widget.listReportResult, widget.listSelect)),
+      add(GetListReportResultEvent()),
       child: Scaffold(
         appBar: OfitAppBar(context,
             centerTitle: true,
@@ -72,7 +57,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
             showDefaultBackButton: true,
             callback: [updateHarvesting, listCallback],
             title: Text(
-              widget.activityFarm.nameActivity,
+              "Báo cáo đánh giá nội bộ",
               style: StyleOfit.textStyleFW700(Colors.white, 20),
             )),
         //resizeToAvoidBottomInset: true,
@@ -80,41 +65,24 @@ class _ListReportResultViewState extends State<ListReportResultView> {
         floatingActionButton: BlocBuilder<ListReportResultBloc, ListReportResultState>(
           builder: (contextBloc, state) {
             return floatingActionButton(
-                "Khảo sát", Icons.note_add,   (widget.diary.status??'').compareTo("done") == 0 ||
-                (widget.diary.status??'').compareTo("cancelled") == 0 ?
-                () {
-              if((widget.diary.status??'').compareTo("done") == 0 ) {
-                DiaLogManager.displayDialog(context,
-                    "Nhật ký đã hoàn thành","Bạn không thể thêm mới hoạt động",
-                        (){Navigator.pop(context);}, () {
-                      print("HoangCV: bug:Asdas");
-                    },
-                    "",S.of(context).close_dialog);
-              }
-              if((widget.diary.status??'').compareTo("cancelled") == 0 ) {
-                DiaLogManager.displayDialog(context,
-                    "Nhật ký đã đóng","Bạn không thể thêm mới hoạt động",
-                        (){Navigator.pop(context);}, () {},
-                    "",S.of(context).close_dialog);
-              }
-            }
-                : () async {
-                  if(widget.listSelect.length > 1) {
+                "Khảo sát", Icons.note_add,
+                    () async {
+                  if(state.listReportSelect.length > 1) {
                     var result = await Navigator.of(context)
-                        .push(ListReportSelect.route(widget.listSelect));
+                        .push(ListReportSelect.route(state.listReportSelect));
                     if (result != null && result[0]) {
                       contextBloc.read<ListReportResultBloc>().add(
                           GetListReportResultEvent(
-                              const [], const [], checkUpdate: true));
+                              checkUpdate: true));
                     }
-                  } else if (widget.listSelect.isNotEmpty) {
+                  } else if (state.listReportSelect.isNotEmpty) {
                     var result = await Navigator.of(context)
                         .push(AddReportViewPage.route(
-                        widget.listSelect[0].id ?? -1));
+                        state.listReportSelect[0].id ?? -1));
                     if (result != null && result[0]) {
                       contextBloc.read<ListReportResultBloc>().add(
                           GetListReportResultEvent(
-                              const [], const [], checkUpdate: true));
+                              checkUpdate: true));
                     }
                   } else{
 
@@ -157,7 +125,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
               : RefreshIndicator(
             onRefresh: () async {
               blocContext.read<ListReportResultBloc>().add(
-                  GetListReportResultEvent(const [], const [], checkUpdate: true));
+                  GetListReportResultEvent(checkUpdate: true));
             },
             child: (state.listReport.isEmpty)
                 ? const EmptyWidget()
@@ -180,10 +148,10 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                           },
                         callbackEdit: () async {
                         var result = await Navigator.of(context)
-                            .push(EditReportViewPage.route(widget.diary, state.listReport[index].id??-1));
+                            .push(EditReportViewPage.route(state.listReport[index].id??-1));
                         if (result != null && result[0]) {
                           contextBloc.read<ListReportResultBloc>().add(
-                              GetListReportResultEvent(const [], const [], checkUpdate: true));
+                              GetListReportResultEvent(checkUpdate: true));
                         }
                       }, overlayEntry: overlayEntry,);
                     },

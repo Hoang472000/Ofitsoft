@@ -39,6 +39,11 @@ class DiaryTable extends Table {
   TextColumn get farmerName => text().nullable()();
   IntColumn get farmerId => integer().nullable()();
 
+  TextColumn get areaName => text().nullable()();
+  TextColumn get areaCode => text().nullable()();
+  TextColumn get farmCode => text().nullable()();
+  TextColumn get googleMap => text().nullable()();
+
   @override
   Set<Column>? get primaryKey => {id, userId};
 }

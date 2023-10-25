@@ -12,14 +12,16 @@ import '../bkav_app_bar.dart';
 
 class PDFScreen extends StatefulWidget {
   final String base64Data;
-  PDFScreen({required this.base64Data});
+  final String title;
+  PDFScreen({required this.base64Data, required this.title});
 
   _PDFScreenState createState() => _PDFScreenState();
 
-  static Route route(String base64Data) {
+  static Route route(String base64Data, String title) {
     return Utils.pageRouteBuilder(
         PDFScreen(
-            base64Data: base64Data
+            base64Data: base64Data,
+            title: title
         ),
         true);
   }
@@ -58,7 +60,7 @@ class _PDFScreenState extends State<PDFScreen> with WidgetsBindingObserver {
         centerTitle: true,
         showDefaultBackButton: true,
         title: Text(
-          "Chi tiết",
+          widget.title,
           style: StyleOfit.textStyleFW700(Colors.white, 20),
         ),
         backgroundColor: AppColor.main,

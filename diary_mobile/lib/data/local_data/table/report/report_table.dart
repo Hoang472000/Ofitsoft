@@ -7,6 +7,9 @@ class ReportTable extends Table {
   String get tableName => 'report';
 
   IntColumn get id => integer().nullable()();
+  BoolColumn get isPage => boolean().nullable()();
+  IntColumn get pageId => integer().nullable()();
+  IntColumn get surveyId => integer().nullable()();
   TextColumn get title => text().nullable()();
   IntColumn get userId => integer().nullable()();
   BoolColumn get active => boolean().nullable()();
@@ -14,6 +17,7 @@ class ReportTable extends Table {
   TextColumn get questionsSelection => text().nullable()();
   RealColumn get timeLimit => real().nullable()();
   TextColumn get stringQuestionAndPageIds => text().nullable()();
+  TextColumn get stringListFarmers => text().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id};

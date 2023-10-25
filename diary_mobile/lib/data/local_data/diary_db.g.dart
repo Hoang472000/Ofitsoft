@@ -192,6 +192,30 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
       'farmer_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _areaNameMeta =
+      const VerificationMeta('areaName');
+  @override
+  late final GeneratedColumn<String> areaName = GeneratedColumn<String>(
+      'area_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _areaCodeMeta =
+      const VerificationMeta('areaCode');
+  @override
+  late final GeneratedColumn<String> areaCode = GeneratedColumn<String>(
+      'area_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmCodeMeta =
+      const VerificationMeta('farmCode');
+  @override
+  late final GeneratedColumn<String> farmCode = GeneratedColumn<String>(
+      'farm_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _googleMapMeta =
+      const VerificationMeta('googleMap');
+  @override
+  late final GeneratedColumn<String> googleMap = GeneratedColumn<String>(
+      'google_map', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -224,7 +248,11 @@ class $DiaryTableTable extends DiaryTable
         statusName,
         description,
         farmerName,
-        farmerId
+        farmerId,
+        areaName,
+        areaCode,
+        farmCode,
+        googleMap
       ];
   @override
   String get aliasedName => _alias ?? 'diary';
@@ -386,6 +414,22 @@ class $DiaryTableTable extends DiaryTable
       context.handle(_farmerIdMeta,
           farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta));
     }
+    if (data.containsKey('area_name')) {
+      context.handle(_areaNameMeta,
+          areaName.isAcceptableOrUnknown(data['area_name']!, _areaNameMeta));
+    }
+    if (data.containsKey('area_code')) {
+      context.handle(_areaCodeMeta,
+          areaCode.isAcceptableOrUnknown(data['area_code']!, _areaCodeMeta));
+    }
+    if (data.containsKey('farm_code')) {
+      context.handle(_farmCodeMeta,
+          farmCode.isAcceptableOrUnknown(data['farm_code']!, _farmCodeMeta));
+    }
+    if (data.containsKey('google_map')) {
+      context.handle(_googleMapMeta,
+          googleMap.isAcceptableOrUnknown(data['google_map']!, _googleMapMeta));
+    }
     return context;
   }
 
@@ -458,6 +502,14 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.string, data['${effectivePrefix}farmer_name']),
       farmerId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}farmer_id']),
+      areaName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area_name']),
+      areaCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area_code']),
+      farmCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farm_code']),
+      googleMap: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}google_map']),
     );
   }
 
@@ -499,6 +551,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> description;
   final Value<String?> farmerName;
   final Value<int?> farmerId;
+  final Value<String?> areaName;
+  final Value<String?> areaCode;
+  final Value<String?> farmCode;
+  final Value<String?> googleMap;
   final Value<int> rowid;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
@@ -532,6 +588,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
     this.farmerId = const Value.absent(),
+    this.areaName = const Value.absent(),
+    this.areaCode = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.googleMap = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DiaryTableCompanion.insert({
@@ -566,6 +626,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.description = const Value.absent(),
     this.farmerName = const Value.absent(),
     this.farmerId = const Value.absent(),
+    this.areaName = const Value.absent(),
+    this.areaCode = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.googleMap = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<Diary> custom({
@@ -600,6 +664,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? description,
     Expression<String>? farmerName,
     Expression<int>? farmerId,
+    Expression<String>? areaName,
+    Expression<String>? areaCode,
+    Expression<String>? farmCode,
+    Expression<String>? googleMap,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -636,6 +704,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (description != null) 'description': description,
       if (farmerName != null) 'farmer_name': farmerName,
       if (farmerId != null) 'farmer_id': farmerId,
+      if (areaName != null) 'area_name': areaName,
+      if (areaCode != null) 'area_code': areaCode,
+      if (farmCode != null) 'farm_code': farmCode,
+      if (googleMap != null) 'google_map': googleMap,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -672,6 +744,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? description,
       Value<String?>? farmerName,
       Value<int?>? farmerId,
+      Value<String?>? areaName,
+      Value<String?>? areaCode,
+      Value<String?>? farmCode,
+      Value<String?>? googleMap,
       Value<int>? rowid}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
@@ -706,6 +782,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       description: description ?? this.description,
       farmerName: farmerName ?? this.farmerName,
       farmerId: farmerId ?? this.farmerId,
+      areaName: areaName ?? this.areaName,
+      areaCode: areaCode ?? this.areaCode,
+      farmCode: farmCode ?? this.farmCode,
+      googleMap: googleMap ?? this.googleMap,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -807,6 +887,18 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (farmerId.present) {
       map['farmer_id'] = Variable<int>(farmerId.value);
     }
+    if (areaName.present) {
+      map['area_name'] = Variable<String>(areaName.value);
+    }
+    if (areaCode.present) {
+      map['area_code'] = Variable<String>(areaCode.value);
+    }
+    if (farmCode.present) {
+      map['farm_code'] = Variable<String>(farmCode.value);
+    }
+    if (googleMap.present) {
+      map['google_map'] = Variable<String>(googleMap.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -847,6 +939,10 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('description: $description, ')
           ..write('farmerName: $farmerName, ')
           ..write('farmerId: $farmerId, ')
+          ..write('areaName: $areaName, ')
+          ..write('areaCode: $areaCode, ')
+          ..write('farmCode: $farmCode, ')
+          ..write('googleMap: $googleMap, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -5117,6 +5213,28 @@ class $ReportTableTable extends ReportTable
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _isPageMeta = const VerificationMeta('isPage');
+  @override
+  late final GeneratedColumn<bool> isPage =
+      GeneratedColumn<bool>('is_page', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_page" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _pageIdMeta = const VerificationMeta('pageId');
+  @override
+  late final GeneratedColumn<int> pageId = GeneratedColumn<int>(
+      'page_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _surveyIdMeta =
+      const VerificationMeta('surveyId');
+  @override
+  late final GeneratedColumn<int> surveyId = GeneratedColumn<int>(
+      'survey_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
@@ -5168,16 +5286,26 @@ class $ReportTableTable extends ReportTable
   late final GeneratedColumn<String> stringQuestionAndPageIds =
       GeneratedColumn<String>('string_question_and_page_ids', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringListFarmersMeta =
+      const VerificationMeta('stringListFarmers');
+  @override
+  late final GeneratedColumn<String> stringListFarmers =
+      GeneratedColumn<String>('string_list_farmers', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        isPage,
+        pageId,
+        surveyId,
         title,
         userId,
         active,
         hasConditionalQuestions,
         questionsSelection,
         timeLimit,
-        stringQuestionAndPageIds
+        stringQuestionAndPageIds,
+        stringListFarmers
       ];
   @override
   String get aliasedName => _alias ?? 'report';
@@ -5190,6 +5318,18 @@ class $ReportTableTable extends ReportTable
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('is_page')) {
+      context.handle(_isPageMeta,
+          isPage.isAcceptableOrUnknown(data['is_page']!, _isPageMeta));
+    }
+    if (data.containsKey('page_id')) {
+      context.handle(_pageIdMeta,
+          pageId.isAcceptableOrUnknown(data['page_id']!, _pageIdMeta));
+    }
+    if (data.containsKey('survey_id')) {
+      context.handle(_surveyIdMeta,
+          surveyId.isAcceptableOrUnknown(data['survey_id']!, _surveyIdMeta));
     }
     if (data.containsKey('title')) {
       context.handle(
@@ -5227,6 +5367,12 @@ class $ReportTableTable extends ReportTable
               data['string_question_and_page_ids']!,
               _stringQuestionAndPageIdsMeta));
     }
+    if (data.containsKey('string_list_farmers')) {
+      context.handle(
+          _stringListFarmersMeta,
+          stringListFarmers.isAcceptableOrUnknown(
+              data['string_list_farmers']!, _stringListFarmersMeta));
+    }
     return context;
   }
 
@@ -5238,6 +5384,12 @@ class $ReportTableTable extends ReportTable
     return Report(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      isPage: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_page']),
+      pageId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}page_id']),
+      surveyId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}survey_id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title']),
       userId: attachedDatabase.typeMapping
@@ -5254,6 +5406,8 @@ class $ReportTableTable extends ReportTable
       stringQuestionAndPageIds: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}string_question_and_page_ids']),
+      stringListFarmers: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}string_list_farmers']),
     );
   }
 
@@ -5265,6 +5419,9 @@ class $ReportTableTable extends ReportTable
 
 class ReportTableCompanion extends UpdateCompanion<Report> {
   final Value<int?> id;
+  final Value<bool?> isPage;
+  final Value<int?> pageId;
+  final Value<int?> surveyId;
   final Value<String?> title;
   final Value<int?> userId;
   final Value<bool?> active;
@@ -5272,8 +5429,12 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
   final Value<String?> questionsSelection;
   final Value<double?> timeLimit;
   final Value<String?> stringQuestionAndPageIds;
+  final Value<String?> stringListFarmers;
   const ReportTableCompanion({
     this.id = const Value.absent(),
+    this.isPage = const Value.absent(),
+    this.pageId = const Value.absent(),
+    this.surveyId = const Value.absent(),
     this.title = const Value.absent(),
     this.userId = const Value.absent(),
     this.active = const Value.absent(),
@@ -5281,9 +5442,13 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     this.questionsSelection = const Value.absent(),
     this.timeLimit = const Value.absent(),
     this.stringQuestionAndPageIds = const Value.absent(),
+    this.stringListFarmers = const Value.absent(),
   });
   ReportTableCompanion.insert({
     this.id = const Value.absent(),
+    this.isPage = const Value.absent(),
+    this.pageId = const Value.absent(),
+    this.surveyId = const Value.absent(),
     this.title = const Value.absent(),
     this.userId = const Value.absent(),
     this.active = const Value.absent(),
@@ -5291,9 +5456,13 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     this.questionsSelection = const Value.absent(),
     this.timeLimit = const Value.absent(),
     this.stringQuestionAndPageIds = const Value.absent(),
+    this.stringListFarmers = const Value.absent(),
   });
   static Insertable<Report> custom({
     Expression<int>? id,
+    Expression<bool>? isPage,
+    Expression<int>? pageId,
+    Expression<int>? surveyId,
     Expression<String>? title,
     Expression<int>? userId,
     Expression<bool>? active,
@@ -5301,9 +5470,13 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     Expression<String>? questionsSelection,
     Expression<double>? timeLimit,
     Expression<String>? stringQuestionAndPageIds,
+    Expression<String>? stringListFarmers,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (isPage != null) 'is_page': isPage,
+      if (pageId != null) 'page_id': pageId,
+      if (surveyId != null) 'survey_id': surveyId,
       if (title != null) 'title': title,
       if (userId != null) 'user_id': userId,
       if (active != null) 'active': active,
@@ -5313,20 +5486,28 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       if (timeLimit != null) 'time_limit': timeLimit,
       if (stringQuestionAndPageIds != null)
         'string_question_and_page_ids': stringQuestionAndPageIds,
+      if (stringListFarmers != null) 'string_list_farmers': stringListFarmers,
     });
   }
 
   ReportTableCompanion copyWith(
       {Value<int?>? id,
+      Value<bool?>? isPage,
+      Value<int?>? pageId,
+      Value<int?>? surveyId,
       Value<String?>? title,
       Value<int?>? userId,
       Value<bool?>? active,
       Value<bool?>? hasConditionalQuestions,
       Value<String?>? questionsSelection,
       Value<double?>? timeLimit,
-      Value<String?>? stringQuestionAndPageIds}) {
+      Value<String?>? stringQuestionAndPageIds,
+      Value<String?>? stringListFarmers}) {
     return ReportTableCompanion(
       id: id ?? this.id,
+      isPage: isPage ?? this.isPage,
+      pageId: pageId ?? this.pageId,
+      surveyId: surveyId ?? this.surveyId,
       title: title ?? this.title,
       userId: userId ?? this.userId,
       active: active ?? this.active,
@@ -5336,6 +5517,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       timeLimit: timeLimit ?? this.timeLimit,
       stringQuestionAndPageIds:
           stringQuestionAndPageIds ?? this.stringQuestionAndPageIds,
+      stringListFarmers: stringListFarmers ?? this.stringListFarmers,
     );
   }
 
@@ -5344,6 +5526,15 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (isPage.present) {
+      map['is_page'] = Variable<bool>(isPage.value);
+    }
+    if (pageId.present) {
+      map['page_id'] = Variable<int>(pageId.value);
+    }
+    if (surveyId.present) {
+      map['survey_id'] = Variable<int>(surveyId.value);
     }
     if (title.present) {
       map['title'] = Variable<String>(title.value);
@@ -5368,6 +5559,9 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       map['string_question_and_page_ids'] =
           Variable<String>(stringQuestionAndPageIds.value);
     }
+    if (stringListFarmers.present) {
+      map['string_list_farmers'] = Variable<String>(stringListFarmers.value);
+    }
     return map;
   }
 
@@ -5375,13 +5569,1127 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
   String toString() {
     return (StringBuffer('ReportTableCompanion(')
           ..write('id: $id, ')
+          ..write('isPage: $isPage, ')
+          ..write('pageId: $pageId, ')
+          ..write('surveyId: $surveyId, ')
           ..write('title: $title, ')
           ..write('userId: $userId, ')
           ..write('active: $active, ')
           ..write('hasConditionalQuestions: $hasConditionalQuestions, ')
           ..write('questionsSelection: $questionsSelection, ')
           ..write('timeLimit: $timeLimit, ')
-          ..write('stringQuestionAndPageIds: $stringQuestionAndPageIds')
+          ..write('stringQuestionAndPageIds: $stringQuestionAndPageIds, ')
+          ..write('stringListFarmers: $stringListFarmers')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $QuestionUploadNoNetworkTableTable extends QuestionUploadNoNetworkTable
+    with TableInfo<$QuestionUploadNoNetworkTableTable, QuestionUpload> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $QuestionUploadNoNetworkTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _apiMeta = const VerificationMeta('api');
+  @override
+  late final GeneratedColumn<String> api = GeneratedColumn<String>(
+      'api', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idOfflineMeta =
+      const VerificationMeta('idOffline');
+  @override
+  late final GeneratedColumn<String> idOffline = GeneratedColumn<String>(
+      'id_offline', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _userInputIdMeta =
+      const VerificationMeta('userInputId');
+  @override
+  late final GeneratedColumn<int> userInputId = GeneratedColumn<int>(
+      'user_input_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _surveyIdMeta =
+      const VerificationMeta('surveyId');
+  @override
+  late final GeneratedColumn<int> surveyId = GeneratedColumn<int>(
+      'survey_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _questionIdMeta =
+      const VerificationMeta('questionId');
+  @override
+  late final GeneratedColumn<int> questionId = GeneratedColumn<int>(
+      'question_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _suggestedAnswerIdMeta =
+      const VerificationMeta('suggestedAnswerId');
+  @override
+  late final GeneratedColumn<int> suggestedAnswerId = GeneratedColumn<int>(
+      'suggested_answer_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _matrixRowIdMeta =
+      const VerificationMeta('matrixRowId');
+  @override
+  late final GeneratedColumn<int> matrixRowId = GeneratedColumn<int>(
+      'matrix_row_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _answerTypeMeta =
+      const VerificationMeta('answerType');
+  @override
+  late final GeneratedColumn<String> answerType = GeneratedColumn<String>(
+      'answer_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _valueTextMeta =
+      const VerificationMeta('valueText');
+  @override
+  late final GeneratedColumn<String> valueText = GeneratedColumn<String>(
+      'value_text', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+      'state', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _skippedMeta =
+      const VerificationMeta('skipped');
+  @override
+  late final GeneratedColumn<bool> skipped =
+      GeneratedColumn<bool>('skipped', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("skipped" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _isAnswerExistMeta =
+      const VerificationMeta('isAnswerExist');
+  @override
+  late final GeneratedColumn<bool> isAnswerExist =
+      GeneratedColumn<bool>('is_answer_exist', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_answer_exist" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _valueCheckBoxMeta =
+      const VerificationMeta('valueCheckBox');
+  @override
+  late final GeneratedColumn<bool> valueCheckBox =
+      GeneratedColumn<bool>('value_check_box', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("value_check_box" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _tableRowIdMeta =
+      const VerificationMeta('tableRowId');
+  @override
+  late final GeneratedColumn<int> tableRowId = GeneratedColumn<int>(
+      'table_row_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _stringListIdSuggestedMeta =
+      const VerificationMeta('stringListIdSuggested');
+  @override
+  late final GeneratedColumn<String> stringListIdSuggested =
+      GeneratedColumn<String>('string_list_id_suggested', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerIdMeta =
+      const VerificationMeta('farmerId');
+  @override
+  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
+      'farmer_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _farmerCodeMeta =
+      const VerificationMeta('farmerCode');
+  @override
+  late final GeneratedColumn<String> farmerCode = GeneratedColumn<String>(
+      'farmer_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmIdMeta = const VerificationMeta('farmId');
+  @override
+  late final GeneratedColumn<int> farmId = GeneratedColumn<int>(
+      'farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _farmCodeMeta =
+      const VerificationMeta('farmCode');
+  @override
+  late final GeneratedColumn<String> farmCode = GeneratedColumn<String>(
+      'farm_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _internalInspectorIdMeta =
+      const VerificationMeta('internalInspectorId');
+  @override
+  late final GeneratedColumn<int> internalInspectorId = GeneratedColumn<int>(
+      'internal_inspector_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _monitoringVisitTypeMeta =
+      const VerificationMeta('monitoringVisitType');
+  @override
+  late final GeneratedColumn<String> monitoringVisitType =
+      GeneratedColumn<String>('monitoring_visit_type', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _visitDateMeta =
+      const VerificationMeta('visitDate');
+  @override
+  late final GeneratedColumn<String> visitDate = GeneratedColumn<String>(
+      'visit_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        api,
+        idOffline,
+        userInputId,
+        surveyId,
+        questionId,
+        suggestedAnswerId,
+        matrixRowId,
+        answerType,
+        valueText,
+        state,
+        skipped,
+        isAnswerExist,
+        valueCheckBox,
+        tableRowId,
+        stringListIdSuggested,
+        farmerId,
+        farmerCode,
+        farmId,
+        farmCode,
+        internalInspectorId,
+        monitoringVisitType,
+        visitDate
+      ];
+  @override
+  String get aliasedName => _alias ?? 'question_upload_no_network';
+  @override
+  String get actualTableName => 'question_upload_no_network';
+  @override
+  VerificationContext validateIntegrity(Insertable<QuestionUpload> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('api')) {
+      context.handle(
+          _apiMeta, api.isAcceptableOrUnknown(data['api']!, _apiMeta));
+    }
+    if (data.containsKey('id_offline')) {
+      context.handle(_idOfflineMeta,
+          idOffline.isAcceptableOrUnknown(data['id_offline']!, _idOfflineMeta));
+    }
+    if (data.containsKey('user_input_id')) {
+      context.handle(
+          _userInputIdMeta,
+          userInputId.isAcceptableOrUnknown(
+              data['user_input_id']!, _userInputIdMeta));
+    }
+    if (data.containsKey('survey_id')) {
+      context.handle(_surveyIdMeta,
+          surveyId.isAcceptableOrUnknown(data['survey_id']!, _surveyIdMeta));
+    }
+    if (data.containsKey('question_id')) {
+      context.handle(
+          _questionIdMeta,
+          questionId.isAcceptableOrUnknown(
+              data['question_id']!, _questionIdMeta));
+    }
+    if (data.containsKey('suggested_answer_id')) {
+      context.handle(
+          _suggestedAnswerIdMeta,
+          suggestedAnswerId.isAcceptableOrUnknown(
+              data['suggested_answer_id']!, _suggestedAnswerIdMeta));
+    }
+    if (data.containsKey('matrix_row_id')) {
+      context.handle(
+          _matrixRowIdMeta,
+          matrixRowId.isAcceptableOrUnknown(
+              data['matrix_row_id']!, _matrixRowIdMeta));
+    }
+    if (data.containsKey('answer_type')) {
+      context.handle(
+          _answerTypeMeta,
+          answerType.isAcceptableOrUnknown(
+              data['answer_type']!, _answerTypeMeta));
+    }
+    if (data.containsKey('value_text')) {
+      context.handle(_valueTextMeta,
+          valueText.isAcceptableOrUnknown(data['value_text']!, _valueTextMeta));
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+          _stateMeta, state.isAcceptableOrUnknown(data['state']!, _stateMeta));
+    }
+    if (data.containsKey('skipped')) {
+      context.handle(_skippedMeta,
+          skipped.isAcceptableOrUnknown(data['skipped']!, _skippedMeta));
+    }
+    if (data.containsKey('is_answer_exist')) {
+      context.handle(
+          _isAnswerExistMeta,
+          isAnswerExist.isAcceptableOrUnknown(
+              data['is_answer_exist']!, _isAnswerExistMeta));
+    }
+    if (data.containsKey('value_check_box')) {
+      context.handle(
+          _valueCheckBoxMeta,
+          valueCheckBox.isAcceptableOrUnknown(
+              data['value_check_box']!, _valueCheckBoxMeta));
+    }
+    if (data.containsKey('table_row_id')) {
+      context.handle(
+          _tableRowIdMeta,
+          tableRowId.isAcceptableOrUnknown(
+              data['table_row_id']!, _tableRowIdMeta));
+    }
+    if (data.containsKey('string_list_id_suggested')) {
+      context.handle(
+          _stringListIdSuggestedMeta,
+          stringListIdSuggested.isAcceptableOrUnknown(
+              data['string_list_id_suggested']!, _stringListIdSuggestedMeta));
+    }
+    if (data.containsKey('farmer_id')) {
+      context.handle(_farmerIdMeta,
+          farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta));
+    }
+    if (data.containsKey('farmer_code')) {
+      context.handle(
+          _farmerCodeMeta,
+          farmerCode.isAcceptableOrUnknown(
+              data['farmer_code']!, _farmerCodeMeta));
+    }
+    if (data.containsKey('farm_id')) {
+      context.handle(_farmIdMeta,
+          farmId.isAcceptableOrUnknown(data['farm_id']!, _farmIdMeta));
+    }
+    if (data.containsKey('farm_code')) {
+      context.handle(_farmCodeMeta,
+          farmCode.isAcceptableOrUnknown(data['farm_code']!, _farmCodeMeta));
+    }
+    if (data.containsKey('internal_inspector_id')) {
+      context.handle(
+          _internalInspectorIdMeta,
+          internalInspectorId.isAcceptableOrUnknown(
+              data['internal_inspector_id']!, _internalInspectorIdMeta));
+    }
+    if (data.containsKey('monitoring_visit_type')) {
+      context.handle(
+          _monitoringVisitTypeMeta,
+          monitoringVisitType.isAcceptableOrUnknown(
+              data['monitoring_visit_type']!, _monitoringVisitTypeMeta));
+    }
+    if (data.containsKey('visit_date')) {
+      context.handle(_visitDateMeta,
+          visitDate.isAcceptableOrUnknown(data['visit_date']!, _visitDateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {idOffline};
+  @override
+  QuestionUpload map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return QuestionUpload(
+      api: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}api']),
+      idOffline: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id_offline']),
+      userInputId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_input_id']),
+      surveyId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}survey_id']),
+      questionId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}question_id']),
+      suggestedAnswerId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}suggested_answer_id']),
+      matrixRowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}matrix_row_id']),
+      answerType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}answer_type']),
+      valueText: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value_text']),
+      skipped: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}skipped']),
+      state: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}state']),
+      isAnswerExist: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_answer_exist']),
+      valueCheckBox: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}value_check_box']),
+      tableRowId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}table_row_id']),
+      stringListIdSuggested: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}string_list_id_suggested']),
+      farmerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farmer_id']),
+      farmerCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farmer_code']),
+      internalInspectorId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}internal_inspector_id']),
+      monitoringVisitType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}monitoring_visit_type']),
+      visitDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}visit_date']),
+      farmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
+      farmCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farm_code']),
+    );
+  }
+
+  @override
+  $QuestionUploadNoNetworkTableTable createAlias(String alias) {
+    return $QuestionUploadNoNetworkTableTable(attachedDatabase, alias);
+  }
+}
+
+class QuestionUploadNoNetworkTableCompanion
+    extends UpdateCompanion<QuestionUpload> {
+  final Value<String?> api;
+  final Value<String?> idOffline;
+  final Value<int?> userInputId;
+  final Value<int?> surveyId;
+  final Value<int?> questionId;
+  final Value<int?> suggestedAnswerId;
+  final Value<int?> matrixRowId;
+  final Value<String?> answerType;
+  final Value<String?> valueText;
+  final Value<String?> state;
+  final Value<bool?> skipped;
+  final Value<bool?> isAnswerExist;
+  final Value<bool?> valueCheckBox;
+  final Value<int?> tableRowId;
+  final Value<String?> stringListIdSuggested;
+  final Value<int?> farmerId;
+  final Value<String?> farmerCode;
+  final Value<int?> farmId;
+  final Value<String?> farmCode;
+  final Value<int?> internalInspectorId;
+  final Value<String?> monitoringVisitType;
+  final Value<String?> visitDate;
+  final Value<int> rowid;
+  const QuestionUploadNoNetworkTableCompanion({
+    this.api = const Value.absent(),
+    this.idOffline = const Value.absent(),
+    this.userInputId = const Value.absent(),
+    this.surveyId = const Value.absent(),
+    this.questionId = const Value.absent(),
+    this.suggestedAnswerId = const Value.absent(),
+    this.matrixRowId = const Value.absent(),
+    this.answerType = const Value.absent(),
+    this.valueText = const Value.absent(),
+    this.state = const Value.absent(),
+    this.skipped = const Value.absent(),
+    this.isAnswerExist = const Value.absent(),
+    this.valueCheckBox = const Value.absent(),
+    this.tableRowId = const Value.absent(),
+    this.stringListIdSuggested = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.internalInspectorId = const Value.absent(),
+    this.monitoringVisitType = const Value.absent(),
+    this.visitDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  QuestionUploadNoNetworkTableCompanion.insert({
+    this.api = const Value.absent(),
+    this.idOffline = const Value.absent(),
+    this.userInputId = const Value.absent(),
+    this.surveyId = const Value.absent(),
+    this.questionId = const Value.absent(),
+    this.suggestedAnswerId = const Value.absent(),
+    this.matrixRowId = const Value.absent(),
+    this.answerType = const Value.absent(),
+    this.valueText = const Value.absent(),
+    this.state = const Value.absent(),
+    this.skipped = const Value.absent(),
+    this.isAnswerExist = const Value.absent(),
+    this.valueCheckBox = const Value.absent(),
+    this.tableRowId = const Value.absent(),
+    this.stringListIdSuggested = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.internalInspectorId = const Value.absent(),
+    this.monitoringVisitType = const Value.absent(),
+    this.visitDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<QuestionUpload> custom({
+    Expression<String>? api,
+    Expression<String>? idOffline,
+    Expression<int>? userInputId,
+    Expression<int>? surveyId,
+    Expression<int>? questionId,
+    Expression<int>? suggestedAnswerId,
+    Expression<int>? matrixRowId,
+    Expression<String>? answerType,
+    Expression<String>? valueText,
+    Expression<String>? state,
+    Expression<bool>? skipped,
+    Expression<bool>? isAnswerExist,
+    Expression<bool>? valueCheckBox,
+    Expression<int>? tableRowId,
+    Expression<String>? stringListIdSuggested,
+    Expression<int>? farmerId,
+    Expression<String>? farmerCode,
+    Expression<int>? farmId,
+    Expression<String>? farmCode,
+    Expression<int>? internalInspectorId,
+    Expression<String>? monitoringVisitType,
+    Expression<String>? visitDate,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (api != null) 'api': api,
+      if (idOffline != null) 'id_offline': idOffline,
+      if (userInputId != null) 'user_input_id': userInputId,
+      if (surveyId != null) 'survey_id': surveyId,
+      if (questionId != null) 'question_id': questionId,
+      if (suggestedAnswerId != null) 'suggested_answer_id': suggestedAnswerId,
+      if (matrixRowId != null) 'matrix_row_id': matrixRowId,
+      if (answerType != null) 'answer_type': answerType,
+      if (valueText != null) 'value_text': valueText,
+      if (state != null) 'state': state,
+      if (skipped != null) 'skipped': skipped,
+      if (isAnswerExist != null) 'is_answer_exist': isAnswerExist,
+      if (valueCheckBox != null) 'value_check_box': valueCheckBox,
+      if (tableRowId != null) 'table_row_id': tableRowId,
+      if (stringListIdSuggested != null)
+        'string_list_id_suggested': stringListIdSuggested,
+      if (farmerId != null) 'farmer_id': farmerId,
+      if (farmerCode != null) 'farmer_code': farmerCode,
+      if (farmId != null) 'farm_id': farmId,
+      if (farmCode != null) 'farm_code': farmCode,
+      if (internalInspectorId != null)
+        'internal_inspector_id': internalInspectorId,
+      if (monitoringVisitType != null)
+        'monitoring_visit_type': monitoringVisitType,
+      if (visitDate != null) 'visit_date': visitDate,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  QuestionUploadNoNetworkTableCompanion copyWith(
+      {Value<String?>? api,
+      Value<String?>? idOffline,
+      Value<int?>? userInputId,
+      Value<int?>? surveyId,
+      Value<int?>? questionId,
+      Value<int?>? suggestedAnswerId,
+      Value<int?>? matrixRowId,
+      Value<String?>? answerType,
+      Value<String?>? valueText,
+      Value<String?>? state,
+      Value<bool?>? skipped,
+      Value<bool?>? isAnswerExist,
+      Value<bool?>? valueCheckBox,
+      Value<int?>? tableRowId,
+      Value<String?>? stringListIdSuggested,
+      Value<int?>? farmerId,
+      Value<String?>? farmerCode,
+      Value<int?>? farmId,
+      Value<String?>? farmCode,
+      Value<int?>? internalInspectorId,
+      Value<String?>? monitoringVisitType,
+      Value<String?>? visitDate,
+      Value<int>? rowid}) {
+    return QuestionUploadNoNetworkTableCompanion(
+      api: api ?? this.api,
+      idOffline: idOffline ?? this.idOffline,
+      userInputId: userInputId ?? this.userInputId,
+      surveyId: surveyId ?? this.surveyId,
+      questionId: questionId ?? this.questionId,
+      suggestedAnswerId: suggestedAnswerId ?? this.suggestedAnswerId,
+      matrixRowId: matrixRowId ?? this.matrixRowId,
+      answerType: answerType ?? this.answerType,
+      valueText: valueText ?? this.valueText,
+      state: state ?? this.state,
+      skipped: skipped ?? this.skipped,
+      isAnswerExist: isAnswerExist ?? this.isAnswerExist,
+      valueCheckBox: valueCheckBox ?? this.valueCheckBox,
+      tableRowId: tableRowId ?? this.tableRowId,
+      stringListIdSuggested:
+          stringListIdSuggested ?? this.stringListIdSuggested,
+      farmerId: farmerId ?? this.farmerId,
+      farmerCode: farmerCode ?? this.farmerCode,
+      farmId: farmId ?? this.farmId,
+      farmCode: farmCode ?? this.farmCode,
+      internalInspectorId: internalInspectorId ?? this.internalInspectorId,
+      monitoringVisitType: monitoringVisitType ?? this.monitoringVisitType,
+      visitDate: visitDate ?? this.visitDate,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (api.present) {
+      map['api'] = Variable<String>(api.value);
+    }
+    if (idOffline.present) {
+      map['id_offline'] = Variable<String>(idOffline.value);
+    }
+    if (userInputId.present) {
+      map['user_input_id'] = Variable<int>(userInputId.value);
+    }
+    if (surveyId.present) {
+      map['survey_id'] = Variable<int>(surveyId.value);
+    }
+    if (questionId.present) {
+      map['question_id'] = Variable<int>(questionId.value);
+    }
+    if (suggestedAnswerId.present) {
+      map['suggested_answer_id'] = Variable<int>(suggestedAnswerId.value);
+    }
+    if (matrixRowId.present) {
+      map['matrix_row_id'] = Variable<int>(matrixRowId.value);
+    }
+    if (answerType.present) {
+      map['answer_type'] = Variable<String>(answerType.value);
+    }
+    if (valueText.present) {
+      map['value_text'] = Variable<String>(valueText.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (skipped.present) {
+      map['skipped'] = Variable<bool>(skipped.value);
+    }
+    if (isAnswerExist.present) {
+      map['is_answer_exist'] = Variable<bool>(isAnswerExist.value);
+    }
+    if (valueCheckBox.present) {
+      map['value_check_box'] = Variable<bool>(valueCheckBox.value);
+    }
+    if (tableRowId.present) {
+      map['table_row_id'] = Variable<int>(tableRowId.value);
+    }
+    if (stringListIdSuggested.present) {
+      map['string_list_id_suggested'] =
+          Variable<String>(stringListIdSuggested.value);
+    }
+    if (farmerId.present) {
+      map['farmer_id'] = Variable<int>(farmerId.value);
+    }
+    if (farmerCode.present) {
+      map['farmer_code'] = Variable<String>(farmerCode.value);
+    }
+    if (farmId.present) {
+      map['farm_id'] = Variable<int>(farmId.value);
+    }
+    if (farmCode.present) {
+      map['farm_code'] = Variable<String>(farmCode.value);
+    }
+    if (internalInspectorId.present) {
+      map['internal_inspector_id'] = Variable<int>(internalInspectorId.value);
+    }
+    if (monitoringVisitType.present) {
+      map['monitoring_visit_type'] =
+          Variable<String>(monitoringVisitType.value);
+    }
+    if (visitDate.present) {
+      map['visit_date'] = Variable<String>(visitDate.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('QuestionUploadNoNetworkTableCompanion(')
+          ..write('api: $api, ')
+          ..write('idOffline: $idOffline, ')
+          ..write('userInputId: $userInputId, ')
+          ..write('surveyId: $surveyId, ')
+          ..write('questionId: $questionId, ')
+          ..write('suggestedAnswerId: $suggestedAnswerId, ')
+          ..write('matrixRowId: $matrixRowId, ')
+          ..write('answerType: $answerType, ')
+          ..write('valueText: $valueText, ')
+          ..write('state: $state, ')
+          ..write('skipped: $skipped, ')
+          ..write('isAnswerExist: $isAnswerExist, ')
+          ..write('valueCheckBox: $valueCheckBox, ')
+          ..write('tableRowId: $tableRowId, ')
+          ..write('stringListIdSuggested: $stringListIdSuggested, ')
+          ..write('farmerId: $farmerId, ')
+          ..write('farmerCode: $farmerCode, ')
+          ..write('farmId: $farmId, ')
+          ..write('farmCode: $farmCode, ')
+          ..write('internalInspectorId: $internalInspectorId, ')
+          ..write('monitoringVisitType: $monitoringVisitType, ')
+          ..write('visitDate: $visitDate, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $FarmerInspectorUploadNoNetworkTableTable
+    extends FarmerInspectorUploadNoNetworkTable
+    with
+        TableInfo<$FarmerInspectorUploadNoNetworkTableTable,
+            FarmerInspectorUpload> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $FarmerInspectorUploadNoNetworkTableTable(this.attachedDatabase,
+      [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _apiMeta = const VerificationMeta('api');
+  @override
+  late final GeneratedColumn<String> api = GeneratedColumn<String>(
+      'api', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idOfflineMeta =
+      const VerificationMeta('idOffline');
+  @override
+  late final GeneratedColumn<String> idOffline = GeneratedColumn<String>(
+      'id_offline', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stateMeta = const VerificationMeta('state');
+  @override
+  late final GeneratedColumn<String> state = GeneratedColumn<String>(
+      'state', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerIdMeta =
+      const VerificationMeta('farmerId');
+  @override
+  late final GeneratedColumn<int> farmerId = GeneratedColumn<int>(
+      'farmer_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _farmerCodeMeta =
+      const VerificationMeta('farmerCode');
+  @override
+  late final GeneratedColumn<String> farmerCode = GeneratedColumn<String>(
+      'farmer_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmIdMeta = const VerificationMeta('farmId');
+  @override
+  late final GeneratedColumn<int> farmId = GeneratedColumn<int>(
+      'farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _farmCodeMeta =
+      const VerificationMeta('farmCode');
+  @override
+  late final GeneratedColumn<String> farmCode = GeneratedColumn<String>(
+      'farm_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _internalInspectorIdMeta =
+      const VerificationMeta('internalInspectorId');
+  @override
+  late final GeneratedColumn<int> internalInspectorId = GeneratedColumn<int>(
+      'internal_inspector_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _monitoringVisitTypeMeta =
+      const VerificationMeta('monitoringVisitType');
+  @override
+  late final GeneratedColumn<String> monitoringVisitType =
+      GeneratedColumn<String>('monitoring_visit_type', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _visitDateMeta =
+      const VerificationMeta('visitDate');
+  @override
+  late final GeneratedColumn<String> visitDate = GeneratedColumn<String>(
+      'visit_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        api,
+        idOffline,
+        state,
+        farmerId,
+        farmerCode,
+        farmId,
+        farmCode,
+        internalInspectorId,
+        monitoringVisitType,
+        visitDate
+      ];
+  @override
+  String get aliasedName => _alias ?? 'farmer_inspector_upload_no_network';
+  @override
+  String get actualTableName => 'farmer_inspector_upload_no_network';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<FarmerInspectorUpload> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('api')) {
+      context.handle(
+          _apiMeta, api.isAcceptableOrUnknown(data['api']!, _apiMeta));
+    }
+    if (data.containsKey('id_offline')) {
+      context.handle(_idOfflineMeta,
+          idOffline.isAcceptableOrUnknown(data['id_offline']!, _idOfflineMeta));
+    }
+    if (data.containsKey('state')) {
+      context.handle(
+          _stateMeta, state.isAcceptableOrUnknown(data['state']!, _stateMeta));
+    }
+    if (data.containsKey('farmer_id')) {
+      context.handle(_farmerIdMeta,
+          farmerId.isAcceptableOrUnknown(data['farmer_id']!, _farmerIdMeta));
+    }
+    if (data.containsKey('farmer_code')) {
+      context.handle(
+          _farmerCodeMeta,
+          farmerCode.isAcceptableOrUnknown(
+              data['farmer_code']!, _farmerCodeMeta));
+    }
+    if (data.containsKey('farm_id')) {
+      context.handle(_farmIdMeta,
+          farmId.isAcceptableOrUnknown(data['farm_id']!, _farmIdMeta));
+    }
+    if (data.containsKey('farm_code')) {
+      context.handle(_farmCodeMeta,
+          farmCode.isAcceptableOrUnknown(data['farm_code']!, _farmCodeMeta));
+    }
+    if (data.containsKey('internal_inspector_id')) {
+      context.handle(
+          _internalInspectorIdMeta,
+          internalInspectorId.isAcceptableOrUnknown(
+              data['internal_inspector_id']!, _internalInspectorIdMeta));
+    }
+    if (data.containsKey('monitoring_visit_type')) {
+      context.handle(
+          _monitoringVisitTypeMeta,
+          monitoringVisitType.isAcceptableOrUnknown(
+              data['monitoring_visit_type']!, _monitoringVisitTypeMeta));
+    }
+    if (data.containsKey('visit_date')) {
+      context.handle(_visitDateMeta,
+          visitDate.isAcceptableOrUnknown(data['visit_date']!, _visitDateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {idOffline};
+  @override
+  FarmerInspectorUpload map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return FarmerInspectorUpload(
+      api: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}api']),
+      idOffline: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id_offline']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      farmerId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farmer_id']),
+      farmerCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farmer_code']),
+      farmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
+      farmCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farm_code']),
+      internalInspectorId: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}internal_inspector_id']),
+      monitoringVisitType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}monitoring_visit_type']),
+      visitDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}visit_date']),
+      state: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}state']),
+    );
+  }
+
+  @override
+  $FarmerInspectorUploadNoNetworkTableTable createAlias(String alias) {
+    return $FarmerInspectorUploadNoNetworkTableTable(attachedDatabase, alias);
+  }
+}
+
+class FarmerInspectorUploadNoNetworkTableCompanion
+    extends UpdateCompanion<FarmerInspectorUpload> {
+  final Value<int?> id;
+  final Value<String?> api;
+  final Value<String?> idOffline;
+  final Value<String?> state;
+  final Value<int?> farmerId;
+  final Value<String?> farmerCode;
+  final Value<int?> farmId;
+  final Value<String?> farmCode;
+  final Value<int?> internalInspectorId;
+  final Value<String?> monitoringVisitType;
+  final Value<String?> visitDate;
+  final Value<int> rowid;
+  const FarmerInspectorUploadNoNetworkTableCompanion({
+    this.id = const Value.absent(),
+    this.api = const Value.absent(),
+    this.idOffline = const Value.absent(),
+    this.state = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.internalInspectorId = const Value.absent(),
+    this.monitoringVisitType = const Value.absent(),
+    this.visitDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  FarmerInspectorUploadNoNetworkTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.api = const Value.absent(),
+    this.idOffline = const Value.absent(),
+    this.state = const Value.absent(),
+    this.farmerId = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.farmId = const Value.absent(),
+    this.farmCode = const Value.absent(),
+    this.internalInspectorId = const Value.absent(),
+    this.monitoringVisitType = const Value.absent(),
+    this.visitDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<FarmerInspectorUpload> custom({
+    Expression<int>? id,
+    Expression<String>? api,
+    Expression<String>? idOffline,
+    Expression<String>? state,
+    Expression<int>? farmerId,
+    Expression<String>? farmerCode,
+    Expression<int>? farmId,
+    Expression<String>? farmCode,
+    Expression<int>? internalInspectorId,
+    Expression<String>? monitoringVisitType,
+    Expression<String>? visitDate,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (api != null) 'api': api,
+      if (idOffline != null) 'id_offline': idOffline,
+      if (state != null) 'state': state,
+      if (farmerId != null) 'farmer_id': farmerId,
+      if (farmerCode != null) 'farmer_code': farmerCode,
+      if (farmId != null) 'farm_id': farmId,
+      if (farmCode != null) 'farm_code': farmCode,
+      if (internalInspectorId != null)
+        'internal_inspector_id': internalInspectorId,
+      if (monitoringVisitType != null)
+        'monitoring_visit_type': monitoringVisitType,
+      if (visitDate != null) 'visit_date': visitDate,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  FarmerInspectorUploadNoNetworkTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? api,
+      Value<String?>? idOffline,
+      Value<String?>? state,
+      Value<int?>? farmerId,
+      Value<String?>? farmerCode,
+      Value<int?>? farmId,
+      Value<String?>? farmCode,
+      Value<int?>? internalInspectorId,
+      Value<String?>? monitoringVisitType,
+      Value<String?>? visitDate,
+      Value<int>? rowid}) {
+    return FarmerInspectorUploadNoNetworkTableCompanion(
+      id: id ?? this.id,
+      api: api ?? this.api,
+      idOffline: idOffline ?? this.idOffline,
+      state: state ?? this.state,
+      farmerId: farmerId ?? this.farmerId,
+      farmerCode: farmerCode ?? this.farmerCode,
+      farmId: farmId ?? this.farmId,
+      farmCode: farmCode ?? this.farmCode,
+      internalInspectorId: internalInspectorId ?? this.internalInspectorId,
+      monitoringVisitType: monitoringVisitType ?? this.monitoringVisitType,
+      visitDate: visitDate ?? this.visitDate,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (api.present) {
+      map['api'] = Variable<String>(api.value);
+    }
+    if (idOffline.present) {
+      map['id_offline'] = Variable<String>(idOffline.value);
+    }
+    if (state.present) {
+      map['state'] = Variable<String>(state.value);
+    }
+    if (farmerId.present) {
+      map['farmer_id'] = Variable<int>(farmerId.value);
+    }
+    if (farmerCode.present) {
+      map['farmer_code'] = Variable<String>(farmerCode.value);
+    }
+    if (farmId.present) {
+      map['farm_id'] = Variable<int>(farmId.value);
+    }
+    if (farmCode.present) {
+      map['farm_code'] = Variable<String>(farmCode.value);
+    }
+    if (internalInspectorId.present) {
+      map['internal_inspector_id'] = Variable<int>(internalInspectorId.value);
+    }
+    if (monitoringVisitType.present) {
+      map['monitoring_visit_type'] =
+          Variable<String>(monitoringVisitType.value);
+    }
+    if (visitDate.present) {
+      map['visit_date'] = Variable<String>(visitDate.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('FarmerInspectorUploadNoNetworkTableCompanion(')
+          ..write('id: $id, ')
+          ..write('api: $api, ')
+          ..write('idOffline: $idOffline, ')
+          ..write('state: $state, ')
+          ..write('farmerId: $farmerId, ')
+          ..write('farmerCode: $farmerCode, ')
+          ..write('farmId: $farmId, ')
+          ..write('farmCode: $farmCode, ')
+          ..write('internalInspectorId: $internalInspectorId, ')
+          ..write('monitoringVisitType: $monitoringVisitType, ')
+          ..write('visitDate: $visitDate, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ReportSelectTableTable extends ReportSelectTable
+    with TableInfo<$ReportSelectTableTable, ReportSelect> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ReportSelectTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+      'title', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [id, title];
+  @override
+  String get aliasedName => _alias ?? 'report_select_table';
+  @override
+  String get actualTableName => 'report_select_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ReportSelect> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  ReportSelect map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ReportSelect(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title']),
+    );
+  }
+
+  @override
+  $ReportSelectTableTable createAlias(String alias) {
+    return $ReportSelectTableTable(attachedDatabase, alias);
+  }
+}
+
+class ReportSelectTableCompanion extends UpdateCompanion<ReportSelect> {
+  final Value<int?> id;
+  final Value<String?> title;
+  const ReportSelectTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+  });
+  ReportSelectTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+  });
+  static Insertable<ReportSelect> custom({
+    Expression<int>? id,
+    Expression<String>? title,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+    });
+  }
+
+  ReportSelectTableCompanion copyWith(
+      {Value<int?>? id, Value<String?>? title}) {
+    return ReportSelectTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ReportSelectTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title')
           ..write(')'))
         .toString();
   }
@@ -5404,6 +6712,13 @@ abstract class _$DiaryDB extends GeneratedDatabase {
   late final $ActDiaryNoNetworkTableTable actDiaryNoNetworkTable =
       $ActDiaryNoNetworkTableTable(this);
   late final $ReportTableTable reportTable = $ReportTableTable(this);
+  late final $QuestionUploadNoNetworkTableTable questionUploadNoNetworkTable =
+      $QuestionUploadNoNetworkTableTable(this);
+  late final $FarmerInspectorUploadNoNetworkTableTable
+      farmerInspectorUploadNoNetworkTable =
+      $FarmerInspectorUploadNoNetworkTableTable(this);
+  late final $ReportSelectTableTable reportSelectTable =
+      $ReportSelectTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5419,6 +6734,9 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         activityMonitorTable,
         monitorDiaryTable,
         actDiaryNoNetworkTable,
-        reportTable
+        reportTable,
+        questionUploadNoNetworkTable,
+        farmerInspectorUploadNoNetworkTable,
+        reportSelectTable
       ];
 }

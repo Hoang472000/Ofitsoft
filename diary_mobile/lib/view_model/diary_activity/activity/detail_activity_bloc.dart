@@ -526,6 +526,10 @@ class DetailActivityBloc
     final listUnitYield =
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
     _initViewDetail(emitter, detailActivity.activityId ?? -1);
+    print("HoangCV: detailActivity.activityId: ${detailActivity.toJson()}");
+    listActivity.forEach((element) {print("HoangCV: listActivity: ${element.toJson()}");});
+
+    listUnitArea.forEach((element) {print("HoangCV: listUnitArea: ${element.toJson()}");});
     int index = listActivity
         .indexWhere((element) => element.id == detailActivity.activityId);
     int indexArea = listUnitArea

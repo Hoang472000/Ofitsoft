@@ -55,8 +55,6 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       final detailDiary = await repository.getInfoDiary(event.id);
       final listActivityDiary = await repository.getListActivityDiary(event.id);
       final listActivityTransaction = await repository.getListActivityTransaction(event.id);
-      final listReportResult = await repository.getListReportResult();
-      final listReportSelect = await repository.getListReportSelect();
       List<bool> check = await SharedPreDiary.getRole();
       List<ActivityFarm> list = [];
       list.add(ActivityFarm(
@@ -73,12 +71,12 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           iconActivity: ImageAsset.imageSelling));
       if (check[0]) {
       }
-      if (check[4]) {
+     /* if (check[4]) {
         list.add(ActivityFarm(
             id: 6,
             nameActivity: "HOẠT ĐỘNG THU MUA",
             iconActivity: ImageAsset.imageSelling));
-      }
+      }*/
       // HoangCV: hide activity monitor
       /*if (check[1]) {
         list.add(ActivityFarm(
@@ -87,12 +85,7 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
             iconActivity: ImageAsset.imageSpyware));
 
       }*/
-      if (check[3]) {
-        list.add(ActivityFarm(
-            id: 5,
-            nameActivity: "BÁO CÁO ĐÁNH GIÁ THỰC ĐỊA",
-            iconActivity: ImageAsset.imageDisaster));
-      }
+
 /*    list.add(ActivityFarm(
         nameActivity: "Hoạt động thu hoạch",
         iconActivity: ImageAsset.imagePlantCrop));
@@ -111,9 +104,7 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           detailDiary: detailDiary,
           listActivityFarm: list,
           listActivityTransaction: listActivityTransaction,
-          listActivityDiary: listActivityDiary,
-          listReportSelect: listReportSelect,
-          listReportResult: listReportResult));
+          listActivityDiary: listActivityDiary));
     }
   }
 }

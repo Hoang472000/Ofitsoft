@@ -36,7 +36,7 @@ class ReportResult {
       farmerCode: json['farmer_code'] ?? '',
       farmId: json['farm_id'] ?? -1,
       farmName: json['farm_name'] ?? '',
-      farmCode: json['farm_code'] ?? '',
+      farmCode: json['farm_code'] == false  ? '': json['farm_code'] ?? '',
       internalInspectorId: json['internal_inspector_id'] ?? -1,
       internalInspector: json['internal_inspector'] ?? '',
       createDate: json['create_date'] ?? '',

@@ -218,73 +218,43 @@ class _AddActivitySellPageState extends State<AddActivitySellPage> {
                                   ),
                                   Row(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       Expanded(
-                                        child: Text(
-                                          "Đơn giá",
-                                          style: StyleOfit.textStyleFW500(
-                                              AppColor.gray57, 16),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Row(
-                                        children: [
-                                          SizedBox(
-                                            width: 120,
-                                            height: 40,
-                                            child: ListView.builder(
-                                              padding: EdgeInsets.zero,
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              shrinkWrap: true,
-                                              itemCount: state.inputDonGia.length,
-                                              itemBuilder: (_, index) => ContainerInputWidget(
-                                                contextParent: context,
-                                                inputRegisterModel: state.inputDonGia[index],
-                                                onClick: () {},
-                                                onMutiChoice: (id) {},
-                                                onChangeText: (text) {
-                                                  blocContext.read<AddActivitySellBloc>().add(
-                                                      SaveValueTextFieldEvent(
-                                                          text, state.inputDonGia[index], index));
-                                                },
-                                                onEditingComplete: (text) {
-                                                  blocContext.read<AddActivitySellBloc>().add(
-                                                      SaveValueTextFieldEvent(
-                                                          text, state.inputDonGia[index], index));
-                                                },
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                shrinkWrap: true,
+                                                itemCount: state.inputDonGia.length,
+                                                itemBuilder: (_, index) => ContainerInputWidget(
+                                                  titleStyle: StyleOfit.textStyleFW500(AppColor.black22, 16),
+                                                  contextParent: context,
+                                                  inputRegisterModel: state.inputDonGia[index],
+                                                  onClick: () {},
+                                                  onMutiChoice: (id) {},
+                                                  onChangeText: (text) {
+                                                    blocContext.read<AddActivitySellBloc>().add(
+                                                        SaveValueTextFieldEvent(
+                                                            text, state.inputDonGia[index], index));
+                                                  },
+                                                  onEditingComplete: (text) {
+                                                    /*    blocContext.read<AddActivitySellBloc>().add(
+                                                        SaveValueTextFieldEvent(
+                                                            text, state.inputDonGia[index], index));*/
+                                                  },
+                                                ),
                                               ),
                                             ),
-                                            /*Focus(
-                                              child: TextFormFieldInput(
-                                                  '',
-                                                  state.donGiaController ??
-                                                      TextEditingController(),
-                                                  false,
-                                                  false,
-                                                  focusNode,
-                                                  '',
-                                                  (lostFocus) {},
-                                                  true,
-                                                  isPhone: true,
-                                                  isNotValidStart: true,
-                                                  noBorder: true,
-                                                  underLine: true,
-                                                  onChangeCallBack: (text) {
-                                                         blocContext
-                                                        .read<
-                                                             AddActivitySellBloc>()
-                                                        .add(OnChangeDonGiaEvent(
-                                                        text));
-                                              }, isChangeCallBack: true),
-                                            ),*/
-                                          ),
-                                          Text(
-                                            " VND/${state.donViController?.text}",
-                                            style: StyleOfit.textStyleFW500(
-                                                AppColor.gray57, 16),
-                                          )
-                                        ],
+                                            Text(
+                                              " VND/${state.donViController?.text}",
+                                              style: StyleOfit.textStyleFW500(
+                                                  AppColor.gray57, 16),
+                                            )
+                                          ],
+                                        ),
                                       )
                                     ],
                                   ),

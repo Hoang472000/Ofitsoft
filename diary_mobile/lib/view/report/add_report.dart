@@ -112,22 +112,22 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     padding: EdgeInsets.zero,
                     shrinkWrap: true,
                     //physics: NeverScrollableScrollPhysics(),
-                    itemCount: state.listReport[1].questionAndPageIds.length + 2,
+                    itemCount: state.listReport[0].questionAndPageIds.length + 2,
                     itemBuilder: (context, index) {
                       return AutoScrollTag(
                         controller: state.scrollController!,
                         index: index,
                         key: ValueKey(index),
-                        child: index == 0 ? detailHeader("${state.listReport[1].title}",
+                        child: index == 0 ? detailHeader("${state.listReport[0].title}",
                             state.listSelectedInspector, state.listWidget, state.nameInspector ?? '', blocContext) :
-                            index == state.listReport[1].questionAndPageIds.length + 1 ? detailEnd(blocContext) :
-                            state.listReport[1].questionAndPageIds[index -1].isPage == true ?
+                            index == state.listReport[0].questionAndPageIds.length + 1 ? detailEnd(blocContext) :
+                            state.listReport[0].questionAndPageIds[index -1].isPage == true ?
                             ExpansionTile(
-                          title: widgetMuc("${state.listReport[1].questionAndPageIds[index -1].title}"),
+                          title: widgetMuc("${state.listReport[0].questionAndPageIds[index -1].title}"),
                           children: [
                             tableDetailResult(
-                              state.listReport[1].questionAndPageIds[index -1].questionAndPageIds,
-                              state.listReport[1].questionAndPageIds[index -1].questionParentTitleId,
+                              state.listReport[0].questionAndPageIds[index -1].questionAndPageIds,
+                              state.listReport[0].questionAndPageIds[index -1].questionParentTitleId,
                               state.listSelected[index-1],
                               state.listController[index-1],
                               state.listControllerTable,
@@ -139,8 +139,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                           ],
                         ) :
                             tableDetailResult(
-                              [state.listReport[1].questionAndPageIds[index-1]],
-                              [state.listReport[1].questionAndPageIds[index-1]],
+                              [state.listReport[0].questionAndPageIds[index-1]],
+                              [state.listReport[0].questionAndPageIds[index-1]],
                               state.listSelected[index-1],
                               state.listController[index-1],
                               state.listControllerTable,
@@ -1780,7 +1780,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       }
     }
 
-    print("HoangCV: list.first.questionType : ${list.first.questionType}");
+    print("HoangCV: list.first.questionType : ${list}");
     return Container(
       decoration: BoxDecoration(
         border: list.length == 1 ? Border.symmetric() : Border.all(width: 0.5,color: AppColor.black22),
@@ -1790,7 +1790,26 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         child: Container(
           constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width* checkTable(list)),
           child: Column(
-              children: listTable1
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                  children: listTable1
+              ),
+              isTable(list) == true ? TextButton(
+                style: TextButton.styleFrom(
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: () {
+                  context.read<AddReportBloc>().add(AddTableRowEvent(list, listTable.indexWhere((element) =>
+                      element.id == list.first.id
+                  )));
+                  },
+                child: const Icon(
+                  Icons.add_circle_outline,
+                  color: AppColor.main,
+                ),
+              ): SizedBox(),
+            ],
           ),
         ),
       ),
@@ -1810,6 +1829,12 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       return 1.1;
     }
     return 1.3;
+  }
+  bool isTable(List<Question> list){
+    if(list.length == 1 && list.first.questionType == "table"){
+      return true;
+    }
+    return false;
   }
 
   Table tableForm2TextField(String title, bool isError, int id, List<Select> listSelected, List<Controller> listController, BuildContext context, FarmerInspectorUpload farmerInspector, {bool isFirst = false}){

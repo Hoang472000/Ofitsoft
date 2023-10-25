@@ -33,6 +33,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     on<UpdateAddTableEvent>(updateAddTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
     on<SubmitReportEvent>(submitReport);
+    on<AddTableRowEvent>(addNewTableRow);
   }
 
   void _initViewAdd(Emitter<AddReportState> emitter) {
@@ -126,7 +127,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             .selectValue(
             event.list[event.index], event.context, (modelInput) {});
         if (result1 == 1) {
-          state.farmerInspector!.visit_date = Utils.formatDateTimeToString(
+          state.farmerInspector!.visitDate = Utils.formatDateTimeToString(
               event.list[event.index].valueSelected);
           emit(state.copyWith(
             startTimeController: TextEditingController(
@@ -141,15 +142,15 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
               FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
                 id: state.reportId,
-                farmer_id: state.farmerInspector!.farmer_id,
-                farm_id: state.farmerInspector!.farm_id,
-                farm_code: state.farmerInspector!.farm_code,
-                farmer_code: state.farmerInspector!.farmer_code,
-                internal_inspector_id: state.farmerInspector!
-                    .internal_inspector_id,
-                monitoring_visit_type: state.farmerInspector!
-                    .monitoring_visit_type,
-                visit_date: state.farmerInspector!.visit_date,
+                farmerId: state.farmerInspector!.farmerId,
+                farmId: state.farmerInspector!.farmId,
+                farmCode: state.farmerInspector!.farmCode,
+                farmerCode: state.farmerInspector!.farmerCode,
+                internalInspectorId: state.farmerInspector!
+                    .internalInspectorId,
+                monitoringVisitType: state.farmerInspector!
+                    .monitoringVisitType,
+                visitDate: state.farmerInspector!.visitDate,
               );
               ObjectResult result = await repository.editFarmerInspector(
                   questionUpload);
@@ -166,15 +167,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             } else{
               print("HoangCV:  uplaods asdsaj 1121");
               QuestionUpload questionUpload = QuestionUpload(
-                    user_input_id: state.reportId,
-                    survey_id: state.listReport[1].id,
-                    question_id: event.id,
-                    answer_type: event.type,
-                    value_text: Utils.stringToFormattedString(Utils.formatDateTimeToString(
+                    userInputId: state.reportId,
+                    surveyId: state.listReport[0].id,
+                    questionId: event.id,
+                    answerType: event.type,
+                    valueText: Utils.stringToFormattedString(Utils.formatDateTimeToString(
                         event.list[event.index].valueSelected)),
-                    test_entry: false,
-                    list_id_suggested: [],
-                    is_answer_exist: true,
+                    listIdSuggested: [],
+                    isAnswerExist: true,
                 );
               ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
               if (objectResult.responseCode == StatusConst.code00) {
@@ -191,22 +191,21 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           }else if(state.reportId == null && event.id == 1){
             print("HoangCV:  uplaods asdsaj");
             QuestionUpload questionUpload = QuestionUpload(
-            user_input_id: state.reportId,
-            survey_id: state.listReport[1].id,
-              question_id: event.id,
-              answer_type: event.type,
-              value_text: Utils.stringToFormattedString(Utils.formatDateTimeToString(
+            userInputId: state.reportId,
+            surveyId: state.listReport[0].id,
+              questionId: event.id,
+              answerType: event.type,
+              valueText: Utils.stringToFormattedString(Utils.formatDateTimeToString(
                   event.list[event.index].valueSelected)),
-              list_id_suggested: [],
-            test_entry: false,
-            is_answer_exist: true,
-            farmer_id: state.farmerInspector!.farmer_id,
-            farmer_code: state.farmerInspector!.farmer_code,
-            farm_id: state.farmerInspector!.farm_id,
-            farm_code: state.farmerInspector!.farm_code,
-            internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-            monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-            visit_date: state.farmerInspector!.visit_date,
+              listIdSuggested: [],
+            isAnswerExist: true,
+            farmerId: state.farmerInspector!.farmerId,
+            farmerCode: state.farmerInspector!.farmerCode,
+            farmId: state.farmerInspector!.farmId,
+            farmCode: state.farmerInspector!.farmCode,
+            internalInspectorId: state.farmerInspector!.internalInspectorId,
+            monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+            visitDate: state.farmerInspector!.visitDate,
           );
             ObjectResult result = await repository.uploadQuestion(questionUpload);
             if (result.responseCode == StatusConst.code00) {
@@ -240,10 +239,10 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
           if (event.index == 0) {
             event.list[1].controller = TextEditingController(text: "${state.listFarmer[result].id}");
-            state.farmerInspector!.farmer_id = state.listFarmer[result].id;
-            state.farmerInspector!.farmer_code = state.listFarmer[result].code;
-            state.farmerInspector!.farm_id = null;
-            state.farmerInspector!.farm_code = null;
+            state.farmerInspector!.farmerId = state.listFarmer[result].id;
+            state.farmerInspector!.farmerCode = state.listFarmer[result].code;
+            state.farmerInspector!.farmId = null;
+            state.farmerInspector!.farmCode = null;
             state.listWidget[4].listValue = state.listFarmer[result].farmIds;
             state.listWidget[4].valueSelected = null;
             state.listWidget[4].positionSelected = -1;
@@ -253,18 +252,16 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             listFarm: state.listFarmer[result].farmIds,
             ));
           } else if (event.index == 2) {
-            state.farmerInspector!.internal_inspector_id = state.listInspector[result].id;
+            state.farmerInspector!.internalInspectorId = state.listInspector[result].id;
             emit(state.copyWith(
               farmerInspector: state.farmerInspector,
             ));
-            print("HoangCV: state.farmerInspector!.internal_inspector_id : ${ state.farmerInspector!.internal_inspector_id} ");
           } else if (event.index == 4) {
-            state.farmerInspector!.farm_id = state.listFarm[result].id;
-            state.farmerInspector!.farm_code = state.listFarm[result].code;
+            state.farmerInspector!.farmId = state.listFarm[result].id;
+            state.farmerInspector!.farmCode = state.listFarm[result].code;
             emit(state.copyWith(
               farmerInspector: state.farmerInspector,
             ));
-            print("HoangCV: state.farmerInspector!.internal_inspector_id : ${ state.farmerInspector!.internal_inspector_id} ");
           }
           if(state.reportId != null ){
             emit(state.copyWith(
@@ -272,13 +269,13 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
             FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
               id: state.reportId,
-              farmer_id: state.farmerInspector!.farmer_id,
-              farm_id: state.farmerInspector!.farm_id,
-              farm_code: state.farmerInspector!.farm_code,
-              farmer_code: state.farmerInspector!.farmer_code,
-              internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-              monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-              visit_date: state.farmerInspector!.visit_date,
+              farmerId: state.farmerInspector!.farmerId,
+              farmId: state.farmerInspector!.farmId,
+              farmCode: state.farmerInspector!.farmCode,
+              farmerCode: state.farmerInspector!.farmerCode,
+              internalInspectorId: state.farmerInspector!.internalInspectorId,
+              monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+              visitDate: state.farmerInspector!.visitDate,
             );
             ObjectResult result = await repository.editFarmerInspector(questionUpload);
             if (result.responseCode == StatusConst.code00) {
@@ -304,7 +301,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       startTimeController: TextEditingController(
           text: DateTime.now().toString() /*.split('.')[0]*/),
       idFarmerController: TextEditingController(text: ''),
-      farmerInspector: FarmerInspectorUpload(visit_date: DateTime.now().toString().split('.')[0]),
+      farmerInspector: FarmerInspectorUpload(visitDate: DateTime.now().toString().split('.')[0]),
     ));
     final report = await repository.getListActivityReport(event.id);
     List<List<Select>> listSelected = [];
@@ -319,15 +316,15 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? nameInspector = sharedPreferences.getString(SharedPreferencesKey.fullName);
     int? idInspector = sharedPreferences.getInt(SharedPreferencesKey.userId);
-    state.farmerInspector!.internal_inspector_id = idInspector;
+    state.farmerInspector!.internalInspectorId = idInspector;
     emit(state.copyWith(
       nameInspector: nameInspector,
     ));
     if (report.isNotEmpty) {
-      listSelected = createSelectLists(report[1].questionAndPageIds);
-      listInputModel = createInputLists(report[1].questionAndPageIds);
-      listVisible = createVisibleLists(report[1].questionAndPageIds);
-      listController = createTextEditingControllerLists(report[1].questionAndPageIds);
+      listSelected = createSelectLists(report[0].questionAndPageIds);
+      listInputModel = createInputLists(report[0].questionAndPageIds);
+      listVisible = createVisibleLists(report[0].questionAndPageIds);
+      listController = createTextEditingControllerLists(report[0].questionAndPageIds);
       listInputModel.forEach((element) {
         print("HoangCV:listInputModel:  ${element.length} : ${element.toString()}");
       });
@@ -335,7 +332,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });*/
       int i = 0;
-      addTableRow(report[1].questionAndPageIds, listTable, i);
+      addTableRow(report[0].questionAndPageIds, listTable, i);
 /*      listTable.forEach((element) {
         print("HoangCV:listTable:  ${listTable.toString()}");
         element.listQuestion.forEach((e) {
@@ -361,10 +358,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       _initViewAdd(emitter);
 
       List<GlobalExpand> expansionTileKeys = List.generate(
-        report[1].questionAndPageIds.length,
+        report[0].questionAndPageIds.length,
             (index) => GlobalExpand(false,GlobalKey()),
       );
-      print("HoangCV: expansionTileKeys: ${expansionTileKeys.length} :  ${expansionTileKeys[0]} : ${report[1].questionAndPageIds.length}");
       emitter(state.copyWith(expansionTileKeys: expansionTileKeys,
           scrollController: AutoScrollController(
               viewportBoundaryGetter: () => Rect.fromLTRB(0, 0, 0, 0),
@@ -764,7 +760,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<int> listIdSuggested = [];
     String answerType = '';
     bool hasCommandAnswer = false;
-    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    List<Question> listQs = state.listReport[0].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
       print("HoangCV: listQs: ${listQs[i].title}");
       if(listQs[i].questionAndPageIds.isNotEmpty) {
@@ -956,42 +952,40 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     } else {
       if (state.reportId != null) {
         questionUpload = QuestionUpload(
-            user_input_id: state.reportId,
-            survey_id: state.listReport[1].id,
-            question_id: question.id,
-            suggested_answer_id: answer.id,
-            answer_type: answerType == '' ? null : answerType,
-            value_text: /*event.value*/text,
-            test_entry: false,
+            userInputId: state.reportId,
+            surveyId: state.listReport[0].id,
+            questionId: question.id,
+            suggestedAnswerId: answer.id,
+            answerType: answerType == '' ? null : answerType,
+            valueText: /*event.value*/text,
             // value default ko ro Anh Dung de lam gi
-            is_answer_exist: index != -1
+            isAnswerExist: index != -1
                 ? event.listSelect[index].value
                 : false,
             // value khi tich chon va bo tich chon
             //table_row_id: 1,
-            list_id_suggested: listIdSuggested
+            listIdSuggested: listIdSuggested
         );
       } else {
         questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[1].id,
-          question_id: question.id,
-          suggested_answer_id: answer.id,
-          answer_type: answerType == '' ? null : answerType,
-          value_text: event.value,
-          test_entry: false,
+          userInputId: state.reportId,
+          surveyId: state.listReport[0].id,
+          questionId: question.id,
+          suggestedAnswerId: answer.id,
+          answerType: answerType == '' ? null : answerType,
+          valueText: event.value,
           // value default ko ro Anh Dung de lam gi
-          is_answer_exist: index != -1 ? event.listSelect[index].value : false,
+          isAnswerExist: index != -1 ? event.listSelect[index].value : false,
           // value khi tich chon va bo tich chon
           //table_row_id: 1,
-          list_id_suggested: listIdSuggested,
-          farmer_id: state.farmerInspector!.farmer_id,
-          farmer_code: state.farmerInspector!.farmer_code,
-          farm_id: state.farmerInspector!.farm_id,
-          farm_code: state.farmerInspector!.farm_code,
-          internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-          monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-          visit_date: state.farmerInspector!.visit_date,
+          listIdSuggested: listIdSuggested,
+          farmerId: state.farmerInspector!.farmerId,
+          farmerCode: state.farmerInspector!.farmerCode,
+          farmId: state.farmerInspector!.farmId,
+          farmCode: state.farmerInspector!.farmCode,
+          internalInspectorId: state.farmerInspector!.internalInspectorId,
+          monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+          visitDate: state.farmerInspector!.visitDate,
         );
       }
 
@@ -1014,7 +1008,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
-    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    List<Question> listQs = state.listReport[0].questionAndPageIds;
     bool checkBreak = false;
     for (int i = 0; i < listQs.length; i++) {
       for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
@@ -1042,15 +1036,15 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
     if(event.value.isNotEmpty) {
       QuestionUpload questionUpload = QuestionUpload(
-          user_input_id: state.reportId,
-          survey_id: state.listReport[1].id,
-          question_id: event.questionId,
-          suggested_answer_id: event.answerId,
-          answer_type: 'table',
-          value_text: event.value,
-          is_answer_exist: true,
-          table_row_id: event.rowId + 1,
-          list_id_suggested: []
+          userInputId: state.reportId,
+          surveyId: state.listReport[0].id,
+          questionId: event.questionId,
+          suggestedAnswerId: event.answerId,
+          answerType: 'table',
+          valueText: event.value,
+          isAnswerExist: true,
+          tableRowId: event.rowId + 1,
+          listIdSuggested: []
       );
       ObjectResult result = await repository.uploadQuestion(questionUpload);
       if (result.responseCode == StatusConst.code00) {
@@ -1067,7 +1061,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   }
 
   Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<AddReportState> emit) async {
-    state.farmerInspector!.monitoring_visit_type = event.value;
+    state.farmerInspector!.monitoringVisitType = event.value;
     emit(state.copyWith(
       farmerInspector: state.farmerInspector
     ));
@@ -1077,11 +1071,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
       FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
         id: state.reportId,
-        farmer_id: state.farmerInspector!.farmer_id,
-        farmer_code: state.farmerInspector!.farmer_code,
-        internal_inspector_id: state.farmerInspector!.internal_inspector_id,
-        monitoring_visit_type: state.farmerInspector!.monitoring_visit_type,
-        visit_date: state.farmerInspector!.visit_date,
+        farmerId: state.farmerInspector!.farmerId,
+        farmerCode: state.farmerInspector!.farmerCode,
+        internalInspectorId: state.farmerInspector!.internalInspectorId,
+        monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+        visitDate: state.farmerInspector!.visitDate,
       );
       ObjectResult result = await repository.editFarmerInspector(questionUpload);
       if (result.responseCode == StatusConst.code00) {
@@ -1102,7 +1096,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
     bool submit = true;
-    List<Question> listQs = state.listReport[1].questionAndPageIds;
+    List<Question> listQs = state.listReport[0].questionAndPageIds;
     for (int i = 0; i < listQs.length; i++) {
       bool checkBreak = false;
       print("HoangCV: title: ${listQs[i].title}");
@@ -1678,6 +1672,87 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
+
+  FutureOr<void> addNewTableRow(AddTableRowEvent event, Emitter<AddReportState> emit) {
+    emit(state.copyWith(
+        isShowProgress: true
+    ));
+    List<TableQuestion> listTable = state.listTable;
+    //int indexTable = listTable.indexWhere((element) => element.id == event.idTable);
+    int i = state.listTable[event.idTable].listQuestion.length;
+    addNewRow(event.list, listTable, i, event.idTable);
+      listTable.forEach((element) {
+        print("HoangCV:listTable:  ${listTable.toString()}");
+        element.listQuestion.forEach((e) {
+          print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
+        });
+      });
+    List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
+    state.listControllerTable.addAll(listCtrlTable);
+    emit(state.copyWith(
+      listTable: listTable,
+      listControllerTable: state.listControllerTable,
+      isShowProgress: false
+      // listReport: state.listReport
+    ));
+    state.listTable.forEach((element) {
+      print("HoangCV:state.listTable:  ${listTable.toString()}");
+      element.listQuestion.forEach((e) {
+        print("HoangCV:state.listTable e:  ${element.listQuestion.toString()}");
+      });
+    });
+  }
+
+  void addNewRow(List<dynamic> items, List<TableQuestion> listTable, int id, int idTable) {
+    for (dynamic item in items) {
+      if (item is Question) {
+        if (item.questionType == 'table') {
+          print("HaongCV: item: ${item.title}");
+          List<Question> list = [];
+            List<Answer> listAs = [];
+            for (Answer answer in item.suggestedAnswerIds) {
+
+              print("HaongCV: answer: ${answer.value}");
+              Answer clonedAnswer = Answer.copy(answer);
+              clonedAnswer.tableRowId = id;
+              List<Answer> las = [];
+              for (Answer as in clonedAnswer.suggestedAnswerIds) {
+                Answer clonedAs = Answer.copy(as);
+                clonedAs.tableRowId = id;
+                las.add(clonedAs);
+              }
+              if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+                clonedAnswer.suggestedAnswerIds = las;
+              }
+              listAs.add(clonedAnswer);
+            }
+            Question qs = Question.copy(item);
+            qs.suggestedAnswerIds = listAs;
+            qs.rowId = id;
+            id++;
+            list.add(qs);
+          listTable[idTable].listQuestion.add(qs);
+        }
+      }
+    }
+
+    // Gọi đệ quy sau khi xử lý toàn bộ danh sách items
+    for (dynamic item in items) {
+      if (item is Question) {
+        addNewRow(item.questionAndPageIds, listTable, id, idTable);
+      }
+    }
+  }
+}
+
+class AddTableRowEvent extends AddReportEvent {
+  final List<Question> list;
+  int idTable;
+
+  AddTableRowEvent(this.list, this.idTable);
+
+  @override
+  List<Object?> get props => [list, idTable];
 }
 
 class AddReportEvent extends BlocEvent {

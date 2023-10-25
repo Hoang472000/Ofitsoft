@@ -213,6 +213,13 @@ class ImageAsset {
   static const String imageToolSpecialized = "${iMages}tool_specialized.png";
   //background ofitsoft
 
+  //purchase
+  static const String imagePurchase1 = "${iMages}purchase1.jpeg";
+  static const String imagePurchase2 = "${iMages}purchase2.jpg";
+  static const String imagePurchase3 = "${iMages}purchase3.jpeg";
+  static const String imageManagerSmart1 = "${iMages}image_manager_smart1.png";
+  static const String imageManagerSmart2 = "${iMages}images_manager_smart2.jpeg";
+
   static const String imageOfitSoftBackground = "${iMages}image_ofitsoft_background.jpg";
 
   static const String imageEmptyData = "${iMages}empty_data.png";

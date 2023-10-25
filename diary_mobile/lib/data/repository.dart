@@ -7,6 +7,7 @@ import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
+import 'entity/activity/season_farm.dart';
 import 'entity/diary/diary.dart';
 import 'entity/item_default/activity.dart';
 import 'entity/item_default/item_default.dart';
@@ -14,6 +15,7 @@ import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
 import 'entity/report/question_upload.dart';
+import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
 import 'entity/setting/user_info.dart';
 
@@ -97,7 +99,7 @@ abstract class Repository {
 
   Future<List<ReportResult>> getListReportResult();
 
-  Future<List<Report>> getListReportSelect();
+  Future<List<ReportSelect>> getListReportSelect();
 
   Future<List<SurveyRpRlt>> getDetailReport(int id);
 
@@ -108,4 +110,8 @@ abstract class Repository {
   Future<ObjectResult> updateActivityTransaction(ActivityTransaction transaction);
 
   Future<ObjectResult> removeActivityTransaction(int id);
+
+  Future<List<SeasonFarm>> getSeasonFarm();
+
+  Future<List<ActivityTransaction>> getListActivityPurchase();
 }

@@ -52,7 +52,7 @@ class Tool implements Insertable<Tool> {
       quantity: json['quantity'] ?? 0,
       unitId: json['unit_id'] ?? -1,
       unitName: json['unit_name'] ?? '',
-      mediaContent: json['media_content'] ?? '',
+      mediaContent: json['media_content'] == false ? '' : json['media_content'] ?? "",
     );
   }
 

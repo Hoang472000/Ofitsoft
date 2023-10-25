@@ -121,11 +121,11 @@ class _ItemTransactionState extends State<ItemTransaction> {
               SizedBox(
                 height: 50,
                 width: 50,
-                child: /*(state.listDiaryActivity[index].harvesting ?? false) || */
-                    (widget.diary.status ?? '').compareTo("done") == 0 ||
+                child: widget.action == "sell" &&
+                    ((widget.diary.status ?? '').compareTo("done") == 0 ||
                             (widget.diary.status ?? '')
                                     .compareTo("cancelled") ==
-                                0
+                                0)
                         ? Container()
                         : IconButton(
                             padding: EdgeInsets.only(left: 16, right: 4),
@@ -138,17 +138,7 @@ class _ItemTransactionState extends State<ItemTransaction> {
                               DiaLogManager.displayDialog(context, "",
                                   "Bạn có muốn xóa hoạt động này không.", () {
                                 Get.back();
-                                if (widget.action.compareTo('activity') == 0 /*||
-                                    widget.action.compareTo('sell') == 0 ||
-                                    widget.action.compareTo('purchase') == 0*/) {
-                                  widget.callbackDelete();
-                                } else {
-                                  DiaLogManager.showDialogSuccess(context,
-                                      "Chức năng này đang phát triển. Vui lòng thử lại sau",
-                                      () {
-                                    Get.back();
-                                  });
-                                }
+                                widget.callbackDelete();
                               }, () {
                                 Get.back();
                               }, S.of(context).no, S.of(context).yes);

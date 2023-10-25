@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:diary_mobile/view/home/home_record_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,11 +52,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void checkUser(BuildContext context) async {
     bool checkFarmer = true;
+    bool checkRecord = false;
     List<bool> check = await SharedPreDiary.getRole();
+    checkRecord = check[3];
     bool isAllTrueExceptFirst = check[0] == true &&
         check.skip(1).every((element) => element == false);
     bool isAllFalse = check.every((element) => element == false);
-    print("HoangC: check: $check : ${isAllTrueExceptFirst} : ${isAllFalse}");
     if (isAllTrueExceptFirst) {
       checkFarmer = true;
     }
@@ -71,18 +73,30 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         checkMonitor = false;
       });
     }
-    if (!checkFarmer) {
+
+    print("HoangC: check: $check : ${isAllTrueExceptFirst} : ${isAllFalse} : ${checkRecord} : ${checkFarmer}");
+    if (checkFarmer) {
       screens = [
         const HomeView(), //const Page1(),
+        const DiaryView(), // page ban hang const Page2(),
+        const QRCodeView(), // page mua hang Page3(),
+        const NotifyView(), //const Page4(),
+        const SettingView(), //const Page5(),
+      ];
+    } else if(checkRecord){
+      print("HoangCV: aor ma");
+      screens = [
+        const HomeRecordView(), //const Page1(),
         const DiaryMonitorView(), // page ban hang const Page2(),
         const QRCodeView(), // page mua hang Page3(),
         const NotifyView(), //const Page4(),
         const SettingView(), //const Page5(),
       ];
-    } else{
+      currentScreen = screens[0];
+    } else {
       screens = [
         const HomeView(), //const Page1(),
-        const DiaryView(), // page ban hang const Page2(),
+        const DiaryMonitorView(), // page ban hang const Page2(),
         const QRCodeView(), // page mua hang Page3(),
         const NotifyView(), //const Page4(),
         const SettingView(), //const Page5(),
@@ -95,12 +109,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (currentScreen.toString() == "HomeView") {
+        if (currentScreen.toString() == "HomeView" || currentScreen.toString() == "HomeRecordView") {
           SystemNavigator.pop();
           return true;
         } else {
           setState(() {
-            currentScreen = const HomeView();
+            currentScreen = screens[0];
             currentTab = 0;
           });
           return false;
@@ -168,7 +182,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          currentScreen = const HomeView();
+                          currentScreen = screens[0];
                           currentTab = 0;
                         });
                       },

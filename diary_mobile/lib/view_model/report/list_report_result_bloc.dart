@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/repository.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_select.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
 import '../bloc_event.dart';
@@ -33,10 +34,13 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
             listReport: listReportResult));
       }
     }else {
+      final listReportResult = await repository.getListReportResult();
+      final listSelect = await repository.getListReportSelect();
       emitter(state.copyWith(
           isShowProgress: false,
           formStatus: const InitialFormStatus(),
-          listReport: event.list));
+          listReport: listReportResult,
+          listReportSelect: listSelect));
     }
   }
 
@@ -66,14 +70,12 @@ class ListReportResultEvent extends BlocEvent {
 }
 
 class GetListReportResultEvent extends ListReportResultEvent {
-  final List<ReportResult> list;
-  final List<Report> listSelect;
   final bool checkUpdate;
 
-  GetListReportResultEvent(this.list, this.listSelect, {this.checkUpdate = false});
+  GetListReportResultEvent({this.checkUpdate = false});
 
   @override
-  List<Object?> get props => [list, listSelect, checkUpdate];
+  List<Object?> get props => [checkUpdate];
 }
 
 class DeleteReportResultEvent extends ListReportResultEvent {
@@ -91,16 +93,19 @@ class ListReportResultState extends BlocState {
     listReport,
     formStatus,
     isShowProgress,
+    listReportSelect,
   ];
   final List<ReportResult> listReport;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
+  final List<ReportSelect> listReportSelect;
 
 
   ListReportResultState({
     this.listReport = const [],
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
+    this.listReportSelect = const [],
 
   });
 
@@ -108,10 +113,12 @@ class ListReportResultState extends BlocState {
     List<ReportResult>? listReport,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
+    List<ReportSelect>? listReportSelect,
   }) {
     return ListReportResultState(
       listReport: listReport ?? this.listReport,
         formStatus: formStatus ?? this.formStatus,
-        isShowProgress: isShowProgress ?? this.isShowProgress,);
+        isShowProgress: isShowProgress ?? this.isShowProgress,
+        listReportSelect: listReportSelect ?? this.listReportSelect);
   }
 }

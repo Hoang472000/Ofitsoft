@@ -20,22 +20,14 @@ import '../../../view_model/diary_activity/activity/activity_sell/add_activity_p
 
 class AddActivityPurchasePage extends StatefulWidget {
   const AddActivityPurchasePage(
-      {super.key,
-        required this.seasonFarmId,
-        required this.diary,});
-
-  final int seasonFarmId;
-  final Diary diary;
+      {super.key});
 
   @override
   _AddActivityPurchasePageState createState() => _AddActivityPurchasePageState();
 
-  static Route route(
-      int seasonFarmId, Diary diary) {
+  static Route route() {
     return Utils.pageRouteBuilder(
-        AddActivityPurchasePage(
-            seasonFarmId: seasonFarmId,
-            diary: diary),
+        AddActivityPurchasePage(),
         true);
   }
 }
@@ -52,8 +44,7 @@ class _AddActivityPurchasePageState extends State<AddActivityPurchasePage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddActivityPurchaseBloc(context.read<Repository>())
-        ..add(InitAddActivityPurchaseEvent(
-            widget.seasonFarmId, widget.diary)),
+        ..add(InitAddActivityPurchaseEvent()),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
@@ -217,14 +208,6 @@ class _AddActivityPurchasePageState extends State<AddActivityPurchasePage> {
                                     mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                     children: [
-                                      /*Expanded(
-                                        child: Text(
-                                          "Đơn giá",
-                                          style: StyleOfit.textStyleFW500(
-                                              AppColor.gray57, 16),
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),*/
                                       Expanded(
                                         child: Row(
                                           children: [
@@ -246,9 +229,9 @@ class _AddActivityPurchasePageState extends State<AddActivityPurchasePage> {
                                                             text, state.inputDonGia[index], index));
                                                   },
                                                   onEditingComplete: (text) {
-                                                    blocContext.read<AddActivityPurchaseBloc>().add(
+                                                /*    blocContext.read<AddActivityPurchaseBloc>().add(
                                                         SaveValueTextFieldEvent(
-                                                            text, state.inputDonGia[index], index));
+                                                            text, state.inputDonGia[index], index));*/
                                                   },
                                                 ),
                                               ),

@@ -161,7 +161,7 @@ class NetworkExecutor{
         return objectResult;
       } else {
         ///khong co mang
-        objectResult= ObjectResult(1, "Lost Internet connection" , "Lost Internet connection", "06",false , true);
+        objectResult= ObjectResult(1, "Lost Internet connection" , "Không có kết nối mạng!\n Vui lòng kiểm tra lại kết nối mạng.", "06",false , true);
       }
     }on DioException catch(dioError){
         /// loi timeout
@@ -169,7 +169,7 @@ class NetworkExecutor{
         if(dioError.type== DioExceptionType.connectionTimeout||
         dioError.type== DioExceptionType.sendTimeout||
         dioError.type== DioExceptionType.receiveTimeout){
-          objectResult= ObjectResult(1, "Connection timed out", "Connection timed out", "07",false, true);
+          objectResult= ObjectResult(1, "Connection timed out", "Kết nối bị gián đoạn! \n Vui lòng thử lại sau.", "07",false, true);
         }else {
           if (dioError.type == DioExceptionType.badResponse) {
             ///may chu phan hoi nhung co trang thai khong chinh xac (404,503...)

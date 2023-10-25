@@ -29,13 +29,11 @@ class ActivityTransactionPage extends StatefulWidget {
       {super.key,
       required this.action,
       required this.seasonFarmId,
-      required this.activityFarm,
       required this.diary,
       required this.listActivityTransaction,
       required this.listActivityDiary});
 
   final String action;
-  final ActivityFarm activityFarm;
   final int seasonFarmId;
   final Diary diary;
   final List<ActivityTransaction> listActivityTransaction;
@@ -47,19 +45,17 @@ class ActivityTransactionPage extends StatefulWidget {
 
   static Route route(
       String action,
-      int seasonFarmId,
-      Diary diary,
-      ActivityFarm activityFarm,
-      List<ActivityTransaction> listActivityTransaction,
-      List<ActivityDiary> listActivityDiary) {
+  {int? seasonFarmId,
+    Diary? diary,
+      List<ActivityTransaction>? listActivityTransaction,
+      List<ActivityDiary>? listActivityDiary}) {
     return Utils.pageRouteBuilder(
         ActivityTransactionPage(
-          activityFarm: activityFarm,
           action: action,
-          seasonFarmId: seasonFarmId,
-          diary: diary,
-          listActivityTransaction: listActivityTransaction,
-          listActivityDiary: listActivityDiary,
+          seasonFarmId: seasonFarmId ?? -1,
+          diary: diary ?? Diary(),
+          listActivityTransaction: listActivityTransaction ?? [],
+          listActivityDiary: listActivityDiary ?? [],
         ),
         true);
   }
@@ -89,7 +85,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
             showDefaultBackButton: true,
             callback: [updateHarvesting, listCallback],
             title: Text(
-              widget.activityFarm.nameActivity,
+              widget.action == "sell" ? "HOẠT ĐỘNG BÁN HÀNG" : "HOẠT ĐỘNG MUA HÀNG",
               style: StyleOfit.textStyleFW700(Colors.white, 20),
             )),
         //resizeToAvoidBottomInset: true,
@@ -106,51 +102,11 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                           ? "Ghi bán hàng"
                           : "Ghi thu mua",
                       Icons.add,
-                      (widget.diary.status ?? '').compareTo("done") == 0 ||
-                              (widget.diary.status ?? '')
-                                      .compareTo("cancelled") ==
-                                  0
-                          ? () {
-                              if ((widget.diary.status ?? '')
-                                      .compareTo("done") ==
-                                  0) {
-                                DiaLogManager.displayDialog(
-                                    context,
-                                    "Nhật ký đã hoàn thành",
-                                    "Bạn không thể thêm mới hoạt động", () {
-                                  Navigator.pop(context);
-                                }, () {}, "", S.of(context).close_dialog);
-                              }
-                              if ((widget.diary.status ?? '')
-                                      .compareTo("cancelled") ==
-                                  0) {
-                                DiaLogManager.displayDialog(
-                                    context,
-                                    "Nhật ký đã đóng",
-                                    "Bạn không thể thêm mới hoạt động", () {
-                                  Navigator.pop(context);
-                                }, () {}, "", S.of(context).close_dialog);
-                              }
-                            }
-                          : () async {
+                      () async {
                               if (widget.action.compareTo("sell") == 0) {
                                 var result = await Navigator.of(context).push(
                                     ActivitySelectPage.route(
                                         widget.diary, state.listDiaryActivity));
-                                if (result != null && result[0]) {
-                                  setState(() {
-                                    updateHarvesting = result[0];
-                                  });
-                                  contextBloc.read<ActivityBloc>().add(
-                                      GetListActivityEvent(
-                                          widget.seasonFarmId,
-                                          widget.action,
-                                          result[0],
-                                          widget.listActivityDiary, []));
-                                }
-                              } else {
-                                var result = await Navigator.of(context).push(AddActivityPurchasePage.route(
-                                    1, widget.diary));
                                 if (result != null && result[0]) {
                                   setState(() {
                                     updateHarvesting = result[0];
@@ -229,7 +185,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                         DetailActivityTransactionPage.route(
                                             state
                                                 .listActivityTransaction[index],
-                                            widget.diary, widget.action));
+                                            diary: widget.diary, widget.action));
                                     if (result != null && result[0]) {
                                       contextBloc.read<ActivityBloc>().add(
                                           GetListActivityEvent(

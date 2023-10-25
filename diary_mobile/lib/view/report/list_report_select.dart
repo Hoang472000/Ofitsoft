@@ -17,6 +17,7 @@ import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../data/entity/report/report.dart';
 import '../../data/entity/report/report_result_title.dart';
+import '../../data/entity/report/report_select.dart';
 import '../../utils/widgets/items/item_report_result.dart';
 import '../../utils/widgets/items/item_report_select.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
@@ -29,12 +30,12 @@ import 'edit_report.dart';
 class ListReportSelect extends StatefulWidget {
   const ListReportSelect({super.key, required this.listReport});
 
-  final List<Report> listReport;
+  final List<ReportSelect> listReport;
 
   @override
   _ListReportSelectState createState() => _ListReportSelectState();
 
-  static Route route(List<Report> listReport) {
+  static Route route(List<ReportSelect> listReport) {
     return Utils.pageRouteBuilder(
         ListReportSelect(listReport: listReport), true);
   }
@@ -47,7 +48,7 @@ class _ListReportSelectState extends State<ListReportSelect> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ListReportSelectBloc(context.read<Repository>())
-        ..add(GetListReportSelectEvent(widget.listReport, [])),
+        ..add(GetListReportSelectEvent(widget.listReport,)),
       child: Scaffold(
         appBar: OfitAppBar(context,
             centerTitle: true,
@@ -67,7 +68,7 @@ class _ListReportSelectState extends State<ListReportSelect> {
               onRefresh: () async {
                 print('Refresh triggered');
                 blocContext.read<ListReportSelectBloc>().add(
-                    GetListReportSelectEvent(const [], const [],
+                    GetListReportSelectEvent(const [],
                         checkUpdate: true));
               },
               child: state.isShowProgress

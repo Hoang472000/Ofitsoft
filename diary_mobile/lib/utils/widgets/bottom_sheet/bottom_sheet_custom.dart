@@ -74,6 +74,23 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
     }
   }
 
+  double getHeight(dynamic text, double itemHeight) {
+    if (Extension().getValueDisplay(text).toString().length < 50) {
+      try {
+        if (!(text is String) && text?.image != '')
+          return 70;
+        else
+          return itemHeight;
+      } catch (_) {
+        return itemHeight;
+      }
+    } else if (Extension().getValueDisplay(text).toString().length < 100) {
+      return 58;
+    } else {
+      return 80;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     /// Tính toán chiều cao của bottom sheet
@@ -141,21 +158,8 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
                               width: double.infinity,
                               color: Colors.white,
                               //height: itemHeight,
-                              height: Extension()
-                                          .getValueDisplay(listDataSearch(
-                                              controller.text)[index])
-                                          .toString()
-                                          .length <
-                                      50
-                                  ? !(listDataSearch(controller.text)[index] is String) && listDataSearch(controller.text)[index]?.image!='' ? 70 : itemHeight
-                                  : Extension()
-                                              .getValueDisplay(listDataSearch(
-                                                  controller.text)[index])
-                                              .toString()
-                                              .length <
-                                          100
-                                      ? 58
-                                      : 80,
+                              height: getHeight(listDataSearch(
+                                  controller.text)[index], itemHeight),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,

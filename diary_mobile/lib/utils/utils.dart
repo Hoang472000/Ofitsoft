@@ -468,6 +468,7 @@ class Utils {
   static String convertNumber(double number){
     var formatter = NumberFormat('#,###,###');
     var result = formatter.format(number);
+    print("HangCV: number: ${number} : ${result}");
     return result.replaceAll(",", ".");
   }
 
@@ -800,10 +801,10 @@ class Utils {
   }
 
   static bool checkPassFarm(FarmerInspectorUpload farmerInspector){
-    if (farmerInspector.farmer_id == null) {
+    if (farmerInspector.farmerId == null) {
       Toast.showLongTop("Vui lòng chọn Tên nông dân");
       return false;
-    } else if (farmerInspector.farm_id == null) {
+    } else if (farmerInspector.farmId == null) {
       Toast.showLongTop("Vui lòng chọn Tên vùng trồng");
       return false;
     }/* else if (farmerInspector.internal_inspector_id == null) {
