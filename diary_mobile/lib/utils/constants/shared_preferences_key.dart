@@ -28,4 +28,8 @@ class SharedPreferencesKey {
   static String group= "group";
   static String imageProfile= "image";
   static String role= "role";
+
+  static String password = "password";
+  static String passwordEncode = "passwordEncode";
+
 }

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:diary_mobile/data/entity/activity/activity_purchase.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
@@ -335,18 +336,21 @@ class AddActivityPurchaseBloc
     } else {
       print(
           "HoangCV: state. state.listUnitYield[state.indexYield].id: ${state.listUnitYield[state.indexYield].id}");
-      ActivityTransaction activityTransaction = ActivityTransaction(
+      ActivityPurchase activityTransaction = ActivityPurchase(
         id: -1,
         seasonFarmId: state.seasonId,
+        seasonFarmName: state.listSeasonFarm[state.indexSeasonFarm].name,
         transactionDate: state.startTimeController!.text,
+        productName: state.listSeasonFarm[state.indexSeasonFarm].productName,
         quantity: Utils.convertStringToDouble(state.soLuongController!.text),
         quantityUnitId: state.listUnitYield[state.indexYield].id,
+        quantityUnitName: state.listUnitYield[state.indexYield].name,
         unitPrice: Utils.convertStringToDouble(state.donGiaController!.text.replaceAll('.', '')),
         person: state.buyerController!.text,
         isPurchase: true,
       );
       ObjectResult objectResult =
-          await repository.addActivityTransaction(activityTransaction);
+          await repository.addActivityPurchase(activityTransaction);
       if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,

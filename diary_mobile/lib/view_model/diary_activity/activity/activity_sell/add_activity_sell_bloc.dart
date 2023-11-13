@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/entity/activity/activity_diary.dart';
+import '../../../../data/entity/activity/activity_purchase.dart';
 import '../../../../data/entity/diary/diary.dart';
 import '../../../../data/entity/image/image_entity.dart';
 import '../../../../data/entity/item_default/material_entity.dart';
@@ -322,13 +323,15 @@ class AddActivitySellBloc
       emit(state.copyWith(isShowProgress: false));
       print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
-      print("HoangCV: state. state.listUnitYield[state.indexYield].id: ${ state.listUnitYield[state.indexYield].id}");
+      print("HoangCV: state. state.listUnitYield[state.indexYield].id: ${state.listUnitYield[state.indexYield].id}");
       ActivityTransaction activityTransaction = ActivityTransaction(
         id: -1,
         seasonFarmId: state.detailActivity!.seasonId,
+        productName: state.productController!.text,
         transactionDate: state.startTimeController!.text,
         quantity: Utils.convertStringToDouble(state.soLuongController!.text),
         quantityUnitId: state.listUnitYield[state.indexYield].id,
+        quantityUnitName: state.listUnitYield[state.indexYield].name,
         unitPrice: Utils.convertStringToDouble(state.donGiaController!.text.replaceAll('.', '')),
         person: state.buyerController!.text,
         isPurchase: false,

@@ -1,11 +1,13 @@
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:drift/drift.dart';
 
-import '../../../utils/utils.dart';
+import '../../../../utils/utils.dart';
+import '../activity_transaction.dart';
 
-class ActivityTransaction implements Insertable<ActivityTransaction>{
-  String? uuid;
+class ActivityTransactionNoNetwork implements Insertable<ActivityTransactionNoNetwork>{
+  String? api;
   int? id;
+  String? uuid;
   int? seasonFarmId;
   String? seasonFarmName;
   String? transactionDate;
@@ -18,7 +20,8 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
   bool? isPurchase;
   String? person;
 
-  ActivityTransaction({
+  ActivityTransactionNoNetwork({
+    this.api,
     this.uuid,
     this.id,
     this.seasonFarmId,
@@ -34,8 +37,9 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
     this.isPurchase,
   });
 
-  factory ActivityTransaction.fromJson(Map<String, dynamic> json) {
-    return ActivityTransaction(
+  factory ActivityTransactionNoNetwork.fromJson(Map<String, dynamic> json, String api) {
+    return ActivityTransactionNoNetwork(
+      api: api,
       uuid: json['uuid'] ?? '',
       id: json['id'] ?? -1,
       seasonFarmId: json['season_farm_id'] ?? -1,
@@ -52,8 +56,28 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
     );
   }
 
+  factory ActivityTransactionNoNetwork.fromJsonConvert(ActivityTransaction json, String api) {
+    return ActivityTransactionNoNetwork(
+      api: api,
+      uuid: json.uuid,
+      id: json.id,
+      seasonFarmId: json.seasonFarmId,
+      seasonFarmName: json.seasonFarmName,
+      transactionDate: json.transactionDate,
+      quantity: json.quantity,
+      quantityUnitId: json.quantityUnitId,
+      quantityUnitName: json.quantityUnitName,
+      productId: json.productId,
+      productName: json.productName,
+      person: json.person,
+      unitPrice: json.unitPrice,
+      isPurchase: json.isPurchase,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['api'] = api;
     data['uuid'] = uuid;
     data['id'] = id;
     data['season_farm_id'] = seasonFarmId;
@@ -70,8 +94,9 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
     return data;
   }
 
-  ActivityTransaction.copy(ActivityTransaction other)
-      : uuid = other.uuid,
+  ActivityTransactionNoNetwork.copy(ActivityTransactionNoNetwork other)
+      : api = other.api,
+        uuid = other.uuid,
         id = other.id,
         seasonFarmId = other.seasonFarmId,
         transactionDate = other.transactionDate,
@@ -86,7 +111,8 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
 
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
-    return ActivityPurchaseTableCompanion(
+    return ActivityTransactionNoNetworkTableCompanion(
+      api: Value(api),
       id: Value(id),
       uuid: Value(uuid),
       seasonFarmId: Value(seasonFarmId),

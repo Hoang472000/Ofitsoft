@@ -91,3 +91,28 @@ class ImageEntity {
   }
 
 }
+
+class FeedbackMedia {
+  String? mediaContent;
+
+  FeedbackMedia(
+      {this.mediaContent});
+
+
+  // Factory constructor for JSON conversion
+  factory FeedbackMedia.fromJson(Map<String, dynamic> json) {
+    File? fileImage;
+
+    return FeedbackMedia(
+      mediaContent: json['media_content'] ?? '',
+    );
+  }
+
+  // Phương thức chuyển đổi từ đối tượng ImageEntity thành JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'media_content': mediaContent,
+    };
+  }
+
+}

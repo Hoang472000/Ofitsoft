@@ -32,5 +32,5 @@ class QuestionUploadNoNetworkTable extends Table {
   TextColumn get visitDate => text().nullable()();
 
   @override
-  Set<Column>? get primaryKey => {idOffline};
+  Set<Column>? get primaryKey => {idOffline, questionId, suggestedAnswerId, tableRowId};
 }

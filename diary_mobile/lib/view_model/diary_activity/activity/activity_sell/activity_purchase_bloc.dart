@@ -9,6 +9,7 @@ import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../data/entity/activity/activity_purchase.dart';
 import '../../../../data/entity/diary/diary.dart';
 import '../../../../data/entity/item_default/material_entity.dart';
 import '../../../../data/remote_data/object_model/object_result.dart';
@@ -31,13 +32,13 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     emitter(state.copyWith(
         isShowProgress: true,
         formStatus: const InitialFormStatus()));
-    List<ActivityTransaction> listActivityTransaction = [];
-    List<ActivityTransaction> listCallbackTransaction = [];
+    List<ActivityPurchase> listActivityTransaction = [];
+    List<ActivityPurchase> listCallbackTransaction = [];
 
       emitter(state.copyWith(
           isShowProgress: true));
       listActivityTransaction = await repository.getListActivityPurchase();
-      print("HoangCV: listActivityTransaction: ${listActivityTransaction.length}");
+      print("HoangCV: _getListActivityPurchase: ${listActivityTransaction.length}");
       listCallbackTransaction.addAll(listActivityTransaction);
       emitter(state.copyWith(
         isShowProgress: false,
@@ -50,6 +51,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     emit(state.copyWith(isShowProgress: true, formStatus: FormSubmitting()));
     ObjectResult objectResult;
     if(event.action.compareTo('sell') == 0 || event.action.compareTo('purchase') == 0) {
+      print("HoangCV: bug remove sell: ${event.id}");
       objectResult = await repository.removeActivityTransaction(event.id);
     } else{
       objectResult = await repository.removeActivityDiary(event.id);
@@ -121,8 +123,8 @@ class ActivityPurchaseState extends BlocState {
   final Diary? diary;
   final bool updateHarvesting;
   final List<ActivityDiary> listCallback;
-  final List<ActivityTransaction> listCallbackTransaction;
-  final List<ActivityTransaction> listActivityTransaction;
+  final List<ActivityPurchase> listCallbackTransaction;
+  final List<ActivityPurchase> listActivityTransaction;
 
   ActivityPurchaseState({
     this.listActivityTransaction = const [],
@@ -154,8 +156,8 @@ class ActivityPurchaseState extends BlocState {
     Diary? diary,
     bool? updateHarvesting,
     List<ActivityDiary>? listCallback,
-    List<ActivityTransaction>? listActivityTransaction,
-    List<ActivityTransaction>? listCallbackTransaction,
+    List<ActivityPurchase>? listActivityTransaction,
+    List<ActivityPurchase>? listCallbackTransaction,
   }) {
     return ActivityPurchaseState(
         listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,

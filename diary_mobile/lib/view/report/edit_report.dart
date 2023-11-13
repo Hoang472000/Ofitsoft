@@ -85,7 +85,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                             () {
                           Get.back();
                           //check bug
-                          //Navigator.of(context).pop([checkUpdate]);
+                          Navigator.of(context).pop([checkUpdate]);
                         }, () {
                           Get.back();
                         }, '', S.of(context).close_dialog, dismissible: false);

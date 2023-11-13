@@ -50,122 +50,128 @@ class _ListReportResultViewState extends State<ListReportResultView> {
     return BlocProvider(
       create: (context) => ListReportResultBloc(context.read<Repository>())..
       add(GetListReportResultEvent()),
-      child: Scaffold(
-        appBar: OfitAppBar(context,
-            centerTitle: true,
-            hasBottom: true,
-            showDefaultBackButton: true,
-            callback: [updateHarvesting, listCallback],
-            title: Text(
-              "Báo cáo đánh giá nội bộ",
-              style: StyleOfit.textStyleFW700(Colors.white, 20),
-            )),
-        //resizeToAvoidBottomInset: true,
-        backgroundColor: AppColor.background,
-        floatingActionButton: BlocBuilder<ListReportResultBloc, ListReportResultState>(
-          builder: (contextBloc, state) {
-            return floatingActionButton(
-                "Khảo sát", Icons.note_add,
-                    () async {
-                  if(state.listReportSelect.length > 1) {
-                    var result = await Navigator.of(context)
-                        .push(ListReportSelect.route(state.listReportSelect));
-                    if (result != null && result[0]) {
-                      contextBloc.read<ListReportResultBloc>().add(
-                          GetListReportResultEvent(
-                              checkUpdate: true));
-                    }
-                  } else if (state.listReportSelect.isNotEmpty) {
-                    var result = await Navigator.of(context)
-                        .push(AddReportViewPage.route(
-                        state.listReportSelect[0].id ?? -1));
-                    if (result != null && result[0]) {
-                      contextBloc.read<ListReportResultBloc>().add(
-                          GetListReportResultEvent(
-                              checkUpdate: true));
-                    }
-                  } else{
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, -1);
+          return false;
+        },
+        child: Scaffold(
+          appBar: OfitAppBar(context,
+              centerTitle: true,
+              hasBottom: true,
+              showDefaultBackButton: true,
+              callback: [updateHarvesting, listCallback],
+              title: Text(
+                "Báo cáo đánh giá nội bộ",
+                style: StyleOfit.textStyleFW700(Colors.white, 20),
+              )),
+          //resizeToAvoidBottomInset: true,
+          backgroundColor: AppColor.background,
+          floatingActionButton: BlocBuilder<ListReportResultBloc, ListReportResultState>(
+            builder: (contextBloc, state) {
+              return floatingActionButton(
+                  "Khảo sát", Icons.note_add,
+                      () async {
+                    if(state.listReportSelect.length > 1) {
+                      var result = await Navigator.of(context)
+                          .push(ListReportSelect.route(state.listReportSelect));
+                      if (result != null && result[0]) {
+                        contextBloc.read<ListReportResultBloc>().add(
+                            GetListReportResultEvent(
+                                checkUpdate: true));
+                      }
+                    } else if (state.listReportSelect.isNotEmpty) {
+                      var result = await Navigator.of(context)
+                          .push(AddReportViewPage.route(
+                          state.listReportSelect[0].id ?? -1));
+                      if (result != null && result[0]) {
+                        contextBloc.read<ListReportResultBloc>().add(
+                            GetListReportResultEvent(
+                                checkUpdate: true));
+                      }
+                    } else{
 
-                  }
-            });
-          },
-        ),
-        body: BlocConsumer<ListReportResultBloc, ListReportResultState>(
-            listener: (blocContext, state) async {
-              final formStatus = state.formStatus;
-              if(!state.isShowProgress){
-              }
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                setState(() {
-                  updateHarvesting = true;
-                  listCallback = state.listReport;
-                });
-                if ((formStatus.success ?? "").isNotEmpty) {
-                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                        () {
-                      Get.back();
-                    }, () {
-                      Get.back();
-                    }, '', S.of(context).close_dialog);
-                }
-              } else if (formStatus is FormSubmitting) {
-              }
-            }, builder: (blocContext, state) {
-          return state.isShowProgress
-              ? const Center(
-            child:
-            DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-          )
-              : RefreshIndicator(
-            onRefresh: () async {
-              blocContext.read<ListReportResultBloc>().add(
-                  GetListReportResultEvent(checkUpdate: true));
+                    }
+              });
             },
-            child: (state.listReport.isEmpty)
-                ? const EmptyWidget()
-                : SingleChildScrollView(
-              //physics: const NeverScrollableScrollPhysics(),
-              child: Column(
-                children: [
-                  ListView.builder(
-                    itemCount: state.listReport.length,
-                    itemBuilder: (BuildContext contextBloc, int index) {
-                      return ItemReportResult(
-                          reportResult: state.listReport[index],
-                          callbackChooseItem: () {
-                            Navigator.of(context)
-                                .push(DetailReportViewPage.route(state.listReport[index].id??-1));
-                          },
-                          callbackDelete: () {
-                              contextBloc.read<ListReportResultBloc>().add(
-                                  DeleteReportResultEvent(state.listReport[index].id??-1));
-                          },
-                        callbackEdit: () async {
-                        var result = await Navigator.of(context)
-                            .push(EditReportViewPage.route(state.listReport[index].id??-1));
-                        if (result != null && result[0]) {
-                          contextBloc.read<ListReportResultBloc>().add(
-                              GetListReportResultEvent(checkUpdate: true));
-                        }
-                      }, overlayEntry: overlayEntry,);
-                    },
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                  ),
-                  SizedBox(
-                    height: 60,
-                  )
-                ],
+          ),
+          body: BlocConsumer<ListReportResultBloc, ListReportResultState>(
+              listener: (blocContext, state) async {
+                final formStatus = state.formStatus;
+                if(!state.isShowProgress){
+                }
+                if (formStatus is SubmissionFailed) {
+                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                    Get.back();
+                  }, () {
+                    Get.back();
+                  }, '', S.of(context).close_dialog);
+                } else if (formStatus is SubmissionSuccess) {
+                  setState(() {
+                    updateHarvesting = true;
+                    listCallback = state.listReport;
+                  });
+                  if ((formStatus.success ?? "").isNotEmpty) {
+                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                          () {
+                        Get.back();
+                      }, () {
+                        Get.back();
+                      }, '', S.of(context).close_dialog);
+                  }
+                } else if (formStatus is FormSubmitting) {
+                }
+              }, builder: (blocContext, state) {
+            return state.isShowProgress
+                ? const Center(
+              child:
+              DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+            )
+                : RefreshIndicator(
+              onRefresh: () async {
+                blocContext.read<ListReportResultBloc>().add(
+                    GetListReportResultEvent(checkUpdate: true));
+              },
+              child: (state.listReport.isEmpty)
+                  ? const EmptyWidget()
+                  : SingleChildScrollView(
+                //physics: const NeverScrollableScrollPhysics(),
+                child: Column(
+                  children: [
+                    ListView.builder(
+                      itemCount: state.listReport.length,
+                      itemBuilder: (BuildContext contextBloc, int index) {
+                        return ItemReportResult(
+                            reportResult: state.listReport[index],
+                            callbackChooseItem: () {
+                              Navigator.of(context)
+                                  .push(DetailReportViewPage.route(state.listReport[index].id??-1));
+                            },
+                            callbackDelete: () {
+                                contextBloc.read<ListReportResultBloc>().add(
+                                    DeleteReportResultEvent(state.listReport[index].id??-1));
+                            },
+                          callbackEdit: () async {
+                          var result = await Navigator.of(context)
+                              .push(EditReportViewPage.route(state.listReport[index].id??-1));
+                          if (result != null && result[0]) {
+                            contextBloc.read<ListReportResultBloc>().add(
+                                GetListReportResultEvent(checkUpdate: true));
+                          }
+                        }, overlayEntry: overlayEntry,);
+                      },
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                    ),
+                    SizedBox(
+                      height: 60,
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ),
       ),
     );
   }

@@ -41,45 +41,21 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
     });
     List<bool> check = await SharedPreDiary.getRole();
     List<ActivityFarm> list = [];
-    if (check[0] && check[2] && !check[1]) {
+    if (check[0]) {
       list.add(ActivityFarm(
           id: 1,
           nameActivity: "Nông hộ",
           iconActivity: ImageAsset.imageDiary,
           action: "farmer"));
+    }
+    if (check[2]) {
       list.add(ActivityFarm(
           id: 1,
           nameActivity: "Ghi hộ",
           iconActivity: ImageAsset.imageDiary,
           action: "record"));
-    } else if (check[0] && check[2] && check[1]) {
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "Nông hộ",
-          iconActivity: ImageAsset.imageDiary,
-          action: "farmer"));
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "Ghi hộ",
-          iconActivity: ImageAsset.imageDiary,
-          action: "record"));
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "Giám sát",
-          iconActivity: ImageAsset.imageDiary,
-          action: "monitor"));
-    } else if (check[0] && !check[2] && check[1]) {
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "Nông hộ",
-          iconActivity: ImageAsset.imageDiary,
-          action: "farmer"));
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "Giám sát",
-          iconActivity: ImageAsset.imageDiary,
-          action: "monitor"));
-    } else if (!check[0] && !check[2] && check[1]) {
+    }
+    if (check[1]) {
       list.add(ActivityFarm(
           id: 1,
           nameActivity: "Giám sát",

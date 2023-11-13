@@ -45,12 +45,20 @@ class _ManagerPageState extends State<ManagerPage> {
     if (checkReport && checkPurchase) {
     }
     else if (checkReport) {
-      Navigator.push(context,
+      var result = await Navigator.push(context,
           ListReportResultView.route());
+      if(result != null){
+        print("HoangCV: result: $result");
+        Navigator.of(context).pop();
+      }
     }
     else if(checkPurchase){
-      Navigator.push(context,
+      var result = await  Navigator.push(context,
           ActivityPurchasePage.route("purchase"));
+      if(result != null){
+        print("HoangCV: result: $result");
+        Navigator.of(context).pop();
+      }
     }
 
   }
@@ -65,7 +73,7 @@ class _ManagerPageState extends State<ManagerPage> {
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
-            "Quản lý",
+            "Tổng quan quản lý",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,

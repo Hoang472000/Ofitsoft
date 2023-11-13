@@ -234,8 +234,6 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         text: "Danh sách vật tư, công cụ",
                         image: ImageAsset.imageGardening,
                         voidCallback: () async {
-                      print(
-                          "HoangCV: state.listWidgetVT: ${state.listWidgetVT[0].listValue.length}");
                       var result = await Navigator.of(context).push(
                           AddActivitySubPage.route(
                               state.listVatTuAdd,

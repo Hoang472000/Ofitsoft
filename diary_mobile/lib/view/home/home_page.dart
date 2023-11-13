@@ -52,9 +52,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   void checkUser(BuildContext context) async {
     bool checkFarmer = true;
-    bool checkRecord = false;
+    bool checkReport = false;
+    bool checkPurchase = false;
     List<bool> check = await SharedPreDiary.getRole();
-    checkRecord = check[3];
+    checkReport = check[3];
+    checkPurchase = check[4];
     bool isAllTrueExceptFirst = check[0] == true &&
         check.skip(1).every((element) => element == false);
     bool isAllFalse = check.every((element) => element == false);
@@ -74,7 +76,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       });
     }
 
-    print("HoangC: check: $check : ${isAllTrueExceptFirst} : ${isAllFalse} : ${checkRecord} : ${checkFarmer}");
+    print("HoangC: check: $check : ${isAllTrueExceptFirst} : ${isAllFalse} : ${checkReport} : ${checkFarmer}");
     if (checkFarmer) {
       screens = [
         const HomeView(), //const Page1(),
@@ -83,7 +85,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         const NotifyView(), //const Page4(),
         const SettingView(), //const Page5(),
       ];
-    } else if(checkRecord){
+    } else if(checkPurchase || checkReport){
       print("HoangCV: aor ma");
       screens = [
         const HomeRecordView(), //const Page1(),

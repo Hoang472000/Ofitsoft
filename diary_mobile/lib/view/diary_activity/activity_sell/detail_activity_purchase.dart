@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../data/entity/activity/activity_purchase.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
@@ -21,14 +22,14 @@ import '../../../view_model/diary_activity/activity/activity_sell/detail_activit
 class DetailActivityPurchasePage extends StatefulWidget {
   DetailActivityPurchasePage({super.key, required this.activityDiary, required this.diary, required this.action});
 
-  final ActivityTransaction activityDiary;
+  final ActivityPurchase activityDiary;
   final Diary diary;
   final String action;
 
   @override
   _DetailActivityPurchasePageState createState() => _DetailActivityPurchasePageState();
 
-  static Route route(ActivityTransaction activityDiary, String action, {Diary? diary,}) {
+  static Route route(ActivityPurchase activityDiary, String action, {Diary? diary,}) {
     return Utils.pageRouteBuilder(
         DetailActivityPurchasePage(
             activityDiary: activityDiary,

@@ -57,7 +57,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.0
   path_provider: ^2.0.0
   path: ^1.8.3
-  flutter_ffmpeg:
+
   video_player:
   chewie:
   auto_orientation:
@@ -66,12 +66,14 @@ dependencies:
   fluttertoast:
   scroll_to_index:
   flutter_pdfview:
+  uuid:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   drift_dev: ^2.10.0
   build_runner: ^2.4.6
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -80,6 +82,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_flavorizr: ^2.1.4
+  flutter_launcher_icons: ^0.13.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../data/entity/report/answer.dart';
@@ -141,6 +142,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                   isShowProgress: true, formStatus: const InitialFormStatus()));
 
               FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
+                idOffline: state.idOffline,
                 id: state.reportId,
                 farmerId: state.farmerInspector!.farmerId,
                 farmId: state.farmerInspector!.farmId,
@@ -167,6 +169,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             } else{
               print("HoangCV:  uplaods asdsaj 1121");
               QuestionUpload questionUpload = QuestionUpload(
+                    idOffline: state.idOffline,
                     userInputId: state.reportId,
                     surveyId: state.listReport[0].id,
                     questionId: event.id,
@@ -191,21 +194,22 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           }else if(state.reportId == null && event.id == 1){
             print("HoangCV:  uplaods asdsaj");
             QuestionUpload questionUpload = QuestionUpload(
-            userInputId: state.reportId,
-            surveyId: state.listReport[0].id,
+              idOffline: state.idOffline,
+              userInputId: state.reportId,
+              surveyId: state.listReport[0].id,
               questionId: event.id,
               answerType: event.type,
               valueText: Utils.stringToFormattedString(Utils.formatDateTimeToString(
                   event.list[event.index].valueSelected)),
               listIdSuggested: [],
-            isAnswerExist: true,
-            farmerId: state.farmerInspector!.farmerId,
-            farmerCode: state.farmerInspector!.farmerCode,
-            farmId: state.farmerInspector!.farmId,
-            farmCode: state.farmerInspector!.farmCode,
-            internalInspectorId: state.farmerInspector!.internalInspectorId,
-            monitoringVisitType: state.farmerInspector!.monitoringVisitType,
-            visitDate: state.farmerInspector!.visitDate,
+              isAnswerExist: true,
+              farmerId: state.farmerInspector!.farmerId,
+              farmerCode: state.farmerInspector!.farmerCode,
+              farmId: state.farmerInspector!.farmId,
+              farmCode: state.farmerInspector!.farmCode,
+              internalInspectorId: state.farmerInspector!.internalInspectorId,
+              monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+              visitDate: state.farmerInspector!.visitDate,
           );
             ObjectResult result = await repository.uploadQuestion(questionUpload);
             if (result.responseCode == StatusConst.code00) {
@@ -268,6 +272,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                 isShowProgress: true, formStatus: const InitialFormStatus()));
 
             FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+              idOffline: state.idOffline,
               id: state.reportId,
               farmerId: state.farmerInspector!.farmerId,
               farmId: state.farmerInspector!.farmId,
@@ -296,12 +301,16 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
   void _getAddReport(
       GetAddReportEvent event, Emitter<AddReportState> emitter) async {
+    var uuid = Uuid();
+    String idOffline = uuid.v1();
+    print("String HoangCV: idOffline: $idOffline");
     emitter(state.copyWith(
       isShowProgress: true,
       startTimeController: TextEditingController(
           text: DateTime.now().toString() /*.split('.')[0]*/),
       idFarmerController: TextEditingController(text: ''),
       farmerInspector: FarmerInspectorUpload(visitDate: DateTime.now().toString().split('.')[0]),
+      idOffline: idOffline,
     ));
     final report = await repository.getListActivityReport(event.id);
     List<List<Select>> listSelected = [];
@@ -952,6 +961,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     } else {
       if (state.reportId != null) {
         questionUpload = QuestionUpload(
+            idOffline: state.idOffline,
             userInputId: state.reportId,
             surveyId: state.listReport[0].id,
             questionId: question.id,
@@ -968,6 +978,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         );
       } else {
         questionUpload = QuestionUpload(
+          idOffline: state.idOffline,
           userInputId: state.reportId,
           surveyId: state.listReport[0].id,
           questionId: question.id,
@@ -1036,6 +1047,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
 
     if(event.value.isNotEmpty) {
       QuestionUpload questionUpload = QuestionUpload(
+          idOffline: state.idOffline,
           userInputId: state.reportId,
           surveyId: state.listReport[0].id,
           questionId: event.questionId,
@@ -1070,11 +1082,16 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
           isShowProgress: true, formStatus: const InitialFormStatus()));
 
       FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
+        idOffline: state.idOffline,
         id: state.reportId,
         farmerId: state.farmerInspector!.farmerId,
+        farmId: state.farmerInspector!.farmId,
+        farmCode: state.farmerInspector!.farmCode,
         farmerCode: state.farmerInspector!.farmerCode,
-        internalInspectorId: state.farmerInspector!.internalInspectorId,
-        monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+        internalInspectorId: state.farmerInspector!
+            .internalInspectorId,
+        monitoringVisitType: state.farmerInspector!
+            .monitoringVisitType,
         visitDate: state.farmerInspector!.visitDate,
       );
       ObjectResult result = await repository.editFarmerInspector(questionUpload);
@@ -1656,7 +1673,17 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     print("HoangCV: submit: ${submit} : ${state.scrollController}");
     if(submit){
       FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
-        id: state.reportId,
+          idOffline: state.idOffline,
+          id: state.reportId,
+          farmerId: state.farmerInspector!.farmerId,
+          farmId: state.farmerInspector!.farmId,
+          farmCode: state.farmerInspector!.farmCode,
+          farmerCode: state.farmerInspector!.farmerCode,
+          internalInspectorId: state.farmerInspector!
+              .internalInspectorId,
+          monitoringVisitType: state.farmerInspector!
+              .monitoringVisitType,
+          visitDate: state.farmerInspector!.visitDate,
         state: 'done'
       );
       ObjectResult result = await repository.editFarmerInspector(questionUpload);
@@ -1664,7 +1691,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
+            formStatus: SubmissionSuccess(success: "Hoàn thành báo cáo đánh giá.")));
       } else if (result.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
@@ -1800,6 +1827,8 @@ class OnSelectValueEvent extends AddReportEvent {
   int id;
   String type;
 
+  //bug date time
+
   OnSelectValueEvent(this.list, this.index, this.context, {this.id = -1, this.type = 'date'});
 
   @override
@@ -1851,6 +1880,7 @@ class AddReportState extends BlocState {
         expansionTileKeys,
         scrollController,
         nameInspector,
+        idOffline
       ];
   final Diary? detailDiary;
   final List<Report> listReport;
@@ -1874,6 +1904,7 @@ class AddReportState extends BlocState {
   final List<GlobalExpand> expansionTileKeys;
   AutoScrollController? scrollController = AutoScrollController();
   final String? nameInspector;
+  final String? idOffline;
 
   AddReportState({
     this.detailDiary,
@@ -1898,6 +1929,7 @@ class AddReportState extends BlocState {
     this.expansionTileKeys = const [],
     this.scrollController,
     this.nameInspector,
+    this.idOffline,
   });
 
   AddReportState copyWith({
@@ -1923,6 +1955,7 @@ class AddReportState extends BlocState {
     List<GlobalExpand>? expansionTileKeys,
     AutoScrollController? scrollController,
     String? nameInspector,
+    String? idOffline,
   }) {
     return AddReportState(
         detailDiary: detailDiary ?? this.detailDiary,
@@ -1946,7 +1979,9 @@ class AddReportState extends BlocState {
         reportId: reportId ?? this.reportId,
         expansionTileKeys: expansionTileKeys ?? this.expansionTileKeys,
         scrollController: scrollController ?? this.scrollController,
-        nameInspector: nameInspector ?? this.nameInspector);
+        nameInspector: nameInspector ?? this.nameInspector,
+        idOffline: idOffline ?? this.idOffline,
+    );
   }
 }
 

@@ -10,10 +10,12 @@ import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
+import 'package:diary_mobile/data/entity/setting/feedback_info.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import '../../resource/assets.dart';
+import '../entity/activity/activity_purchase.dart';
 import '../entity/activity/season_farm.dart';
 import '../entity/diary/diary.dart';
 import '../entity/item_default/item_default.dart';
@@ -39,100 +41,6 @@ class FakeRepositoryImpl extends Repository {
 
   @override
   Future<List<Activity>> getListActivities() async {
-    /*var json = [
-      {
-        "id": 25,
-        "name": "Garden Care",
-        "category_id": 19,
-        "description": "<p>Garden Care</p>",
-        "image": ImageAsset.imageActGardenCare
-      },
-      {
-        "id": 26,
-        "name": "Garden Cleaning",
-        "category_id": 19,
-        "description": "<p>Garden Cleaning</p>",
-        "image": ImageAsset.imageActGardenVentilation
-      },
-      {
-        "id": 27,
-        "name": "Garden Ventilation",
-        "category_id": 19,
-        "description": "<p>Garden Ventilation</p>",
-        "image": ImageAsset.imageActGardenVentilation
-      },
-      {
-        "id": 28,
-        "name": "Pest and disease control",
-        "category_id": 19,
-        "description": "<p>Pest and disease control</p>",
-        "image": ImageAsset.imageActPestAndDiseaseControl
-      },
-      {
-        "id": 29,
-        "name": "Gardening",
-        "category_id": 19,
-        "description": "<p>Gardening</p>",
-        "image": ImageAsset.imageActGardening
-      },
-      {
-        "id": 30,
-        "name": "Pruning",
-        "category_id": 19,
-        "description": "<p>Pruning</p>",
-        "image": ImageAsset.imageActPruning
-      },
-      {
-        "id": 31,
-        "name": "Weed control",
-        "category_id": 19,
-        "description": "<p>Weed control</p>",
-        "image": ImageAsset.imageActWeedControl
-      },
-      {
-        "id": 32,
-        "name": "Harvesting",
-        "category_id": 19,
-        "description": "<p>Harvesting</p>",
-        "image": ImageAsset.imageActHarvesting
-      },
-  *//*    {
-        "id": 33,
-        "name": "Do farmers store pesticides/herbicides in their house?",
-        "category_id": 20,
-        "description":
-            "<p>Do farmers store pesticides/herbicides in their house?</p>"
-      },
-      {
-        "id": 34,
-        "name": "Do they have a pesticide sprayer at home?",
-        "category_id": 20,
-        "description": "<p>Do they have a pesticide sprayer at home?</p>"
-      },
-      {
-        "id": 35,
-        "name": "Do farmers have both organic and conventional product crops?",
-        "category_id": 20,
-        "description":
-            "<p>Do farmers have both organic and conventional product crops?</p>"
-      },
-      {
-        "id": 36,
-        "name": "Is there any sign of using compost for the product?",
-        "category_id": 20,
-        "description":
-            "<p>Is there any sign of using compost for the product?</p>"
-      }*//*
-    ];
-    List<Activity> list =
-        List.from(json).map((json) => Activity.fromJson(json)).toList();
-    print("HoangCV: fake data: getListActivities: ${list.length}");
-    await DiaryDB.instance.insertListActivity(list);
-    getListMaterials();
-    getListUnits(10);
-    getListUnits(8);
-    getListTools();
-    return list;*/
     // TODO: implement login
     throw UnimplementedError();
   }
@@ -696,8 +604,26 @@ class FakeRepositoryImpl extends Repository {
   }
 
   @override
-  Future<List<ActivityTransaction>> getListActivityPurchase() {
+  Future<List<ActivityPurchase>> getListActivityPurchase() {
     // TODO: implement getListActivityPurchase
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> addActivityPurchase(ActivityPurchase transaction) {
+    // TODO: implement addActivityPurchase
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> addFarmerFeedback(FeedbackInfo feedback) {
+    // TODO: implement addFarmerFeedback
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<FeedbackInfo>> getListFeedbackFarmer() {
+    // TODO: implement getListFeedbackFarmer
     throw UnimplementedError();
   }
 }

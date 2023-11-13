@@ -58,7 +58,7 @@ class QuestionUpload implements Insertable<QuestionUpload> {
     this.farmCode,
   });
 
-  factory QuestionUpload.fromJsonConvert(QuestionUpload json, String api) {
+  factory QuestionUpload.fromJson(QuestionUpload json, String api) {
     return QuestionUpload(
       api: api,
       idOffline: json.idOffline,
@@ -87,8 +87,40 @@ class QuestionUpload implements Insertable<QuestionUpload> {
     );
   }
 
+  factory QuestionUpload.fromJsonNoNetwork(Map<String, dynamic> json) {
+    return QuestionUpload(
+      api: json['api'] ?? "",
+      idOffline: json['idOffline'],
+      userInputId: json['userInputId'],
+      surveyId: json['surveyId'],
+      listIdSuggested:
+      json['listIdSuggested'] != null ? List<int>.from(json['listIdSuggested']) : <int>[],
+      stringListIdSuggested: jsonEncode(json['listIdSuggested']) ?? '[]',
+      suggestedAnswerId: json['suggestedAnswerId'],
+      questionId: json['questionId'],
+      matrixRowId: json['matrixRowId'],
+      answerType: json['answerType'] ?? '',
+      valueText: json['valueText'] ?? '',
+      skipped: json['skipped'] ?? false,
+      state: json['state'] ?? '',
+      isAnswerExist: json['isAnswerExist'] ?? false,
+      valueCheckBox: json['valueCheckBox'] ?? false,
+      tableRowId: json['tableRowId'],
+
+      farmerId: json['farmerId'],
+      farmerCode: json['farmerCode'] ?? '',
+      internalInspectorId: json['internalInspectorId'] ?? -1,
+      monitoringVisitType: json['monitoringVisitType'] ?? '',
+      visitDate: json['visitDate'] ?? '',
+      farmId: json['farmId'],
+      farmCode: json['farmCode'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+
+    data['id_offline'] = idOffline;
     data['user_input_id'] = userInputId;
     data['survey_id'] = surveyId;
     data['question_id'] = questionId;
@@ -185,8 +217,24 @@ class FarmerInspectorUpload implements Insertable<FarmerInspectorUpload> {
     );
   }
 
+  factory FarmerInspectorUpload.fromJsonNoNetwork(Map<String, dynamic> json) {
+    return FarmerInspectorUpload(
+      api: json['api'] ?? "",
+      idOffline: json['idOffline'],
+      state: json['state'] ?? '',
+      farmerId: json['farmerId'],
+      farmerCode: json['farmerCode'] ?? '',
+      internalInspectorId: json['internalInspectorId'],
+      monitoringVisitType: json['monitoringVisitType'] ?? '',
+      visitDate: json['visitDate'] ?? '',
+      farmId: json['farmId'],
+      farmCode: json['farmCode'] ?? '',
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['state'] = state;
     data['id_offline'] = idOffline;
     data['id'] = id;
     data['farmer_id'] = farmerId;
@@ -201,6 +249,7 @@ class FarmerInspectorUpload implements Insertable<FarmerInspectorUpload> {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['state'] = state;
+    data['id_offline'] = idOffline;
     return data;
   }
 
@@ -215,6 +264,7 @@ class FarmerInspectorUpload implements Insertable<FarmerInspectorUpload> {
       farmCode: Value(farmCode),
       internalInspectorId: Value(internalInspectorId),
       monitoringVisitType: Value(monitoringVisitType),
+      state: Value(state),
       visitDate: Value(visitDate),
     ).toColumns(nullToAbsent);
   }

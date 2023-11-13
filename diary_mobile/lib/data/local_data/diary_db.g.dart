@@ -5888,7 +5888,8 @@ class $QuestionUploadNoNetworkTableTable extends QuestionUploadNoNetworkTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {idOffline};
+  Set<GeneratedColumn> get $primaryKey =>
+      {idOffline, questionId, suggestedAnswerId, tableRowId};
   @override
   QuestionUpload map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -6695,6 +6696,1910 @@ class ReportSelectTableCompanion extends UpdateCompanion<ReportSelect> {
   }
 }
 
+class $ActivityPurchaseTableTable extends ActivityPurchaseTable
+    with TableInfo<$ActivityPurchaseTableTable, ActivityPurchase> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityPurchaseTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmNameMeta =
+      const VerificationMeta('seasonFarmName');
+  @override
+  late final GeneratedColumn<String> seasonFarmName = GeneratedColumn<String>(
+      'season_farm_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _transactionDateMeta =
+      const VerificationMeta('transactionDate');
+  @override
+  late final GeneratedColumn<String> transactionDate = GeneratedColumn<String>(
+      'transaction_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _isPurchaseMeta =
+      const VerificationMeta('isPurchase');
+  @override
+  late final GeneratedColumn<bool> isPurchase =
+      GeneratedColumn<bool>('is_purchase', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _personMeta = const VerificationMeta('person');
+  @override
+  late final GeneratedColumn<String> person = GeneratedColumn<String>(
+      'person', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        uuid,
+        userId,
+        seasonFarmId,
+        seasonFarmName,
+        transactionDate,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        productId,
+        productName,
+        unitPrice,
+        isPurchase,
+        person
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_purchase';
+  @override
+  String get actualTableName => 'activity_purchase';
+  @override
+  VerificationContext validateIntegrity(Insertable<ActivityPurchase> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm_name')) {
+      context.handle(
+          _seasonFarmNameMeta,
+          seasonFarmName.isAcceptableOrUnknown(
+              data['season_farm_name']!, _seasonFarmNameMeta));
+    }
+    if (data.containsKey('transaction_date')) {
+      context.handle(
+          _transactionDateMeta,
+          transactionDate.isAcceptableOrUnknown(
+              data['transaction_date']!, _transactionDateMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('is_purchase')) {
+      context.handle(
+          _isPurchaseMeta,
+          isPurchase.isAcceptableOrUnknown(
+              data['is_purchase']!, _isPurchaseMeta));
+    }
+    if (data.containsKey('person')) {
+      context.handle(_personMeta,
+          person.isAcceptableOrUnknown(data['person']!, _personMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, userId, uuid};
+  @override
+  ActivityPurchase map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityPurchase(
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      seasonFarmName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}season_farm_name']),
+      transactionDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_date']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      person: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}person']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      isPurchase: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_purchase']),
+    );
+  }
+
+  @override
+  $ActivityPurchaseTableTable createAlias(String alias) {
+    return $ActivityPurchaseTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
+  final Value<int?> id;
+  final Value<String?> uuid;
+  final Value<int?> userId;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarmName;
+  final Value<String?> transactionDate;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<double?> unitPrice;
+  final Value<bool?> isPurchase;
+  final Value<String?> person;
+  final Value<int> rowid;
+  const ActivityPurchaseTableCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ActivityPurchaseTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<ActivityPurchase> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<int>? userId,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarmName,
+    Expression<String>? transactionDate,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<double>? unitPrice,
+    Expression<bool>? isPurchase,
+    Expression<String>? person,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (userId != null) 'user_id': userId,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarmName != null) 'season_farm_name': seasonFarmName,
+      if (transactionDate != null) 'transaction_date': transactionDate,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (isPurchase != null) 'is_purchase': isPurchase,
+      if (person != null) 'person': person,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ActivityPurchaseTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? uuid,
+      Value<int?>? userId,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarmName,
+      Value<String?>? transactionDate,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<double?>? unitPrice,
+      Value<bool?>? isPurchase,
+      Value<String?>? person,
+      Value<int>? rowid}) {
+    return ActivityPurchaseTableCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      userId: userId ?? this.userId,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarmName: seasonFarmName ?? this.seasonFarmName,
+      transactionDate: transactionDate ?? this.transactionDate,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      isPurchase: isPurchase ?? this.isPurchase,
+      person: person ?? this.person,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarmName.present) {
+      map['season_farm_name'] = Variable<String>(seasonFarmName.value);
+    }
+    if (transactionDate.present) {
+      map['transaction_date'] = Variable<String>(transactionDate.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (isPurchase.present) {
+      map['is_purchase'] = Variable<bool>(isPurchase.value);
+    }
+    if (person.present) {
+      map['person'] = Variable<String>(person.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityPurchaseTableCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('userId: $userId, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarmName: $seasonFarmName, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('isPurchase: $isPurchase, ')
+          ..write('person: $person, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ActivityTransactionTableTable extends ActivityTransactionTable
+    with TableInfo<$ActivityTransactionTableTable, ActivityTransaction> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityTransactionTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmNameMeta =
+      const VerificationMeta('seasonFarmName');
+  @override
+  late final GeneratedColumn<String> seasonFarmName = GeneratedColumn<String>(
+      'season_farm_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _transactionDateMeta =
+      const VerificationMeta('transactionDate');
+  @override
+  late final GeneratedColumn<String> transactionDate = GeneratedColumn<String>(
+      'transaction_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _isPurchaseMeta =
+      const VerificationMeta('isPurchase');
+  @override
+  late final GeneratedColumn<bool> isPurchase =
+      GeneratedColumn<bool>('is_purchase', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _personMeta = const VerificationMeta('person');
+  @override
+  late final GeneratedColumn<String> person = GeneratedColumn<String>(
+      'person', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        uuid,
+        seasonFarmId,
+        seasonFarmName,
+        transactionDate,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        productId,
+        productName,
+        unitPrice,
+        isPurchase,
+        person
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_transaction';
+  @override
+  String get actualTableName => 'activity_transaction';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<ActivityTransaction> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm_name')) {
+      context.handle(
+          _seasonFarmNameMeta,
+          seasonFarmName.isAcceptableOrUnknown(
+              data['season_farm_name']!, _seasonFarmNameMeta));
+    }
+    if (data.containsKey('transaction_date')) {
+      context.handle(
+          _transactionDateMeta,
+          transactionDate.isAcceptableOrUnknown(
+              data['transaction_date']!, _transactionDateMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('is_purchase')) {
+      context.handle(
+          _isPurchaseMeta,
+          isPurchase.isAcceptableOrUnknown(
+              data['is_purchase']!, _isPurchaseMeta));
+    }
+    if (data.containsKey('person')) {
+      context.handle(_personMeta,
+          person.isAcceptableOrUnknown(data['person']!, _personMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, uuid};
+  @override
+  ActivityTransaction map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityTransaction(
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      seasonFarmName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}season_farm_name']),
+      transactionDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_date']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      person: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}person']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      isPurchase: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_purchase']),
+    );
+  }
+
+  @override
+  $ActivityTransactionTableTable createAlias(String alias) {
+    return $ActivityTransactionTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityTransactionTableCompanion
+    extends UpdateCompanion<ActivityTransaction> {
+  final Value<int?> id;
+  final Value<String?> uuid;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarmName;
+  final Value<String?> transactionDate;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<double?> unitPrice;
+  final Value<bool?> isPurchase;
+  final Value<String?> person;
+  final Value<int> rowid;
+  const ActivityTransactionTableCompanion({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ActivityTransactionTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<ActivityTransaction> custom({
+    Expression<int>? id,
+    Expression<String>? uuid,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarmName,
+    Expression<String>? transactionDate,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<double>? unitPrice,
+    Expression<bool>? isPurchase,
+    Expression<String>? person,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (uuid != null) 'uuid': uuid,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarmName != null) 'season_farm_name': seasonFarmName,
+      if (transactionDate != null) 'transaction_date': transactionDate,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (isPurchase != null) 'is_purchase': isPurchase,
+      if (person != null) 'person': person,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ActivityTransactionTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? uuid,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarmName,
+      Value<String?>? transactionDate,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<double?>? unitPrice,
+      Value<bool?>? isPurchase,
+      Value<String?>? person,
+      Value<int>? rowid}) {
+    return ActivityTransactionTableCompanion(
+      id: id ?? this.id,
+      uuid: uuid ?? this.uuid,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarmName: seasonFarmName ?? this.seasonFarmName,
+      transactionDate: transactionDate ?? this.transactionDate,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      isPurchase: isPurchase ?? this.isPurchase,
+      person: person ?? this.person,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarmName.present) {
+      map['season_farm_name'] = Variable<String>(seasonFarmName.value);
+    }
+    if (transactionDate.present) {
+      map['transaction_date'] = Variable<String>(transactionDate.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (isPurchase.present) {
+      map['is_purchase'] = Variable<bool>(isPurchase.value);
+    }
+    if (person.present) {
+      map['person'] = Variable<String>(person.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityTransactionTableCompanion(')
+          ..write('id: $id, ')
+          ..write('uuid: $uuid, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarmName: $seasonFarmName, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('isPurchase: $isPurchase, ')
+          ..write('person: $person, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ActivityTransactionNoNetworkTableTable
+    extends ActivityTransactionNoNetworkTable
+    with
+        TableInfo<$ActivityTransactionNoNetworkTableTable,
+            ActivityTransactionNoNetwork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityTransactionNoNetworkTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _apiMeta = const VerificationMeta('api');
+  @override
+  late final GeneratedColumn<String> api = GeneratedColumn<String>(
+      'api', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmNameMeta =
+      const VerificationMeta('seasonFarmName');
+  @override
+  late final GeneratedColumn<String> seasonFarmName = GeneratedColumn<String>(
+      'season_farm_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _transactionDateMeta =
+      const VerificationMeta('transactionDate');
+  @override
+  late final GeneratedColumn<String> transactionDate = GeneratedColumn<String>(
+      'transaction_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _isPurchaseMeta =
+      const VerificationMeta('isPurchase');
+  @override
+  late final GeneratedColumn<bool> isPurchase =
+      GeneratedColumn<bool>('is_purchase', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _personMeta = const VerificationMeta('person');
+  @override
+  late final GeneratedColumn<String> person = GeneratedColumn<String>(
+      'person', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        api,
+        uuid,
+        id,
+        seasonFarmId,
+        seasonFarmName,
+        transactionDate,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        productId,
+        productName,
+        unitPrice,
+        isPurchase,
+        person
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_transaction_no_network';
+  @override
+  String get actualTableName => 'activity_transaction_no_network';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<ActivityTransactionNoNetwork> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('api')) {
+      context.handle(
+          _apiMeta, api.isAcceptableOrUnknown(data['api']!, _apiMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm_name')) {
+      context.handle(
+          _seasonFarmNameMeta,
+          seasonFarmName.isAcceptableOrUnknown(
+              data['season_farm_name']!, _seasonFarmNameMeta));
+    }
+    if (data.containsKey('transaction_date')) {
+      context.handle(
+          _transactionDateMeta,
+          transactionDate.isAcceptableOrUnknown(
+              data['transaction_date']!, _transactionDateMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('is_purchase')) {
+      context.handle(
+          _isPurchaseMeta,
+          isPurchase.isAcceptableOrUnknown(
+              data['is_purchase']!, _isPurchaseMeta));
+    }
+    if (data.containsKey('person')) {
+      context.handle(_personMeta,
+          person.isAcceptableOrUnknown(data['person']!, _personMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, uuid};
+  @override
+  ActivityTransactionNoNetwork map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityTransactionNoNetwork(
+      api: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}api']),
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      seasonFarmName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}season_farm_name']),
+      transactionDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_date']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      person: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}person']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      isPurchase: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_purchase']),
+    );
+  }
+
+  @override
+  $ActivityTransactionNoNetworkTableTable createAlias(String alias) {
+    return $ActivityTransactionNoNetworkTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityTransactionNoNetworkTableCompanion
+    extends UpdateCompanion<ActivityTransactionNoNetwork> {
+  final Value<String?> api;
+  final Value<String?> uuid;
+  final Value<int?> id;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarmName;
+  final Value<String?> transactionDate;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<double?> unitPrice;
+  final Value<bool?> isPurchase;
+  final Value<String?> person;
+  final Value<int> rowid;
+  const ActivityTransactionNoNetworkTableCompanion({
+    this.api = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ActivityTransactionNoNetworkTableCompanion.insert({
+    this.api = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<ActivityTransactionNoNetwork> custom({
+    Expression<String>? api,
+    Expression<String>? uuid,
+    Expression<int>? id,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarmName,
+    Expression<String>? transactionDate,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<double>? unitPrice,
+    Expression<bool>? isPurchase,
+    Expression<String>? person,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (api != null) 'api': api,
+      if (uuid != null) 'uuid': uuid,
+      if (id != null) 'id': id,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarmName != null) 'season_farm_name': seasonFarmName,
+      if (transactionDate != null) 'transaction_date': transactionDate,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (isPurchase != null) 'is_purchase': isPurchase,
+      if (person != null) 'person': person,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ActivityTransactionNoNetworkTableCompanion copyWith(
+      {Value<String?>? api,
+      Value<String?>? uuid,
+      Value<int?>? id,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarmName,
+      Value<String?>? transactionDate,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<double?>? unitPrice,
+      Value<bool?>? isPurchase,
+      Value<String?>? person,
+      Value<int>? rowid}) {
+    return ActivityTransactionNoNetworkTableCompanion(
+      api: api ?? this.api,
+      uuid: uuid ?? this.uuid,
+      id: id ?? this.id,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarmName: seasonFarmName ?? this.seasonFarmName,
+      transactionDate: transactionDate ?? this.transactionDate,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      isPurchase: isPurchase ?? this.isPurchase,
+      person: person ?? this.person,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (api.present) {
+      map['api'] = Variable<String>(api.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarmName.present) {
+      map['season_farm_name'] = Variable<String>(seasonFarmName.value);
+    }
+    if (transactionDate.present) {
+      map['transaction_date'] = Variable<String>(transactionDate.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (isPurchase.present) {
+      map['is_purchase'] = Variable<bool>(isPurchase.value);
+    }
+    if (person.present) {
+      map['person'] = Variable<String>(person.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityTransactionNoNetworkTableCompanion(')
+          ..write('api: $api, ')
+          ..write('uuid: $uuid, ')
+          ..write('id: $id, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarmName: $seasonFarmName, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('isPurchase: $isPurchase, ')
+          ..write('person: $person, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ActivityPurchaseNoNetworkTableTable
+    extends ActivityPurchaseNoNetworkTable
+    with
+        TableInfo<$ActivityPurchaseNoNetworkTableTable,
+            ActivityPurchaseNoNetWork> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityPurchaseNoNetworkTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _apiMeta = const VerificationMeta('api');
+  @override
+  late final GeneratedColumn<String> api = GeneratedColumn<String>(
+      'api', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String> uuid = GeneratedColumn<String>(
+      'uuid', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmIdMeta =
+      const VerificationMeta('seasonFarmId');
+  @override
+  late final GeneratedColumn<int> seasonFarmId = GeneratedColumn<int>(
+      'season_farm_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonFarmNameMeta =
+      const VerificationMeta('seasonFarmName');
+  @override
+  late final GeneratedColumn<String> seasonFarmName = GeneratedColumn<String>(
+      'season_farm_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _transactionDateMeta =
+      const VerificationMeta('transactionDate');
+  @override
+  late final GeneratedColumn<String> transactionDate = GeneratedColumn<String>(
+      'transaction_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _quantityMeta =
+      const VerificationMeta('quantity');
+  @override
+  late final GeneratedColumn<double> quantity = GeneratedColumn<double>(
+      'quantity', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitIdMeta =
+      const VerificationMeta('quantityUnitId');
+  @override
+  late final GeneratedColumn<int> quantityUnitId = GeneratedColumn<int>(
+      'quantity_unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _quantityUnitNameMeta =
+      const VerificationMeta('quantityUnitName');
+  @override
+  late final GeneratedColumn<String> quantityUnitName = GeneratedColumn<String>(
+      'quantity_unit_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _unitPriceMeta =
+      const VerificationMeta('unitPrice');
+  @override
+  late final GeneratedColumn<double> unitPrice = GeneratedColumn<double>(
+      'unit_price', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _isPurchaseMeta =
+      const VerificationMeta('isPurchase');
+  @override
+  late final GeneratedColumn<bool> isPurchase =
+      GeneratedColumn<bool>('is_purchase', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  static const VerificationMeta _personMeta = const VerificationMeta('person');
+  @override
+  late final GeneratedColumn<String> person = GeneratedColumn<String>(
+      'person', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        api,
+        uuid,
+        id,
+        seasonFarmId,
+        seasonFarmName,
+        transactionDate,
+        quantity,
+        quantityUnitId,
+        quantityUnitName,
+        productId,
+        productName,
+        unitPrice,
+        isPurchase,
+        person
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_purchase_no_network';
+  @override
+  String get actualTableName => 'activity_purchase_no_network';
+  @override
+  VerificationContext validateIntegrity(
+      Insertable<ActivityPurchaseNoNetWork> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('api')) {
+      context.handle(
+          _apiMeta, api.isAcceptableOrUnknown(data['api']!, _apiMeta));
+    }
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('season_farm_id')) {
+      context.handle(
+          _seasonFarmIdMeta,
+          seasonFarmId.isAcceptableOrUnknown(
+              data['season_farm_id']!, _seasonFarmIdMeta));
+    }
+    if (data.containsKey('season_farm_name')) {
+      context.handle(
+          _seasonFarmNameMeta,
+          seasonFarmName.isAcceptableOrUnknown(
+              data['season_farm_name']!, _seasonFarmNameMeta));
+    }
+    if (data.containsKey('transaction_date')) {
+      context.handle(
+          _transactionDateMeta,
+          transactionDate.isAcceptableOrUnknown(
+              data['transaction_date']!, _transactionDateMeta));
+    }
+    if (data.containsKey('quantity')) {
+      context.handle(_quantityMeta,
+          quantity.isAcceptableOrUnknown(data['quantity']!, _quantityMeta));
+    }
+    if (data.containsKey('quantity_unit_id')) {
+      context.handle(
+          _quantityUnitIdMeta,
+          quantityUnitId.isAcceptableOrUnknown(
+              data['quantity_unit_id']!, _quantityUnitIdMeta));
+    }
+    if (data.containsKey('quantity_unit_name')) {
+      context.handle(
+          _quantityUnitNameMeta,
+          quantityUnitName.isAcceptableOrUnknown(
+              data['quantity_unit_name']!, _quantityUnitNameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('unit_price')) {
+      context.handle(_unitPriceMeta,
+          unitPrice.isAcceptableOrUnknown(data['unit_price']!, _unitPriceMeta));
+    }
+    if (data.containsKey('is_purchase')) {
+      context.handle(
+          _isPurchaseMeta,
+          isPurchase.isAcceptableOrUnknown(
+              data['is_purchase']!, _isPurchaseMeta));
+    }
+    if (data.containsKey('person')) {
+      context.handle(_personMeta,
+          person.isAcceptableOrUnknown(data['person']!, _personMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, uuid};
+  @override
+  ActivityPurchaseNoNetWork map(Map<String, dynamic> data,
+      {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return ActivityPurchaseNoNetWork(
+      api: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}api']),
+      uuid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uuid']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      seasonFarmId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}season_farm_id']),
+      seasonFarmName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}season_farm_name']),
+      transactionDate: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}transaction_date']),
+      quantity: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}quantity']),
+      quantityUnitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}quantity_unit_id']),
+      quantityUnitName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}quantity_unit_name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      unitPrice: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}unit_price']),
+      person: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}person']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      isPurchase: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_purchase']),
+    );
+  }
+
+  @override
+  $ActivityPurchaseNoNetworkTableTable createAlias(String alias) {
+    return $ActivityPurchaseNoNetworkTableTable(attachedDatabase, alias);
+  }
+}
+
+class ActivityPurchaseNoNetworkTableCompanion
+    extends UpdateCompanion<ActivityPurchaseNoNetWork> {
+  final Value<String?> api;
+  final Value<String?> uuid;
+  final Value<int?> id;
+  final Value<int?> seasonFarmId;
+  final Value<String?> seasonFarmName;
+  final Value<String?> transactionDate;
+  final Value<double?> quantity;
+  final Value<int?> quantityUnitId;
+  final Value<String?> quantityUnitName;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<double?> unitPrice;
+  final Value<bool?> isPurchase;
+  final Value<String?> person;
+  final Value<int> rowid;
+  const ActivityPurchaseNoNetworkTableCompanion({
+    this.api = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  ActivityPurchaseNoNetworkTableCompanion.insert({
+    this.api = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.id = const Value.absent(),
+    this.seasonFarmId = const Value.absent(),
+    this.seasonFarmName = const Value.absent(),
+    this.transactionDate = const Value.absent(),
+    this.quantity = const Value.absent(),
+    this.quantityUnitId = const Value.absent(),
+    this.quantityUnitName = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.unitPrice = const Value.absent(),
+    this.isPurchase = const Value.absent(),
+    this.person = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<ActivityPurchaseNoNetWork> custom({
+    Expression<String>? api,
+    Expression<String>? uuid,
+    Expression<int>? id,
+    Expression<int>? seasonFarmId,
+    Expression<String>? seasonFarmName,
+    Expression<String>? transactionDate,
+    Expression<double>? quantity,
+    Expression<int>? quantityUnitId,
+    Expression<String>? quantityUnitName,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<double>? unitPrice,
+    Expression<bool>? isPurchase,
+    Expression<String>? person,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (api != null) 'api': api,
+      if (uuid != null) 'uuid': uuid,
+      if (id != null) 'id': id,
+      if (seasonFarmId != null) 'season_farm_id': seasonFarmId,
+      if (seasonFarmName != null) 'season_farm_name': seasonFarmName,
+      if (transactionDate != null) 'transaction_date': transactionDate,
+      if (quantity != null) 'quantity': quantity,
+      if (quantityUnitId != null) 'quantity_unit_id': quantityUnitId,
+      if (quantityUnitName != null) 'quantity_unit_name': quantityUnitName,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (unitPrice != null) 'unit_price': unitPrice,
+      if (isPurchase != null) 'is_purchase': isPurchase,
+      if (person != null) 'person': person,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  ActivityPurchaseNoNetworkTableCompanion copyWith(
+      {Value<String?>? api,
+      Value<String?>? uuid,
+      Value<int?>? id,
+      Value<int?>? seasonFarmId,
+      Value<String?>? seasonFarmName,
+      Value<String?>? transactionDate,
+      Value<double?>? quantity,
+      Value<int?>? quantityUnitId,
+      Value<String?>? quantityUnitName,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<double?>? unitPrice,
+      Value<bool?>? isPurchase,
+      Value<String?>? person,
+      Value<int>? rowid}) {
+    return ActivityPurchaseNoNetworkTableCompanion(
+      api: api ?? this.api,
+      uuid: uuid ?? this.uuid,
+      id: id ?? this.id,
+      seasonFarmId: seasonFarmId ?? this.seasonFarmId,
+      seasonFarmName: seasonFarmName ?? this.seasonFarmName,
+      transactionDate: transactionDate ?? this.transactionDate,
+      quantity: quantity ?? this.quantity,
+      quantityUnitId: quantityUnitId ?? this.quantityUnitId,
+      quantityUnitName: quantityUnitName ?? this.quantityUnitName,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      unitPrice: unitPrice ?? this.unitPrice,
+      isPurchase: isPurchase ?? this.isPurchase,
+      person: person ?? this.person,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (api.present) {
+      map['api'] = Variable<String>(api.value);
+    }
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (seasonFarmId.present) {
+      map['season_farm_id'] = Variable<int>(seasonFarmId.value);
+    }
+    if (seasonFarmName.present) {
+      map['season_farm_name'] = Variable<String>(seasonFarmName.value);
+    }
+    if (transactionDate.present) {
+      map['transaction_date'] = Variable<String>(transactionDate.value);
+    }
+    if (quantity.present) {
+      map['quantity'] = Variable<double>(quantity.value);
+    }
+    if (quantityUnitId.present) {
+      map['quantity_unit_id'] = Variable<int>(quantityUnitId.value);
+    }
+    if (quantityUnitName.present) {
+      map['quantity_unit_name'] = Variable<String>(quantityUnitName.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (unitPrice.present) {
+      map['unit_price'] = Variable<double>(unitPrice.value);
+    }
+    if (isPurchase.present) {
+      map['is_purchase'] = Variable<bool>(isPurchase.value);
+    }
+    if (person.present) {
+      map['person'] = Variable<String>(person.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityPurchaseNoNetworkTableCompanion(')
+          ..write('api: $api, ')
+          ..write('uuid: $uuid, ')
+          ..write('id: $id, ')
+          ..write('seasonFarmId: $seasonFarmId, ')
+          ..write('seasonFarmName: $seasonFarmName, ')
+          ..write('transactionDate: $transactionDate, ')
+          ..write('quantity: $quantity, ')
+          ..write('quantityUnitId: $quantityUnitId, ')
+          ..write('quantityUnitName: $quantityUnitName, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('unitPrice: $unitPrice, ')
+          ..write('isPurchase: $isPurchase, ')
+          ..write('person: $person, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SeasonFarmTableTable extends SeasonFarmTable
+    with TableInfo<$SeasonFarmTableTable, SeasonFarm> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SeasonFarmTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productIdMeta =
+      const VerificationMeta('productId');
+  @override
+  late final GeneratedColumn<int> productId = GeneratedColumn<int>(
+      'product_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _imageMeta = const VerificationMeta('image');
+  @override
+  late final GeneratedColumn<String> image = GeneratedColumn<String>(
+      'image', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, name, productId, productName, image];
+  @override
+  String get aliasedName => _alias ?? 'season_farm';
+  @override
+  String get actualTableName => 'season_farm';
+  @override
+  VerificationContext validateIntegrity(Insertable<SeasonFarm> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('product_id')) {
+      context.handle(_productIdMeta,
+          productId.isAcceptableOrUnknown(data['product_id']!, _productIdMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('image')) {
+      context.handle(
+          _imageMeta, image.isAcceptableOrUnknown(data['image']!, _imageMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  SeasonFarm map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SeasonFarm(
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      productId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      image: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}image']),
+    );
+  }
+
+  @override
+  $SeasonFarmTableTable createAlias(String alias) {
+    return $SeasonFarmTableTable(attachedDatabase, alias);
+  }
+}
+
+class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
+  final Value<int?> id;
+  final Value<int?> userId;
+  final Value<String?> name;
+  final Value<int?> productId;
+  final Value<String?> productName;
+  final Value<String?> image;
+  const SeasonFarmTableCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.image = const Value.absent(),
+  });
+  SeasonFarmTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.productId = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.image = const Value.absent(),
+  });
+  static Insertable<SeasonFarm> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<String>? name,
+    Expression<int>? productId,
+    Expression<String>? productName,
+    Expression<String>? image,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (name != null) 'name': name,
+      if (productId != null) 'product_id': productId,
+      if (productName != null) 'product_name': productName,
+      if (image != null) 'image': image,
+    });
+  }
+
+  SeasonFarmTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<int?>? userId,
+      Value<String?>? name,
+      Value<int?>? productId,
+      Value<String?>? productName,
+      Value<String?>? image}) {
+    return SeasonFarmTableCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      productId: productId ?? this.productId,
+      productName: productName ?? this.productName,
+      image: image ?? this.image,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (productId.present) {
+      map['product_id'] = Variable<int>(productId.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (image.present) {
+      map['image'] = Variable<String>(image.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SeasonFarmTableCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('name: $name, ')
+          ..write('productId: $productId, ')
+          ..write('productName: $productName, ')
+          ..write('image: $image')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -6719,6 +8624,18 @@ abstract class _$DiaryDB extends GeneratedDatabase {
       $FarmerInspectorUploadNoNetworkTableTable(this);
   late final $ReportSelectTableTable reportSelectTable =
       $ReportSelectTableTable(this);
+  late final $ActivityPurchaseTableTable activityPurchaseTable =
+      $ActivityPurchaseTableTable(this);
+  late final $ActivityTransactionTableTable activityTransactionTable =
+      $ActivityTransactionTableTable(this);
+  late final $ActivityTransactionNoNetworkTableTable
+      activityTransactionNoNetworkTable =
+      $ActivityTransactionNoNetworkTableTable(this);
+  late final $ActivityPurchaseNoNetworkTableTable
+      activityPurchaseNoNetworkTable =
+      $ActivityPurchaseNoNetworkTableTable(this);
+  late final $SeasonFarmTableTable seasonFarmTable =
+      $SeasonFarmTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6737,6 +8654,11 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         reportTable,
         questionUploadNoNetworkTable,
         farmerInspectorUploadNoNetworkTable,
-        reportSelectTable
+        reportSelectTable,
+        activityPurchaseTable,
+        activityTransactionTable,
+        activityTransactionNoNetworkTable,
+        activityPurchaseNoNetworkTable,
+        seasonFarmTable
       ];
 }

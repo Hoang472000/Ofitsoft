@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
+import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
+import 'package:diary_mobile/data/entity/activity/no_network/activity_purchase_no_network.dart';
+import 'package:diary_mobile/data/entity/activity/season_farm.dart';
 import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
@@ -19,12 +22,17 @@ import 'package:diary_mobile/data/local_data/table/report/question_upload_no_net
 import 'package:diary_mobile/data/local_data/table/report/report_select_table.dart';
 import 'package:diary_mobile/data/local_data/table/report/report_table.dart';
 import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
+import 'package:diary_mobile/data/local_data/table/transaction/activity_purchase_table.dart';
+import 'package:diary_mobile/data/local_data/table/transaction/activity_transaction_table.dart';
+import 'package:diary_mobile/data/local_data/table/transaction/season_farm_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
 import '../entity/activity/activity_diary_no_network.dart';
+import '../entity/activity/activity_purchase.dart';
+import '../entity/activity/no_network/activity_transaction_no_network.dart';
 import '../entity/item_default/activity.dart';
 import '../entity/item_default/activity_monitor.dart';
 import '../entity/item_default/tool.dart';
@@ -33,12 +41,15 @@ import '../entity/monitor/monitor_diary.dart';
 import '../entity/report/question_upload.dart';
 import '../entity/report/report.dart';
 import '../entity/report/report_select.dart';
+import 'table/transaction/activity_purchase_no_network_table.dart';
+import 'table/transaction/activity_transaction_no_network_table.dart';
 part 'diary_db.g.dart';
 
 @DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable,
   ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
   ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
-  ReportSelectTable])
+  ReportSelectTable, ActivityPurchaseTable, ActivityTransactionTable, ActivityTransactionNoNetworkTable,
+  ActivityPurchaseNoNetworkTable, SeasonFarmTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -401,7 +412,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertQuestionUploadNoNetWork(List<QuestionUpload> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry:");
+        print("HoangCV: entry: insertQuestionUploadNoNetWork:  ${entry.toJson()}");
         final QuestionUploadNoNetworkTableCompanion entryCompanion = QuestionUploadNoNetworkTableCompanion(
           api: Value(entry.api),
           idOffline: Value(entry.idOffline),
@@ -430,12 +441,54 @@ class DiaryDB extends _$DiaryDB {
       }
     });
   }
+  ///get
+  Future<List<QuestionUpload>> getListQuestionUploadNoNetWork() async {
+    final query = await (select(questionUploadNoNetworkTable))
+        .get();
+    final List<QuestionUpload> diaryEntriesList = [];
+
+    print("HoangCV: query:list Question upload: ${query.length}");
+    for (final queriedEntry in query) {
+      final diaryEntry = QuestionUpload.fromJsonNoNetwork({
+        'api': queriedEntry.api,
+        'idOffline': queriedEntry.idOffline,
+        'userInputId': queriedEntry.userInputId,
+        'surveyId': queriedEntry.surveyId,
+        'listIdSuggested': jsonDecode(queriedEntry.stringListIdSuggested??'[]'),
+        'stringListIdSuggested': queriedEntry.stringListIdSuggested,
+        'suggestedAnswerId': queriedEntry.suggestedAnswerId,
+        'questionId': queriedEntry.questionId,
+        'matrixRowId': queriedEntry.matrixRowId,
+        'answerType': queriedEntry.answerType,
+        'valueText': queriedEntry.valueText,
+        'skipped': queriedEntry.skipped,
+        'state': queriedEntry.state,
+        'isAnswerExist': queriedEntry.isAnswerExist,
+        'valueCheckBox': queriedEntry.valueCheckBox,
+        'tableRowId': queriedEntry.tableRowId,
+        'farmerId': queriedEntry.farmerId,
+        'farmerCode': queriedEntry.farmerCode,
+        'internalInspectorId': queriedEntry.internalInspectorId,
+        'monitoringVisitType': queriedEntry.monitoringVisitType,
+        'visitDate': queriedEntry.visitDate,
+        'farmId': queriedEntry.farmId,
+        'farmCode': queriedEntry.farmCode,
+      });
+      diaryEntriesList.add(diaryEntry);
+    }
+    return diaryEntriesList;
+  }
+  ///delete
+  Future<void> removeQuestionUploadNoNetWork() async {
+    await delete(questionUploadNoNetworkTable).go();
+  }
+
   ///report
   ///Thêm, sửa, xóa, lấy report no network
   Future<void> insertFarmerInspectorUploaddNoNetWork(List<FarmerInspectorUpload> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry:");
+        print("HoangCV: entry: insertFarmerInspectorUploaddNoNetWork : ${entry.toJson()}");
         final FarmerInspectorUploadNoNetworkTableCompanion entryCompanion = FarmerInspectorUploadNoNetworkTableCompanion(
           api: Value(entry.api),
           idOffline: Value(entry.idOffline),
@@ -453,6 +506,33 @@ class DiaryDB extends _$DiaryDB {
       }
     });
   }
+  ///get
+  Future<List<FarmerInspectorUpload>> getListFarmerInspectorUploadNoNetWork() async {
+    final query = await (select(farmerInspectorUploadNoNetworkTable))
+        .get();
+    final List<FarmerInspectorUpload> diaryEntriesList = [];
+
+    for (final queriedEntry in query) {
+      final diaryEntry = FarmerInspectorUpload.fromJsonNoNetwork({
+        'api': queriedEntry.api,
+        'idOffline': queriedEntry.idOffline,
+        'state': queriedEntry.state,
+        'farmerId': queriedEntry.farmerId,
+        'farmerCode': queriedEntry.farmerCode,
+        'internalInspectorId': queriedEntry.internalInspectorId,
+        'monitoringVisitType': queriedEntry.monitoringVisitType,
+        'visitDate': queriedEntry.visitDate,
+        'farmId': queriedEntry.farmId,
+        'farmCode': queriedEntry.farmCode,
+      });
+      diaryEntriesList.add(diaryEntry);
+    }
+    return diaryEntriesList;
+  }
+  ///delete
+  Future<void> removeFarmerInspectorUploadNoNetWork(String idOffline) async {
+    await (delete(farmerInspectorUploadNoNetworkTable)..where((tbl) => tbl.idOffline.equals(idOffline))).go();
+  }
 
   ///Report Select
   ///
@@ -464,6 +544,74 @@ class DiaryDB extends _$DiaryDB {
   }
   Future<List<ReportSelect>> getListReportSelect() async {
     return await select(reportSelectTable).get();
+  }
+
+  /// Transaction sell
+  Future<void> insertListActivityTransaction(List<ActivityTransaction> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityTransactionTable, values);
+    });
+  }
+  Future<List<ActivityTransaction>> getListActivityTransaction() async {
+    return await select(activityTransactionTable).get();
+  }
+  Future<void> removeActivityTransaction() async {
+    await (delete(activityTransactionTable).go());
+  }
+
+
+  /// Transaction purchase
+  Future<void> insertListActivityPurchase(List<ActivityPurchase> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityPurchaseTable, values);
+    });
+  }
+  Future<List<ActivityPurchase>> getListActivityPurchase(int userId) async {
+    return await (select(activityPurchaseTable)..where((tbl) => tbl.userId.equals(userId)))
+        .get();
+  }
+  Future<void> removeActivityPurchase() async {
+    await (delete(activityPurchaseTable).go());
+  }
+
+
+
+  /// Transaction sell no network
+  Future<void> insertListActivityTransactionNoNetwork (List<ActivityTransactionNoNetwork> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityTransactionNoNetworkTable, values);
+    });
+  }
+  Future<List<ActivityTransactionNoNetwork>> getListActivityTransactionNoNetwork() async {
+    return await select(activityTransactionNoNetworkTable).get();
+  }
+  Future<void> removeActivityTransactionNoNetWork(int id) async {
+    await (delete(activityTransactionNoNetworkTable).go());
+  }
+
+  /// Transaction purchase no network
+  Future<void> insertListActivityPurchaseNoNetwork(List<ActivityPurchaseNoNetWork> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(activityPurchaseNoNetworkTable, values);
+    });
+  }
+  Future<List<ActivityPurchaseNoNetWork>> getListActivityPurchaseNoNetwork() async {
+    return await select(activityPurchaseNoNetworkTable).get();
+  }
+  Future<void> removeActivityPurchaseNoNetWork(int id) async {
+    await (delete(activityPurchaseNoNetworkTable).go());
+  }
+
+  /// Season Farm
+  Future<void> insertListSeasonFarm(List<SeasonFarm> values) async{
+    await batch((batch) {
+      batch.insertAllOnConflictUpdate(seasonFarmTable, values);
+    });
+  }
+  Future<List<SeasonFarm>> getListSeasonFarm(int userId) async {
+    return
+      await (select(seasonFarmTable)..where((tbl) => tbl.userId.equals(userId)))
+        .get();
   }
 
   SingleSelectable<UserInfo> singleUser(int userId) {

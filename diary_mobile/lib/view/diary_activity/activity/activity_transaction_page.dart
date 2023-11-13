@@ -198,7 +198,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                 callbackDelete: () {
                                   blocContext.read<ActivityBloc>().add(
                                       RemoveActivityEvent(
-                                          state.listDiaryActivity[index].id ??
+                                          state.listActivityTransaction[index].id ??
                                               -1,
                                           widget.action));
                                 });

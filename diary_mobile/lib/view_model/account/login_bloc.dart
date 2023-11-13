@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/utils/constants/status_const.dart';
@@ -15,6 +16,7 @@ import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
+import 'package:crypto/crypto.dart' as crypto;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final Repository repository;
@@ -125,7 +127,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   FutureOr<void> _getUserInfo(GetUserInfoEvent event, Emitter<LoginState> emit) async{
     SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
     String username= sharedPreferences.getString(SharedPreferencesKey.userName) ?? "";
-    emit(state.copyWith(username: username));
+    String password= sharedPreferences.getString(SharedPreferencesKey.passwordEncode) ?? "";
+    emit(state.copyWith(username: username, password: password));
   }
 }
 

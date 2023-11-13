@@ -2,6 +2,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
+import 'package:diary_mobile/data/entity/activity/no_network/activity_purchase_no_network.dart';
+import 'package:diary_mobile/data/entity/activity/no_network/activity_transaction_no_network.dart';
+import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -44,10 +47,64 @@ class NetworkExecutor{
                     path: element.api ?? '',
                     body: ObjectData(
                         token: route.body.token, params: element.toJson())));
-            if (objectResult.responseCode == StatusConst.code00) {
-              print("HoangCV: loop remove : ${element.id}");
+            //if (objectResult.responseCode == StatusConst.code00 && objectResult.responseCode == StatusConst.code01) {
+              print("HoangCV: loop remove ActDiaryNoNetwork: $objectResult ");
               await DiaryDB.instance.removeActDiaryNoNetWork(element.id ?? -1);
-            }
+            //}
+          }
+          List<QuestionUpload> listQsUl = await DiaryDB.instance
+              .getListQuestionUploadNoNetWork();
+          await DiaryDB.instance.removeQuestionUploadNoNetWork();
+          for (var element in listQsUl) {
+            ObjectResult objectResult = await request(
+                loop: true,
+                route: ApiBaseGenerator(
+                    path: element.api ?? '',
+                    body: ObjectData(
+                        token: route.body.token, params: element.toJson())));
+            //if (objectResult.responseCode == StatusConst.code00 && objectResult.responseCode == StatusConst.code01) {
+            //  print("HoangCV: loop remove QuestionUpload: $objectResult ");
+            //}
+          }
+          List<FarmerInspectorUpload> listFaIn = await DiaryDB.instance
+              .getListFarmerInspectorUploadNoNetWork();
+          for (var element in listFaIn) {
+            ObjectResult objectResult = await request(
+                loop: true,
+                route: ApiBaseGenerator(
+                    path: element.api ?? '',
+                    body: ObjectData(
+                        token: route.body.token, params: element.toJson())));
+            //if (objectResult.responseCode == StatusConst.code00 && objectResult.responseCode == StatusConst.code01) {
+              print("HoangCV: loop remove FarmerInspectorUpload: $objectResult ");
+              await DiaryDB.instance.removeFarmerInspectorUploadNoNetWork(element.idOffline ?? "");
+            //}
+          }
+
+          List<ActivityPurchaseNoNetWork> listPurchase = await DiaryDB.instance
+              .getListActivityPurchaseNoNetwork();
+          for (var element in listPurchase) {
+            ObjectResult objectResult = await request(
+                loop: true,
+                route: ApiBaseGenerator(
+                    path: element.api ?? '',
+                    body: ObjectData(
+                        token: route.body.token, params: element.toJson())));
+            print("HoangCV: loop remove ActivityPurchaseNoNetWork: $objectResult ");
+            await DiaryDB.instance.removeActivityPurchaseNoNetWork(element.id ?? -1);
+          }
+
+          List<ActivityTransactionNoNetwork> listTransaction = await DiaryDB.instance
+              .getListActivityTransactionNoNetwork();
+          for (var element in listTransaction) {
+            ObjectResult objectResult = await request(
+                loop: true,
+                route: ApiBaseGenerator(
+                    path: element.api ?? '',
+                    body: ObjectData(
+                        token: route.body.token, params: element.toJson())));
+            print("HoangCV: loop remove ActivityTransactionNoNetwork: $objectResult ");
+            await DiaryDB.instance.removeActivityTransactionNoNetWork(element.id ?? -1);
           }
         }
         var client = Dio();

@@ -53,6 +53,10 @@ class ApiConst {
   //offline
   static const String editFarmerInspectorOffline = "/edit/result_assessment_offline/";
   static const String uploadQuestionOffline = "/add/user_input_line_offline/";
+  //feedback
+  static const String getListFarmerFeedback = "/get/list_farmer_feedback/";///get/list_farmer_feedback/<int:id>
+  static const String getFarmerFeedback = "/get/farmer_feedback/";///get/farmer_feedback/<int:id>
+  static const String addFarmerFeedback = "/add/farmer_feedback";
 
 
   //update

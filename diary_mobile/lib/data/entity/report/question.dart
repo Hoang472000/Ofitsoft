@@ -111,7 +111,7 @@ class Question {
       rowId: rowId,
 
       checkResult: json['check_result'] ?? false,
-      valueResult: json['value_result'],
+      valueResult: "${json['value_result']}" == "null" ? "" : "${json['value_result']}" ,
       userInputLines: json['user_input_lines'] != null
           ? (json['user_input_lines'] as List<dynamic>)
           .map((itemJson) => RowLine.fromJson(itemJson))

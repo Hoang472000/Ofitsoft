@@ -6,7 +6,7 @@ import 'package:diary_mobile/data/remote_data/network_processor/network_check_co
 import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -640,6 +640,19 @@ class Utils {
     ]);
   }
 
+  static TextSpan convertTextFeedback(String title, String value, Color color, double size,
+      {bool isMoney = false, BuildContext? buildContext}) {
+    return TextSpan(children: [
+      TextSpan(
+          text: title, style: StyleOfit.textStyleFW500(color, size)),
+      TextSpan(text: value, style: StyleOfit.textStyleFW400(color, size)),
+      if (isMoney = true && buildContext != null)
+        TextSpan(
+            text: " ${S.of(buildContext!).vnd}",
+            style: StyleOfit.textStyleFW400(AppColor.gray57, 14))
+    ]);
+  }
+
   // vung hien thi trang thai
   static Widget descriptionPaymentStatusWidget(int amount,int select,  BuildContext context,VoidCallback ontap,VoidCallback ontapAll,bool selectAll,
       {bool isShowAll = true}) {
@@ -807,7 +820,8 @@ class Utils {
     } else if (farmerInspector.farmId == null) {
       Toast.showLongTop("Vui lòng chọn Tên vùng trồng");
       return false;
-    }/* else if (farmerInspector.internal_inspector_id == null) {
+    }
+    /* else if (farmerInspector.internal_inspector_id == null) {
       Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
       return false;
     } else if (farmerInspector.monitoring_visit_type == null) {
@@ -895,14 +909,14 @@ class Utils {
   }
 
   static Future<String?> extractImageFromVideo(String videoPath) async {
-    final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
+    //final FlutterFFmpeg _flutterFFmpeg = FlutterFFmpeg();
 
     final String videoExtension = videoPath.split('.').last.toLowerCase();
     final String outputPath = videoPath.replaceAll('.$videoExtension', '_thumbnail.jpg').replaceAll(' ', "_");
     print("HoangCV: outputPath: ${outputPath}");
 
-    final int resultCode = await _flutterFFmpeg.execute(
-        '-i ${videoPath} -ss 00:00:01.000 -vframes 1 $outputPath');
+    final int resultCode = -1;/*await _flutterFFmpeg.execute(
+        '-i ${videoPath} -ss 00:00:01.000 -vframes 1 $outputPath');*/
 
     if (resultCode == 0) {
       final Uint8List thumbnailBytes = File(outputPath).readAsBytesSync();

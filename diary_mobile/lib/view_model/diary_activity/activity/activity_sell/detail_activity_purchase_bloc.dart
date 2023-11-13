@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/entity/activity/activity_diary.dart';
+import '../../../../data/entity/activity/activity_purchase.dart';
 import '../../../../data/entity/activity/activity_transaction.dart';
 import '../../../../data/entity/activity/season_farm.dart';
 import '../../../../data/entity/diary/diary.dart';
@@ -347,7 +348,7 @@ class DetailActivityPurchaseBloc
   FutureOr<void> _changeDetailActivityPurchase(ChangeDetailActivityPurchaseEvent event,
       Emitter<DetailActivityPurchaseState> emit) async {
     //_changeViewDetail(emit);
-    add(GetDetailActivityPurchaseEvent(state.copiedActivityDiary ?? ActivityTransaction(), state.diary ?? Diary(),
+    add(GetDetailActivityPurchaseEvent(state.copiedActivityDiary ?? ActivityPurchase(), state.diary ?? Diary(),
         resetView: true));
   }
 
@@ -530,7 +531,7 @@ class DetailActivityPurchaseBloc
         isShowProgress: false,
         formStatus: const InitialFormStatus()));
     var copiesActivity =
-    ActivityTransaction.copy(state.detailActivity ?? ActivityTransaction());
+    ActivityPurchase.copy(state.detailActivity ?? ActivityPurchase());
     emit(state.copyWith(
       isShowProgress: true,
       detailActivity: copiesActivity,
@@ -544,7 +545,7 @@ class DetailActivityPurchaseEvent extends BlocEvent {
 }
 
 class GetDetailActivityPurchaseEvent extends DetailActivityPurchaseEvent {
-  ActivityTransaction activityDiary;
+  ActivityPurchase activityDiary;
   bool resetView;
   Diary diary;
 
@@ -663,8 +664,8 @@ class DetailActivityPurchaseState extends BlocState {
     seasonFarmController,
   ];
   final Diary? diary;
-  final ActivityTransaction? detailActivity;
-  final ActivityTransaction? copiedActivityDiary;
+  final ActivityPurchase? detailActivity;
+  final ActivityPurchase? copiedActivityDiary;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
   final List<MaterialEntity> listMaterialAll;
@@ -771,8 +772,8 @@ class DetailActivityPurchaseState extends BlocState {
     TextEditingController? seasonFarmController,
     int? indexSeasonFarm,
     List<SeasonFarm>? listSeasonFarm,
-    ActivityTransaction? detailActivity,
-    ActivityTransaction? copiedActivityDiary,
+    ActivityPurchase? detailActivity,
+    ActivityPurchase? copiedActivityDiary,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<MaterialEntity>? listMaterial,

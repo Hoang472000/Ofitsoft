@@ -168,7 +168,7 @@ class DetailActivityBloc
         listWidgetArea: listArea));
   }
 
-  void _initViewDetail(Emitter<DetailActivityState> emitter, int id) {
+  void _initViewDetail(Emitter<DetailActivityState> emitter, bool harvesting) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
@@ -280,7 +280,7 @@ class DetailActivityBloc
       listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
-    if (id == 20) {
+    if (harvesting) {
       listYield.add(InputRegisterModel(
         title: "Sản lượng",
         isCompulsory: false,
@@ -311,7 +311,7 @@ class DetailActivityBloc
         listWidgetYield: listYield));
   }
 
-  void _changeViewEdit(Emitter<DetailActivityState> emitter, int id) {
+  void _changeViewEdit(Emitter<DetailActivityState> emitter, bool harvesting) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
@@ -440,7 +440,7 @@ class DetailActivityBloc
       listValue: state.listUnitAmount,
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
-    if (id == 20) {
+    if (harvesting) {
       listYield.add(InputRegisterModel(
         title: "Sản lượng",
         isCompulsory: false,
@@ -525,7 +525,7 @@ class DetailActivityBloc
         await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
     final listUnitYield =
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
-    _initViewDetail(emitter, detailActivity.activityId ?? -1);
+    _initViewDetail(emitter, detailActivity.harvesting ?? false);
     print("HoangCV: detailActivity.activityId: ${detailActivity.toJson()}");
     listActivity.forEach((element) {print("HoangCV: listActivity: ${element.toJson()}");});
 
@@ -652,7 +652,7 @@ class DetailActivityBloc
 
   FutureOr<void> _changeEditActivity(
       ChangeEditActivityEvent event, Emitter<DetailActivityState> emit) async {
-    _changeViewEdit(emit, state.detailActivity!.activityId ?? -1);
+    _changeViewEdit(emit, state.detailActivity!.harvesting ?? false);
   }
 
   FutureOr<void> _changeDetailActivity(ChangeDetailActivityEvent event,

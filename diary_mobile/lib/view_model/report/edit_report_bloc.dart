@@ -1988,7 +1988,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: result.message)));
+            formStatus: SubmissionSuccess(success: "Sửa báo cáo đánh giá hoàn thành.")));
       } else if (result.responseCode == StatusConst.code01) {
         emit(state.copyWith(
             isShowProgress: false,

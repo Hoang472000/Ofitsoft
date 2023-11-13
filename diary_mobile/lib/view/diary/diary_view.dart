@@ -73,7 +73,7 @@ class _DiaryViewState extends State<DiaryView> {
                 child:
                 DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
               )
-                  : state.listDate.isEmpty ? const EmptyWidget()
+                  /*: state.listDate.isEmpty ? const EmptyWidget()*/
                   : Column(
                 children: [
                   const SizedBox(height: 10),
@@ -169,7 +169,7 @@ class _DiaryViewState extends State<DiaryView> {
                       ],
                     ),
                   ),
-                  Expanded(
+                  state.listDate.isEmpty ? const EmptyWidget() : Expanded(
                       child: ListView.builder(
                         itemCount: state.listDate.length,
                         itemBuilder: (context, indexParent) {

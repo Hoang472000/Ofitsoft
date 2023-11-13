@@ -8,6 +8,7 @@ import 'package:diary_mobile/view/diary_activity/activity_sell/activity_select_p
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import '../../../data/entity/activity/activity_purchase.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
@@ -34,7 +35,7 @@ class ActivityPurchasePage extends StatefulWidget {
 
   final String action;
   final int seasonFarmId;
-  final List<ActivityTransaction> listActivityTransaction;
+  final List<ActivityPurchase> listActivityTransaction;
   final List<ActivityDiary> listActivityDiary;
 
   @override
@@ -44,7 +45,7 @@ class ActivityPurchasePage extends StatefulWidget {
   static Route route(
       String action,
       {int? seasonFarmId,
-        List<ActivityTransaction>? listActivityTransaction,
+        List<ActivityPurchase>? listActivityTransaction,
         List<ActivityDiary>? listActivityDiary}) {
     return Utils.pageRouteBuilder(
         ActivityPurchasePage(
@@ -60,7 +61,7 @@ class ActivityPurchasePage extends StatefulWidget {
 class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
   bool visible = true;
   bool updateHarvesting = false;
-  List<ActivityTransaction> listCallback = const [];
+  List<ActivityPurchase> listCallback = const [];
 
   @override
   void initState() {
@@ -73,129 +74,135 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
     return BlocProvider(
       create: (context) => ActivityPurchaseBloc(context.read<Repository>())
         ..add(GetListActivityPurchaseEvent()),
-      child: Scaffold(
-        appBar: OfitAppBar(context,
-            centerTitle: true,
-            hasBottom: true,
-            showDefaultBackButton: true,
-            callback: [updateHarvesting, listCallback],
-            title: Text(
-              "HOẠT ĐỘNG MUA HÀNG",
-              style: StyleOfit.textStyleFW700(Colors.white, 20),
-            )),
-        //resizeToAvoidBottomInset: true,
-        backgroundColor: AppColor.background,
-        floatingActionButton: BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
-          builder: (contextBloc, state) {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Visibility(
-                  visible: visible,
-                  child: floatingActionButton(
-                      "Ghi thu mua",
-                      Icons.add,
-                          () async {
-                          var result = await Navigator.of(context).push(AddActivityPurchasePage.route());
-                          if (result != null && result[0]) {
-                            setState(() {
-                              updateHarvesting = result[0];
-                            });
-                            contextBloc.read<ActivityPurchaseBloc>().add(
-                                GetListActivityPurchaseEvent());
-                          }
-
-                      }),
-                ),
-              ],
-            );
-          },
-        ),
-        body: BlocConsumer<ActivityPurchaseBloc, ActivityPurchaseState>(
-            listener: (blocContext, state) async {
-              final formStatus = state.formStatus;
-              if (!state.isShowProgress) {
-                setState(() {
-                  listCallback = state.listCallbackTransaction;
-                });
-                print(
-                    "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
-              }
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                        () {
-                      Get.back();
-                    }, () {
-                      Get.back();
-                    }, '', S.of(context).close_dialog);
-              } else if (formStatus is FormSubmitting) {
-                //DiaLogManager.showDialogLoading(context);
-              }
-            },
-            builder: (blocContext, state) {
-              return state
-                  .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                  ? const Center(
-                child:
-                DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-              )
-                  : RefreshIndicator(
-                onRefresh: () async {
-                  blocContext.read<ActivityPurchaseBloc>().add(GetListActivityPurchaseEvent());
-                },
-                child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
-                    : SingleChildScrollView(
-                  //physics: const NeverScrollableScrollPhysics(),
-                  child: Column(
-                    children: [
-                      ListView.builder(
-                        itemCount: state.listActivityTransaction.length,
-                        itemBuilder: (BuildContext contextBloc, int index) {
-                          return ItemTransaction(
-                              diary: Diary(),
-                              activityDiary:
-                              state.listActivityTransaction[index],
-                              action: widget.action,
-                              callbackChooseItem: () async {
-                                //Truyen id de sang man ben goi api hoac DB
-                                //if (widget.action.compareTo('sell') == 0) {
-                                var result = await Navigator.push(
-                                    context,
-                                    DetailActivityPurchasePage.route(
-                                        state
-                                            .listActivityTransaction[index],
-                                        widget.action));
-                                if (result != null && result[0]) {
-                                  contextBloc.read<ActivityPurchaseBloc>().add(
-                                      GetListActivityPurchaseEvent());
-                                }
-                                //}
-                              },
-                              callbackDelete: () {
-                                blocContext.read<ActivityPurchaseBloc>().add(
-                                    RemoveActivityPurchaseEvent(
-                                        state.listDiaryActivity[index].id ??
-                                            -1,
-                                        widget.action));
+      child: WillPopScope(
+        onWillPop: () async {
+          Navigator.pop(context, -1);
+          return false;
+        },
+        child: Scaffold(
+          appBar: OfitAppBar(context,
+              centerTitle: true,
+              hasBottom: true,
+              showDefaultBackButton: true,
+              callback: [updateHarvesting, listCallback],
+              title: Text(
+                "HOẠT ĐỘNG MUA HÀNG",
+                style: StyleOfit.textStyleFW700(Colors.white, 20),
+              )),
+          //resizeToAvoidBottomInset: true,
+          backgroundColor: AppColor.background,
+          floatingActionButton: BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
+            builder: (contextBloc, state) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Visibility(
+                    visible: visible,
+                    child: floatingActionButton(
+                        "Ghi thu mua",
+                        Icons.add,
+                            () async {
+                            var result = await Navigator.of(context).push(AddActivityPurchasePage.route());
+                            if (result != null && result[0]) {
+                              setState(() {
+                                updateHarvesting = result[0];
                               });
-                        },
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                      ),
-                      SizedBox(
-                        height: 60,
-                      )
-                    ],
+                              contextBloc.read<ActivityPurchaseBloc>().add(
+                                  GetListActivityPurchaseEvent());
+                            }
+
+                        }),
                   ),
-                ),
+                ],
               );
-            }),
+            },
+          ),
+          body: BlocConsumer<ActivityPurchaseBloc, ActivityPurchaseState>(
+              listener: (blocContext, state) async {
+                final formStatus = state.formStatus;
+                if (!state.isShowProgress) {
+                  setState(() {
+                    listCallback = state.listCallbackTransaction;
+                  });
+                  print(
+                      "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
+                }
+                if (formStatus is SubmissionFailed) {
+                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                    Get.back();
+                  }, () {
+                    Get.back();
+                  }, '', S.of(context).close_dialog);
+                } else if (formStatus is SubmissionSuccess) {
+                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                          () {
+                        Get.back();
+                      }, () {
+                        Get.back();
+                      }, '', S.of(context).close_dialog);
+                } else if (formStatus is FormSubmitting) {
+                  //DiaLogManager.showDialogLoading(context);
+                }
+              },
+              builder: (blocContext, state) {
+                return state
+                    .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
+                    ? const Center(
+                  child:
+                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<ActivityPurchaseBloc>().add(GetListActivityPurchaseEvent());
+                  },
+                  child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: state.listActivityTransaction.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemTransaction(
+                                diary: Diary(),
+                                activityDiary:
+                                state.listActivityTransaction[index],
+                                action: widget.action,
+                                callbackChooseItem: () async {
+                                  //Truyen id de sang man ben goi api hoac DB
+                                  //if (widget.action.compareTo('sell') == 0) {
+                                  var result = await Navigator.push(
+                                      context,
+                                      DetailActivityPurchasePage.route(
+                                          state
+                                              .listActivityTransaction[index],
+                                          widget.action));
+                                  if (result != null && result[0]) {
+                                    contextBloc.read<ActivityPurchaseBloc>().add(
+                                        GetListActivityPurchaseEvent());
+                                  }
+                                  //}
+                                },
+                                callbackDelete: () {
+                                  blocContext.read<ActivityPurchaseBloc>().add(
+                                      RemoveActivityPurchaseEvent(
+                                          state.listActivityTransaction[index].id ??
+                                              -1,
+                                          widget.action));
+                                });
+                          },
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              }),
+        ),
       ),
     );
   }

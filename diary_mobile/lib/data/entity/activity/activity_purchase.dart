@@ -3,9 +3,10 @@ import 'package:drift/drift.dart';
 
 import '../../../utils/utils.dart';
 
-class ActivityTransaction implements Insertable<ActivityTransaction>{
-  String? uuid;
+class ActivityPurchase implements Insertable<ActivityPurchase>{
   int? id;
+  String? uuid;
+  int? userId;
   int? seasonFarmId;
   String? seasonFarmName;
   String? transactionDate;
@@ -18,7 +19,8 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
   bool? isPurchase;
   String? person;
 
-  ActivityTransaction({
+  ActivityPurchase({
+    this.userId,
     this.uuid,
     this.id,
     this.seasonFarmId,
@@ -34,8 +36,9 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
     this.isPurchase,
   });
 
-  factory ActivityTransaction.fromJson(Map<String, dynamic> json) {
-    return ActivityTransaction(
+  factory ActivityPurchase.fromJson(Map<String, dynamic> json, int userId) {
+    return ActivityPurchase(
+      userId: userId,
       uuid: json['uuid'] ?? '',
       id: json['id'] ?? -1,
       seasonFarmId: json['season_farm_id'] ?? -1,
@@ -54,6 +57,7 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['userId'] = userId;
     data['uuid'] = uuid;
     data['id'] = id;
     data['season_farm_id'] = seasonFarmId;
@@ -70,10 +74,12 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
     return data;
   }
 
-  ActivityTransaction.copy(ActivityTransaction other)
-      : uuid = other.uuid,
-        id = other.id,
+  ActivityPurchase.copy(ActivityPurchase other)
+      : id = other.id,
+        uuid = other.uuid,
+        userId = other.userId,
         seasonFarmId = other.seasonFarmId,
+        seasonFarmName = other.seasonFarmName,
         transactionDate = other.transactionDate,
         quantity = other.quantity,
         quantityUnitId = other.quantityUnitId,
@@ -87,19 +93,20 @@ class ActivityTransaction implements Insertable<ActivityTransaction>{
   @override
   Map<String, Expression<Object>> toColumns(bool nullToAbsent) {
     return ActivityPurchaseTableCompanion(
-      id: Value(id),
-      uuid: Value(uuid),
-      seasonFarmId: Value(seasonFarmId),
-      transactionDate: Value(transactionDate),
-      seasonFarmName: Value(seasonFarmName),
-      quantity: Value(quantity),
-      quantityUnitId: Value(quantityUnitId),
-      quantityUnitName: Value(quantityUnitName),
-      productId: Value(productId),
-      productName: Value(productName),
-      person: Value(person),
-      unitPrice: Value(unitPrice),
-      isPurchase: Value(isPurchase),)
+        userId: Value(userId),
+        uuid: Value(uuid),
+        id: Value(id),
+        seasonFarmId: Value(seasonFarmId),
+        transactionDate: Value(transactionDate),
+        seasonFarmName: Value(seasonFarmName),
+        quantity: Value(quantity),
+        quantityUnitId: Value(quantityUnitId),
+        quantityUnitName: Value(quantityUnitName),
+        productId: Value(productId),
+        productName: Value(productName),
+        person: Value(person),
+        unitPrice: Value(unitPrice),
+        isPurchase: Value(isPurchase),)
         .toColumns(nullToAbsent);
   }
 }

@@ -58,7 +58,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                 child:
                 DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
               )
-                  : state.listDate.isNotEmpty ? Center(
+                  : /*state.listDate.isNotEmpty ? */Center(
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
@@ -145,7 +145,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    state.listDate.isEmpty ? const EmptyWidget() : Expanded(
                         child: ListView.builder(
                           itemCount: state.listDate.length,
                           itemBuilder: (context, indexParent) {
@@ -205,7 +205,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                   ],
                 ),
               )
-              : const EmptyWidget();
+              /*: const EmptyWidget()*/;
             }),
       ),
     );

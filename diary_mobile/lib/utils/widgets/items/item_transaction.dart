@@ -12,7 +12,7 @@ import '../../../utils/utils.dart';
 import '../dialog/dialog_manager.dart';
 
 class ItemTransaction extends StatefulWidget {
-  final ActivityTransaction activityDiary;
+  final dynamic activityDiary;
   final Diary diary;
   final String action;
   final VoidCallback callbackChooseItem;

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
+import 'package:diary_mobile/data/entity/activity/no_network/activity_purchase_no_network.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/report/question.dart';
@@ -18,11 +19,15 @@ import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/uuid.dart';
 
 import '../utils/constants/shared_preferences.dart';
 import '../utils/constants/shared_preferences_key.dart';
 import '../utils/widgets/dialog/dialog_manager.dart';
+import 'entity/activity/activity_purchase.dart';
+import 'entity/activity/no_network/activity_transaction_no_network.dart';
 import 'entity/activity/season_farm.dart';
 import 'entity/diary/diary.dart';
 import 'entity/item_default/item_default.dart';
@@ -34,6 +39,7 @@ import 'entity/report/answer.dart';
 import 'entity/report/report_result_title.dart';
 import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
+import 'entity/setting/feedback_info.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -41,6 +47,7 @@ import 'remote_data/object_model/object_command_data.dart';
 import 'repository.dart';
 
 import "package:http/http.dart" as http;
+import 'package:crypto/crypto.dart' as crypto;
 
 class RepositoryImpl extends Repository {
   final FakeRepositoryImpl _fakeData = FakeRepositoryImpl();
@@ -57,17 +64,23 @@ class RepositoryImpl extends Repository {
   RepositoryImpl({required this.context}) {
     networkExecutor = NetworkExecutor(context: context);
   }
+
   @override
   Future<ObjectResult> login(String userName, String pass) async {
     final sharedPreferences = await SharedPreferences.getInstance();
+    String password = sharedPreferences.getString(SharedPreferencesKey.password) ?? "";
+    String passEncode = sharedPreferences.getString(SharedPreferencesKey.passwordEncode) ?? "";
+    if(passEncode.compareTo(pass) == 0){
+      pass = password;
+    }
     final Map<String, Object> object = {
-      'login': userName,
+      'login': userName.removeAllWhitespace.toLowerCase(),
       'password': pass,
     };
     final Map<String, Object> object1 = {
       //'login': "managervis2",//"0385672922",//adminvisimex//managervis2
       //'login': "ofitsoft@gmail.com",
-      'login': "adminvisimex",
+      'login': "managervis2",
       'password': "Abcd@1234",
     };
     var headers = {'Content-Type': 'application/json'};
@@ -77,13 +90,18 @@ class RepositoryImpl extends Repository {
         route: ApiBaseGenerator(
             path: ApiConst.login,
             //method: HttpMethod.POST,
-            body: ObjectData(params: object1, isLogin: true),
+            body: ObjectData(params: object, isLogin: true),
             header: headers),
         isLogin: true);
 
     //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.responseCode == StatusConst.code00) {
+      sharedPreferences.setString(SharedPreferencesKey.userName, userName);
+      sharedPreferences.setString(SharedPreferencesKey.password, pass);
+      String md5Password = crypto.md5.convert(utf8.encode(pass)).toString();
+      sharedPreferences.setString(SharedPreferencesKey.passwordEncode, md5Password.substring(0, 20));
+      sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
       sharedPreferences.setString(SharedPreferencesKey.token, objectResult.response["token"]);
       sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
       sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"] ?? '');
@@ -140,7 +158,9 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListActivities response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+
+      print("HoangCV: getListActivities response: ${objectResult.response}");
       List<Activity> list = List.from(objectResult.response)
           .map((json) => Activity.fromJson(json))
           .toList();
@@ -154,7 +174,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListActivities();
+    return [];
   }
 
   @override
@@ -169,7 +189,7 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListMaterials response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<MaterialEntity> list = List.from(objectResult.response)
           .map((json) => MaterialEntity.fromJson(json))
           .toList();
@@ -183,7 +203,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListMaterials();
+    return [];
   }
 
   @override
@@ -198,7 +218,7 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListTools response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<Tool> list = List.from(objectResult.response)
           .map((json) => Tool.fromJson(json))
           .toList();
@@ -212,7 +232,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListTools();
+    return [];
   }
 
   @override
@@ -235,6 +255,8 @@ class RepositoryImpl extends Repository {
       sharedPreferences.setInt(id == 8 ? SharedPreferencesKey.unitArea : id == 9 ?SharedPreferencesKey.unitYield: SharedPreferencesKey.unitAmount, list[0].categoryId ?? -1);
       DiaryDB.instance.insertListUnit(list);
       return list;
+    } else if(objectResult.responseCode == StatusConst.code02){
+      return [];
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -243,7 +265,7 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return FakeRepositoryImpl().getListUnits(id);
+    return [];
   }
 
   @override
@@ -614,6 +636,8 @@ class RepositoryImpl extends Repository {
       sharedPreferences.remove(SharedPreferencesKey.fullName);
       sharedPreferences.remove(SharedPreferencesKey.group);
       sharedPreferences.remove(SharedPreferencesKey.imageProfile);
+      sharedPreferences.remove(SharedPreferencesKey.password);
+      sharedPreferences.remove(SharedPreferencesKey.passwordEncode);
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -676,6 +700,8 @@ class RepositoryImpl extends Repository {
           .map((json) => ActivityTransaction.fromJson(json))
           .toList();
       list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
+      await DiaryDB.instance.removeActivityTransaction();
+      DiaryDB.instance.insertListActivityTransaction(list);
       //DiaryDB.instance.insertListActivityDiary(list);
       return list;
     }
@@ -687,13 +713,14 @@ class RepositoryImpl extends Repository {
       );
     }
 
-    return []/*DiaryDB.instance.getListActivityDiary(id)*/;
+    return DiaryDB.instance.getListActivityTransaction();
   }
 
   @override
   Future<ObjectResult> addActivityTransaction(ActivityTransaction transaction) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.addActivityTransaction,
@@ -703,12 +730,15 @@ class RepositoryImpl extends Repository {
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
     }
-  /*  else if(objectResult.responseCode == StatusConst.code06) {
-      print("HoangCV: addActivityDiary not network");
-      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
-      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
-      DiaryDB.instance.insertListActivityDiary([diary]);
-    }*/
+    else if(objectResult.responseCode == StatusConst.code06) {
+      print("HoangCV: addActivityTransaction not network");
+      var uuid = Uuid();
+      String idOffline = uuid.v1();
+      transaction.uuid = idOffline;
+      ActivityTransactionNoNetwork actDiaryNoNetwork = ActivityTransactionNoNetwork.fromJsonConvert(transaction, ApiConst.addActivityTransaction);
+      DiaryDB.instance.insertListActivityTransactionNoNetwork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityTransaction([transaction]);
+    }
     else if (objectResult.responseCode != StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
@@ -792,6 +822,8 @@ class RepositoryImpl extends Repository {
       // list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
       //DiaryDB.instance.insertListActivityDiary(list);
       return [hierarchyList[1]];
+    } else if(objectResult.responseCode == StatusConst.code02) {
+
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -1000,7 +1032,7 @@ class RepositoryImpl extends Repository {
     }
     else if(objectResult.responseCode == StatusConst.code06) {
       print("HoangCV: addActivityDiary not network");
-      QuestionUpload qsNoNetwork = QuestionUpload.fromJsonConvert(questionUpload, ApiConst.uploadQuestionOffline);
+      QuestionUpload qsNoNetwork = QuestionUpload.fromJson(questionUpload, ApiConst.uploadQuestionOffline);
       DiaryDB.instance.insertQuestionUploadNoNetWork([qsNoNetwork]);
     }
     else if (objectResult.responseCode != StatusConst.code01) {
@@ -1240,22 +1272,22 @@ class RepositoryImpl extends Repository {
   Future<ObjectResult> editFarmerInspector(FarmerInspectorUpload farmerInspector) async {
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
-    //print("HoangCV: uploadQuestion response: ${questionUpload.list_id_suggested is List}");
+    print("HoangCV: uploadQuestion response: ${farmerInspector.state}");
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.editFarmerInspector,
             method: HttpMethod.GET,
             body: ObjectData(token: token, params: farmerInspector.state != null ? farmerInspector.toJsonSubmit() : farmerInspector.toJson())));
     print("HoangCV: editFarmerInspector response: ${objectResult.response}: ${objectResult.isOK}");
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 && objectResult.responseCode == StatusConst.code01) {
       return objectResult;
     }
     else if(objectResult.responseCode == StatusConst.code06) {
       print("HoangCV: addActivityDiary not network");
-      FarmerInspectorUpload farmerInspectorUploadNoNetwork = FarmerInspectorUpload.fromJsonConvert(farmerInspector, ApiConst.addActivityDiary);
+      FarmerInspectorUpload farmerInspectorUploadNoNetwork = FarmerInspectorUpload.fromJsonConvert(farmerInspector, ApiConst.editFarmerInspectorOffline);
       DiaryDB.instance.insertFarmerInspectorUploaddNoNetWork([farmerInspectorUploadNoNetwork]);
     }
-    else if (objectResult.responseCode != StatusConst.code01) {
+    else{
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
@@ -1276,7 +1308,7 @@ class RepositoryImpl extends Repository {
             method: HttpMethod.GET,
             body: ObjectData(token: token)));
     print("HoangCV: getListReportSelect response: ${objectResult.response}");
-    if (objectResult.responseCode == StatusConst.code00) {
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<ReportSelect> list = List.from(objectResult.response)
           .map((json) => ReportSelect.fromJson(json))
           .toList();
@@ -1320,6 +1352,7 @@ class RepositoryImpl extends Repository {
   Future<List<SeasonFarm>> getSeasonFarm() async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getSeasonFarm,
@@ -1327,9 +1360,10 @@ class RepositoryImpl extends Repository {
             body: ObjectData(token: token)));
     if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
       List<SeasonFarm> list = List.from(objectResult.response)
-          .map((json) => SeasonFarm.fromJson(json))
+          .map((json) => SeasonFarm.fromJson(json, userId))
           .toList();
       print("HoangCV: getListDiary response: ${list.length}");
+      DiaryDB.instance.insertListSeasonFarm(list);
       return list;
     }
     else if (objectResult.responseCode != StatusConst.code02){
@@ -1339,14 +1373,15 @@ class RepositoryImpl extends Repository {
         resultObject: objectResult.message,
       );
     }
-    return [];
+    return DiaryDB.instance.getListSeasonFarm(userId);
     //}
   }
 
   @override
-  Future<List<ActivityTransaction>> getListActivityPurchase() async{
+  Future<List<ActivityPurchase>> getListActivityPurchase() async{
     final sharedPreferences = await SharedPreferences.getInstance();
     String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
             path: ApiConst.getListActivityPurchase,
@@ -1356,11 +1391,12 @@ class RepositoryImpl extends Repository {
     print("HoangCV: getListActivityPurchase response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
     if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
-      List<ActivityTransaction> list = List.from(objectResult.response)
-          .map((json) => ActivityTransaction.fromJson(json))
+      List<ActivityPurchase> list = List.from(objectResult.response)
+          .map((json) => ActivityPurchase.fromJson(json, userId))
           .toList();
       list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
-      //DiaryDB.instance.insertListActivityDiary(list);
+      await DiaryDB.instance.removeActivityPurchase();
+      DiaryDB.instance.insertListActivityPurchase(list);
       return list;
     }
     else {
@@ -1371,7 +1407,115 @@ class RepositoryImpl extends Repository {
       );
     }
 
-    return []/*DiaryDB.instance.getListActivityDiary(id)*/;
+    return DiaryDB.instance.getListActivityPurchase(userId);
   }
+
+  @override
+  Future<ObjectResult> addActivityPurchase(ActivityPurchase transaction) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.addActivityTransaction,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: transaction.toJson())));
+    print("HoangCV: addActivityDiary response: ${objectResult.response}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else if(objectResult.responseCode == StatusConst.code06) {
+      var uuid = Uuid();
+      String idOffline = uuid.v1();
+      transaction.userId = userId;
+      transaction.uuid = idOffline;
+      print("HoangCV: addActivityPurchase not network : ${transaction.userId}");
+      ActivityPurchaseNoNetWork actDiaryNoNetwork = ActivityPurchaseNoNetWork.fromJsonConvert(transaction, ApiConst.addActivityTransaction);
+      DiaryDB.instance.insertListActivityPurchaseNoNetwork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityPurchase([transaction]);
+    }
+    else if (objectResult.responseCode != StatusConst.code01) {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  //
+  @override
+  Future<ObjectResult> addFarmerFeedback(FeedbackInfo feedback) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.addFarmerFeedback,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: feedback.toJson())));
+    print("HoangCV: addActivityDiary response: ${objectResult.responseCode}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else if(objectResult.responseCode == StatusConst.code06) {
+      /*print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);*/
+        /*DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }else if (objectResult.responseCode == StatusConst.code01) {
+
+      print("HoangCV: addActivityDiary11 response: ${objectResult.responseCode}: ${objectResult.isOK}");
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
+    }
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<List<FeedbackInfo>> getListFeedbackFarmer() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListFarmerFeedback+"/"+"$userId",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {})));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListActivityPurchase response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<FeedbackInfo> list = List.from(objectResult.response)
+          .map((json) => FeedbackInfo.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return [];
+  }
+
 
 }

@@ -83,7 +83,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   bool loginGoogle = false;
   String account = "";
   TextEditingController _inputUsernameController = TextEditingController();
-  final TextEditingController _inputPasswordController =
+  TextEditingController _inputPasswordController =
       TextEditingController();
 
   final FocusNode _focusNodeName = FocusNode();
@@ -302,10 +302,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   Widget _passwordField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      // if(state.username.isNotEmpty) {
-      //   _inputPasswordController = TextEditingController(
-      //       text: state.isRememberLogin ? state.password : "");
-      // }
+      if(state.password.isNotEmpty) {
+        _inputPasswordController = TextEditingController(
+            text: _inputPasswordController.text.isNotEmpty
+                ? _inputPasswordController.text
+                : state.password);
+      }
       return Focus(
         child: Container(
             margin: const EdgeInsets.only(top: 20),

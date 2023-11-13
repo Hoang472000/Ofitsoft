@@ -46,10 +46,12 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
     // TODO: implement initState
     super.initState();
     _initializeTabController();
+    print("HOangCV:Á ahdasidas bug to le ");
   }
 
   Future<void> _initializeTabController() async {
     int tabLength = await calculateLength();
+    print("HoangCV: tabLength : ${tabLength}");
     _tabController = TabController(vsync: this, length: tabLength);
     setState(() {
       _tabControllerInitialized = true;
@@ -59,19 +61,14 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
 
   Future<int> calculateLength() async {
     List<bool> check = await SharedPreDiary.getRole();
-
-    if (check[0] && check[2] && !check[1]) {
-      return 2;
-    } else if (check[0] && check[2] && check[1]) {
-      return 3;
-    } else if (check[0] && !check[2] && check[1]) {
-      return 2;
-    } else if (!check[0] && !check[2] && check[1]) {
-      return 1;
+    int count = 0;
+    for(int i = 0 ; i < 3; i++){
+      if(check[i]){
+        count++;
+      }
     }
-
     // Trường hợp mặc định, bạn có thể trả về một giá trị khác nếu cần.
-    return 0;
+    return count;
   }
 
   void _handleTabIndex() {

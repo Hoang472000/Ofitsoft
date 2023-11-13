@@ -123,7 +123,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageManagement),
                         if((state.detailDiary!.googleMap??"").isNotEmpty)
                         cardUrl(
-                            label: "Bản đồ",
+                            label: "Địa chỉ",
                             value: "${state.detailDiary!.googleMap}",
                             image: ImageAsset.imageLocation),
        /*                 CardTile(
@@ -250,6 +250,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(
                   padding: const EdgeInsets.all(4),
@@ -258,21 +259,19 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     style: StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
                   ),
                 ),
-                Container(
-                  width: double.infinity,
-                  //padding: const EdgeInsets.all(4),
-                  child:
-                  TextButton(
-                    child: Text(
-                      value,
-                      style: StyleOfit.textStyleFW400(AppColor.blue15, 16, decoration:
-                        TextDecoration.underline,),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,),
-                    onPressed: () {
-                      Utils.launchBrowserUrl(value);
-                    },
-                  ),
+                TextButton(
+                  style: TextButton.styleFrom(
+                      padding: const EdgeInsets.all(4),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      alignment: Alignment.centerLeft),
+                  child: Text(
+                    value,
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis),
+                  onPressed: () {
+                    Utils.launchBrowserUrl(value);
+                  },
                 )
               ],
             ),

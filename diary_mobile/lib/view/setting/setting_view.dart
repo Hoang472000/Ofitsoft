@@ -22,6 +22,7 @@ import '../login/login_page.dart';
 import 'account/account_information_page.dart';
 import 'change_password/change_password_page.dart';
 import 'contact/contact_page.dart';
+import 'feedback/feedback_page.dart';
 import 'mananger/list_pdf_page.dart';
 
 ///Bkav HoangCV: GD tai khoan
@@ -181,6 +182,13 @@ class _SettingViewState extends State<SettingView> {
                 itemAccount(context, text: "Liên hệ", voidCallback: () {
                             Navigator.push(context, ContactPage.route());
                 }, icon: IconAsset.icContact),
+                Container(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: itemAccount(context, text: "Thông tin phản hồi",
+                      voidCallback: () {
+                    Navigator.push(context, FeedbackPage.route());
+                  }, icon: IconAsset.icHistoryActivity),
+                ),
                 // SizedBox(height: 20,)
                 Padding(
                   padding:
@@ -193,6 +201,8 @@ class _SettingViewState extends State<SettingView> {
                         SharedPreferences preferences = await SharedPreferences.getInstance();
                         preferences.remove(SharedPreferencesKey.token);
                         preferences.remove(SharedPreferencesKey.userName);
+                        preferences.remove(SharedPreferencesKey.password);
+                        preferences.remove(SharedPreferencesKey.passwordEncode);
                         Navigator.of(context).pushAndRemoveUntil(
                             await LoginPage.route(), (route) => false);
                       }, () {Get.back(); }, S.of(context).cancel, S.of(context).agree,);
