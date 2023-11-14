@@ -46,7 +46,6 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
     // TODO: implement initState
     super.initState();
     _initializeTabController();
-    print("HOangCV:Á ahdasidas bug to le ");
   }
 
   Future<void> _initializeTabController() async {

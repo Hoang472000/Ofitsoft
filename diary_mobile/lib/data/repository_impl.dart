@@ -1517,5 +1517,75 @@ class RepositoryImpl extends Repository {
     return [];
   }
 
+  @override
+  Future<FeedbackInfo> getDetailFeedbackFarmer(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getFarmerFeedback+"/"+"$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {})));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListActivityPurchase response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<FeedbackInfo> list = List.from(objectResult.response)
+          .map((json) => FeedbackInfo.fromJson(json))
+          .toList();
+      return list[0];
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return FeedbackInfo();
+  }
+
+  @override
+  Future<ObjectResult> addReplyFeedback(FeedbackInfo feedback) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.addReplyFeedback,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: feedback.toJson())));
+    print("HoangCV: addActivityDiary response: ${objectResult.responseCode}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else if(objectResult.responseCode == StatusConst.code06) {
+      /*print("HoangCV: addActivityDiary not network");
+      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
+      DiaryDB.instance.insertListActivityDiary([diary]);*/
+      /*DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );*/
+    }else if (objectResult.responseCode == StatusConst.code01) {
+
+      print("HoangCV: addActivityDiary11 response: ${objectResult.responseCode}: ${objectResult.isOK}");
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+      );
+    }
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
 
 }

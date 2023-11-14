@@ -122,4 +122,8 @@ abstract class Repository {
   Future<ObjectResult> addFarmerFeedback(FeedbackInfo feedback);
 
   Future<List<FeedbackInfo>> getListFeedbackFarmer();
+
+  Future<FeedbackInfo> getDetailFeedbackFarmer(int id);
+
+  Future<ObjectResult> addReplyFeedback(FeedbackInfo feedback);
 }

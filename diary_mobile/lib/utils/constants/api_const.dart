@@ -57,6 +57,7 @@ class ApiConst {
   static const String getListFarmerFeedback = "/get/list_farmer_feedback/";///get/list_farmer_feedback/<int:id>
   static const String getFarmerFeedback = "/get/farmer_feedback/";///get/farmer_feedback/<int:id>
   static const String addFarmerFeedback = "/add/farmer_feedback";
+  static const String addReplyFeedback = "/add/reply_feedback";
 
 
   //update

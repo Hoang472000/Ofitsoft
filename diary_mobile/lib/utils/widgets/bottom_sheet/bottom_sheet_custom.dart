@@ -118,191 +118,193 @@ class _BottomSheetCustomWidgetState extends State<BottomSheetCustomWidget> {
       }
     }
 
-    return Padding(
-      key: stickyKey,
-      padding: EdgeInsets.only(top: AppBar().preferredSize.height + 12),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12),
-            topRight: Radius.circular(12),
-          ),
-          color: Colors.white,
-        ),
-        height: heightWidget,
-        child: Stack(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(
-                  top: hasSearch
-                      ? appBarHeight + searchWidgetHeight
-                      : appBarHeight),
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  controller: scrollController,
-                  itemCount: listDataSearch(controller.text).length,
-                  itemBuilder: (context, index) {
-                    bool isItemSelected = index == posSelected;
-                    return GestureDetector(
-                      onTap: () {
-                        result = _list.indexWhere((element) =>
-                        element == listDataSearch(controller.text)[index]);
-                        Navigator.pop(context, result);
-                      },
-                      child: Stack(
-                        children: [
-                          Container(
-                              padding: EdgeInsets.only(left: 12),
-                              alignment: Alignment.centerLeft,
-                              width: double.infinity,
-                              color: Colors.white,
-                              //height: itemHeight,
-                              height: getHeight(listDataSearch(
-                                  controller.text)[index], itemHeight),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Expanded(
-                                    child: Row(
-                                      children: [(!(listDataSearch(controller.text)[index] is String) && listDataSearch(controller.text)[index].image!=null && listDataSearch(controller.text)[index].image !='') ?
-                                        Flexible(
-                                            flex: 1,child: Image.memory(gaplessPlayback: true,
-                                          base64Decode(listDataSearch(controller.text)[index]?.image ?? ""),
-                                          height: 65, fit: BoxFit.fitWidth,
-                                        ),) : const SizedBox(),
-                                        Flexible(
-                                          flex: 3,
-                                          child: Text(
-                                            "${Extension().getValueDisplay(
-                                              listDataSearch(controller.text)[index],
-                                            )}",
-                                            style: TextStyle(
-                                                color: !isItemSelected
-                                                    ? Colors.black
-                                                    : Theme.of(context)
-                                                        .primaryColorDark,
-                                                fontSize: 16),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6),
-                                    child: CheckboxCustomWidget(
-                                      isChecked: isItemSelected,
-                                      colorBorder: Colors.white,
-                                    ),
-                                  )
-                                ],
-                              )),
-                          Divider(
-                            height: 1,
-                            thickness: 1,
-                            indent: 10,
-                            color: Colors.black12,
-                          )
-                          // Divider(),
-                        ],
-                      ),
-                    );
-                  }),
+    return SafeArea(
+      child: Padding(
+        key: stickyKey,
+        padding: EdgeInsets.only(top: AppBar().preferredSize.height + 12),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
             ),
+            color: Colors.white,
+          ),
+          height: heightWidget,
+          child: Stack(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(
+                    top: hasSearch
+                        ? appBarHeight + searchWidgetHeight
+                        : appBarHeight),
+                child: ListView.builder(
+                    shrinkWrap: true,
+                    primary: false,
+                    controller: scrollController,
+                    itemCount: listDataSearch(controller.text).length,
+                    itemBuilder: (context, index) {
+                      bool isItemSelected = index == posSelected;
+                      return GestureDetector(
+                        onTap: () {
+                          result = _list.indexWhere((element) =>
+                          element == listDataSearch(controller.text)[index]);
+                          Navigator.pop(context, result);
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                                padding: EdgeInsets.only(left: 12),
+                                alignment: Alignment.centerLeft,
+                                width: double.infinity,
+                                color: Colors.white,
+                                //height: itemHeight,
+                                height: getHeight(listDataSearch(
+                                    controller.text)[index], itemHeight),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Expanded(
+                                      child: Row(
+                                        children: [(!(listDataSearch(controller.text)[index] is String) && listDataSearch(controller.text)[index].image!=null && listDataSearch(controller.text)[index].image !='') ?
+                                          Flexible(
+                                              flex: 1,child: Image.memory(gaplessPlayback: true,
+                                            base64Decode(listDataSearch(controller.text)[index]?.image ?? ""),
+                                            height: 65, fit: BoxFit.fitWidth,
+                                          ),) : const SizedBox(),
+                                          Flexible(
+                                            flex: 3,
+                                            child: Text(
+                                              "${Extension().getValueDisplay(
+                                                listDataSearch(controller.text)[index],
+                                              )}",
+                                              style: TextStyle(
+                                                  color: !isItemSelected
+                                                      ? Colors.black
+                                                      : Theme.of(context)
+                                                          .primaryColorDark,
+                                                  fontSize: 16),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6),
+                                      child: CheckboxCustomWidget(
+                                        isChecked: isItemSelected,
+                                        colorBorder: Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                )),
+                            Divider(
+                              height: 1,
+                              thickness: 1,
+                              indent: 10,
+                              color: Colors.black12,
+                            )
+                            // Divider(),
+                          ],
+                        ),
+                      );
+                    }),
+              ),
 
-            ///App bar
-            Container(
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Text(
-                        "${title}",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
+              ///App bar
+              Container(
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          "${title}",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
-                    ),
-              /*      Align(
-                      alignment: Alignment.centerRight,
-                      child: Theme(
-                        data: ThemeData(
-                          splashColor: Colors.transparent,
-                          highlightColor: Colors.transparent,
-                        ),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context, -1);
-                          },
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: appBarHeight / 4),
-                            child: Text(
-                              "Đóng",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
+                /*      Align(
+                        alignment: Alignment.centerRight,
+                        child: Theme(
+                          data: ThemeData(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                          ),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context, -1);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: appBarHeight / 4),
+                              child: Text(
+                                "Đóng",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    )*/
-                  ],
-                ),
-                height: appBarHeight,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(12),
-                        topLeft: Radius.circular(12)),
-                    color: Theme.of(context).primaryColor)),
+                      )*/
+                    ],
+                  ),
+                  height: appBarHeight,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(12),
+                          topLeft: Radius.circular(12)),
+                      color: Theme.of(context).primaryColor)),
 
-            /// Search
-            hasSearch
-                ? Container(
-              margin: EdgeInsets.only(top: appBarHeight),
-              height: searchWidgetHeight,
-              color: Colors.white,
-              padding: EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 8),
-              child: TextField(
-                enabled: _list.length != 0,
-                focusNode: focusNode,
-                controller: controller,
-                style: StyleOfit.textStyleFW400(AppColor.black22, 18),
-                decoration: InputDecoration(
-                  disabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFB2B8BB),
+              /// Search
+              hasSearch
+                  ? Container(
+                margin: EdgeInsets.only(top: appBarHeight),
+                height: searchWidgetHeight,
+                color: Colors.white,
+                padding: EdgeInsets.symmetric(
+                    horizontal: 16, vertical: 8),
+                child: TextField(
+                  enabled: _list.length != 0,
+                  focusNode: focusNode,
+                  controller: controller,
+                  style: StyleOfit.textStyleFW400(AppColor.black22, 18),
+                  decoration: InputDecoration(
+                    disabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFB2B8BB),
+                      ),
                     ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(
-                      color: Color(0xFFB2B8BB),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Color(0xFFB2B8BB),
+                      ),
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Theme.of(context).primaryColor),
-                  ),
-                  suffixIcon: Icon(Icons.search),
-                  border: InputBorder.none,
-                  hintText: "Tìm kiếm",
-                  contentPadding: EdgeInsets.only(
-                    left: 16,
-                    right: 20,
-                    top: 8,
-                    bottom: 8,
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                      BorderSide(color: Theme.of(context).primaryColor),
+                    ),
+                    suffixIcon: Icon(Icons.search),
+                    border: InputBorder.none,
+                    hintText: "Tìm kiếm",
+                    contentPadding: EdgeInsets.only(
+                      left: 16,
+                      right: 20,
+                      top: 8,
+                      bottom: 8,
+                    ),
                   ),
                 ),
-              ),
-            )
-                : Container(),
-          ],
+              )
+                  : Container(),
+            ],
+          ),
         ),
       ),
     );

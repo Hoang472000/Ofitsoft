@@ -196,6 +196,45 @@ class Utils {
     }
   }
 
+  static String formatDateDay(String time) {
+
+    print("HoangCV: formatDate: $time");
+    try {
+      if (time.isNotEmpty) {
+        String result = time.replaceAll('"', "").trim();
+        print("HoangCV: formatDate result: $result");
+        // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
+        DateTime dateTime = DateTime.parse(result);
+        final f = DateFormat('HH:mm');
+        return f.format(dateTime);
+      } else {
+        return "";
+      }
+    }catch(_){
+      return "";
+    }
+  }
+
+  static String formatDateMonth(String time) {
+
+    print("HoangCV: formatDate: $time");
+    try {
+      if (time.isNotEmpty) {
+        String result = time.replaceAll('"', "").trim();
+        print("HoangCV: formatDate result: $result");
+        // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
+        DateTime dateTime = DateTime.parse(result);
+        final f = DateFormat('dd/MM/yyyy');
+        return f.format(dateTime);
+      } else {
+        return "";
+      }
+    }catch(_){
+      return "";
+    }
+  }
+
+
   static String formatDateTimeToString(DateTime dateTime) {
     DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
     String formattedString = formatter.format(dateTime);

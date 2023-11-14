@@ -33,6 +33,8 @@ class TextFormFieldInputText extends StatefulWidget {
   final bool? underLine; // dung underLine thay cho OutLine
   final Function(String)? onChangeCallBack;
   final bool? isChangeCallBack;
+  final int? minLine;
+  final bool? isShowAsterrick;
 
   const TextFormFieldInputText(
       this._label,
@@ -50,7 +52,7 @@ class TextFormFieldInputText extends StatefulWidget {
         this.isFromEnterInfo,
         this.isTime, this.isNotEdit,
         this.isNotPass, this.noBorder, this.underLine,
-        this.onChangeCallBack, this.isChangeCallBack})
+        this.onChangeCallBack, this.isChangeCallBack, this.minLine, this.isShowAsterrick = true})
       : super(key: key);
 
   @override
@@ -380,7 +382,7 @@ class _TextFormFieldInputTextState extends State<TextFormFieldInputText> {
           focusNode: widget._focusNode,
           maxLength: null,
           maxLines: null,
-          minLines: 5,
+          minLines: widget.minLine != null ? widget.minLine : 5,
           maxLengthEnforcement: MaxLengthEnforcement.truncateAfterCompositionEnds ,
           keyboardType:
           widget.isPhone != null ? TextInputType.phone :

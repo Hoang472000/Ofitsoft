@@ -626,4 +626,16 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getListFeedbackFarmer
     throw UnimplementedError();
   }
+
+  @override
+  Future<FeedbackInfo> getDetailFeedbackFarmer(int id) {
+    // TODO: implement getDetailFeedbackFarmer
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> addReplyFeedback(FeedbackInfo feedback) {
+    // TODO: implement addReplyFeedback
+    throw UnimplementedError();
+  }
 }

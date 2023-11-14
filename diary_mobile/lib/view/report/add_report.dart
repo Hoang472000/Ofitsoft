@@ -69,8 +69,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           backgroundColor: AppColor.main,
           actions: [],
         ),
-        body: SafeArea(
-          child: BlocConsumer<AddReportBloc, AddReportState>(
+        body: Utils.bkavCheckOrientation(
+          context,
+          BlocConsumer<AddReportBloc, AddReportState>(
               listener: (blocContext, state) async {
                 final formStatus = state.formStatus;
                 if (formStatus is SubmissionFailed) {

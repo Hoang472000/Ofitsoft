@@ -4,6 +4,7 @@ import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
+import 'package:diary_mobile/view/setting/feedback/detail_feedback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,11 +131,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         return ItemFeedback(
                             feedbackInfo: state.listFeedback[index],
                             callbackChooseItem: () async {
-                             /* var result = await Navigator.push(
+                              var result = await Navigator.push(
                                     context,
-                                    DetailMonitorPage.route(
-                                        state.listDiaryMonitor[index]));
-                                if (result != null && result[0]) {
+                                    DetailFeedbackPage.route(
+                                        state.listFeedback[index].id ?? -1));
+                               /* if (result != null && result[0]) {
                                   contextBloc.read<FeedbackBloc>().add(
                                       GetListFeedbackEvent(
                                           widget.seasonFarmId,

@@ -50,7 +50,7 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
       productId: json['product_id'] ?? -1,
       productName: json['product_name'] ?? '',
       person: json['person'] ?? '',
-      unitPrice: json['unit_price'] ?? '',
+      unitPrice: json['unit_price'] ?? -1,
       isPurchase: json['is_purchase'] ?? false,
     );
   }
