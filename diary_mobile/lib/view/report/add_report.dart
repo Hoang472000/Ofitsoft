@@ -442,28 +442,33 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         type = element[index].type;
         return Padding(
           padding: EdgeInsets.only(bottom: 4, top: 4),
-          child: TextField(
-            controller: controller,
-            keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
-            onSubmitted: (str) {
-              context.read<AddReportBloc>().add(UpdateAddTableEvent(questionId, answerId, idRow, str));
+          child: Focus(
+            onFocusChange: (hasFocus){
+              context.read<AddReportBloc>().add(UpdateAddTableEvent(questionId, answerId, idRow, controller.text));
             },
-            onChanged: (str) {
-              bool checkPass = true;
-              checkPass = Utils.checkPassFarm(farmerInspector);
-              if (checkPass) {
-                //controller.text = str;
-              } else{
-                controller.text = '';
-              }
-            },
-            decoration: const InputDecoration(
-              isDense: true,
-              border: InputBorder.none, // No border or underline
-              contentPadding: EdgeInsets.only(bottom: 4, top: 4, left: 4, right: 4),
+            child: TextField(
+              controller: controller,
+              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              onSubmitted: (str) {
+                context.read<AddReportBloc>().add(UpdateAddTableEvent(questionId, answerId, idRow, str));
+              },
+              onChanged: (str) {
+                bool checkPass = true;
+                checkPass = Utils.checkPassFarm(farmerInspector);
+                if (checkPass) {
+                  //controller.text = str;
+                } else{
+                  controller.text = '';
+                }
+              },
+              decoration: const InputDecoration(
+                isDense: true,
+                border: InputBorder.none, // No border or underline
+                contentPadding: EdgeInsets.only(bottom: 4, top: 4, left: 4, right: 4),
+              ),
+              maxLines: 10,
+              minLines: 2,
             ),
-            maxLines: 10,
-            minLines: 2,
           ),
         );
       }
@@ -507,37 +512,43 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                WidgetSpan(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: TextField(
-                    controller: controller[index].controller,
-                      keyboardType: controller[index].type == 'text' ? TextInputType.text : controller[index].type == 'none' ? TextInputType.none : TextInputType.number,
-                      onSubmitted: (str){
-                        context.read<AddReportBloc>().add(
-                            UpdateAddReportEvent(id, str, listSelected));
-                      },
-                    onChanged: (str) {
-                      bool checkPass = true;
-                      checkPass = Utils.checkPassFarm(farmerInspector);
-                      if (checkPass) {
-                        //controller[index].controller.text = str;
-                      } else{
-                        controller[index].controller.text = '';
-                      }
+                  child: Focus(
+                    onFocusChange: (hasFocus){
+                      context.read<AddReportBloc>().add(
+                          UpdateAddReportEvent(id, controller[index].controller.text, listSelected));
                     },
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.zero,
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: AppColor.back09),
+                    child: TextField(
+                      controller: controller[index].controller,
+                        keyboardType: controller[index].type == 'text' ? TextInputType.text : controller[index].type == 'none' ? TextInputType.none : TextInputType.number,
+                        onSubmitted: (str){
+                          context.read<AddReportBloc>().add(
+                              UpdateAddReportEvent(id, str, listSelected));
+                        },
+                      onChanged: (str) {
+                        bool checkPass = true;
+                        checkPass = Utils.checkPassFarm(farmerInspector);
+                        if (checkPass) {
+                          //controller[index].controller.text = str;
+                        } else{
+                          controller[index].controller.text = '';
+                        }
+                      },
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: AppColor.back09),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color:  AppColor.back09),
+                          ),
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(color:  AppColor.back09),
+                          ),
                         ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color:  AppColor.back09),
-                        ),
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide(color:  AppColor.back09),
-                        ),
-                      ),
-                    maxLines: 10,
-                    minLines: 1,
+                      maxLines: 10,
+                      minLines: 1,
+                    ),
                   ),
                 ),
               ),
@@ -564,39 +575,45 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               WidgetSpan(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: TextField(
-                    controller: controller[index].controller,
-                    keyboardType: controller[index].type == 'text'
-                        ? TextInputType.text
-                        : TextInputType.number,
-                    onSubmitted: (str) {
+                  child: Focus(
+                    onFocusChange: (hasFocus){
                       context.read<AddReportBloc>().add(
-                          UpdateAddReportEvent(id, str, []));
+                          UpdateAddReportEvent(id, controller[index].controller.text, []));
                     },
-                    onChanged: (str) {
-                      bool checkPass = true;
-                      checkPass = Utils.checkPassFarm(farmerInspector);
-                      if (checkPass) {
-                        //controller[index].controller.text = str;
-                      } else{
-                        controller[index].controller.text = '';
-                      }
-                    },
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.back09),
+                    child: TextField(
+                      controller: controller[index].controller,
+                      keyboardType: controller[index].type == 'text'
+                          ? TextInputType.text
+                          : TextInputType.number,
+                      onSubmitted: (str) {
+                        context.read<AddReportBloc>().add(
+                            UpdateAddReportEvent(id, str, []));
+                      },
+                      onChanged: (str) {
+                        bool checkPass = true;
+                        checkPass = Utils.checkPassFarm(farmerInspector);
+                        if (checkPass) {
+                          //controller[index].controller.text = str;
+                        } else{
+                          controller[index].controller.text = '';
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.back09),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color:  AppColor.back09),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color:  AppColor.back09),
+                        ),
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color:  AppColor.back09),
-                      ),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color:  AppColor.back09),
-                      ),
+                      maxLines: 10,
+                      minLines: 1,
                     ),
-                    maxLines: 10,
-                    minLines: 1,
                   ),
                 ),
               ),
@@ -647,39 +664,45 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               WidgetSpan(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 0),
-                  child: TextField(
-                    controller: controller[index].controller,
-                    keyboardType: controller[index].type == 'text'
-                        ? TextInputType.text
-                        : TextInputType.number,
-                    onSubmitted: (str) {
+                  child: Focus(
+                    onFocusChange: (hasFocus){
                       context.read<AddReportBloc>().add(
-                          UpdateAddReportEvent(id, str, []));
+                          UpdateAddReportEvent(id, controller[index].controller.text, []));
                     },
-                    onChanged: (str) {
-                      bool checkPass = true;
-                      checkPass = Utils.checkPassFarm(farmerInspector);
-                      if (checkPass) {
-                        //controller[index].controller.text = str;
-                      } else{
-                        controller[index].controller.text = '';
-                      }
-                    },
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColor.back09),
+                    child: TextField(
+                      controller: controller[index].controller,
+                      keyboardType: controller[index].type == 'text'
+                          ? TextInputType.text
+                          : TextInputType.number,
+                      onSubmitted: (str) {
+                        context.read<AddReportBloc>().add(
+                            UpdateAddReportEvent(id, str, []));
+                      },
+                      onChanged: (str) {
+                        bool checkPass = true;
+                        checkPass = Utils.checkPassFarm(farmerInspector);
+                        if (checkPass) {
+                          //controller[index].controller.text = str;
+                        } else{
+                          controller[index].controller.text = '';
+                        }
+                      },
+                      decoration: const InputDecoration(
+                        isDense: true,
+                        contentPadding: EdgeInsets.zero,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: AppColor.back09),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color:  AppColor.back09),
+                        ),
+                        border: UnderlineInputBorder(
+                          borderSide: BorderSide(color:  AppColor.back09),
+                        ),
                       ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color:  AppColor.back09),
-                      ),
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(color:  AppColor.back09),
-                      ),
+                      maxLines: 10,
+                      minLines: 1,
                     ),
-                    maxLines: 10,
-                    minLines: 1,
                   ),
                 ),
               ),

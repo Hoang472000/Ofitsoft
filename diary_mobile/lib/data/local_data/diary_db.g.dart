@@ -216,6 +216,18 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<String> googleMap = GeneratedColumn<String>(
       'google_map', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productProcessIdMeta =
+      const VerificationMeta('productProcessId');
+  @override
+  late final GeneratedColumn<int> productProcessId = GeneratedColumn<int>(
+      'product_process_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _productProcessNameMeta =
+      const VerificationMeta('productProcessName');
+  @override
+  late final GeneratedColumn<String> productProcessName =
+      GeneratedColumn<String>('product_process_name', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -252,7 +264,9 @@ class $DiaryTableTable extends DiaryTable
         areaName,
         areaCode,
         farmCode,
-        googleMap
+        googleMap,
+        productProcessId,
+        productProcessName
       ];
   @override
   String get aliasedName => _alias ?? 'diary';
@@ -430,6 +444,18 @@ class $DiaryTableTable extends DiaryTable
       context.handle(_googleMapMeta,
           googleMap.isAcceptableOrUnknown(data['google_map']!, _googleMapMeta));
     }
+    if (data.containsKey('product_process_id')) {
+      context.handle(
+          _productProcessIdMeta,
+          productProcessId.isAcceptableOrUnknown(
+              data['product_process_id']!, _productProcessIdMeta));
+    }
+    if (data.containsKey('product_process_name')) {
+      context.handle(
+          _productProcessNameMeta,
+          productProcessName.isAcceptableOrUnknown(
+              data['product_process_name']!, _productProcessNameMeta));
+    }
     return context;
   }
 
@@ -510,6 +536,10 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.string, data['${effectivePrefix}farm_code']),
       googleMap: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}google_map']),
+      productProcessId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}product_process_id']),
+      productProcessName: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}product_process_name']),
     );
   }
 
@@ -555,6 +585,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> areaCode;
   final Value<String?> farmCode;
   final Value<String?> googleMap;
+  final Value<int?> productProcessId;
+  final Value<String?> productProcessName;
   final Value<int> rowid;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
@@ -592,6 +624,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.areaCode = const Value.absent(),
     this.farmCode = const Value.absent(),
     this.googleMap = const Value.absent(),
+    this.productProcessId = const Value.absent(),
+    this.productProcessName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DiaryTableCompanion.insert({
@@ -630,6 +664,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.areaCode = const Value.absent(),
     this.farmCode = const Value.absent(),
     this.googleMap = const Value.absent(),
+    this.productProcessId = const Value.absent(),
+    this.productProcessName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<Diary> custom({
@@ -668,6 +704,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? areaCode,
     Expression<String>? farmCode,
     Expression<String>? googleMap,
+    Expression<int>? productProcessId,
+    Expression<String>? productProcessName,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -708,6 +746,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (areaCode != null) 'area_code': areaCode,
       if (farmCode != null) 'farm_code': farmCode,
       if (googleMap != null) 'google_map': googleMap,
+      if (productProcessId != null) 'product_process_id': productProcessId,
+      if (productProcessName != null)
+        'product_process_name': productProcessName,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -748,6 +789,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? areaCode,
       Value<String?>? farmCode,
       Value<String?>? googleMap,
+      Value<int?>? productProcessId,
+      Value<String?>? productProcessName,
       Value<int>? rowid}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
@@ -786,6 +829,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       areaCode: areaCode ?? this.areaCode,
       farmCode: farmCode ?? this.farmCode,
       googleMap: googleMap ?? this.googleMap,
+      productProcessId: productProcessId ?? this.productProcessId,
+      productProcessName: productProcessName ?? this.productProcessName,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -899,6 +944,12 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (googleMap.present) {
       map['google_map'] = Variable<String>(googleMap.value);
     }
+    if (productProcessId.present) {
+      map['product_process_id'] = Variable<int>(productProcessId.value);
+    }
+    if (productProcessName.present) {
+      map['product_process_name'] = Variable<String>(productProcessName.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -943,6 +994,8 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('areaCode: $areaCode, ')
           ..write('farmCode: $farmCode, ')
           ..write('googleMap: $googleMap, ')
+          ..write('productProcessId: $productProcessId, ')
+          ..write('productProcessName: $productProcessName, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8600,6 +8653,294 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
   }
 }
 
+class $WorkflowTableTable extends WorkflowTable
+    with TableInfo<$WorkflowTableTable, Workflow> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $WorkflowTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _cropNameMeta =
+      const VerificationMeta('cropName');
+  @override
+  late final GeneratedColumn<String> cropName = GeneratedColumn<String>(
+      'crop_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _productNameMeta =
+      const VerificationMeta('productName');
+  @override
+  late final GeneratedColumn<String> productName = GeneratedColumn<String>(
+      'product_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _standardMeta =
+      const VerificationMeta('standard');
+  @override
+  late final GeneratedColumn<String> standard = GeneratedColumn<String>(
+      'standard', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusNameMeta =
+      const VerificationMeta('statusName');
+  @override
+  late final GeneratedColumn<String> statusName = GeneratedColumn<String>(
+      'status_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringProcessStageIdsMeta =
+      const VerificationMeta('stringProcessStageIds');
+  @override
+  late final GeneratedColumn<String> stringProcessStageIds =
+      GeneratedColumn<String>('string_process_stage_ids', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        cropName,
+        productName,
+        description,
+        standard,
+        status,
+        statusName,
+        stringProcessStageIds
+      ];
+  @override
+  String get aliasedName => _alias ?? 'workflow';
+  @override
+  String get actualTableName => 'workflow';
+  @override
+  VerificationContext validateIntegrity(Insertable<Workflow> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('crop_name')) {
+      context.handle(_cropNameMeta,
+          cropName.isAcceptableOrUnknown(data['crop_name']!, _cropNameMeta));
+    }
+    if (data.containsKey('product_name')) {
+      context.handle(
+          _productNameMeta,
+          productName.isAcceptableOrUnknown(
+              data['product_name']!, _productNameMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('standard')) {
+      context.handle(_standardMeta,
+          standard.isAcceptableOrUnknown(data['standard']!, _standardMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('status_name')) {
+      context.handle(
+          _statusNameMeta,
+          statusName.isAcceptableOrUnknown(
+              data['status_name']!, _statusNameMeta));
+    }
+    if (data.containsKey('string_process_stage_ids')) {
+      context.handle(
+          _stringProcessStageIdsMeta,
+          stringProcessStageIds.isAcceptableOrUnknown(
+              data['string_process_stage_ids']!, _stringProcessStageIdsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Workflow map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Workflow(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      cropName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}crop_name']),
+      productName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      statusName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status_name']),
+      stringProcessStageIds: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}string_process_stage_ids']),
+    );
+  }
+
+  @override
+  $WorkflowTableTable createAlias(String alias) {
+    return $WorkflowTableTable(attachedDatabase, alias);
+  }
+}
+
+class WorkflowTableCompanion extends UpdateCompanion<Workflow> {
+  final Value<int?> id;
+  final Value<String?> name;
+  final Value<String?> cropName;
+  final Value<String?> productName;
+  final Value<String?> description;
+  final Value<String?> standard;
+  final Value<String?> status;
+  final Value<String?> statusName;
+  final Value<String?> stringProcessStageIds;
+  const WorkflowTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.cropName = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.standard = const Value.absent(),
+    this.status = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.stringProcessStageIds = const Value.absent(),
+  });
+  WorkflowTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.cropName = const Value.absent(),
+    this.productName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.standard = const Value.absent(),
+    this.status = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.stringProcessStageIds = const Value.absent(),
+  });
+  static Insertable<Workflow> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? cropName,
+    Expression<String>? productName,
+    Expression<String>? description,
+    Expression<String>? standard,
+    Expression<String>? status,
+    Expression<String>? statusName,
+    Expression<String>? stringProcessStageIds,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (cropName != null) 'crop_name': cropName,
+      if (productName != null) 'product_name': productName,
+      if (description != null) 'description': description,
+      if (standard != null) 'standard': standard,
+      if (status != null) 'status': status,
+      if (statusName != null) 'status_name': statusName,
+      if (stringProcessStageIds != null)
+        'string_process_stage_ids': stringProcessStageIds,
+    });
+  }
+
+  WorkflowTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? name,
+      Value<String?>? cropName,
+      Value<String?>? productName,
+      Value<String?>? description,
+      Value<String?>? standard,
+      Value<String?>? status,
+      Value<String?>? statusName,
+      Value<String?>? stringProcessStageIds}) {
+    return WorkflowTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      cropName: cropName ?? this.cropName,
+      productName: productName ?? this.productName,
+      description: description ?? this.description,
+      standard: standard ?? this.standard,
+      status: status ?? this.status,
+      statusName: statusName ?? this.statusName,
+      stringProcessStageIds:
+          stringProcessStageIds ?? this.stringProcessStageIds,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (cropName.present) {
+      map['crop_name'] = Variable<String>(cropName.value);
+    }
+    if (productName.present) {
+      map['product_name'] = Variable<String>(productName.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (standard.present) {
+      map['standard'] = Variable<String>(standard.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (statusName.present) {
+      map['status_name'] = Variable<String>(statusName.value);
+    }
+    if (stringProcessStageIds.present) {
+      map['string_process_stage_ids'] =
+          Variable<String>(stringProcessStageIds.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('WorkflowTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('cropName: $cropName, ')
+          ..write('productName: $productName, ')
+          ..write('description: $description, ')
+          ..write('standard: $standard, ')
+          ..write('status: $status, ')
+          ..write('statusName: $statusName, ')
+          ..write('stringProcessStageIds: $stringProcessStageIds')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -8636,6 +8977,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
       $ActivityPurchaseNoNetworkTableTable(this);
   late final $SeasonFarmTableTable seasonFarmTable =
       $SeasonFarmTableTable(this);
+  late final $WorkflowTableTable workflowTable = $WorkflowTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -8659,6 +9001,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         activityTransactionTable,
         activityTransactionNoNetworkTable,
         activityPurchaseNoNetworkTable,
-        seasonFarmTable
+        seasonFarmTable,
+        workflowTable
       ];
 }

@@ -126,19 +126,10 @@ class _AddFeedbackPageState extends State<AddFeedbackPage> {
                           focusNode,
                           (state.formStatus is ValidatePassFail) ? "ý kiến phản hồi không được để trống" : "",
                               (lostFocus) {
-                            /*blocContext.read<AddFeedbackBloc>().add(
-                                SaveValueTextFieldEvent(
-                                    state.titleController!.text, state.listWidget[1], 1));
-                            if (!lostFocus) {
-                              //_focusNodePassNew.requestFocus();
-
-                            }*/
                           },
                           true,
-                          //icons: '',
                           onChangeCallBack: (text) {
                             print("text: onchangeCallback: $text");
-                              //onchangePassOld = text;
                               blocContext.read<AddFeedbackBloc>().add(
                                   SaveValueTextFieldEvent(
                                       text, state.listWidget[1], 1));

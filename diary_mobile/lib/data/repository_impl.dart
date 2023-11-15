@@ -12,6 +12,7 @@ import 'package:diary_mobile/data/entity/report/question.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
+import 'package:diary_mobile/data/entity/workflow/workflow.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/http_method.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_executor.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
@@ -123,6 +124,7 @@ class RepositoryImpl extends Repository {
       getListUnits(9);
       getListUnits(8);
       getListTools();
+      getListWorkflow();
     }
     else if (objectResult.responseCode == StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
@@ -1588,4 +1590,32 @@ class RepositoryImpl extends Repository {
     return objectResult;
   }
 
+  @override
+  Future<List<Workflow>> getListWorkflow() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListWorkflow,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListWorkflow response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<Workflow> list = List.from(objectResult.response)
+          .map((json) => Workflow.fromJson(json))
+          .toList();
+      DiaryDB.instance.insertListWorkflow(list);
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
+  }
 }

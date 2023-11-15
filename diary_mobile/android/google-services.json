@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "321357439192",
+    "project_id": "ofitone-c9783",
+    "storage_bucket": "ofitone-c9783.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321357439192:android:dbaffd1bdbbb522f2177ad",
+        "android_client_info": {
+          "package_name": "com.ofitsoft.diary.diary_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

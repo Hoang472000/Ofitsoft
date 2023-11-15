@@ -71,33 +71,6 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           iconActivity: ImageAsset.imageSelling));
       if (check[0]) {
       }
-     /* if (check[4]) {
-        list.add(ActivityFarm(
-            id: 6,
-            nameActivity: "HOẠT ĐỘNG THU MUA",
-            iconActivity: ImageAsset.imageSelling));
-      }*/
-      // HoangCV: hide activity monitor
-      /*if (check[1]) {
-        list.add(ActivityFarm(
-            id: 4,
-            nameActivity: "HOẠT ĐỘNG GIÁM SÁT",
-            iconActivity: ImageAsset.imageSpyware));
-
-      }*/
-
-/*    list.add(ActivityFarm(
-        nameActivity: "Hoạt động thu hoạch",
-        iconActivity: ImageAsset.imagePlantCrop));
-    list.add(ActivityFarm(
-        nameActivity: "Hoạt động mua bán",
-        iconActivity: ImageAsset.imageBudget));
-    list.add(ActivityFarm(
-        nameActivity: "Hoạt động giám sát",
-        iconActivity: ImageAsset.imageSpyware));
-    list.add(ActivityFarm(
-        nameActivity: "Báo cáo đánh giá thực địa",
-        iconActivity: ImageAsset.imageDisaster));*/
       print("HoangCV: detailDiary: ${detailDiary.name}");
       emitter(state.copyWith(
           isShowProgress: false,

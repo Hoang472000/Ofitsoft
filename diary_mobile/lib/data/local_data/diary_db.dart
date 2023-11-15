@@ -8,6 +8,7 @@ import 'package:diary_mobile/data/entity/activity/season_farm.dart';
 import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
+import 'package:diary_mobile/data/entity/workflow/workflow.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_no_network_table.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
@@ -25,6 +26,7 @@ import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart'
 import 'package:diary_mobile/data/local_data/table/transaction/activity_purchase_table.dart';
 import 'package:diary_mobile/data/local_data/table/transaction/activity_transaction_table.dart';
 import 'package:diary_mobile/data/local_data/table/transaction/season_farm_table.dart';
+import 'package:diary_mobile/data/local_data/workflow_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,7 +51,7 @@ part 'diary_db.g.dart';
   ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
   ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
   ReportSelectTable, ActivityPurchaseTable, ActivityTransactionTable, ActivityTransactionNoNetworkTable,
-  ActivityPurchaseNoNetworkTable, SeasonFarmTable])
+  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -612,6 +614,51 @@ class DiaryDB extends _$DiaryDB {
     return
       await (select(seasonFarmTable)..where((tbl) => tbl.userId.equals(userId)))
         .get();
+  }
+
+  ///Thêm, sửa, xóa, lấy Activity Diary
+  Future<void> insertListWorkflow(List<Workflow> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry: ${entry.toJson()}");
+        final WorkflowTableCompanion entryCompanion = WorkflowTableCompanion(
+          id: Value(entry.id),
+          name: Value(entry.name),
+          cropName: Value(entry.cropName),
+          statusName: Value(entry.statusName),
+          standard: Value(entry.standard),
+          status: Value(entry.status),
+          description: Value(entry.description),
+          productName: Value(entry.productName),
+          stringProcessStageIds: Value(entry.convertProcessListToJson()),// Chuyển đổi thành chuỗi JSON
+        );
+        print("HoangCV: stringProcessStageIds: ${entryCompanion.stringProcessStageIds}");
+        batch.insertAllOnConflictUpdate(workflowTable, [entryCompanion]);
+      }
+    });
+  }
+
+  Future<List<Workflow>> getListWorkflow(int id) async {
+    final query = await (select(workflowTable)..where((tbl) => tbl.id.equals(id)))
+        .get();
+    final List<Workflow> workflow = [];
+
+    for (final queriedEntry in query) {
+
+      final diaryEntry = Workflow.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'crop_name': queriedEntry.cropName,
+        'product_name': queriedEntry.productName,
+        'standard': queriedEntry.standard,
+        'status': queriedEntry.status,
+        'status_name': queriedEntry.statusName,
+        'description': queriedEntry.description,
+        'process_stage_ids': jsonDecode(queriedEntry.stringProcessStageIds??'[]'),
+      });
+      workflow.add(diaryEntry);
+    }
+    return workflow;
   }
 
   SingleSelectable<UserInfo> singleUser(int userId) {

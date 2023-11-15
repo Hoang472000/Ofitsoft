@@ -2,8 +2,10 @@ import 'dart:ffi';
 
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/utils/widgets/items/item_card_activity.dart';
+import 'package:diary_mobile/view/diary_activity/infomation_diary/workflow_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../../resource/color.dart';
@@ -131,6 +133,16 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             value:
                                 "số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam,số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam",
                             image: ImageAsset.imageDisaster),*/
+                        (state.detailDiary!.productProcessName ?? "").isNotEmpty ?
+                          itemAccount(context,
+                              image: ImageAsset.imageDiary,
+                              text: "${state.detailDiary!.productProcessName}",
+                              voidCallback: () async {
+                                var result = await Navigator.of(context).push(
+                                    WorkflowPage.route(
+                                        state.detailDiary!.productProcessId ??
+                                            -1));
+                              }) : SizedBox(),
                         CardTile(
                             label: "Loại vật nuôi/cây trồng",
                             value: "${state.detailDiary!.cropName}",
@@ -321,6 +333,68 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                       ],
                     )),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget itemAccount(BuildContext context,
+      {required String image,
+        required String text,
+        required VoidCallback voidCallback,
+        String? iconRight}) {
+    return InkWell(
+      onTap: () {
+        voidCallback();
+      },
+      child: Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 4),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 8, bottom: 8),
+              padding: const EdgeInsets.only(left: 6, right: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFFB2B8BB),
+                    width: 1.5,
+                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(5)),
+                  color: Colors.white),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: SizedBox(
+                      child: Text(
+                        text,
+                        style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      voidCallback();
+                    },
+                    icon: SvgPicture.asset(
+                      iconRight ?? IconAsset.icArrowRight,
+                      color: AppColor.main,
+                    ),
+                    padding: const EdgeInsets.only(
+                        left: 8, right: 0, top: 10, bottom: 10),
+                    constraints: const BoxConstraints(),
+                  )
+                ],
+              ),
             ),
           ),
         ],

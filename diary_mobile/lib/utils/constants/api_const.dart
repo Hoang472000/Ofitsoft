@@ -13,6 +13,7 @@ class ApiConst {
   static const String getListMaterials = "/get/materials_farmer/";
   static const String getListActivities = "/get/activites_farmer/";
   static const String getListUnits = "/get/units_farmer/";
+  static const String getListWorkflow = "/get/product_process";//
   //api danh sach diary
   static const String getListDiary = "/get/diaries/farmer/";//
   //api danh sach backup diary
