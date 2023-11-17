@@ -59,7 +59,12 @@ class ApiConst {
   static const String getFarmerFeedback = "/get/farmer_feedback/";///get/farmer_feedback/<int:id>
   static const String addFarmerFeedback = "/add/farmer_feedback";
   static const String addReplyFeedback = "/add/reply_feedback";
+  //loc mua vu lo trong
+  static const String getListAreaEntity = "/get/area";//
 
+  ///get/list_product_batch
+  static const String getListNotify = "/get/notification";
+  static const String editNotification = "/edit/notification/";
 
   //update
   static const packageIdIOS = "com.bkav.aibooks";

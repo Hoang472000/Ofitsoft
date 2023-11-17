@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
 import 'package:diary_mobile/utils/constants/config_build.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,16 +22,42 @@ import 'view/login/login_page.dart';
 import 'view_model/account/authentication/authentication_bloc.dart';
 import 'view_model/account/authentication/authentication_state.dart';
 import 'view_model/navigation_service.dart';
-//
-// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-//   await Firebase.initializeApp();
-// }
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  Logger.loggerDebug(
+      "Bkav DucLQ _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
+  try {
+    await Firebase.initializeApp(
+        name: "OfitOne",
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+            appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
+            messagingSenderId: '321357439192',
+            projectId: 'ofitone-c9783')
+    );
+  }catch(e){
+    print("HoangCV: error: $e");
+  }
+  // Utils.autoLoginWithTBTC(message);
+}
 
 Future<void> initBkav() async{
   WidgetsFlutterBinding.ensureInitialized();
-/*  await Firebase.initializeApp();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  try {
+    await Firebase.initializeApp(
+        name: "OfitOne",
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+            appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
+            messagingSenderId: '321357439192',
+            projectId: 'ofitone-c9783')
+    );
+  }catch(e){
+    print("HoangCV: error: $e");
+  }
+/*  FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.instance.getInitialMessage();*/
   // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   // makes Smartphone Statusbar transparent
@@ -38,54 +67,81 @@ Future<void> initBkav() async{
       statusBarIconBrightness: Brightness.dark,
       ));
 
-//
-//   FirebaseMessaging messaging = FirebaseMessaging.instance;
-//   FirebaseMessaging.instance.getInitialMessage();
-//   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-//
-//   messaging.requestPermission(
-//     alert: true,
-//     announcement: false,
-//     badge: true,
-//     carPlay: false,
-//     criticalAlert: false,
-//     provisional: false,
-//     sound: true,
-//   );
-//
-//   if (Platform.isIOS) {
-//     messaging.setForegroundNotificationPresentationOptions(
-//       alert: true, // Required to display a heads up notification
-//       badge: true,
-//       sound: true,
-//     );
-//   }
-//   if (Platform.isAndroid) {
-//     AndroidNotificationChannel channel = const AndroidNotificationChannel(
-//       'high_importance_channel', // id
-//       'Thông báo Đại lý', // title
-//       importance: Importance.max,
-//     );
-//     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-//
-//     flutterLocalNotificationsPlugin
-//         .resolvePlatformSpecificImplementation<
-//         AndroidFlutterLocalNotificationsPlugin>()
-//         ?.createNotificationChannel(channel);
-//   }
-//
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging.instance.getInitialMessage();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    Logger.loggerDebug("Bkav DucLQ onMessageOpenedApp.listen $message");
+    if (message.data["flag"] == "3" &&
+        message.data["confirmed"] == "false") {
+/*      DiaLogManager.showDiaLogError(
+          message.notification!.body ?? "Yêu cầu không được xác nhận");*/
+    } else if (message.data["flag"] == "3" &&
+        message.data["confirmed"] == "true") {
+     // Utils.autoLoginWithTBTC(message);
+    }
+  });
+
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    Logger.loggerDebug(
+        "Bkav DucLQ onMessage.listen ${message.toMap().toString()}");
+    if (message.data["flag"] == "1") {
+      Utils.handleRequireAuthWithTBG(message);
+    } else if (message.data["flag"] == "3" &&
+        message.data["confirmed"] == "false") {
+
+    } else if (message.data["flag"] == "3" &&
+        message.data["confirmed"] == "true") {
+      //Utils.autoLoginWithTBTC(message);
+      //Bkav ToanTDd add -start
+    } else if (message.data["flag"] == "4") {
+
+    }
+    //Bkav ToanTDd add -end
+  });
+  messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (Platform.isIOS) {
+    messaging.setForegroundNotificationPresentationOptions(
+      alert: true, // Required to display a heads up notification
+      badge: true,
+      sound: true,
+    );
+  }
+  if (Platform.isAndroid) {
+    AndroidNotificationChannel channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id
+      'Thông báo OfitOne', // title
+      importance: Importance.max,
+    );
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
+
   final prefs = await SharedPreferences.getInstance();
-//   String? uuidSave = prefs.getString(SharedPreferencesKey.keyUUID);
-//   Logger.loggerDebug("Bkav DucLQ uuid $uuidSave");
-//
-//   if (uuidSave == null || uuidSave.isEmpty) {
-//     var uuid = const Uuid(options: {'dai_ly_bkav': UuidUtil.cryptoRNG});
-//     uuidSave = uuid.v4();
-//     prefs.setString(SharedPreferencesKey.keyUUID, uuidSave);
-//   }
-//
-/*  messaging.getToken().then((tokenFirebase) {
+  String? uuidSave = prefs.getString(SharedPreferencesKey.keyUUID);
+  Logger.loggerDebug("Bkav DucLQ uuid $uuidSave");
+
+/*  if (uuidSave == null || uuidSave.isEmpty) {
+    var uuid = const Uuid(options: {'dai_ly_bkav': UuidUtil.cryptoRNG});
+    uuidSave = uuid.v4();
+    prefs.setString(SharedPreferencesKey.keyUUID, uuidSave);
+  }*/
+
+  messaging.getToken().then((tokenFirebase) {
     if (tokenFirebase != null && tokenFirebase.isNotEmpty) {
       prefs.setString(SharedPreferencesKey.tokenFirebase, tokenFirebase);
       Logger.loggerDebug("Bkav DucLQ Token firebase cua app la $tokenFirebase");
@@ -96,7 +152,7 @@ Future<void> initBkav() async{
       prefs.setString(SharedPreferencesKey.tokenFirebase, newToken);
       Logger.loggerDebug("Bkav DucLQ Token firebase cua app la $newToken");
     }
-  });*/
+  });
 //
 }
 

@@ -3,13 +3,22 @@ import 'dart:isolate';
 
 import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../data/entity/diary/area_entity.dart';
 import '../../data/entity/diary/diary.dart';
 
+import '../../data/local_data/diary_db.dart';
 import '../../data/repository.dart';
+import '../../utils/constants/shared_preferences_key.dart';
+import '../../utils/extenstion/extenstions.dart';
+import '../../utils/extenstion/input_register_model.dart';
+import '../../utils/extenstion/service_info_extension.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../utils/utils.dart';
+import '../../utils/widgets/dialog/toast_widget.dart';
 import '../../view/diary_activity/activity_writeby/add_activity_writeby.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
@@ -22,13 +31,63 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
     on<AddChooseAllDiary>(_addChooseAllDiary);
     on<GetListDiarySelected>(_getListDiarySelected);
     on<SearchListDiaryEvent>(_searchListDiary);
+    on<OnSelectValueEvent>(_selectValue);
 /*    add(GetListDiaryEvent());*/
+  }
+
+  void _initViewAdd(Emitter<DiaryMonitorChildState> emitter) {
+    List<InputRegisterModel> list = [];
+
+    list.add(InputRegisterModel<AreaEntity, AreaEntity>(
+      title: "Vùng trồng",
+      isCompulsory: true,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: 0,
+      listValue: state.listAreaEntity,
+      valueSelected: state.listAreaEntity[0],
+      typeInputEnum: TypeInputEnum.dmucItem,
+      hasSearch: true,));
+
+    list.add(InputRegisterModel<SeasonEntity, SeasonEntity>(
+      title: "Mùa vụ",
+      isCompulsory: true,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: 0,
+      listValue: state.listSeasonEntity,
+      valueSelected: state.listSeasonEntity[0],
+      typeInputEnum: TypeInputEnum.dmucItem,
+      hasSearch: true,));
+
+    emitter(state.copyWith(
+        listWidget: list, formStatus: const InitialFormStatus()));
   }
 
   Future<void> _getListDiary(
       GetListDiaryEvent event, Emitter<DiaryMonitorChildState> emitter) async {
     emitter(state.copyWith(isShowProgress: true, formStatus: const InitialFormStatus()));
-    final listDiary = event.diary/*await repository.getListDiary()*/;
+    final List<Diary> listDiary;
+    final sharedPreferences = await SharedPreferences.getInstance();
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    print("HoangCV:event.first: ${event.first} ");
+    if(event.first == true) {
+      listDiary = event.diary;
+      List<AreaEntity> listAreaEntity = [];
+      listAreaEntity.add(AreaEntity(id: -1, name: "Tất cả"));
+      List<SeasonEntity> listSeasonEntity = [];
+      listSeasonEntity.add(SeasonEntity(id: -1, name: "Tất cả"));
+      listAreaEntity.addAll(await DiaryDB.instance.getListAreaEntity(userId));
+      emitter(state.copyWith(
+        listAreaEntity: listAreaEntity,
+        listSeasonEntity: listSeasonEntity,
+        action: event.action
+      ));
+      _initViewAdd(emitter);
+    } else{
+
+      listDiary = await DiaryDB.instance.getListDiaryFilter(userId, event.action, event.seasonId, event.areaId);
+    }
     List<String> distinctMonthsAndYears = [];
     List<List<Diary>> list = [];
     Map<String, List<Diary>> mapTasksByMonthAndYear = {};
@@ -57,8 +116,10 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
           lengthSearchDiary: listDiary.length,
           amountSelected: 0));
       isolateError.kill(priority: Isolate.immediate);
+    }else if(listDiary.isEmpty && event.first == false) {
+      emitter(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Không tìm thấy thông tin nhật ký phù hợp.")));
     }else {
-      emitter(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Bạn chưa được phân quyền truy cập vào nhật ký.\nVui lòng liên hệ quản trị viên để được hỗ trợ")));
+    emitter(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Bạn chưa được phân quyền truy cập vào nhật ký.\nVui lòng liên hệ quản trị viên để được hỗ trợ")));
     }
 
   }
@@ -164,7 +225,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
         .push(AddActWriteByPage.route(listSelected));
     if(result != null && result[0]) {
       if (result[1]) {
-        add(GetListDiaryEvent([]));
+        add(GetListDiaryEvent([], state.action));
       } else {
         List<List<bool>> listSelected = state.listSelected;
         for (var element in listSelected) {
@@ -220,6 +281,52 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
     print("HoangCV: newListDate: ${newListDate.toString()}");
     emit(state.copyWith(listDiary: searchResults, listSelected: searchBoolResult, listDate: newListDate, lengthDiary: totalSublistItems, amountSelected: 0));
   }
+
+  FutureOr<void> _selectValue(OnSelectValueEvent event, Emitter<DiaryMonitorChildState> emit) async {
+    int result;
+    bool checkPass = true;
+    if(event.index == 0 && state.listAreaEntity.isEmpty) {
+      Toast.showLongTop("Không có danh sách vùng trồng");
+      checkPass = false;
+    }else if(event.index == 1 && state.listSeasonEntity.isEmpty) {
+      Toast.showLongTop("Không có danh sách mùa vụ");
+      checkPass = false;
+    }
+    if(checkPass) {
+      emit(state.copyWith(formStatus: const InitialFormStatus()));
+        result = await Extension().showBottomSheetSelection(
+            event.context,
+            event.list[event.index].listValue,
+            event.list[event.index].positionSelected,
+            "${event.list[event.index].title}",
+            hasSearch: event.list[event.index].hasSearch ?? false);
+        if (result != -1) {
+          //   setState(() {
+          event.list[event.index].positionSelected = result;
+          event.list[event.index].valueDefault = null;
+          event.list[event.index].valueSelected =
+          event.list[event.index].listValue[result];
+          event.list[event.index].error = null;
+          // });
+          if (event.list[event.index].title.compareTo("Vùng trồng") == 0) {
+            List<SeasonEntity> listSeasonEntity = [];
+            listSeasonEntity.add(SeasonEntity(id: -1, name: "Tất cả"));
+            listSeasonEntity.addAll(event.list[event.index].listValue[result].seasons);
+            print("HoangCV: event.list[event.index].listValue[result].seasons: ${event.list[event.index].listValue[result].seasons}");
+            state.listWidget[1].listValue = listSeasonEntity;
+            state.listWidget[1].valueSelected = listSeasonEntity[0];
+            state.listWidget[1].positionSelected = 0;
+            emit(state.copyWith(
+                listSeasonEntity: listSeasonEntity));
+            emit(
+                state.copyWith(listWidget: state.listWidget));
+          }
+          if (event.list[event.index].title.compareTo("Mùa vụ") == 0) {
+            add(GetListDiaryEvent(event.diary, state.action, first: false, seasonId: state.listWidget[0].valueSelected.id , areaId: event.list[event.index].listValue[result].id));
+          }
+      }
+    }
+  }
 }
 
 class DiaryMonitorChildEvent extends BlocEvent {
@@ -229,7 +336,11 @@ class DiaryMonitorChildEvent extends BlocEvent {
 
 class GetListDiaryEvent extends DiaryMonitorChildEvent {
   final List<Diary> diary;
-  GetListDiaryEvent(this.diary);
+  final bool first;
+  final String action;
+  final int seasonId;
+  final int areaId;
+  GetListDiaryEvent(this.diary, this.action, {this.first = false, this.seasonId = -1, this.areaId = -1});
 }
 
 class AddChooseDiary extends DiaryMonitorChildEvent {
@@ -251,6 +362,18 @@ class AddChooseAllDiary extends DiaryMonitorChildEvent {
 
   @override
   List<Object?> get props => [isChoose];
+}
+
+class OnSelectValueEvent extends DiaryMonitorChildEvent {
+  List<InputRegisterModel> list;
+  int index;
+  BuildContext context;
+  final List<Diary> diary;
+
+  OnSelectValueEvent(this.list, this.index, this.context, this.diary);
+
+  @override
+  List<Object?> get props => [list, index, context, diary];
 }
 
 class GetListDiarySelected extends DiaryMonitorChildEvent {
@@ -286,6 +409,10 @@ class DiaryMonitorChildState extends BlocState {
     listSearchSelected,
     listSearchDate,
     lengthSearchDiary,
+    listAreaEntity,
+    listWidget,
+    listSeasonEntity,
+    action,
   ];
   final List<List<Diary>> listDiary;
   final List<List<Diary>> listSearchDiary;
@@ -299,6 +426,10 @@ class DiaryMonitorChildState extends BlocState {
   final int amountSelected;
   final int lengthDiary;
   final int lengthSearchDiary;
+  final List<AreaEntity> listAreaEntity;
+  final List<SeasonEntity> listSeasonEntity;
+  final List<InputRegisterModel> listWidget;
+  final String action;
 
   DiaryMonitorChildState(
       {this.listDiarySelected = const [],
@@ -312,7 +443,12 @@ class DiaryMonitorChildState extends BlocState {
         this.listSelected = const [],
         this.amountSelected = 0,
         this.lengthDiary = -1,
-        this.lengthSearchDiary = -1});
+        this.lengthSearchDiary = -1,
+        this.listAreaEntity = const [],
+        this.listWidget = const [],
+        this.listSeasonEntity = const [],
+        this.action = "farmer"
+      });
 
   DiaryMonitorChildState copyWith({
     List<List<Diary>>? listDiary,
@@ -327,6 +463,10 @@ class DiaryMonitorChildState extends BlocState {
     int? amountSelected,
     int? lengthDiary,
     int? lengthSearchDiary,
+    List<AreaEntity>? listAreaEntity,
+    List<InputRegisterModel>? listWidget,
+    List<SeasonEntity>? listSeasonEntity,
+    String? action,
   }) {
     return DiaryMonitorChildState(
       listDiary: listDiary ?? this.listDiary,
@@ -341,6 +481,10 @@ class DiaryMonitorChildState extends BlocState {
       listSearchSelected: listSearchSelected ?? this.listSearchSelected,
       listSearchDate: listSearchDate ?? this.listSearchDate,
       lengthSearchDiary: lengthSearchDiary ?? this.lengthSearchDiary,
+        listAreaEntity: listAreaEntity ?? this.listAreaEntity,
+        listSeasonEntity: listSeasonEntity ?? this.listSeasonEntity,
+        listWidget: listWidget ?? this.listWidget,
+        action: action ?? this.action,
     );
   }
 }

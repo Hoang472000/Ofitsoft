@@ -1,11 +1,18 @@
 import 'dart:isolate';
 
+import 'package:diary_mobile/data/entity/diary/area_entity.dart';
+import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/resource/assets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../utils/constants/shared_preferences.dart';
+import '../../utils/constants/shared_preferences_key.dart';
+import '../../utils/extenstion/input_register_model.dart';
+import '../../utils/extenstion/service_info_extension.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 import '../diary_activity/activity/info_diary_bloc.dart';
@@ -15,6 +22,33 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
 
   DiaryMonitorBloc(this.repository) : super(DiaryMonitorState()) {
     on<GetDiaryMonitorEvent>(_getDiaryMonitor);
+  }
+
+  void _initViewAdd(Emitter<DiaryMonitorState> emitter) {
+    List<InputRegisterModel> list = [];
+
+    list.add(InputRegisterModel<AreaEntity, AreaEntity>(
+        title: "Vùng trồng",
+        isCompulsory: true,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listAreaEntity,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,));
+
+    list.add(InputRegisterModel<SeasonEntity, SeasonEntity>(
+      title: "Mùa vụ",
+      isCompulsory: true,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: -1,
+      listValue: state.listSeasonEntity,
+      typeInputEnum: TypeInputEnum.dmucItem,
+      hasSearch: true,));
+
+    emitter(state.copyWith(
+        listWidget: list, formStatus: const InitialFormStatus()));
   }
 
   void _getDiaryMonitor(
@@ -33,12 +67,12 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
     var listFarmerDiary = await repository.getListDiary("farmer");
     var listBackupDiary = await repository.getListBackupDiary("record");
     var listMonitorDiary = await repository.getListDiary("monitor", monitor: true);
-    listBackupDiary.forEach((element) {
+  /*  listBackupDiary.forEach((element) {
       print("HoangCV: listBackupDiary : ${listMonitorDiary.length} :${listBackupDiary.length} : ${element.toJson()}");
     });
     listFarmerDiary.forEach((element) {
       print("HoangCV: listFarmerDiary : ${listFarmerDiary.length} : ${element.toJson()}");
-    });
+    });*/
     List<bool> check = await SharedPreDiary.getRole();
     List<ActivityFarm> list = [];
     if (check[0]) {
@@ -103,6 +137,9 @@ class DiaryMonitorState extends BlocState {
         listFarmerDiary,
         listBackupDiary,
         listMonitorDiary,
+    listAreaEntity,
+    listWidget,
+    listSeasonEntity,
       ];
 
   final List<ActivityFarm> listActivityFarm;
@@ -111,6 +148,9 @@ class DiaryMonitorState extends BlocState {
   final List<Diary> listFarmerDiary;
   final List<Diary> listBackupDiary;
   final List<Diary> listMonitorDiary;
+  final List<AreaEntity> listAreaEntity;
+  final List<SeasonEntity> listSeasonEntity;
+  final List<InputRegisterModel> listWidget;
 
   DiaryMonitorState({
     this.formStatus = const InitialFormStatus(),
@@ -119,6 +159,9 @@ class DiaryMonitorState extends BlocState {
     this.listFarmerDiary = const [],
     this.listBackupDiary = const [],
     this.listMonitorDiary = const [],
+    this.listAreaEntity = const [],
+    this.listWidget = const [],
+    this.listSeasonEntity = const [],
   });
 
   DiaryMonitorState copyWith({
@@ -128,6 +171,9 @@ class DiaryMonitorState extends BlocState {
     List<Diary>? listFarmerDiary,
     List<Diary>? listBackupDiary,
     List<Diary>? listMonitorDiary,
+    List<AreaEntity>? listAreaEntity,
+    List<InputRegisterModel>? listWidget,
+    List<SeasonEntity>? listSeasonEntity,
   }) {
     return DiaryMonitorState(
         formStatus: formStatus ?? this.formStatus,
@@ -135,6 +181,9 @@ class DiaryMonitorState extends BlocState {
         listActivityFarm: listActivityFarm ?? this.listActivityFarm,
         listFarmerDiary: listFarmerDiary ?? this.listFarmerDiary,
         listBackupDiary: listBackupDiary ?? this.listBackupDiary,
-        listMonitorDiary: listMonitorDiary ?? this.listMonitorDiary);
+        listMonitorDiary: listMonitorDiary ?? this.listMonitorDiary,
+        listAreaEntity: listAreaEntity ?? this.listAreaEntity,
+        listSeasonEntity: listSeasonEntity ?? this.listSeasonEntity,
+        listWidget: listWidget ?? this.listWidget);
   }
 }

@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
   connectivity_plus
   file_selector_windows
+  firebase_core
   sqlite3_flutter_libs
   url_launcher_windows
 )

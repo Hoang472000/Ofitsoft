@@ -67,6 +67,9 @@ dependencies:
   scroll_to_index:
   flutter_pdfview:
   uuid:
+  firebase_messaging: ^14.7.4
+  firebase_core: ^2.22.0
+  flutter_local_notifications: ^16.1.0
 
 dev_dependencies:
   flutter_test:

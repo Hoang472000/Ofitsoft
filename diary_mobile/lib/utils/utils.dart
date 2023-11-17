@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_check_connect.dart';
 import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -21,8 +22,10 @@ import '../data/entity/image/image_entity.dart';
 import '../generated/l10n.dart';
 import '../resource/color.dart';
 import '../resource/style.dart';
+import '../view/notify/notify_view.dart';
 import '../view_model/navigation_service.dart';
 import 'constants/shared_preferences_key.dart';
+import 'local_notification_service.dart';
 import 'logger.dart';
 
 class Utils {
@@ -35,6 +38,17 @@ class Utils {
             top: false,
             child: child,
           );
+  }
+  static void launchAppFromNotification(Map<String, dynamic> jsonDecode) {
+    Navigator.of(NavigationService.navigatorKey.currentContext!)
+        .push(NotifyView.route());
+  }
+
+  static void handleRequireAuthWithTBG(RemoteMessage message) async {
+    // show thong bao tu dong
+    LocalNotificationService service = LocalNotificationService();
+    service.intialize();
+    service.showNotificationFirebase(message);
   }
 
   ///hiệu ứng chuyển giữa các page khác nhau

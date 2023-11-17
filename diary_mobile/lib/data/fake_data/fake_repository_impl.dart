@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
+import 'package:diary_mobile/data/entity/diary/area_entity.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
+import 'package:diary_mobile/data/entity/notify/notify_entity.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
@@ -636,6 +638,24 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> addReplyFeedback(FeedbackInfo feedback) {
     // TODO: implement addReplyFeedback
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<NotifyEntity>> getListNotify() {
+    // TODO: implement getListNotify
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> editNotification(int id) {
+    // TODO: implement editNotification
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<AreaEntity>> getListAreaEntity() {
+    // TODO: implement getListAreaEntity
     throw UnimplementedError();
   }
 }

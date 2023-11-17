@@ -6,8 +6,10 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/activity/no_network/activity_purchase_no_network.dart';
+import 'package:diary_mobile/data/entity/diary/area_entity.dart';
 import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
+import 'package:diary_mobile/data/entity/notify/notify_entity.dart';
 import 'package:diary_mobile/data/entity/report/question.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
@@ -125,6 +127,7 @@ class RepositoryImpl extends Repository {
       getListUnits(8);
       getListTools();
       getListWorkflow();
+      getListAreaEntity();
     }
     else if (objectResult.responseCode == StatusConst.code01) {
       DiaLogManager.showDialogHTTPError(
@@ -1602,12 +1605,95 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
     print("HoangCV: getListWorkflow response: ${objectResult.response}");
     //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
-    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+    if (objectResult.responseCode == StatusConst.code00) {
       List<Workflow> list = List.from(objectResult.response)
           .map((json) => Workflow.fromJson(json))
           .toList();
       DiaryDB.instance.insertListWorkflow(list);
       return list;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
+  }
+
+  @override
+  Future<List<NotifyEntity>> getListNotify() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListNotify,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListNotify response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<NotifyEntity> list = List.from(objectResult.response)
+          .map((json) => NotifyEntity.fromJson(json))
+          .toList();
+      return list;
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
+  }
+
+  @override
+  Future<ObjectResult> editNotification(int id) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.editNotification}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {"is_read" : true})));
+    print("HoangCV: editNotification response: ${objectResult.responseCode}: ${objectResult.isOK}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else{
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
+
+  @override
+  Future<List<AreaEntity>> getListAreaEntity() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListAreaEntity,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListWorkflow response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<AreaEntity> list = List.from(objectResult.response)
+          .map((json) => AreaEntity.fromJson(json, userId))
+          .toList();
+      DiaryDB.instance.insertListAreaEntity(list);
+      return list;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
     }
     else {
       DiaLogManager.showDialogHTTPError(

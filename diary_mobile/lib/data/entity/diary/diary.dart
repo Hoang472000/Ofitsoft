@@ -47,6 +47,7 @@ class Diary implements Insertable<Diary> {
   String? googleMap;
   int? productProcessId;
   String? productProcessName;
+  int? areaId;
 
   Diary({
     this.userId,
@@ -86,6 +87,7 @@ class Diary implements Insertable<Diary> {
     this.googleMap,
     this.productProcessId,
     this.productProcessName,
+    this.areaId,
   });
 
   factory Diary.fromJson(Map<String, dynamic> json, int userId, String action) {
@@ -127,6 +129,7 @@ class Diary implements Insertable<Diary> {
       googleMap: json['google_map'] ?? '',
       productProcessId: json['product_process_id'] ?? -1,
       productProcessName: json['product_process_name'] ?? '',
+      areaId: json['area_id'] ?? -1,
     );
   }
 
@@ -167,6 +170,7 @@ class Diary implements Insertable<Diary> {
     data['google_map'] = googleMap;
     data['product_process_id'] = productProcessId;
     data['product_process_name'] = productProcessName;
+    data['area_id'] = areaId;
     return data;
   }
 
@@ -210,6 +214,7 @@ class Diary implements Insertable<Diary> {
       googleMap:Value(googleMap),
       productProcessId: Value(productProcessId),
       productProcessName:Value(productProcessName),
+      areaId: Value(areaId),
     ).toColumns(nullToAbsent);
   }
 }

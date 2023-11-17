@@ -45,6 +45,7 @@ class DiaryTable extends Table {
   TextColumn get googleMap => text().nullable()();
   IntColumn get productProcessId => integer().nullable()();
   TextColumn get productProcessName => text().nullable()();
+  IntColumn get areaId => integer().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id, userId};

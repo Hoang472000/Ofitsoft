@@ -228,6 +228,11 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<String> productProcessName =
       GeneratedColumn<String>('product_process_name', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _areaIdMeta = const VerificationMeta('areaId');
+  @override
+  late final GeneratedColumn<int> areaId = GeneratedColumn<int>(
+      'area_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -266,7 +271,8 @@ class $DiaryTableTable extends DiaryTable
         farmCode,
         googleMap,
         productProcessId,
-        productProcessName
+        productProcessName,
+        areaId
       ];
   @override
   String get aliasedName => _alias ?? 'diary';
@@ -456,6 +462,10 @@ class $DiaryTableTable extends DiaryTable
           productProcessName.isAcceptableOrUnknown(
               data['product_process_name']!, _productProcessNameMeta));
     }
+    if (data.containsKey('area_id')) {
+      context.handle(_areaIdMeta,
+          areaId.isAcceptableOrUnknown(data['area_id']!, _areaIdMeta));
+    }
     return context;
   }
 
@@ -540,6 +550,8 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.int, data['${effectivePrefix}product_process_id']),
       productProcessName: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}product_process_name']),
+      areaId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}area_id']),
     );
   }
 
@@ -587,6 +599,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> googleMap;
   final Value<int?> productProcessId;
   final Value<String?> productProcessName;
+  final Value<int?> areaId;
   final Value<int> rowid;
   const DiaryTableCompanion({
     this.id = const Value.absent(),
@@ -626,6 +639,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.googleMap = const Value.absent(),
     this.productProcessId = const Value.absent(),
     this.productProcessName = const Value.absent(),
+    this.areaId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   DiaryTableCompanion.insert({
@@ -666,6 +680,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.googleMap = const Value.absent(),
     this.productProcessId = const Value.absent(),
     this.productProcessName = const Value.absent(),
+    this.areaId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<Diary> custom({
@@ -706,6 +721,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? googleMap,
     Expression<int>? productProcessId,
     Expression<String>? productProcessName,
+    Expression<int>? areaId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -749,6 +765,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (productProcessId != null) 'product_process_id': productProcessId,
       if (productProcessName != null)
         'product_process_name': productProcessName,
+      if (areaId != null) 'area_id': areaId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -791,6 +808,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? googleMap,
       Value<int?>? productProcessId,
       Value<String?>? productProcessName,
+      Value<int?>? areaId,
       Value<int>? rowid}) {
     return DiaryTableCompanion(
       id: id ?? this.id,
@@ -831,6 +849,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       googleMap: googleMap ?? this.googleMap,
       productProcessId: productProcessId ?? this.productProcessId,
       productProcessName: productProcessName ?? this.productProcessName,
+      areaId: areaId ?? this.areaId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -950,6 +969,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     if (productProcessName.present) {
       map['product_process_name'] = Variable<String>(productProcessName.value);
     }
+    if (areaId.present) {
+      map['area_id'] = Variable<int>(areaId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -996,6 +1018,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('googleMap: $googleMap, ')
           ..write('productProcessId: $productProcessId, ')
           ..write('productProcessName: $productProcessName, ')
+          ..write('areaId: $areaId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8797,6 +8820,8 @@ class $WorkflowTableTable extends WorkflowTable
           .read(DriftSqlType.string, data['${effectivePrefix}status']),
       statusName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}status_name']),
+      standard: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}standard']),
       stringProcessStageIds: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}string_process_stage_ids']),
@@ -8941,6 +8966,172 @@ class WorkflowTableCompanion extends UpdateCompanion<Workflow> {
   }
 }
 
+class $AreaEntityTableTable extends AreaEntityTable
+    with TableInfo<$AreaEntityTableTable, AreaEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AreaEntityTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringSeasonsMeta =
+      const VerificationMeta('stringSeasons');
+  @override
+  late final GeneratedColumn<String> stringSeasons = GeneratedColumn<String>(
+      'string_seasons', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [userId, id, name, stringSeasons];
+  @override
+  String get aliasedName => _alias ?? 'area_entity';
+  @override
+  String get actualTableName => 'area_entity';
+  @override
+  VerificationContext validateIntegrity(Insertable<AreaEntity> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('string_seasons')) {
+      context.handle(
+          _stringSeasonsMeta,
+          stringSeasons.isAcceptableOrUnknown(
+              data['string_seasons']!, _stringSeasonsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, userId};
+  @override
+  AreaEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AreaEntity(
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id']),
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      stringSeasons: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}string_seasons']),
+    );
+  }
+
+  @override
+  $AreaEntityTableTable createAlias(String alias) {
+    return $AreaEntityTableTable(attachedDatabase, alias);
+  }
+}
+
+class AreaEntityTableCompanion extends UpdateCompanion<AreaEntity> {
+  final Value<int?> userId;
+  final Value<int?> id;
+  final Value<String?> name;
+  final Value<String?> stringSeasons;
+  final Value<int> rowid;
+  const AreaEntityTableCompanion({
+    this.userId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.stringSeasons = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AreaEntityTableCompanion.insert({
+    this.userId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.stringSeasons = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  static Insertable<AreaEntity> custom({
+    Expression<int>? userId,
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? stringSeasons,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (stringSeasons != null) 'string_seasons': stringSeasons,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AreaEntityTableCompanion copyWith(
+      {Value<int?>? userId,
+      Value<int?>? id,
+      Value<String?>? name,
+      Value<String?>? stringSeasons,
+      Value<int>? rowid}) {
+    return AreaEntityTableCompanion(
+      userId: userId ?? this.userId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      stringSeasons: stringSeasons ?? this.stringSeasons,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (stringSeasons.present) {
+      map['string_seasons'] = Variable<String>(stringSeasons.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AreaEntityTableCompanion(')
+          ..write('userId: $userId, ')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('stringSeasons: $stringSeasons, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -8978,6 +9169,8 @@ abstract class _$DiaryDB extends GeneratedDatabase {
   late final $SeasonFarmTableTable seasonFarmTable =
       $SeasonFarmTableTable(this);
   late final $WorkflowTableTable workflowTable = $WorkflowTableTable(this);
+  late final $AreaEntityTableTable areaEntityTable =
+      $AreaEntityTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -9002,6 +9195,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         activityTransactionNoNetworkTable,
         activityPurchaseNoNetworkTable,
         seasonFarmTable,
-        workflowTable
+        workflowTable,
+        areaEntityTable
       ];
 }

@@ -160,7 +160,7 @@ class _TextFormFieldInputTextState extends State<TextFormFieldInputText> {
             borderRadius: BorderRadius.circular(8),
             borderSide: BorderSide(
                 color: widget.isNotEdit ?? false
-                    ? AppColor.redDD
+                    ? Color(0xFFA3A3A3)
                     : (widget._errorValidate || _validatorTextIsEmpty) &&
                     !hideError &&
                     (widget.isNotValidStart == null ||

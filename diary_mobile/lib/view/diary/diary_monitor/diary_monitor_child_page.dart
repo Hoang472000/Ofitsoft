@@ -12,6 +12,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/empty_widget.dart';
+import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/diary/diary_monitor_child_bloc.dart';
 import '../../../utils/widgets/items/item_diary.dart';
 
@@ -35,7 +36,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-      DiaryMonitorChildBloc(context.read<Repository>())..add(GetListDiaryEvent(widget.diary)),
+      DiaryMonitorChildBloc(context.read<Repository>())..add(GetListDiaryEvent(widget.diary, widget.action, first: true)),
       child: Scaffold(
         backgroundColor: AppColor.background,
         body: BlocConsumer<DiaryMonitorChildBloc, DiaryMonitorChildState>(
@@ -61,7 +62,43 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                   : /*state.listDate.isNotEmpty ? */Center(
                 child: Column(
                   children: [
-                    const SizedBox(height: 10),
+                    state.listWidget.isNotEmpty
+                        ? Row(
+                      children: [
+                        Expanded(
+                            flex: 7,
+                            child: ContainerInputWidget(
+                              contextParent: context,
+                              inputRegisterModel: state.listWidget[0],
+                              onClick: () {
+                                setState(() {});
+                                blocContext.read<DiaryMonitorChildBloc>().add(
+                                    OnSelectValueEvent(
+                                        state.listWidget,
+                                        0,
+                                        context,widget.diary));
+                              },
+                            )),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Expanded(
+                            flex: 6,
+                            child: ContainerInputWidget(
+                              contextParent: context,
+                              inputRegisterModel: state.listWidget[1],
+                              onClick: () {
+                                setState(() {});
+                                blocContext.read<DiaryMonitorChildBloc>().add(
+                                    OnSelectValueEvent(
+                                        state.listWidget,
+                                        1,
+                                        context, widget.diary));
+                              },
+                            )),
+                      ],
+                    )
+                        : const SizedBox(),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: TextField(

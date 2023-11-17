@@ -326,21 +326,19 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                               color: AppColor.whiteF2),
                                                           padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
                                                           alignment: Alignment.topRight,
-                                                          child: Flexible(
-                                                            child: Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                                              children: [
-                                                                Text("${state.listReply[index].description}",
-                                                                  style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-                                                                overflow: TextOverflow.visible,),
-                                                                SizedBox(height: 10,),
-                                                                Container(
-                                                                  //alignment: Alignment.centerRight,
-                                                                  child: Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
-                                                                    style: StyleOfit.textStyleFW400(AppColor.back09, 10),),
-                                                                )
-                                                              ],
-                                                            ),
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Text("${state.listReply[index].description}",
+                                                                style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                                                              overflow: TextOverflow.visible,),
+                                                              SizedBox(height: 10,),
+                                                              Container(
+                                                                //alignment: Alignment.centerRight,
+                                                                child: Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
+                                                                  style: StyleOfit.textStyleFW400(AppColor.back09, 10),),
+                                                              )
+                                                            ],
                                                           )),
                                                     ),
                                                   ],

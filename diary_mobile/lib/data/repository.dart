@@ -9,12 +9,14 @@ import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
 import 'entity/activity/activity_purchase.dart';
 import 'entity/activity/season_farm.dart';
+import 'entity/diary/area_entity.dart';
 import 'entity/diary/diary.dart';
 import 'entity/item_default/activity.dart';
 import 'entity/item_default/item_default.dart';
 import 'entity/item_default/material_entity.dart';
 import 'entity/item_default/tool.dart';
 import 'entity/item_default/unit.dart';
+import 'entity/notify/notify_entity.dart';
 import 'entity/report/question_upload.dart';
 import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
@@ -126,4 +128,10 @@ abstract class Repository {
   Future<FeedbackInfo> getDetailFeedbackFarmer(int id);
 
   Future<ObjectResult> addReplyFeedback(FeedbackInfo feedback);
+
+  Future<List<NotifyEntity>> getListNotify();
+
+  Future<ObjectResult> editNotification(int id);
+
+  Future<List<AreaEntity>> getListAreaEntity();
 }

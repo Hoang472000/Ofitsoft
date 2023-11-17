@@ -5,12 +5,14 @@ import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/activity/no_network/activity_purchase_no_network.dart';
 import 'package:diary_mobile/data/entity/activity/season_farm.dart';
+import 'package:diary_mobile/data/entity/diary/area_entity.dart';
 import 'package:diary_mobile/data/entity/diary/diary.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/setting/user_info.dart';
 import 'package:diary_mobile/data/entity/workflow/workflow.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_no_network_table.dart';
 import 'package:diary_mobile/data/local_data/table/activity_diary_table.dart';
+import 'package:diary_mobile/data/local_data/table/area_table.dart';
 import 'package:diary_mobile/data/local_data/table/diary_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/activity_monitor_table.dart';
 import 'package:diary_mobile/data/local_data/table/item_default/activity_table.dart';
@@ -51,7 +53,7 @@ part 'diary_db.g.dart';
   ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
   ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
   ReportSelectTable, ActivityPurchaseTable, ActivityTransactionTable, ActivityTransactionNoNetworkTable,
-  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable])
+  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable, AreaEntityTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -77,6 +79,25 @@ class DiaryDB extends _$DiaryDB {
   Future<List<Diary>> getInfoDiary(int id) async {
     return (select(diaryTable)..where((tbl) => tbl.id.equals(id)))
         .get();
+  }
+  // loc theo vung trong - mua vu
+  Future<List<Diary>> getListDiaryFilter(int userId, String action, int seasonId, int areaId) async {
+    if(seasonId != -1 && areaId != -1){
+      return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId) & tbl.action.equals(action)
+      & tbl.seasonId.equals(seasonId) & tbl.areaId.equals(areaId)))
+          .get();
+    } else if(seasonId == -1 && areaId != -1){
+      return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId) & tbl.action.equals(action)
+      & tbl.areaId.equals(areaId)))
+          .get();
+    } else if(seasonId != -1 && areaId == -1){
+      return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId) & tbl.action.equals(action)
+      & tbl.seasonId.equals(seasonId)))
+          .get();
+    } else {
+      return (select(diaryTable)..where((tbl) => tbl.userId.equals(userId) & tbl.action.equals(action)))
+          .get();
+    }
   }
 
   ///Thêm, sửa, xóa, lấy Activity Diary
@@ -656,6 +677,40 @@ class DiaryDB extends _$DiaryDB {
         'description': queriedEntry.description,
         'process_stage_ids': jsonDecode(queriedEntry.stringProcessStageIds??'[]'),
       });
+      workflow.add(diaryEntry);
+    }
+    return workflow;
+  }
+
+  ///Thêm, sửa, xóa, lấy Area_entity
+  Future<void> insertListAreaEntity(List<AreaEntity> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        print("HoangCV: entry: ${entry.toJson()}");
+        final AreaEntityTableCompanion entryCompanion = AreaEntityTableCompanion(
+          id: Value(entry.id),
+          name: Value(entry.name),
+          userId: Value(entry.userId),
+          stringSeasons: Value(entry.convertSeasonsListToJson()),// Chuyển đổi thành chuỗi JSON
+        );
+        batch.insertAllOnConflictUpdate(areaEntityTable, [entryCompanion]);
+      }
+    });
+  }
+
+  Future<List<AreaEntity>> getListAreaEntity(int userId) async {
+    final query = await (select(areaEntityTable)..where((tbl) => tbl.userId.equals(userId)))
+        .get();
+    final List<AreaEntity> workflow = [];
+
+    for (final queriedEntry in query) {
+
+      final diaryEntry = AreaEntity.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'userId': queriedEntry.userId,
+        'seasons': jsonDecode(queriedEntry.stringSeasons??'[]'),
+      }, userId);
       workflow.add(diaryEntry);
     }
     return workflow;
