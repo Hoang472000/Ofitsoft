@@ -28,37 +28,31 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Logger.loggerDebug(
       "Bkav DucLQ _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
-  try {
+
     await Firebase.initializeApp(
-        name: "OfitOne",
+//        name: "OfitOne",
         options: const FirebaseOptions(
             apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
             appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
             messagingSenderId: '321357439192',
             projectId: 'ofitone-c9783')
     );
-  }catch(e){
-    print("HoangCV: error: $e");
-  }
   // Utils.autoLoginWithTBTC(message);
 }
 
 Future<void> initBkav() async{
+
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await Firebase.initializeApp(
-        name: "OfitOne",
-        options: const FirebaseOptions(
-            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
-            appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
-            messagingSenderId: '321357439192',
-            projectId: 'ofitone-c9783')
-    );
-  }catch(e){
-    print("HoangCV: error: $e");
-  }
-/*  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  FirebaseMessaging.instance.getInitialMessage();*/
+              await Firebase.initializeApp(
+                //name: "OfitOne",
+                options: const FirebaseOptions(
+                    apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+                    appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
+                    messagingSenderId: '321357439192',
+                    projectId: 'ofitone-c9783')
+              );
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging.instance.getInitialMessage();
   // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   // makes Smartphone Statusbar transparent
   SystemChrome.setEnabledSystemUIMode( SystemUiMode.manual,overlays: [SystemUiOverlay.top]);
@@ -67,8 +61,8 @@ Future<void> initBkav() async{
       statusBarIconBrightness: Brightness.dark,
       ));
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  FirebaseMessaging.instance.getInitialMessage();
+/*  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  FirebaseMessaging.instance.getInitialMessage();*/
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     Logger.loggerDebug("Bkav DucLQ onMessageOpenedApp.listen $message");
