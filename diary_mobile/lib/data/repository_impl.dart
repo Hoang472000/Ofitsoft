@@ -21,6 +21,7 @@ import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -100,13 +101,13 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.responseCode == StatusConst.code00) {
+      await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
       sharedPreferences.setString(SharedPreferencesKey.userName, userName);
       sharedPreferences.setString(SharedPreferencesKey.password, pass);
       String md5Password = crypto.md5.convert(utf8.encode(pass)).toString();
       sharedPreferences.setString(SharedPreferencesKey.passwordEncode, md5Password.substring(0, 20));
       sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
       sharedPreferences.setString(SharedPreferencesKey.token, objectResult.response["token"]);
-      sharedPreferences.setInt(SharedPreferencesKey.userId, objectResult.response["user_id"]);
       sharedPreferences.setString(SharedPreferencesKey.fullName, objectResult.response["user_name"] ?? '');
       sharedPreferences.setString(SharedPreferencesKey.group, objectResult.response["group"] ?? '');
       sharedPreferences.setString(SharedPreferencesKey.imageProfile, objectResult.response["image"] ?? '');
@@ -1703,5 +1704,34 @@ class RepositoryImpl extends Repository {
       );
     }
     return [];
+  }
+
+  @override
+  Future<ObjectResult> getExportPdf(List<int> ids) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.exportPdf,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {"list_id": ids}
+            )));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getListWorkflow response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
   }
 }

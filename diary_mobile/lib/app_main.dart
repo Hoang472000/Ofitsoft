@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
 import 'package:diary_mobile/utils/constants/config_build.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'data/entity/notify/notify_push.dart';
 import 'data/repository.dart';
 import 'data/repository_impl.dart';
 import 'generated/l10n.dart';
@@ -24,74 +27,65 @@ import 'view_model/account/authentication/authentication_state.dart';
 import 'view_model/navigation_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Logger.loggerDebug(
-      "Bkav DucLQ _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
-
+      "HoangCV _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
     await Firebase.initializeApp(
-//        name: "OfitOne",
         options: const FirebaseOptions(
             apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
             appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
             messagingSenderId: '321357439192',
             projectId: 'ofitone-c9783')
     );
-  // Utils.autoLoginWithTBTC(message);
+  Utils.handle(message, true);
+/*  final prefspre = await SharedPreferences.getInstance();
+  int userId =
+      prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
+  print("HoangCV: userId: ${userId}");
+  await FirebaseMessaging.instance.subscribeToTopic("${userId}");*/
+  //Utils.handle(message, true);
+/*  final prefspre = await SharedPreferences.getInstance();
+  int userId =
+      prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
+  await FirebaseMessaging.instance.subscribeToTopic("${userId}");*/
+  //Utils.handle(message);
 }
 
-Future<void> initBkav() async{
+Future<void> initOfit() async{
 
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize();
               await Firebase.initializeApp(
-                //name: "OfitOne",
                 options: const FirebaseOptions(
                     apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
                     appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
                     messagingSenderId: '321357439192',
                     projectId: 'ofitone-c9783')
               );
+  final prefspre = await SharedPreferences.getInstance();
+  int userId =
+      prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
+  await FirebaseMessaging.instance.subscribeToTopic("${userId}");
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.instance.getInitialMessage();
-  // SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  // makes Smartphone Statusbar transparent
   SystemChrome.setEnabledSystemUIMode( SystemUiMode.manual,overlays: [SystemUiOverlay.top]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.dark,
       ));
 
-/*  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  FirebaseMessaging.instance.getInitialMessage();*/
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    Logger.loggerDebug("Bkav DucLQ onMessageOpenedApp.listen $message");
-    if (message.data["flag"] == "3" &&
-        message.data["confirmed"] == "false") {
-/*      DiaLogManager.showDiaLogError(
-          message.notification!.body ?? "Yêu cầu không được xác nhận");*/
-    } else if (message.data["flag"] == "3" &&
-        message.data["confirmed"] == "true") {
-     // Utils.autoLoginWithTBTC(message);
-    }
+    Logger.loggerDebug("HoangCV onMessageOpenedApp.listen $message");
+    Utils.handle(message, false);
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
-        "Bkav DucLQ onMessage.listen ${message.toMap().toString()}");
-    if (message.data["flag"] == "1") {
-      Utils.handleRequireAuthWithTBG(message);
-    } else if (message.data["flag"] == "3" &&
-        message.data["confirmed"] == "false") {
-
-    } else if (message.data["flag"] == "3" &&
-        message.data["confirmed"] == "true") {
-      //Utils.autoLoginWithTBTC(message);
-      //Bkav ToanTDd add -start
-    } else if (message.data["flag"] == "4") {
-
-    }
-    //Bkav ToanTDd add -end
+        "Bkav onMessage.listen ${message.toMap().toString()}");
+    Utils.handle(message, false);
   });
   messaging.requestPermission(
     alert: true,

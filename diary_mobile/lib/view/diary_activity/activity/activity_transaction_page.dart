@@ -201,7 +201,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           state.listActivityTransaction[index].id ??
                                               -1,
                                           widget.action));
-                                });
+                                }, callbackExport: (){},);
                           },
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

@@ -66,6 +66,8 @@ class ApiConst {
   static const String getListNotify = "/get/notification";
   static const String editNotification = "/edit/notification/";
 
+  static const String exportPdf = "/export/xlsx_invoice/";
+
   //update
   static const packageIdIOS = "com.bkav.aibooks";
   static const packageIdANDROID = "com.bkav.aibooks";

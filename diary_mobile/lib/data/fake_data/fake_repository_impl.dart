@@ -13,6 +13,7 @@ import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/entity/setting/feedback_info.dart';
+import 'package:diary_mobile/data/entity/workflow/workflow.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
@@ -656,6 +657,12 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<List<AreaEntity>> getListAreaEntity() {
     // TODO: implement getListAreaEntity
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> getExportPdf(List<int> ids) {
+    // TODO: implement getExportPdf
     throw UnimplementedError();
   }
 }

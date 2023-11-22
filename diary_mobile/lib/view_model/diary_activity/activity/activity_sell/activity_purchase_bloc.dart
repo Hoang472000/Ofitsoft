@@ -7,6 +7,7 @@ import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
+import 'package:diary_mobile/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../data/entity/activity/activity_purchase.dart';
@@ -24,6 +25,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
   ActivityPurchaseBloc(this.repository) : super(ActivityPurchaseState()) {
     on<GetListActivityPurchaseEvent>(_getListActivityPurchase);
     on<RemoveActivityPurchaseEvent>(_removeActivityPurchase);
+    on<ExportPDFEvent>(_exportPDFEvent);
     //add(GetListActivityEvent());
   }
 
@@ -68,6 +70,25 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
           formStatus: SubmissionFailed(objectResult.message)));
     }
   }
+
+  FutureOr<void> _exportPDFEvent(ExportPDFEvent event, Emitter<ActivityPurchaseState> emit) async {
+    emit(state.copyWith(isShowProgress: true, formStatus: FormSubmitting()));
+    var objectResult = await repository.getExportPdf(event.ids);
+
+    //DiaryDB.instance.getListDiary();
+    if (objectResult.responseCode == StatusConst.code00) {
+      Utils.downloadExcelFile(objectResult.response);
+      //add(GetListActivityPurchaseEvent());
+      emit(state.copyWith(
+          isShowProgress: false,
+          formStatus: SubmissionSuccess(success: "Xuất hóa đơn thành công.")));
+    } else if (objectResult.responseCode == StatusConst.code01) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          formStatus: SubmissionFailed(objectResult.message)));
+    }
+
+  }
 }
 
 class ActivityPurchaseEvent extends BlocEvent {
@@ -91,6 +112,15 @@ class RemoveActivityPurchaseEvent extends ActivityPurchaseEvent {
 
   @override
   List<Object?> get props => [id, action];
+}
+
+class ExportPDFEvent extends ActivityPurchaseEvent {
+  final List<int> ids;
+
+  ExportPDFEvent(this.ids);
+
+  @override
+  List<Object?> get props => [ids];
 }
 
 class ActivityPurchaseState extends BlocState {

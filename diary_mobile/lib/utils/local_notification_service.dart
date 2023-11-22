@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:diary_mobile/utils/logger.dart';
 import 'package:diary_mobile/utils/utils.dart';
+import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-///Bkav Nhungltk: show notification local
+///HoangCV: show notification local
 class LocalNotificationService {
   LocalNotificationService();
 
@@ -13,9 +14,9 @@ class LocalNotificationService {
 
   final _localNotificatiopnService = FlutterLocalNotificationsPlugin();
 
-  Future<void> intialize() async {
+  Future<void> intialize(bool openApp) async {
     const AndroidInitializationSettings androidInitializationSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher_round');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     DarwinInitializationSettings iosInitializationSettings =
         DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -28,7 +29,7 @@ class LocalNotificationService {
         android: androidInitializationSettings, iOS: iosInitializationSettings);
     await _localNotificatiopnService.initialize(settings,
         onDidReceiveNotificationResponse: ((details) =>
-            onSelectNotification(details.payload)));
+            onSelectNotification(details.payload, openApp)));
   }
 
   Future<NotificationDetails> _notificationDetails() async {
@@ -53,9 +54,12 @@ class LocalNotificationService {
   void onDidReceiveLocalNotification(
       int id, String? title, String? body, String? payload) {}
 
-  void onSelectNotification(String? payload) {
+  void onSelectNotification(String? payload, bool openApp) {
     // HanhNTHe: logic khi thuc hien click vao 1 thong bao o foreground
     Logger.loggerDebug(" onDidReceiveNotificationResponse = $payload");
+    if(openApp){
+      LaunchApp.openApp(androidPackageName: "com.ofitsoft.diary.diary_mobile");
+    }
     if (payload != null) {
       Utils.launchAppFromNotification(jsonDecode(payload));
     }
@@ -70,16 +74,19 @@ class LocalNotificationService {
       priority: Priority.high,
       importance: Importance.max,
       playSound: true,
+      icon: '@mipmap/ic_launcher',
     );
 
     final notificaiton = message.notification;
     Logger.loggerDebug("showNotificationFirebase notification ($notificaiton)");
     if (notificaiton != null) {
-      // Logger.loggerDebug("Bkav DucLQ  nghe khi co thong bao den show notify +++++++++------ $message");
+      // Logger.loggerDebug(" HoangCv  nghe khi co thong bao den show notify +++++++++------ $message");
       await _localNotificatiopnService.show(
           notificationFirebaseId,
           "${notificaiton.title}",
-          notificaiton.body,
+          (notificaiton.body ?? "")
+              .replaceAll('<p>', '')
+              .replaceAll('</p>', ''),
           NotificationDetails(
             android: androidDetails,
           ),

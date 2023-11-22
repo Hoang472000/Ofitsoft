@@ -17,6 +17,7 @@ class ItemTransaction extends StatefulWidget {
   final String action;
   final VoidCallback callbackChooseItem;
   final VoidCallback callbackDelete;
+  final VoidCallback callbackExport;
 
   const ItemTransaction({
     Key? key,
@@ -25,6 +26,7 @@ class ItemTransaction extends StatefulWidget {
     required this.action,
     required this.callbackChooseItem,
     required this.callbackDelete,
+    required this.callbackExport,
   }) : super(key: key);
 
   @override
@@ -144,6 +146,17 @@ class _ItemTransactionState extends State<ItemTransaction> {
                               }, S.of(context).no, S.of(context).yes);
                             },
                           ),
+              ),
+          IconButton(
+                padding: EdgeInsets.only(left: 16, right: 4),
+                icon: const Image(
+                  image: AssetImage(ImageAsset.imageInfo),
+                  //width: 40,
+                  fit: BoxFit.contain,
+                ),
+                onPressed: () {
+         widget.callbackExport();
+                },
               )
             ],
           ),

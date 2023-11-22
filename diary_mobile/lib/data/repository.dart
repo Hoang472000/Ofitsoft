@@ -22,6 +22,7 @@ import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
 import 'entity/setting/feedback_info.dart';
 import 'entity/setting/user_info.dart';
+import 'entity/workflow/workflow.dart';
 
 
 
@@ -134,4 +135,6 @@ abstract class Repository {
   Future<ObjectResult> editNotification(int id);
 
   Future<List<AreaEntity>> getListAreaEntity();
+
+  Future<ObjectResult> getExportPdf(List<int> ids);
 }

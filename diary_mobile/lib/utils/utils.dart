@@ -7,12 +7,14 @@ import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:intl/intl.dart';
+import 'package:open_file/open_file.dart';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,6 +29,7 @@ import '../view_model/navigation_service.dart';
 import 'constants/shared_preferences_key.dart';
 import 'local_notification_service.dart';
 import 'logger.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Utils {
 
@@ -44,11 +47,31 @@ class Utils {
         .push(NotifyView.route());
   }
 
-  static void handleRequireAuthWithTBG(RemoteMessage message) async {
+  static void handle(RemoteMessage message, bool openApp) async {
     // show thong bao tu dong
     LocalNotificationService service = LocalNotificationService();
-    service.intialize();
+    service.intialize(openApp);
     service.showNotificationFirebase(message);
+  }
+
+  static Future<void> downloadExcelFile(String base64String) async {
+    List<int> bytes = base64Decode(base64String);
+
+    // Lấy thư mục tạm thời
+    final directory = await getTemporaryDirectory();
+    final filePath = '${directory.path}/example.xlsx'; // Đường dẫn file Excel
+
+    // Lưu dữ liệu vào file tạm thời
+    File file = File(filePath);
+    await file.writeAsBytes(bytes);
+
+    // Mở tệp Excel
+    openFile(file);
+  }
+
+  static Future<void> openFile(File file) async {
+    // Sử dụng hệ thống tệp của thiết bị để mở tệp Excel
+    await OpenFile.open(file.path);
   }
 
   ///hiệu ứng chuyển giữa các page khác nhau

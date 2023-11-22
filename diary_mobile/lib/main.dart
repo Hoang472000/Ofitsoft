@@ -3,6 +3,6 @@ import 'package:flutter/material.dart';
 import 'app_main.dart';
 
 void main() {
-  initBkav();
+  initOfit();
   runApp(const MyApp());
 }

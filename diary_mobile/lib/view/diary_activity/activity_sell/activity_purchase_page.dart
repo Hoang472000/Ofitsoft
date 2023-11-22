@@ -189,7 +189,13 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                                           state.listActivityTransaction[index].id ??
                                               -1,
                                           widget.action));
-                                });
+                                },
+                            callbackExport: (){
+                              blocContext.read<ActivityPurchaseBloc>().add(
+                                  ExportPDFEvent(
+                                      [state.listActivityTransaction[index].id ??
+                                          -1]));
+                            },);
                           },
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
