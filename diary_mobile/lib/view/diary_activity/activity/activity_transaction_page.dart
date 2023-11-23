@@ -177,7 +177,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                 activityDiary:
                                     state.listActivityTransaction[index],
                                 action: widget.action,
-                                callbackChooseItem: () async {
+                                chooseItem: () async {
                                   //Truyen id de sang man ben goi api hoac DB
                                   //if (widget.action.compareTo('sell') == 0) {
                                     var result = await Navigator.push(
@@ -201,7 +201,11 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           state.listActivityTransaction[index].id ??
                                               -1,
                                           widget.action));
-                                }, callbackExport: (){},);
+                                }, callbackExport: (){},
+                            callbackChooseItem: (isChoose){
+
+                            },isChoose: false,
+                                amountSelected: 0,);
                           },
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

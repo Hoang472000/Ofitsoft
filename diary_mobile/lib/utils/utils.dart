@@ -544,7 +544,7 @@ class Utils {
   static String convertNumber(double number){
     var formatter = NumberFormat('#,###,###');
     var result = formatter.format(number);
-    print("HangCV: number: ${number} : ${result}");
+    //print("HangCV: number: ${number} : ${result}");
     return result.replaceAll(",", ".");
   }
 
@@ -894,7 +894,7 @@ class Utils {
       Toast.showLongTop("Vui lòng chọn Tên nông dân");
       return false;
     } else if (farmerInspector.farmId == null) {
-      Toast.showLongTop("Vui lòng chọn Tên vùng trồng");
+      Toast.showLongTop("Vui lòng chọn Tên lô trồng");
       return false;
     }
     /* else if (farmerInspector.internal_inspector_id == null) {

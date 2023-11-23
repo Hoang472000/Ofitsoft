@@ -88,7 +88,37 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
               title: Text(
                 "HOẠT ĐỘNG MUA HÀNG",
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
-              )),
+              ), actions: [
+              BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
+                  builder: (contextBloc, state) {
+                  return Visibility(
+                    visible: state.amountSelected > 0,
+                    child: IconButton(
+                      padding: EdgeInsets.only(left: 4, right: 16),
+                      icon: const Image(
+                        image: AssetImage(ImageAsset.imageInfo),
+                        color: Colors.white,
+                        //width: 40,
+                        fit: BoxFit.contain,
+                      ),
+                      onPressed: () {
+                        List<int> resultList = state.listActivityTransaction
+                            .asMap()
+                            .entries
+                            .where((entry) => entry.key < state.listSelected.length && state.listSelected[entry.key])
+                            .map((entry) => entry.value.id)
+                            .whereType<int>()
+                            .toList();
+                        print("HOangCV:resultList: ${resultList}");
+                        contextBloc.read<ActivityPurchaseBloc>().add(
+                            ExportPDFEvent(
+                                resultList));
+                      },
+                    ),
+                  );
+                }
+              )
+            ],),
           //resizeToAvoidBottomInset: true,
           backgroundColor: AppColor.background,
           floatingActionButton: BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
@@ -168,7 +198,7 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                                 activityDiary:
                                 state.listActivityTransaction[index],
                                 action: widget.action,
-                                callbackChooseItem: () async {
+                                chooseItem: () async {
                                   //Truyen id de sang man ben goi api hoac DB
                                   //if (widget.action.compareTo('sell') == 0) {
                                   var result = await Navigator.push(
@@ -183,6 +213,11 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                                   }
                                   //}
                                 },
+                              callbackChooseItem: (isChoose){
+                                blocContext.read<ActivityPurchaseBloc>().add(
+                                    AddChoosePurchaseEvent(
+                                        index, !isChoose));
+                              },
                                 callbackDelete: () {
                                   blocContext.read<ActivityPurchaseBloc>().add(
                                       RemoveActivityPurchaseEvent(
@@ -195,7 +230,9 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                                   ExportPDFEvent(
                                       [state.listActivityTransaction[index].id ??
                                           -1]));
-                            },);
+                            }, amountSelected: state.amountSelected,
+                              isChoose: state.listSelected[index],
+                            );
                           },
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

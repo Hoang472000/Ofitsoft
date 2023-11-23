@@ -26,6 +26,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     on<GetListActivityPurchaseEvent>(_getListActivityPurchase);
     on<RemoveActivityPurchaseEvent>(_removeActivityPurchase);
     on<ExportPDFEvent>(_exportPDFEvent);
+    on<AddChoosePurchaseEvent>(_addChoosePurchase);
     //add(GetListActivityEvent());
   }
 
@@ -42,10 +43,15 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
       listActivityTransaction = await repository.getListActivityPurchase();
       print("HoangCV: _getListActivityPurchase: ${listActivityTransaction.length}");
       listCallbackTransaction.addAll(listActivityTransaction);
-      emitter(state.copyWith(
-        isShowProgress: false,
-        listActivityTransaction: listActivityTransaction,
-        listCallbackTransaction: listCallbackTransaction,));
+    List<bool> listSelected =
+        List.generate(listActivityTransaction.length, (index) => false);
+    emitter(state.copyWith(
+      isShowProgress: false,
+      listActivityTransaction: listActivityTransaction,
+      listCallbackTransaction: listCallbackTransaction,
+      listSelected: listSelected,
+      amountSelected: 0,
+    ));
   }
 
   FutureOr<void> _removeActivityPurchase(
@@ -89,6 +95,27 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     }
 
   }
+
+  FutureOr<void> _addChoosePurchase(AddChoosePurchaseEvent event, Emitter<ActivityPurchaseState> emit) {
+    List<bool> listChoose = state.listSelected;
+    bool choose = event.isChoose;
+    int amountChoose = state.amountSelected;
+    if (choose) {
+      amountChoose++;
+    } else {
+      if (amountChoose > 0) {
+        amountChoose--;
+        print("HoangCV: amountChoose: $amountChoose}");
+      }
+    }
+    listChoose
+        .replaceRange(event.index, event.index + 1, [choose]);
+    emit(state.copyWith(
+        isShowProgress: false,
+        formStatus: const InitialFormStatus(),
+        listSelected: listChoose,
+        amountSelected: amountChoose));
+  }
 }
 
 class ActivityPurchaseEvent extends BlocEvent {
@@ -103,6 +130,17 @@ class GetListActivityPurchaseEvent extends ActivityPurchaseEvent {
   @override
   List<Object?> get props => [];
 }
+
+class AddChoosePurchaseEvent extends ActivityPurchaseEvent {
+  AddChoosePurchaseEvent(this.index, this.isChoose);
+
+  final int index;
+  final bool isChoose;
+
+  @override
+  List<Object?> get props => [isChoose, index];
+}
+
 
 class RemoveActivityPurchaseEvent extends ActivityPurchaseEvent {
   final int id;
@@ -140,6 +178,8 @@ class ActivityPurchaseState extends BlocState {
     listCallback,
     listActivityTransaction,
     listCallbackTransaction,
+    amountSelected,
+    listSelected,
   ];
   final List<ActivityDiary> listDiaryActivity;
   final List<MaterialEntity> listMaterial;
@@ -155,6 +195,8 @@ class ActivityPurchaseState extends BlocState {
   final List<ActivityDiary> listCallback;
   final List<ActivityPurchase> listCallbackTransaction;
   final List<ActivityPurchase> listActivityTransaction;
+  final List<bool> listSelected;
+  final int amountSelected;
 
   ActivityPurchaseState({
     this.listActivityTransaction = const [],
@@ -171,6 +213,8 @@ class ActivityPurchaseState extends BlocState {
     this.updateHarvesting = false,
     this.listCallback = const [],
     this.listCallbackTransaction = const [],
+    this.listSelected = const [],
+    this.amountSelected = 0,
   });
 
   ActivityPurchaseState copyWith({
@@ -188,6 +232,8 @@ class ActivityPurchaseState extends BlocState {
     List<ActivityDiary>? listCallback,
     List<ActivityPurchase>? listActivityTransaction,
     List<ActivityPurchase>? listCallbackTransaction,
+    List<bool>? listSelected,
+    int? amountSelected,
   }) {
     return ActivityPurchaseState(
         listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
@@ -205,6 +251,9 @@ class ActivityPurchaseState extends BlocState {
         listActivityTransaction ?? this.listActivityTransaction,
         listCallbackTransaction:
         listCallbackTransaction ?? this.listCallbackTransaction,
-        listCallback: listCallback ?? this.listCallback);
+        listCallback: listCallback ?? this.listCallback,
+        listSelected: listSelected ?? this.listSelected,
+        amountSelected: amountSelected ?? this.amountSelected,
+    );
   }
 }

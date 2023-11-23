@@ -40,17 +40,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
             projectId: 'ofitone-c9783')
     );
   Utils.handle(message, true);
-/*  final prefspre = await SharedPreferences.getInstance();
-  int userId =
-      prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
-  print("HoangCV: userId: ${userId}");
-  await FirebaseMessaging.instance.subscribeToTopic("${userId}");*/
-  //Utils.handle(message, true);
-/*  final prefspre = await SharedPreferences.getInstance();
-  int userId =
-      prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
-  await FirebaseMessaging.instance.subscribeToTopic("${userId}");*/
-  //Utils.handle(message);
 }
 
 Future<void> initOfit() async{

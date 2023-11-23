@@ -843,7 +843,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           Padding(
             padding: const EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
-              "Tên vùng trồng",
+              "Tên lô trồng",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 14),
               maxLines: 3,

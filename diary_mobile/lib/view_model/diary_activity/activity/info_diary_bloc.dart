@@ -65,10 +65,10 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           id: 2,
           nameActivity: "HOẠT ĐỘNG THU HOẠCH",
           iconActivity: ImageAsset.imagePlantCrop));
-      list.add(ActivityFarm(
+ /*     list.add(ActivityFarm(
           id: 3,
           nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
-          iconActivity: ImageAsset.imageSelling));
+          iconActivity: ImageAsset.imageSelling));*/
       if (check[0]) {
       }
       print("HoangCV: detailDiary: ${detailDiary.name}");
