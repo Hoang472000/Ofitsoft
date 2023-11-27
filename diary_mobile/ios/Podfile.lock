@@ -6,6 +6,8 @@ PODS:
   - connectivity_plus (0.0.1):
     - Flutter
     - ReachabilitySwift
+  - external_app_launcher (0.0.1):
+    - Flutter
   - Firebase/CoreOnly (10.17.0):
     - FirebaseCore (= 10.17.0)
   - Firebase/Messaging (10.17.0):
@@ -123,6 +125,7 @@ DEPENDENCIES:
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/ios`)
   - auto_orientation (from `.symlinks/plugins/auto_orientation/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
+  - external_app_launcher (from `.symlinks/plugins/external_app_launcher/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
@@ -166,6 +169,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/auto_orientation/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
+  external_app_launcher:
+    :path: ".symlinks/plugins/external_app_launcher/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -207,6 +212,7 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   auto_orientation: 102ed811a5938d52c86520ddd7ecd3a126b5d39d
   connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
+  external_app_launcher: ad55ac844aa21f2d2197d7cec58ff0d0dc40bbc0
   Firebase: f4ac0b02927af9253ae094d23deecf0890da7374
   firebase_core: efc9455611b8769fa90fbdae5da182600bd6901c
   firebase_messaging: 9c697d1ecfe77edf15d995b5048906ffc994c96c

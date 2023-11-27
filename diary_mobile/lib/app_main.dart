@@ -32,11 +32,12 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
       "HoangCV _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
   if (Platform.isIOS) {
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
+        /*options: const FirebaseOptions(
             apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
             appId: '1:321357439192:ios:8b16e367e90eea842177ad',
             messagingSenderId: '321357439192',
-            projectId: 'ofitone-c9783')
+            projectId: 'ofitone-c9783')*/
+        options: DefaultFirebaseOptions.currentPlatform
     );
   }else {
     await Firebase.initializeApp(
@@ -54,12 +55,14 @@ Future<void> initOfit() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isIOS) {
+    print(" initializeApp : Firebase : ios");
     await Firebase.initializeApp(
-        options: const FirebaseOptions(
+        /*options: const FirebaseOptions(
             apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
             appId: '1:321357439192:ios:8b16e367e90eea842177ad',
             messagingSenderId: '321357439192',
-            projectId: 'ofitone-c9783')
+            projectId: 'ofitone-c9783')*/
+        options: DefaultFirebaseOptions.currentPlatform
     );
   }else {
     await Firebase.initializeApp(
@@ -73,6 +76,7 @@ Future<void> initOfit() async{
   final prefspre = await SharedPreferences.getInstance();
   int userId =
       prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
+  print("HOangCV: userId subcribetoTopic: ${userId}");
   await FirebaseMessaging.instance.subscribeToTopic("${userId}");
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.instance.getInitialMessage();

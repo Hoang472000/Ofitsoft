@@ -72,6 +72,7 @@ dependencies:
   flutter_local_notifications: ^16.1.0
   permission_handler:
   open_file:
+  external_app_launcher:
 
 dev_dependencies:
   flutter_test:
