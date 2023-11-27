@@ -1,0 +1,39 @@
+Target dependency graph (14 targets)
+FlutterMacOS in Pods, no dependencies
+ReachabilitySwift in Pods, no dependencies
+audioplayers_darwin in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+connectivity_plus in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+ReachabilitySwift in Pods (explicit)
+file_selector_macos in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+package_info_plus in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+path_provider_foundation in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+shared_preferences_foundation in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+sqlite3 in Pods, no dependencies
+sqlite3_flutter_libs in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+sqlite3 in Pods (explicit)
+url_launcher_macos in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+wakelock_plus in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+Pods-Runner in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+ReachabilitySwift in Pods (explicit)
+audioplayers_darwin in Pods (explicit)
+connectivity_plus in Pods (explicit)
+file_selector_macos in Pods (explicit)
+package_info_plus in Pods (explicit)
+path_provider_foundation in Pods (explicit)
+shared_preferences_foundation in Pods (explicit)
+sqlite3 in Pods (explicit)
+sqlite3_flutter_libs in Pods (explicit)
+url_launcher_macos in Pods (explicit)
+wakelock_plus in Pods (explicit)
+Pods-RunnerTests in Pods, depends on:
+Pods-Runner in Pods (explicit)

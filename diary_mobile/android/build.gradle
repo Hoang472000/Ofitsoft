@@ -14,6 +14,8 @@ buildscript {
         //classpath 'com.google.gms:google-services:4.2.0'
         //classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.gms:google-services:4.4.0'
+
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
         // Import the Firebase BoM
         //classpath platform('com.google.firebase:firebase-bom:32.5.0')
         //implementation 'com.google.firebase:firebase-messaging:20.1.0'

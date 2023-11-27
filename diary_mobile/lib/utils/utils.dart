@@ -7,7 +7,6 @@ import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:image_cropper/image_cropper.dart';

@@ -2,11 +2,9 @@ import 'dart:io';
 
 import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
 import 'package:diary_mobile/utils/constants/config_build.dart';
-import 'package:external_app_launcher/external_app_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -32,6 +30,15 @@ import 'firebase_options.dart';
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   Logger.loggerDebug(
       "HoangCV _firebaseMessagingBackgroundHandler ${message.toMap().toString()}");
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+            appId: '1:321357439192:ios:8b16e367e90eea842177ad',
+            messagingSenderId: '321357439192',
+            projectId: 'ofitone-c9783')
+    );
+  }else {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
             apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
@@ -39,20 +46,30 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
             messagingSenderId: '321357439192',
             projectId: 'ofitone-c9783')
     );
+  }
   Utils.handle(message, true);
 }
 
 Future<void> initOfit() async{
 
   WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize();
-              await Firebase.initializeApp(
-                options: const FirebaseOptions(
-                    apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
-                    appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
-                    messagingSenderId: '321357439192',
-                    projectId: 'ofitone-c9783')
-              );
+  if (Platform.isIOS) {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+            appId: '1:321357439192:ios:8b16e367e90eea842177ad',
+            messagingSenderId: '321357439192',
+            projectId: 'ofitone-c9783')
+    );
+  }else {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: 'AIzaSyBwFt-QSqCNM2aM74VR-IX500HGBSi8HjE',
+            appId: '1:321357439192:android:dbaffd1bdbbb522f2177ad',
+            messagingSenderId: '321357439192',
+            projectId: 'ofitone-c9783')
+    );
+  }
   final prefspre = await SharedPreferences.getInstance();
   int userId =
       prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
