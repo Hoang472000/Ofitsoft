@@ -48,7 +48,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
             projectId: 'ofitone-c9783')
     );
   }
-  Utils.handle(message, true);
+  //Utils.handle(message, true);
 }
 
 Future<void> initOfit() async{
@@ -77,7 +77,24 @@ Future<void> initOfit() async{
   int userId =
       prefspre.getInt(SharedPreferencesKey.userId) ?? -1;
   print("HOangCV: userId subcribetoTopic: ${userId}");
-  await FirebaseMessaging.instance.subscribeToTopic("${userId}");
+  if (Platform.isIOS) {
+    String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    if (apnsToken != null) {
+      await FirebaseMessaging.instance.subscribeToTopic("${userId}");
+    } else {
+      await Future<void>.delayed(
+        const Duration(
+          seconds: 3,
+        ),
+      );
+      apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      if (apnsToken != null) {
+        await FirebaseMessaging.instance.subscribeToTopic("${userId}");
+      }
+    }
+  } else {
+    await FirebaseMessaging.instance.subscribeToTopic("${userId}");
+  }
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   FirebaseMessaging.instance.getInitialMessage();
   SystemChrome.setEnabledSystemUIMode( SystemUiMode.manual,overlays: [SystemUiOverlay.top]);
@@ -89,13 +106,13 @@ Future<void> initOfit() async{
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     Logger.loggerDebug("HoangCV onMessageOpenedApp.listen $message");
-    Utils.handle(message, false);
+    //Utils.handle(message, false);
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
         "Bkav onMessage.listen ${message.toMap().toString()}");
-    Utils.handle(message, false);
+    //Utils.handle(message, false);
   });
   messaging.requestPermission(
     alert: true,
@@ -131,7 +148,7 @@ Future<void> initOfit() async{
 
   final prefs = await SharedPreferences.getInstance();
   String? uuidSave = prefs.getString(SharedPreferencesKey.keyUUID);
-  Logger.loggerDebug("Bkav DucLQ uuid $uuidSave");
+  Logger.loggerDebug("HoangCV uuid $uuidSave");
 
 /*  if (uuidSave == null || uuidSave.isEmpty) {
     var uuid = const Uuid(options: {'dai_ly_bkav': UuidUtil.cryptoRNG});
@@ -142,13 +159,13 @@ Future<void> initOfit() async{
   messaging.getToken().then((tokenFirebase) {
     if (tokenFirebase != null && tokenFirebase.isNotEmpty) {
       prefs.setString(SharedPreferencesKey.tokenFirebase, tokenFirebase);
-      Logger.loggerDebug("Bkav DucLQ Token firebase cua app la $tokenFirebase");
+      Logger.loggerDebug("HoangCV Token firebase cua app la $tokenFirebase");
     }
   });
   messaging.onTokenRefresh.listen((newToken) {
     if (newToken.isNotEmpty) {
       prefs.setString(SharedPreferencesKey.tokenFirebase, newToken);
-      Logger.loggerDebug("Bkav DucLQ Token firebase cua app la $newToken");
+      Logger.loggerDebug("HoangCV Token firebase cua app la $newToken");
     }
   });
 //

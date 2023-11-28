@@ -1,6 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
@@ -101,7 +102,25 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     if (objectResult.responseCode == StatusConst.code00) {
-      await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
+      if (Platform.isIOS) {
+        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken != null) {
+          await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
+        } else {
+          await Future<void>.delayed(
+            const Duration(
+              seconds: 3,
+            ),
+          );
+          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+          if (apnsToken != null) {
+            await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
+          }
+        }
+      } else {
+        await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
+      }
+      //await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
       sharedPreferences.setString(SharedPreferencesKey.userName, userName);
       sharedPreferences.setString(SharedPreferencesKey.password, pass);
       String md5Password = crypto.md5.convert(utf8.encode(pass)).toString();
