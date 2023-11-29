@@ -8,6 +8,8 @@ class ApiConst {
   //api login
   static const String login = "/api/login";
 
+  static const String qrCode = "http://qlvsx.ofitsoft.com:8069/traceability/";
+
   //api lay danh muc dung chung
   static const String getListTools = "/get/tools_farmer/";
   static const String getListMaterials = "/get/materials_farmer/";
@@ -62,9 +64,13 @@ class ApiConst {
   //loc mua vu lo trong
   static const String getListAreaEntity = "/get/area";//
 
-  ///get/list_product_batch
+  //danh sach thong bao
   static const String getListNotify = "/get/notification";
   static const String editNotification = "/edit/notification/";
+
+  //truy xuat nguon goc
+  static const String getListProductBatch = "/get/list_product_batch";
+  static const String getDetailProductBatch = "/get/product_batch/"; // id
 
   static const String exportPdf = "/export/xlsx_invoice/";
 

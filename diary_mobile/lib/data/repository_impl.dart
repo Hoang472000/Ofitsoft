@@ -3,6 +3,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/data/entity/access/detail_product_batch.dart';
+import 'package:diary_mobile/data/entity/access/product_batch.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary_no_network.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
@@ -1753,4 +1755,65 @@ class RepositoryImpl extends Repository {
     }
     return objectResult;
   }
+
+  @override
+  Future<List<ProductBatch>> getListProductBatch() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListProductBatch,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListProductBatch response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<ProductBatch> list = List.from(objectResult.response)
+          .map((json) => ProductBatch.fromJson(json, userId))
+          .toList();
+      //DiaryDB.instance.insertListAreaEntity(list);
+      return list;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return [];
+  }
+
+  @override
+  Future<DetailProductBatch> getDetailProductBatch(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: "${ApiConst.getDetailProductBatch}$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {})));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: getDetailProductBatch response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00 || objectResult.responseCode == StatusConst.code02) {
+      List<DetailProductBatch> list = List.from(objectResult.response)
+          .map((json) => DetailProductBatch.fromJson(json))
+          .toList();
+      return list[0];
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+
+    return DetailProductBatch();
+  }
+
 }

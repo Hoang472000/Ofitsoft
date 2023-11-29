@@ -89,13 +89,13 @@ class DiaryMonitorBloc extends Bloc<DiaryMonitorEvent, DiaryMonitorState> {
           iconActivity: ImageAsset.imageDiary,
           action: "record"));
     }
-    if (check[1]) {
+    /*if (check[1]) {
       list.add(ActivityFarm(
           id: 1,
           nameActivity: "Giám sát",
           iconActivity: ImageAsset.imageDiary,
           action: "monitor"));
-    }
+    }*/
 
     emitter(state.copyWith(
       isShowProgress: false,

@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     bool isAllTrueExceptFirst = check[0] == true &&
         check.skip(1).every((element) => element == false);
     bool isAllFalse = check.every((element) => element == false);
+    bool is3False = check[0] || check[1] || check[2];
     if (isAllTrueExceptFirst) {
       checkFarmer = true;
     }
@@ -75,6 +76,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         checkMonitor = false;
       });
     }
+    if(!is3False){
+      //checkFarmer = true;
+      setState(() {
+        checkMonitor = false;
+      });
+    }
 
     print("HoangC: check: $check : ${isAllTrueExceptFirst} : ${isAllFalse} : ${checkReport} : ${checkFarmer}");
     if (checkFarmer) {
@@ -86,16 +93,28 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         const SettingView(), //const Page5(),
       ];
     } else if(checkPurchase || checkReport){
-      print("HoangCV: aor ma");
-      screens = [
-        const HomeRecordView(), //const Page1(),
-        const DiaryMonitorView(), // page ban hang const Page2(),
-        const QRCodeView(), // page mua hang Page3(),
-        const NotifyView(), //const Page4(),
-        const SettingView(), //const Page5(),
-      ];
+      if(!is3False) {
+        print("HoangCV: aor ma 1111");
+        screens = [
+          const HomeRecordView(), //const Page1(),
+          const DiaryView(), // page ban hang const Page2(),
+          const QRCodeView(), // page mua hang Page3(),
+          const NotifyView(), //const Page4(),
+          const SettingView(), //const Page5(),
+        ];
+      } else{
+        print("HoangCV: aor ma");
+        screens = [
+          const HomeRecordView(), //const Page1(),
+          const DiaryMonitorView(), // page ban hang const Page2(),
+          const QRCodeView(), // page mua hang Page3(),
+          const NotifyView(), //const Page4(),
+          const SettingView(), //const Page5(),
+        ];
+      }
       currentScreen = screens[0];
     } else {
+      print("HoangCV: aor ma 1111 121312");
       screens = [
         const HomeView(), //const Page1(),
         const DiaryMonitorView(), // page ban hang const Page2(),

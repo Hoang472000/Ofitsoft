@@ -61,11 +61,15 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
   Future<int> calculateLength() async {
     List<bool> check = await SharedPreDiary.getRole();
     int count = 0;
-    for(int i = 0 ; i < 3; i++){
-      if(check[i]){
+    //for(int i = 0 ; i < 3; i++){
+      if(check[0]){
         count++;
       }
-    }
+      if(check[2]){
+        count++;
+      }
+    //}
+    print("HoangCV: count: ${count}");
     // Trường hợp mặc định, bạn có thể trả về một giá trị khác nếu cần.
     return count;
   }

@@ -7,6 +7,8 @@ import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
 
+import 'entity/access/detail_product_batch.dart';
+import 'entity/access/product_batch.dart';
 import 'entity/activity/activity_purchase.dart';
 import 'entity/activity/season_farm.dart';
 import 'entity/diary/area_entity.dart';
@@ -137,4 +139,8 @@ abstract class Repository {
   Future<List<AreaEntity>> getListAreaEntity();
 
   Future<ObjectResult> getExportPdf(List<int> ids);
+
+  Future<List<ProductBatch>> getListProductBatch();
+
+  Future<DetailProductBatch> getDetailProductBatch(int id);
 }

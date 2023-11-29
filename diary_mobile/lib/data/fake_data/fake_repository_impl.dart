@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:diary_mobile/data/entity/access/detail_product_batch.dart';
+import 'package:diary_mobile/data/entity/access/product_batch.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/area_entity.dart';
@@ -663,6 +665,18 @@ class FakeRepositoryImpl extends Repository {
   @override
   Future<ObjectResult> getExportPdf(List<int> ids) {
     // TODO: implement getExportPdf
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<DetailProductBatch> getDetailProductBatch(int id) {
+    // TODO: implement getDetailProductBatch
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<ProductBatch>> getListProductBatch() {
+    // TODO: implement getListProductBatch
     throw UnimplementedError();
   }
 }

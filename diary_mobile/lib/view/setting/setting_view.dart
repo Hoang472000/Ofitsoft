@@ -173,11 +173,11 @@ class _SettingViewState extends State<SettingView> {
                   }, icon: IconAsset.icChangePassword),
                 ),
 
-                itemAccount(context, text: "Hướng dẫn sử dụng",
+                /*itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
                       Navigator.push(context, ListPDFPage.route());
                       //DiaLogManager.showDialogDevelopingFeature();
-                  /*          Navigator.push(context, UserManualPage.route());*/
+                  *//*          Navigator.push(context, UserManualPage.route());*//*
                 }, icon: IconAsset.icUserManual),
                 itemAccount(context, text: "Liên hệ", voidCallback: () {
                             Navigator.push(context, ContactPage.route());
@@ -188,7 +188,7 @@ class _SettingViewState extends State<SettingView> {
                       voidCallback: () {
                     Navigator.push(context, FeedbackPage.route());
                   }, icon: IconAsset.icHistoryActivity),
-                ),
+                ),*/
                 // SizedBox(height: 20,)
                 Padding(
                   padding:

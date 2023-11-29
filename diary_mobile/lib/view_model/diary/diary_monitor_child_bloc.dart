@@ -85,7 +85,6 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
       ));
       _initViewAdd(emitter);
     } else{
-
       listDiary = await DiaryDB.instance.getListDiaryFilter(userId, event.action, event.seasonId, event.areaId);
     }
     List<String> distinctMonthsAndYears = [];
@@ -279,7 +278,9 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
 
     newListDate.removeWhere((element) => element.isEmpty);
     print("HoangCV: newListDate: ${newListDate.toString()}");
-    emit(state.copyWith(listDiary: searchResults, listSelected: searchBoolResult, listDate: newListDate, lengthDiary: totalSublistItems, amountSelected: 0));
+    emit(state.copyWith(
+      formStatus: const InitialFormStatus(),
+        listDiary: searchResults, listSelected: searchBoolResult, listDate: newListDate, lengthDiary: totalSublistItems, amountSelected: 0));
   }
 
   FutureOr<void> _selectValue(OnSelectValueEvent event, Emitter<DiaryMonitorChildState> emit) async {
@@ -320,9 +321,10 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
                 listSeasonEntity: listSeasonEntity));
             emit(
                 state.copyWith(listWidget: state.listWidget));
+            add(GetListDiaryEvent(event.diary, state.action, first: false, areaId: state.listWidget[0].valueSelected.id , seasonId: -1));
           }
           if (event.list[event.index].title.compareTo("Mùa vụ") == 0) {
-            add(GetListDiaryEvent(event.diary, state.action, first: false, seasonId: state.listWidget[0].valueSelected.id , areaId: event.list[event.index].listValue[result].id));
+            add(GetListDiaryEvent(event.diary, state.action, first: false, areaId: state.listWidget[0].valueSelected.id , seasonId: event.list[event.index].listValue[result].id));
           }
       }
     }

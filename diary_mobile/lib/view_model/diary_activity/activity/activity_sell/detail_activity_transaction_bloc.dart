@@ -463,15 +463,19 @@ class DetailActivityTransactionBloc
       if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: "Ghi hoạt động thành công.")));
-      }else if (objectResult.responseCode == StatusConst.code06) {
+            formStatus: SubmissionSuccess(success: "Sửa hoạt động thành công.")));
+      }/*else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
-      } else if (objectResult.responseCode == StatusConst.code01){
+      } */else if (objectResult.responseCode == StatusConst.code01){
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+      } else{
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: const InitialFormStatus()));
       }
     }
   }

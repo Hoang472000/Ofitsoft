@@ -4,8 +4,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../resource/assets.dart';
+import '../utils/constants/shared_preferences.dart';
 import 'bloc_event.dart';
 import 'bloc_state.dart';
+import 'diary_activity/activity/info_diary_bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   //final Repository repository;
@@ -64,6 +67,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> _changeRadioOrg(
       ChangeRadioUserOrgEvent event, Emitter<HomeState> emit) {
     emit(state.copyWith(userORG: event.userOrg));*/
+
+    List<ActivityFarm> list = [];
+    List<bool> check = await SharedPreDiary.getRole();
+    if(check[3] || check[4]) {
+      list.add(ActivityFarm(
+          id: 1,
+          nameActivity: "Quản lý",
+          iconActivity: ImageAsset.imageManager));
+    }
+    if(check[3] || check[4] || check[2]) {
+      list.add(ActivityFarm(
+          id: 2,
+          nameActivity: "Truy xuất",
+          iconActivity: ImageAsset.imageQrCode));
+    }
+    list.add(ActivityFarm(
+        id: 3,
+        nameActivity: "Phản hồi",
+        iconActivity: ImageAsset.imageReply));
+    list.add(ActivityFarm(
+        id: 4,
+        nameActivity: "Hướng dẫn",
+        iconActivity: ImageAsset.imageManual));
+    emit(state.copyWith(listActivityFarm: list));
   }
 }
 
@@ -88,11 +115,13 @@ class ChangeRadioUserOrgEvent extends HomeEvent {
 
 class HomeState extends BlocState {
   @override
-  List<Object?> get props =>[];
+  List<Object?> get props => [listActivityFarm];
+  final List<ActivityFarm> listActivityFarm;
 
-  HomeState();
+  HomeState({this.listActivityFarm = const []});
 
-  HomeState copyWith() {
-    return HomeState();
+  HomeState copyWith({List<ActivityFarm>? listActivityFarm}) {
+    return HomeState(
+        listActivityFarm: listActivityFarm ?? this.listActivityFarm);
   }
 }

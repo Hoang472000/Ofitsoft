@@ -186,6 +186,7 @@ class ImageAsset {
   static const String imageYoutube = "${iMages}youtube.png";
   static const String imageCompany = "${iMages}company.png";
   static const String imageSelling = "${iMages}selling.png";
+  static const String imageWorkProcess = "${iMages}work_process.png";
 
   //activity_image
   static const String imageActGardenVentilation = "${iMages}act_garden_ventilation.png";
@@ -212,6 +213,12 @@ class ImageAsset {
   static const String imageToolSaw = "${iMages}tool_saw.png";
   static const String imageToolSpecialized = "${iMages}tool_specialized.png";
   //background ofitsoft
+
+  //image home
+  static const String imageReply = "${iMages}reply.png";
+  static const String imageQrCode = "${iMages}qr_code.png";
+  static const String imageManager = "${iMages}manager.png";
+  static const String imageManual = "${iMages}manual.png";
 
   //purchase
   static const String imagePurchase1 = "${iMages}purchase1.jpeg";

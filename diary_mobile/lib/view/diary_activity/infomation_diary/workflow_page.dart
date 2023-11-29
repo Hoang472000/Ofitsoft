@@ -43,7 +43,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
           centerTitle: true,
           showDefaultBackButton: true,
           title: Text(
-            "Chi tiết quy trình",
+            "QUY TRÌNH LÀM VIỆC",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
@@ -65,7 +65,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
                         cardTile(
                             label: "Tên quy trình",
                             value: "${state.workflow!.name}",
-                            image: ImageAsset.imageDiary),
+                            image: ImageAsset.imageWorkProcess),
                         cardTileDouble(
                             label1: "Loại vật nuôi/cây trồng",
                             value1:  "${state.workflow!.cropName}",
@@ -74,7 +74,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
                         cardTile(
                             label: "Tiêu chuẩn",
                             value: "${state.workflow!.standard}",
-                            image: ImageAsset.imageDiary),
+                            image: ImageAsset.imageFile),
                         cardTile(
                             label: "Mô tả",
                             value: "${state.workflow!.description}",
@@ -124,42 +124,6 @@ class _WorkflowPageState extends State<WorkflowPage> {
                             );
                           }).toList(),
                         ),
-                       /* Flexible(
-                          child: ListView.builder(
-                            itemCount: state.workflow!.processStageIds.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return ExpansionTile(
-                                title: Text( state.workflow!.processStageIds[index].name ?? ""),
-                                children: [
-                                  ListView.builder(
-                                  itemCount: state.workflow!.processStageIds[index].processStageTaskIds.length,
-                                  itemBuilder: (BuildContext context, int index1) {
-                                    return Column(
-                                      children: [
-                                        Text(state.workflow!.processStageIds[index].processStageTaskIds[index1].activityName ?? ''),
-                                        Text(state.workflow!.processStageIds[index].processStageTaskIds[index1].description ?? ''),
-                                        Image.memory(
-                                          gaplessPlayback: true,
-                                          base64Decode(state.workflow!.processStageIds[index].processStageTaskIds[index1].image ??
-                                              ""),
-                           *//*                               imageWidth = 360;
-                                                            imageHeight = 240;
-
-                                                            imageWidth = 180;
-                                                            imageHeight = 130;*//*
-                                          height: 240,
-                                          width: 360,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                                ]
-                              );
-                            },
-                          ),
-                        ),*/
                       ],
                     ),
                   ));
@@ -174,7 +138,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
 
     final List<String> romanNumerals = [
       "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI",
-      "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX"
+      "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX", "XXI",
+      "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX"
     ]; // Extend this list as needed
 
     return romanNumerals[value];

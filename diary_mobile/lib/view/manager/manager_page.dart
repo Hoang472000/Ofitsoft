@@ -65,7 +65,7 @@ class _ManagerPageState extends State<ManagerPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("runqay ");
+    //print("runqay ");
       return Scaffold(
         backgroundColor: AppColor.background,
         appBar: OfitAppBar(

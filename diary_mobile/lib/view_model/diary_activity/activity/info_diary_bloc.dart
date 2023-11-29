@@ -42,7 +42,7 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           isShowProgress: false,
           detailDiary: detailDiary,
           listActivityDiary: event.list));
-      print("HoangCV: update activity harvesting. ${event.updateHarvesting} : ${event.listTransaction.length} : ${event.list.length}");
+      print("HoangCV: detailDiary.productProcessId. ${detailDiary.productProcessId} : ${event.listTransaction.length} : ${event.list.length}");
     } else if (!event.updateHarvesting && event.list.isNotEmpty) {
       print("HoangCV: update list activity canh tac. ${event.list.length}");
       emitter(
@@ -55,6 +55,7 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
       final detailDiary = await repository.getInfoDiary(event.id);
       final listActivityDiary = await repository.getListActivityDiary(event.id);
       final listActivityTransaction = await repository.getListActivityTransaction(event.id);
+      print("HoangCV: detailDiary.productProcessId. ${detailDiary.productProcessId} ");
       List<bool> check = await SharedPreDiary.getRole();
       List<ActivityFarm> list = [];
       list.add(ActivityFarm(
@@ -65,10 +66,12 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
           id: 2,
           nameActivity: "HOẠT ĐỘNG THU HOẠCH",
           iconActivity: ImageAsset.imagePlantCrop));
- /*     list.add(ActivityFarm(
-          id: 3,
-          nameActivity: "HOẠT ĐỘNG BÁN HÀNG",
-          iconActivity: ImageAsset.imageSelling));*/
+       if(detailDiary!.productProcessId != -1) {
+         list.add(ActivityFarm(
+             id: 3,
+             nameActivity: "QUY TRÌNH LÀM VIỆC",
+             iconActivity: ImageAsset.imageWorkProcess));
+       }
       if (check[0]) {
       }
       print("HoangCV: detailDiary: ${detailDiary.name}");

@@ -32,10 +32,10 @@ class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
       GetWorkflowEvent event, Emitter<WorkflowState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
     final workflow = await DiaryDB.instance.getListWorkflow(event.id);
-    print("HoangCV: workflow : ${workflow.first.toJson()}");
-    workflow.first.processStageIds.forEach((element) {
+    //print("HoangCV: workflow : ${workflow.first.toJson()}");
+ /*   workflow.first.processStageIds.forEach((element) {
       print("HoangCV: processStageIds : ${element.toJson()}");
-    });
+    });*/
     emitter(state.copyWith(
       isShowProgress: false,
       workflow: workflow.first,

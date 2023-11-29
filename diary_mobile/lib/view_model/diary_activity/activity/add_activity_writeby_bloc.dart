@@ -349,7 +349,7 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
               nameController: TextEditingController(
                   text: event.list[event.index].valueSelected.name),
               indexActivity: result));
-          if (event.list[event.index].listValue[result].id == 20) {
+          if (event.list[event.index].listValue[result].harvesting == true) {
             List<InputRegisterModel> listYield = [];
             listYield.add(InputRegisterModel(
               title: "Sản lượng",
@@ -485,7 +485,8 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
       List<ActivityDiary> listDiary = [];
       List<int> seasonFarmIds = [];
       state.detailActivity.forEach((element) {
-        seasonFarmIds.add(element.seasonId ?? -1);
+        print("HoangCV:detailActivity element:  ${element.toJson()}");
+        seasonFarmIds.add(element.id ?? -1);
       });
       ActivityDiary activityDiary = ActivityDiary(
         seasonFarmIds: seasonFarmIds,

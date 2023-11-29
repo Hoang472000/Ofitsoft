@@ -73,6 +73,7 @@ dependencies:
   permission_handler:
   open_file:
   external_app_launcher:
+  qr_flutter:
 
 dev_dependencies:
   flutter_test:

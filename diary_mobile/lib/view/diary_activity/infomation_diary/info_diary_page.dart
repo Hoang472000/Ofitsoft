@@ -89,7 +89,11 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                             blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], list: result[1]));
                                           }
                                         } else if(state.listActivityFarm[index].id == 3){
-                                          var result = await Navigator.push(context,
+                                          var result = await Navigator.of(context).push(
+                                              WorkflowPage.route(
+                                                  state.detailDiary!.productProcessId ??
+                                                      -1));
+                                          /*var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("sell",
                                                 seasonFarmId: widget.id,
                                                   diary: widget.diary,
@@ -97,7 +101,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                                   listActivityDiary: state.listActivityDiary));
                                           if(result != null && result[0]){
                                             blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
-                                          }
+                                          }*/
                                         } else if(state.listActivityFarm[index].id == 4){
                                           Navigator.push(context,
                                               ActivityPage.route("monitor",
@@ -133,7 +137,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             value:
                                 "số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam,số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam",
                             image: ImageAsset.imageDisaster),*/
-                        (state.detailDiary!.productProcessName ?? "").isNotEmpty ?
+       /*                 (state.detailDiary!.productProcessName ?? "").isNotEmpty ?
                           itemAccount(context,
                               image: ImageAsset.imageDiary,
                               text: "${state.detailDiary!.productProcessName}",
@@ -142,7 +146,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                     WorkflowPage.route(
                                         state.detailDiary!.productProcessId ??
                                             -1));
-                              }) : SizedBox(),
+                              }) : SizedBox(),*/
                         CardTile(
                             label: "Loại vật nuôi/cây trồng",
                             value: "${state.detailDiary!.cropName}",
