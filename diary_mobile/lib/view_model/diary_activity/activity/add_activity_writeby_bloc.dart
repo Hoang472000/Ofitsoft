@@ -380,8 +380,13 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
           listTool.addAll(state.listToolAll.map((tool) => Tool.copy(tool)));
           final listMaterial = <MaterialEntity>[];
           listMaterial.addAll(state.listMaterialAll.map((material) => MaterialEntity.copy(material)));
-          listTool.removeWhere((element) => !tool.contains(element.id));
-          listMaterial.removeWhere((element) => !material.contains(element.id));
+          if(tool.isNotEmpty) {
+            listTool.removeWhere((element) => !tool.contains(element.id));
+          }
+          if(material.isNotEmpty) {
+            listMaterial.removeWhere((element) =>
+            !material.contains(element.id));
+          }
           emit(state.copyWith(listMaterial: listMaterial, listTool: listTool));
           state.listWidgetVT[0].listValue= listMaterial;
           state.listWidgetCC[0].listValue= listTool;

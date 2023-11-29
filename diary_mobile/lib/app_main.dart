@@ -112,7 +112,7 @@ Future<void> initOfit() async{
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
         "Bkav onMessage.listen ${message.toMap().toString()}");
-    //Utils.handle(message, false);
+    Utils.handle(message, false);
   });
   messaging.requestPermission(
     alert: true,

@@ -360,13 +360,18 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
             List<int> material = event.list[event.index].valueSelected
                 .materialIds;
             final listTool = <Tool>[];
+            //print("HoangCV: listToolAll: ${state.listToolAll.length}");
             listTool.addAll(state.listToolAll.map((tool) => Tool.copy(tool)));
             final listMaterial = <MaterialEntity>[];
             listMaterial.addAll(state.listMaterialAll.map((material) =>
                 MaterialEntity.copy(material)));
-            listTool.removeWhere((element) => !tool.contains(element.id));
-            listMaterial.removeWhere((element) =>
-            !material.contains(element.id));
+            if(tool.isNotEmpty) {
+              listTool.removeWhere((element) => !tool.contains(element.id));
+            }
+            if(material.isNotEmpty) {
+              listMaterial.removeWhere((element) =>
+              !material.contains(element.id));
+            }
             emit(
                 state.copyWith(listMaterial: listMaterial, listTool: listTool));
             state.listWidgetVT[0].listValue = listMaterial;
@@ -540,6 +545,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<AddActivityState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(

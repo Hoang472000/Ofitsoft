@@ -40,7 +40,7 @@ class ReportResult {
       internalInspectorId: json['internal_inspector_id'] ?? -1,
       internalInspector: json['internal_inspector'] ?? '',
       createDate: json['create_date'] ?? '',
-        state: json['state'] ?? 'in_progress'
+      state: json['state'] ?? 'in_progress'
     );
   }
 

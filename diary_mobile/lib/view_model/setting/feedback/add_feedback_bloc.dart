@@ -186,16 +186,20 @@ class AddFeedbackBloc extends Bloc<AddFeedbackEvent, AddFeedbackState> {
       if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: "Thêm hoạt động thành công.")));
-      }else if (objectResult.responseCode == StatusConst.code06) {
+            formStatus: SubmissionSuccess(success: "Gửi phản hồi thành công thành công.")));
+      }/*else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionSuccess(success: "Hoạt động đã được sao lưu. \n Vui lòng truy cập mạng sớm nhất để thêm hoạt động.")));
-      } else if (objectResult.responseCode != StatusConst.code01) {
+      }*/ else if (objectResult.responseCode != StatusConst.code01) {
         //_changeViewEdit(emit);
         emit(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionFailed(objectResult.message)));
+      } else{
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: const InitialFormStatus()));
       }
     }
   }
