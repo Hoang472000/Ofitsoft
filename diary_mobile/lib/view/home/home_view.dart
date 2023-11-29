@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -32,26 +33,32 @@ class _HomeViewState extends State<HomeView> {
   final PageController _pageController = PageController(initialPage: 0,
     viewportFraction: 1,);
   int _currentPage = 0;
-  int _totalPages = 5;
+  final int _totalPages = 5;
   Timer? _timer;
+  bool _showAppbar = true;
+  final ScrollController _scrollBottomBarController = ScrollController();
+  bool isScrollingDown = false;
+  double bottomBarHeight = 75;
 
   @override
   void initState() {
     super.initState();
     _startAutoScroll();
+    myScroll();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _scrollBottomBarController.removeListener(() {});
     super.dispose();
   }
 
   void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 1 ), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5 ), (timer) {
       if (_pageController.page! < (_totalPages) - 1) {
         _pageController.nextPage(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       } else {
@@ -60,14 +67,33 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  void myScroll() async {
+    _scrollBottomBarController.addListener(() {
+      if (_scrollBottomBarController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+          _showAppbar = false;
+        }
+      }
+      if (_scrollBottomBarController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+          _showAppbar = true;
+        }
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    //print("runqay ");
+    //print("runqay  Home View ");
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
         //backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        appBar: OfitAppBar(
+        appBar: _showAppbar ? OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: false,
@@ -79,7 +105,11 @@ class _HomeViewState extends State<HomeView> {
           flexibleSpace: SizedBox(),
           hasBottom: true,
           actions: [],
-        ),
+        )
+          : PreferredSize(
+          child: Container(),
+      preferredSize: Size(0.0, 0.0),
+      ),
         body: Utils.bkavCheckOrientation(
             context,
             FractionallySizedBox(
@@ -96,6 +126,7 @@ class _HomeViewState extends State<HomeView> {
                           fit: BoxFit.fill),
                     ), ),
                   SingleChildScrollView(
+                    controller: _scrollBottomBarController,
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width,
                         //height: MediaQuery.of(context).size.height,

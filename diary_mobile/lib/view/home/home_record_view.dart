@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:diary_mobile/view/access_origin/access_origin_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -29,32 +30,32 @@ class _HomeRecordViewState extends State<HomeRecordView> {
   final PageController _pageController = PageController(initialPage: 0,
     viewportFraction: 1,);
   int _currentPage = 0;
-  int _totalPages = 5;
+  final int _totalPages = 5;
   Timer? _timer;
+  bool _showAppbar = true;
+  final ScrollController _scrollBottomBarController = ScrollController();
+  bool isScrollingDown = false;
+  double bottomBarHeight = 75;
 
-  @override
   @override
   void initState() {
     super.initState();
-    _pageController.addListener(() {
-      setState(() {
-        _currentPage = _pageController.page!.toInt() % _totalPages;
-      });
-    });
     _startAutoScroll();
+    myScroll();
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _scrollBottomBarController.removeListener(() {});
     super.dispose();
   }
 
   void _startAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 1 ), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5 ), (timer) {
       if (_pageController.page! < (_totalPages) - 1) {
         _pageController.nextPage(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           curve: Curves.easeInOut,
         );
       } else {
@@ -62,14 +63,33 @@ class _HomeRecordViewState extends State<HomeRecordView> {
       }
     });
   }
+
+  void myScroll() async {
+    _scrollBottomBarController.addListener(() {
+      if (_scrollBottomBarController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        if (!isScrollingDown) {
+          isScrollingDown = true;
+          _showAppbar = false;
+        }
+      }
+      if (_scrollBottomBarController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        if (isScrollingDown) {
+          isScrollingDown = false;
+          _showAppbar = true;
+        }
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
-    //print("runqay ");
+    //print("runqay Home record view");
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
         //backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        appBar: OfitAppBar(
+        appBar: _showAppbar ? OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: false,
@@ -80,8 +100,11 @@ class _HomeRecordViewState extends State<HomeRecordView> {
           backgroundColor: Colors.transparent,
           flexibleSpace: SizedBox(),
           hasBottom: true,
-          actions: [
-          ],
+          actions: [],
+        )
+            : PreferredSize(
+          child: Container(),
+          preferredSize: Size(0.0, 0.0),
         ),
         body: Utils.bkavCheckOrientation(
             context,
@@ -99,6 +122,7 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                           fit: BoxFit.fill),
                     ), ),
                      SingleChildScrollView(
+                         controller: _scrollBottomBarController,
                         child: SizedBox(
                           width: MediaQuery.of(context).size.width,
                           //height: MediaQuery.of(context).size.height,
@@ -190,11 +214,11 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                                   scrollDirection: Axis.horizontal,
                                   itemCount: _totalPages,
                                  // viewportFraction: 0.8,
-                                 /* onPageChanged: (index) {
+                                  onPageChanged: (index) {
                                     setState(() {
                                       _currentPage = index;
                                     });
-                                  },*/
+                                  },
                                   itemBuilder: (context, index) {
                                     return Padding(
                                       padding: const EdgeInsets.only(left: 16, right: 16.0), // Khoảng cách giữa các item
