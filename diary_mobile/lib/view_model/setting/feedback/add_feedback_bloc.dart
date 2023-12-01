@@ -186,7 +186,7 @@ class AddFeedbackBloc extends Bloc<AddFeedbackEvent, AddFeedbackState> {
       if (objectResult.responseCode == StatusConst.code00) {
         emit(state.copyWith(
             isShowProgress: false,
-            formStatus: SubmissionSuccess(success: "Gửi phản hồi thành công thành công.")));
+            formStatus: SubmissionSuccess(success: "Gửi phản hồi thành công.")));
       }/*else if (objectResult.responseCode == StatusConst.code06) {
         emit(state.copyWith(
             isShowProgress: false,

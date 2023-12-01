@@ -114,7 +114,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       Toast.showLongTop("Không có danh sách nông hộ");
       checkPass = false;
     }else if(event.index == 4 && state.listFarm.isEmpty) {
-      Toast.showLongTop("Không có danh sách vùng trồng");
+      Toast.showLongTop("Không có danh sách lô trồng");
       checkPass = false;
     }/*else if(event.index == 2 && state.listInspector.isEmpty) {
       Toast.showLongTop("Không có danh sách thanh tra viên");

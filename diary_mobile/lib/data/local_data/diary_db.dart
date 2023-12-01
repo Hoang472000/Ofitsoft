@@ -582,7 +582,6 @@ class DiaryDB extends _$DiaryDB {
     await (delete(activityTransactionTable).go());
   }
 
-
   /// Transaction purchase
   Future<void> insertListActivityPurchase(List<ActivityPurchase> values) async{
     await batch((batch) {
@@ -596,8 +595,6 @@ class DiaryDB extends _$DiaryDB {
   Future<void> removeActivityPurchase() async {
     await (delete(activityPurchaseTable).go());
   }
-
-
 
   /// Transaction sell no network
   Future<void> insertListActivityTransactionNoNetwork (List<ActivityTransactionNoNetwork> values) async{

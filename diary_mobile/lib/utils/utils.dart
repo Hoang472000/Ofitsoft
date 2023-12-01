@@ -215,11 +215,11 @@ class Utils {
 
   static String formatDate(String time) {
 
-    print("HoangCV: formatDate: $time");
+    //print("HoangCV: formatDate: $time");
     try {
       if (time.isNotEmpty) {
         String result = time.replaceAll('"', "").trim();
-        print("HoangCV: formatDate result: $result");
+        //print("HoangCV: formatDate result: $result");
         // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
         DateTime dateTime = DateTime.parse(result);
         final f = DateFormat('dd/MM/yyyy HH:mm:ss');
@@ -232,13 +232,42 @@ class Utils {
     }
   }
 
-  static String formatDateDay(String time) {
+  static String formatDateForDiaryActivity(String time) {
 
-    print("HoangCV: formatDate: $time");
+    //print("HoangCV: formatDate: $time");
     try {
       if (time.isNotEmpty) {
         String result = time.replaceAll('"', "").trim();
-        print("HoangCV: formatDate result: $result");
+        //print("HoangCV: formatDate result: $result");
+        // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
+        DateTime dateTime = DateTime.parse(result);
+        final f2 = DateFormat('dd/MM/yyyy');
+        final f1 = DateFormat('HH:mm');
+        final time2 = f2.format(dateTime) ;
+        String time1 = f1.format(dateTime) ;
+        if(dateTime.hour <= 12 && dateTime.hour >= 3){
+          time1 += " Sáng, ";
+        }else if(dateTime.hour > 12 && dateTime.hour <= 6){
+          time1 += " Chiều, ";
+        }else{
+          time1 += " Tối, ";
+        }
+        return time1+time2;
+      } else {
+        return "";
+      }
+    }catch(_){
+      return "";
+    }
+  }
+
+  static String formatDateDay(String time) {
+
+    //print("HoangCV: formatDate: $time");
+    try {
+      if (time.isNotEmpty) {
+        String result = time.replaceAll('"', "").trim();
+        //print("HoangCV: formatDate result: $result");
         // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
         DateTime dateTime = DateTime.parse(result);
         final f = DateFormat('HH:mm');
@@ -253,11 +282,11 @@ class Utils {
 
   static String formatDateMonth(String time) {
 
-    print("HoangCV: formatDate: $time");
+   // print("HoangCV: formatDate: $time");
     try {
       if (time.isNotEmpty) {
         String result = time.replaceAll('"', "").trim();
-        print("HoangCV: formatDate result: $result");
+        //print("HoangCV: formatDate result: $result");
         // DateTime dateTime = DateTime.parse(time/*.replaceFirst(' ', 'T')*/);
         DateTime dateTime = DateTime.parse(result);
         final f = DateFormat('dd/MM/yyyy');

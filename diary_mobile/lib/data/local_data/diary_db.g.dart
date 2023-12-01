@@ -8508,14 +8508,33 @@ class $SeasonFarmTableTable extends SeasonFarmTable
   late final GeneratedColumn<String> productName = GeneratedColumn<String>(
       'product_name', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _availableQuantityMeta =
+      const VerificationMeta('availableQuantity');
+  @override
+  late final GeneratedColumn<double> availableQuantity =
+      GeneratedColumn<double>('available_quantity', aliasedName, true,
+          type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _unitIdMeta = const VerificationMeta('unitId');
+  @override
+  late final GeneratedColumn<int> unitId = GeneratedColumn<int>(
+      'unit_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
       'image', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, userId, name, productId, productName, image];
+  List<GeneratedColumn> get $columns => [
+        id,
+        userId,
+        name,
+        productId,
+        productName,
+        availableQuantity,
+        unitId,
+        image
+      ];
   @override
   String get aliasedName => _alias ?? 'season_farm';
   @override
@@ -8546,6 +8565,16 @@ class $SeasonFarmTableTable extends SeasonFarmTable
           productName.isAcceptableOrUnknown(
               data['product_name']!, _productNameMeta));
     }
+    if (data.containsKey('available_quantity')) {
+      context.handle(
+          _availableQuantityMeta,
+          availableQuantity.isAcceptableOrUnknown(
+              data['available_quantity']!, _availableQuantityMeta));
+    }
+    if (data.containsKey('unit_id')) {
+      context.handle(_unitIdMeta,
+          unitId.isAcceptableOrUnknown(data['unit_id']!, _unitIdMeta));
+    }
     if (data.containsKey('image')) {
       context.handle(
           _imageMeta, image.isAcceptableOrUnknown(data['image']!, _imageMeta));
@@ -8569,6 +8598,10 @@ class $SeasonFarmTableTable extends SeasonFarmTable
           .read(DriftSqlType.int, data['${effectivePrefix}product_id']),
       productName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
+      availableQuantity: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}available_quantity']),
+      unitId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}unit_id']),
       image: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}image']),
     );
@@ -8586,6 +8619,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
   final Value<String?> name;
   final Value<int?> productId;
   final Value<String?> productName;
+  final Value<double?> availableQuantity;
+  final Value<int?> unitId;
   final Value<String?> image;
   const SeasonFarmTableCompanion({
     this.id = const Value.absent(),
@@ -8593,6 +8628,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
     this.name = const Value.absent(),
     this.productId = const Value.absent(),
     this.productName = const Value.absent(),
+    this.availableQuantity = const Value.absent(),
+    this.unitId = const Value.absent(),
     this.image = const Value.absent(),
   });
   SeasonFarmTableCompanion.insert({
@@ -8601,6 +8638,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
     this.name = const Value.absent(),
     this.productId = const Value.absent(),
     this.productName = const Value.absent(),
+    this.availableQuantity = const Value.absent(),
+    this.unitId = const Value.absent(),
     this.image = const Value.absent(),
   });
   static Insertable<SeasonFarm> custom({
@@ -8609,6 +8648,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
     Expression<String>? name,
     Expression<int>? productId,
     Expression<String>? productName,
+    Expression<double>? availableQuantity,
+    Expression<int>? unitId,
     Expression<String>? image,
   }) {
     return RawValuesInsertable({
@@ -8617,6 +8658,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
       if (name != null) 'name': name,
       if (productId != null) 'product_id': productId,
       if (productName != null) 'product_name': productName,
+      if (availableQuantity != null) 'available_quantity': availableQuantity,
+      if (unitId != null) 'unit_id': unitId,
       if (image != null) 'image': image,
     });
   }
@@ -8627,6 +8670,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
       Value<String?>? name,
       Value<int?>? productId,
       Value<String?>? productName,
+      Value<double?>? availableQuantity,
+      Value<int?>? unitId,
       Value<String?>? image}) {
     return SeasonFarmTableCompanion(
       id: id ?? this.id,
@@ -8634,6 +8679,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
       name: name ?? this.name,
       productId: productId ?? this.productId,
       productName: productName ?? this.productName,
+      availableQuantity: availableQuantity ?? this.availableQuantity,
+      unitId: unitId ?? this.unitId,
       image: image ?? this.image,
     );
   }
@@ -8656,6 +8703,12 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
     if (productName.present) {
       map['product_name'] = Variable<String>(productName.value);
     }
+    if (availableQuantity.present) {
+      map['available_quantity'] = Variable<double>(availableQuantity.value);
+    }
+    if (unitId.present) {
+      map['unit_id'] = Variable<int>(unitId.value);
+    }
     if (image.present) {
       map['image'] = Variable<String>(image.value);
     }
@@ -8670,6 +8723,8 @@ class SeasonFarmTableCompanion extends UpdateCompanion<SeasonFarm> {
           ..write('name: $name, ')
           ..write('productId: $productId, ')
           ..write('productName: $productName, ')
+          ..write('availableQuantity: $availableQuantity, ')
+          ..write('unitId: $unitId, ')
           ..write('image: $image')
           ..write(')'))
         .toString();

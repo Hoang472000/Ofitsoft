@@ -11,6 +11,8 @@ class SeasonFarmTable extends Table {
   TextColumn get name => text().nullable()();
   IntColumn get productId => integer().nullable()();
   TextColumn get productName => text().nullable()();
+  RealColumn get availableQuantity => real().nullable()();
+  IntColumn get unitId => integer().nullable()();
   TextColumn get image => text().nullable()();
 
   @override

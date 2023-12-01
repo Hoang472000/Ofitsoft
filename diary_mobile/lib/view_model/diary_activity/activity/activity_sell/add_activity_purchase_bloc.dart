@@ -55,7 +55,8 @@ class AddActivityPurchaseBloc
       icon: Icons.arrow_drop_down,
       listValue: state.listSeasonFarm,
       typeInputEnum: TypeInputEnum.dmucItem,
-      image: ImageAsset.imageManagement
+      image: ImageAsset.imageManagement,
+      hasSearch: true,
     ));
     list.add(InputRegisterModel(
         title: "Sản phẩm",
@@ -248,12 +249,31 @@ class AddActivityPurchaseBloc
           // });
           if (event.list[event.index].title.compareTo("Mùa vụ lô trồng") == 0) {
             emit(state.copyWith(
-                seasonFarmController: TextEditingController(
-                    text: event.list[event.index].valueSelected.name),
-                indexSeasonFarm: result,
+              seasonFarmController: TextEditingController(
+                  text: event.list[event.index].valueSelected.name),
+              indexSeasonFarm: result,
               seasonId: event.list[event.index].valueSelected.id,
               productController: TextEditingController(
-                  text: event.list[event.index].valueSelected.productName),));
+                  text: event.list[event.index].valueSelected.productName),
+              availableQuantity:
+                  event.list[event.index].valueSelected.availableQuantity,
+              availableUnitId: event.list[event.index].valueSelected.unitId,
+            ));
+            int indexYield = state.listUnitYield.indexWhere((element) =>
+            element.id == event.list[event.index].valueSelected.unitId);
+            if(indexYield != -1) {
+              emit(state.copyWith(listWidget: state.listWidget));
+              emit(state.copyWith(
+                  indexYield: indexYield,
+                  donViController: TextEditingController(
+                      text: state.listUnitYield[indexYield].name),
+              availableUnitName: state.listUnitYield[indexYield].name));
+              state.listWidgetArea[1].controller = state.donViController;
+              state.listWidgetArea[1].positionSelected = indexYield;
+              state.listWidgetArea[1].valueSelected =
+              state.listUnitYield[indexYield];
+              emit(state.copyWith(listWidgetArea: state.listWidgetArea));
+            }
             print("HoangCV: product name: ${state.productController!.text}");
             state.listWidget[1].controller = state.productController;
             emit(state.copyWith(listWidget: state.listWidget));
@@ -374,14 +394,26 @@ class AddActivityPurchaseBloc
       emit(state.copyWith(
           moTaController: TextEditingController(text: event.text)));
     } else if (event.inputRegisterModel.title.compareTo("Sản lượng:") == 0) {
-      event.inputRegisterModel.error = null;
-      double total = 0;
-      double donGia = /*state.total / */
-          double.parse(state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!.text);
-      total = donGia * double.parse(event.text);
-      emit(state.copyWith(
-          soLuongController: TextEditingController(text: event.text),
-          total: total));
+      if ((double.parse(event.text) *
+          double.parse('${state.listUnitYield[state.listWidgetArea[1].positionSelected].convert}'))
+          > state.availableQuantity) {
+        state.listWidgetArea[0].error =
+        "Nhập nhỏ hơn sản lượng thực tế là ${state.availableQuantity} ${state.availableUnitName}";
+        emit(state.copyWith(listWidgetArea : state.listWidgetArea));
+      } else {
+        state.listWidgetArea[0].error = null;
+        event.inputRegisterModel.error = null;
+        double total = 0;
+        double donGia =
+        double.parse(
+            state.donGiaController!.text.isEmpty ? '0' : state.donGiaController!
+                .text);
+        total = donGia * double.parse(event.text);
+        emit(state.copyWith(
+            soLuongController: TextEditingController(text: event.text),
+            total: total,
+            listWidgetArea: state.listWidgetArea));
+      }
     } else if (event.inputRegisterModel.title.compareTo("Đơn giá                   ") == 0) {
       print(
           "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
@@ -514,6 +546,9 @@ class AddActivityPurchaseState extends BlocState {
     listSeasonFarm,
     seasonFarmController,
     indexSeasonFarm,
+    availableUnitName,
+    availableUnitId,
+    availableQuantity
       ];
   final List<SeasonFarm> listSeasonFarm;
   final Diary? detailActivity;
@@ -555,6 +590,9 @@ class AddActivityPurchaseState extends BlocState {
   double imageHeight;
   final double areaMax;
   double total;
+  double availableQuantity;
+  int availableUnitId;
+  String availableUnitName;
 
   AddActivityPurchaseState({
     this.listSeasonFarm = const [],
@@ -597,6 +635,9 @@ class AddActivityPurchaseState extends BlocState {
     this.areaMax = 0,
     this.indexYield = -1,
     this.total = 0,
+    this.availableQuantity = 0,
+    this.availableUnitId = -1,
+    this.availableUnitName = '',
   });
 
   AddActivityPurchaseState copyWith({
@@ -640,6 +681,9 @@ class AddActivityPurchaseState extends BlocState {
     double? areaMax,
     double? total,
     List<InputRegisterModel>? inputDonGia,
+    double? availableQuantity,
+    int? availableUnitId,
+    String? availableUnitName,
   }) {
     return AddActivityPurchaseState(
       listSeasonFarm: listSeasonFarm ?? this.listSeasonFarm,
@@ -681,6 +725,9 @@ class AddActivityPurchaseState extends BlocState {
       indexYield: indexYield ?? this.indexYield,
       indexSeasonFarm: indexSeasonFarm ?? this.indexSeasonFarm,
       inputDonGia: inputDonGia ?? this.inputDonGia,
+      availableQuantity: availableQuantity ?? this.availableQuantity,
+      availableUnitId: availableUnitId ?? this.availableUnitId,
+      availableUnitName: availableUnitName ?? this.availableUnitName,
     );
   }
 }

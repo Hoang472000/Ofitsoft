@@ -102,11 +102,6 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                           if(result != null && result[0]){
                                             blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
                                           }*/
-                                        } else if(state.listActivityFarm[index].id == 4){
-                                          Navigator.push(context,
-                                              ActivityPage.route("monitor",
-                                                widget.id, widget.diary,state
-                                                    .listActivityFarm[index], state.listActivityDiary));
                                         }
                                       });
                                 }),

@@ -70,7 +70,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             listActivityTransaction: listActivityTransaction,
             listCallbackTransaction: listCallbackTransaction,
             listDiaryActivity: listDiaryActivity));
-    } else if (event.action.compareTo("purchase") == 0) {
+    }
+    else if (event.action.compareTo("purchase") == 0) {
         emitter(state.copyWith(
             isShowProgress: true));
         listActivityTransaction
@@ -82,15 +83,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
             isShowProgress: false,
             listActivityTransaction: listActivityTransaction,
             listCallbackTransaction: listCallbackTransaction,));
-   /*`   } else {
-        listActivityTransaction.addAll(event.listTransaction);
-        listActivityTransaction.removeWhere((element) => element.isPurchase == false);
-        emitter(state.copyWith(
-            isShowProgress: false,
-            listActivityTransaction: listActivityTransaction,
-            listDiaryActivity: listDiaryActivity));
-      }*/
-    }else {
+    }
+    else {
       final listDiaryMonitor = await repository.getListMonitorDiary(event.id);
 
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");

@@ -62,7 +62,8 @@ class DetailActivityPurchaseBloc
         listValue: state.listSeasonFarm,
         controller: state.seasonFarmController,
         typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageManagement
+        image: ImageAsset.imageManagement,
+      hasSearch: true,
     ));
 
     list.add(InputRegisterModel(
@@ -154,7 +155,8 @@ class DetailActivityPurchaseBloc
         valueSelected: state.listSeasonFarm[state.indexSeasonFarm],
         listValue: state.listSeasonFarm,
         typeInputEnum: TypeInputEnum.dmucItem,
-        image: ImageAsset.imageManagement
+        image: ImageAsset.imageManagement,
+      hasSearch: true,
     ));
 
     list.add(InputRegisterModel(
@@ -267,7 +269,18 @@ class DetailActivityPurchaseBloc
         .indexWhere((element) => element.id == detailActivity.quantityUnitId);
     int indexSeasonFarm = listSeasonFarm
         .indexWhere((element) => element.id == detailActivity.seasonFarmId);
-    print("HoangcV:_getDetailActivityPurchase: ${event.activityDiary.toJson()} ");
+    if(indexSeasonFarm != -1) {
+      int indexYieldAvailable = listUnitYield.indexWhere((element) =>
+      element.id == listSeasonFarm[indexSeasonFarm].unitId);
+      if (indexYieldAvailable != -1) {
+        emit(state.copyWith(
+            availableUnitName: listUnitYield[indexYieldAvailable].name,
+            availableQuantity:
+            (listSeasonFarm[indexSeasonFarm].availableQuantity ?? 0) +
+                ((listUnitYield[indexYield].convert ?? 0) *
+                    (detailActivity.quantity ?? 0))));
+      }
+    }
     emitter(state.copyWith(
       isShowProgress: false,
       detailActivity: detailActivity,
@@ -403,6 +416,7 @@ class DetailActivityPurchaseBloc
               indexActivity: result));
         }*/
         if (event.list[event.index].title.compareTo("Mùa vụ lô trồng") == 0) {
+          state.listWidgetYield[0].error = null;
           emit(state.copyWith(
             seasonFarmController: TextEditingController(
                 text: event.list[event.index].valueSelected.name),
@@ -413,6 +427,16 @@ class DetailActivityPurchaseBloc
           print("HoangCV: product name: ${state.productController!.text}");
           state.listWidget[1].controller = state.productController;
           emit(state.copyWith(listWidget: state.listWidget));
+
+
+          int indexYield = state.listUnitYield.indexWhere((element) =>
+          element.id == event.list[event.index].valueSelected.unitId);
+          if(indexYield != -1) {
+            emit(state.copyWith(
+              availableQuantity: event.list[event.index].valueSelected.availableQuantity,
+              availableUnitId: event.list[event.index].valueSelected.unitId,
+              availableUnitName: state.listUnitYield[indexYield].name));
+          }
         }
         if (event.list[event.index].title.compareTo("Chi tiết mua bán") == 0) {
           emit(state.copyWith(
@@ -448,18 +472,36 @@ class DetailActivityPurchaseBloc
 
   FutureOr<void> _saveValueTextField(
       SaveValueTextFieldEvent event, Emitter<DetailActivityPurchaseState> emit) {
-    print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
+    print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title} : ${state.listWidgetYield[0].title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
       emit(state.copyWith(
           moTaController: TextEditingController(text: event.text)));
     } else if (event.inputRegisterModel.title.compareTo("Sản lượng:") == 0) {
-      event.inputRegisterModel.error = null;
-      double total = 0;
-      double donGia = double.parse(state.donGiaController!.text)/*state.total / double.parse(state.soLuongController!.text)*/;
-      total = donGia * double.parse(event.text);
-      emit(state.copyWith(
-          soLuongController: TextEditingController(text: event.text),
-          total: total));
+      print("HoangCV: bug: ${event.text} : ${state.listUnitYield[state.listWidgetYield[1].positionSelected].convert} : ${state.availableQuantity}");
+      if ((double.parse(event.text) *
+          double.parse('${state.listUnitYield[state.listWidgetYield[1].positionSelected].convert}'))
+          > state.availableQuantity) {
+        emit(state.copyWith(isShowProgress: true));
+        print("HoangCV: bug 1");
+        state.listWidgetYield[0].error =
+        "Nhập <= sản lượng dự kiến là ${state.availableQuantity} ${state.availableUnitName}";
+        event.inputRegisterModel.error =
+        "Nhập <= sản lượng dự kiến là ${state.availableQuantity} ${state.availableUnitName}";
+        state.listWidgetYield[0] = event.inputRegisterModel;
+        emit(state.copyWith(listWidgetYield : state.listWidgetYield,
+            isShowProgress: false, formStatus: const InitialFormStatus()));
+      } else {
+        print("HoangCV: bug 2");
+        state.listWidgetYield[0].error = null;
+        double total = 0;
+        double donGia = double.parse(state.donGiaController!
+            .text) /*state.total / double.parse(state.soLuongController!.text)*/;
+        total = donGia * double.parse(event.text);
+        emit(state.copyWith(
+            soLuongController: TextEditingController(text: event.text),
+            total: total,
+            listWidgetYield : state.listWidgetYield));
+      }
     } else if (event.inputRegisterModel.title.compareTo("Đơn giá                   ") == 0) {
       print(
           "HoangCV: event.inputRegisterModel.error: ${event.inputRegisterModel.error}");
@@ -491,6 +533,19 @@ class DetailActivityPurchaseBloc
           state.listWidgetYield[1].valueSelected == null) {
         validate = false;
         state.listWidgetYield[1].error = "Vui lòng chọn đơn vị";
+      }
+    }
+    if(validate){
+      if ((double.parse(state.yieldController!.text) *
+          double.parse('${state.listUnitYield[state.indexYield].convert}'))
+          > state.availableQuantity) {
+        //emit(state.copyWith(isShowProgress: true));
+        print("HoangCV: bug 1");
+        state.listWidgetYield[0].error =
+        "Nhập <= sản lượng dự kiến là ${state.availableQuantity} ${state.availableUnitName}";
+        emit(state.copyWith(listWidgetYield : state.listWidgetYield,
+            isShowProgress: false, formStatus: const InitialFormStatus()));
+        validate = false;
       }
     }
     if (!validate) {
@@ -666,6 +721,9 @@ class DetailActivityPurchaseState extends BlocState {
     indexSeasonFarm,
     seasonId,
     seasonFarmController,
+    availableUnitName,
+    availableUnitId,
+    availableQuantity
   ];
   final Diary? diary;
   final ActivityPurchase? detailActivity;
@@ -718,6 +776,9 @@ class DetailActivityPurchaseState extends BlocState {
   double areaMax;
   int indexSeasonFarm;
   final List<SeasonFarm> listSeasonFarm;
+  double availableQuantity;
+  int availableUnitId;
+  String availableUnitName;
 
   DetailActivityPurchaseState({
     this.seasonId = -1,
@@ -769,6 +830,9 @@ class DetailActivityPurchaseState extends BlocState {
     this.areaMax = 0,
     this.diary,
     this.total = 0,
+    this.availableQuantity = 0,
+    this.availableUnitId = -1,
+    this.availableUnitName = '',
   });
 
   DetailActivityPurchaseState copyWith({
@@ -821,6 +885,9 @@ class DetailActivityPurchaseState extends BlocState {
     List<InputRegisterModel>? inputDonGia,
     int? indexYield,
     double? total,
+    double? availableQuantity,
+    int? availableUnitId,
+    String? availableUnitName,
   }) {
     return DetailActivityPurchaseState(
       seasonId: seasonId ?? this.seasonId,
@@ -872,6 +939,9 @@ class DetailActivityPurchaseState extends BlocState {
       indexYield: indexYield ?? this.indexYield,
       donGiaController: donGiaController ?? this.donGiaController,
       total: total ?? this.total,
+      availableQuantity: availableQuantity ?? this.availableQuantity,
+      availableUnitId: availableUnitId ?? this.availableUnitId,
+      availableUnitName: availableUnitName ?? this.availableUnitName,
     );
   }
 }

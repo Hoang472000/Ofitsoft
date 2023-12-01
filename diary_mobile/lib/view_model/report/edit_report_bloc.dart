@@ -158,7 +158,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       Toast.showLongTop("Không có danh sách nông hộ");
       checkPass = false;
     } else if (event.index == 4 && state.listFarm.isEmpty) {
-      Toast.showLongTop("Không có danh sách vùng trồng");
+      Toast.showLongTop("Không có danh sách lô trồng");
       checkPass = false;
     }
     /*else if(event.index == 2 && state.listInspector.isEmpty) {

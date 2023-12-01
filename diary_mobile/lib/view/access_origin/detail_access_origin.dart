@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:diary_mobile/resource/assets.dart';
@@ -93,51 +94,45 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                                 value: "${state.detailAccessOrigin!.manufactureDate}",
                                 image: ImageAsset.imageCalendarBegin),
                             CardTile(
-                                label: "Ngày kết thúc",
+                                label: "Ngày hết hạn",
                                 value: "${state.detailAccessOrigin!.expireDate}",
                                 image: ImageAsset.imageCalendarEnd),
-
-        /*                    CardTile(
-                                label: "Diện tích",
-                                value: "${state.detailAccessOrigin!.area} ${state.detailAccessOrigin!.areaUnitName}",
-                                image: ImageAsset.imageManagement),
-                            state.detailAccessOrigin!.amount == -1 ?
-                            Container() :
-                            CardTileDouble(
-                                label1: "Số lượng ban đầu",
-                                value1:  "${state.detailAccessOrigin!.amount == -1 ? '' : state.detailAccessOrigin!.amount??0}",
-                                value2: "${state.detailAccessOrigin!.amountUnitName}",
-                                image: ImageAsset.imageBudget),
-                            state.detailAccessOrigin!.yieldReal == -1 ?
-                            Container() :
-                            CardTileDouble(
-                                label1: "Sản lượng thu hoạch",
-                                value1:  "${state.detailAccessOrigin!.yieldReal == -1 ? '' : state.detailAccessOrigin!.yieldReal??0}",
-                                value2: "${state.detailAccessOrigin!.yieldRealUnitName}",
-                                image: ImageAsset.imageBudget),
-                            state.detailAccessOrigin!.yieldEstimate == -1 ?
-                            Container() :
-                            CardTileDouble(
-                                label1: "Sản lượng ước tính",
-                                value1: "${state.detailAccessOrigin!.yieldEstimate == -1 ? '' : state.detailAccessOrigin!.yieldEstimate??0}",
-                                value2: "${state.detailAccessOrigin!.yieldEstimateUnitName}",
-                                image: ImageAsset.imageBudget),
-                            CardTile(
-                                label: "Ngày bắt đầu",
-                                value: "${state.detailAccessOrigin!.startDate}",
-                                image: ImageAsset.imageCalendarBegin),
-                            ((state.detailAccessOrigin!.status??'').compareTo("done") == 0)?CardTile(
-                                label: "Ngày kết thúc",
-                                value: "${state.detailAccessOrigin!.endDate}",
-                                image: ImageAsset.imageCalendarEnd): Container(),
-                            //draft//processing//done//cancelled//
-                            CardTile(
-                                label: "Trạng thái",
-                                value: (state.detailAccessOrigin!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
-                                (state.detailAccessOrigin!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
-                                (state.detailAccessOrigin!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
-                                (state.detailAccessOrigin!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
-                                image: ImageAsset.imageStatus),*/
+                            (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
+                            Container(
+                              padding: const EdgeInsets.only(top: 8, bottom: 0, left: 4),
+                              child: Text("Hình ảnh liên quan", style:
+                              StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),),
+                            ) : const SizedBox(),
+                            Container(
+                              padding: const EdgeInsets.all(24),
+                              child: Center(
+                                child: Image.memory(
+                                  gaplessPlayback: true,
+                                  base64Decode(state.detailAccessOrigin!.image ??
+                                      ""),
+                                  //height: MediaQuery.of(context).size.height/2,
+                                  //width: MediaQuery.of(context).size.width/1.5,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error,
+                                      stackTrace) {
+                                    return Container(
+                                      /*height: MediaQuery.of(context).size.width/2,
+                                      width: MediaQuery.of(context).size.width/2,
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                          color:  AppColor.grayC7),
+                                      child: Center(
+                                        child: Text(
+                                          (state.detailAccessOrigin!.productName ?? "")*//*.substring(0,1)*//*,
+                                          style:
+                                          StyleOfit.textStyleFW700(AppColor.green53, 16),
+                                        ),
+                                      ),*/
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ],

@@ -7,6 +7,8 @@ class SeasonFarm implements Insertable<SeasonFarm>{
   String? name;
   int? productId;
   String? productName;
+  double? availableQuantity;
+  int? unitId;
   String? image;
 
 
@@ -16,6 +18,8 @@ class SeasonFarm implements Insertable<SeasonFarm>{
     this.name,
     this.productId,
     this.productName,
+    this.availableQuantity,
+    this.unitId,
     this.image,
   });
 
@@ -26,6 +30,8 @@ class SeasonFarm implements Insertable<SeasonFarm>{
       name: json['name'] ?? "",
       productId: json['product_id'] ?? -1,
       productName: json['product_name'] ?? '',
+      availableQuantity: double.parse("${json['available_quantity'] ?? -1}"),
+      unitId: json['unit_id'] ?? '',
       image: json['image'] ?? '',
     );
   }
@@ -37,6 +43,8 @@ class SeasonFarm implements Insertable<SeasonFarm>{
     data['name'] = name;
     data['product_id'] = productId;
     data['product_name'] = productName;
+    data['available_quantity'] = availableQuantity;
+    data['unit_id'] = unitId;
     data['image'] = image;
     return data;
   }
@@ -48,6 +56,8 @@ class SeasonFarm implements Insertable<SeasonFarm>{
       name: Value(name),
       productId: Value(productId),
       productName: Value(productName),
+      availableQuantity: Value(availableQuantity),
+      unitId: Value(unitId),
       image: Value(image),
       userId: Value(userId))
         .toColumns(nullToAbsent);
