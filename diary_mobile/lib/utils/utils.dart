@@ -358,7 +358,7 @@ class Utils {
 
   static String stringToFormattedString(String time) {
     try {
-      DateFormat inputFormatter = DateFormat('MM/dd/yyyy HH:mm:ss');
+      DateFormat inputFormatter = DateFormat('dd/MM/yyyy HH:mm:ss');
       DateFormat outputFormatter = DateFormat('yyyy-MM-dd HH:mm:ss');
       DateTime dateTime = inputFormatter.parse(time);
       String formattedString = outputFormatter.format(dateTime);

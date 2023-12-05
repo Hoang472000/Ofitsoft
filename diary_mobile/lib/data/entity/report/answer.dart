@@ -1,5 +1,7 @@
 import 'package:diary_mobile/data/entity/report/question.dart';
 
+import '../item_default/item_basic.dart';
+
 class Answer {
   int? id;
   int? idSelected;
@@ -21,6 +23,9 @@ class Answer {
   //check color
   bool? isError;
   bool? constrMandatory;
+  String? linkingField;
+  bool? isSelectionAnswer;
+  List<ItemBasic> selectionAnswerIds;
 
   Answer({
     this.id,
@@ -42,6 +47,9 @@ class Answer {
 
     this.isError,
     this.constrMandatory,
+    this.linkingField,
+    this.isSelectionAnswer,
+    this.selectionAnswerIds = const [],
   });
 
   Answer.copy(Answer other)
@@ -63,7 +71,10 @@ class Answer {
         valueResult = other.valueResult,
 
         constrMandatory = other.constrMandatory,
-        isError = other.isError;
+        isError = other.isError,
+        linkingField = other.linkingField,
+        isSelectionAnswer = other.isSelectionAnswer,
+        selectionAnswerIds = other.selectionAnswerIds.map((item) => ItemBasic.copy(item)).toList();
 
   factory Answer.fromJson(Map<String, dynamic> json,
       {List<Question> questionAndPageIds = const [],
@@ -88,6 +99,13 @@ class Answer {
 
       constrMandatory: json['constr_mandatory'] ?? false,
       isError: json['isError'] ?? false,
+        linkingField: json['linking_field'] ?? "",
+        isSelectionAnswer: json['is_selection_answer'] ?? false,
+        selectionAnswerIds: json['selection_answer_ids'] != null
+            ? (json['selection_answer_ids'] as List<dynamic>)
+            .map((itemJson) => ItemBasic.fromJson(itemJson))
+            .toList()
+            : [],
     );
   }
 
@@ -110,6 +128,10 @@ class Answer {
 
     data['constr_mandatory'] = constrMandatory;
     data['isError'] = isError;
+
+    data['linking_field'] = linkingField;
+    data['is_selection_answer'] = isSelectionAnswer;
+    data['selection_answer_ids'] = selectionAnswerIds;
     return data;
   }
 }

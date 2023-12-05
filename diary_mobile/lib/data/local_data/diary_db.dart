@@ -31,6 +31,7 @@ import 'package:diary_mobile/data/local_data/table/transaction/season_farm_table
 import 'package:diary_mobile/data/local_data/workflow_table.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
@@ -65,6 +66,59 @@ class DiaryDB extends _$DiaryDB {
   // Migrations are covered later in the documentation.
   @override
   int get schemaVersion => 1;
+
+/*  Future<void> deleteDatabase() async {
+    try {
+      // Lấy đường dẫn đến thư mục lưu trữ cơ sở dữ liệu
+      final dbFolder = await getApplicationDocumentsDirectory();
+      final path = p.join(dbFolder.path, 'db.sqlite');
+
+      // Tạo LazyDatabase từ đường dẫn
+      final db = LazyDatabase(() async {
+        final file = File(path);
+        return NativeDatabase.createInBackground(file);
+      });
+
+      // Mở kết nối với cơ sở dữ liệu
+      await db.opener();
+
+      // Xóa cơ sở dữ liệu
+      await db.close(); // Đảm bảo rằng cơ sở dữ liệu đã được đóng trước khi xóa
+      await deleteDatabaseFile(path);
+      print('Cơ sở dữ liệu đã được xóa.');
+    } catch (e) {
+      print('Lỗi xóa cơ sở dữ liệu: $e');
+    }
+  }
+
+  Future<void> deleteDatabaseFile(String path) async {
+    final file = File(path);
+    if (await file.exists()) {
+      await file.delete();
+    }
+  }*/
+/*  Future<void> deleteDiaryData() async {
+    try {
+      await into(diaryTable).database.delete(table); // Xóa toàn bộ dữ liệu từ bảng 'diaryTable'
+      print('Dữ liệu trong bảng đã được xóa.');
+    } catch (e) {
+      print('Lỗi xóa dữ liệu: $e');
+    }
+  }*/
+  Future<void> deleteEverything() {
+    return transaction(() async {
+      // you only need this if you've manually enabled foreign keys
+      // await customStatement('PRAGMA foreign_keys = OFF');
+      try {
+        for (final table in allTables) {
+          await delete(table).go();
+        }
+        print('Dữ liệu trong bảng đã được xóa.');
+      } catch (e) {
+        print('Lỗi xóa dữ liệu: $e');
+      }
+    });
+  }
 
   ///Thêm, sửa, xóa, lấy Diary
   Future<void> insertListDiary(List<Diary> values) async {

@@ -103,6 +103,7 @@ class RepositoryImpl extends Repository {
 
     //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
+    DiaryDB.instance.deleteEverything();
     if (objectResult.responseCode == StatusConst.code00) {
       if (Platform.isIOS) {
         String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();

@@ -94,7 +94,8 @@ class _WorkflowPageState extends State<WorkflowPage> {
                                           Container(
                                             padding: const EdgeInsets.only(top: 8, bottom: 8),
                                             child: Text("Mô tả: ${processStageTask.description}" ?? '',
-                                              style: StyleOfit.textStyleFW400(AppColor.black22, 16),),
+                                              style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                                              maxLines: 100,),
                                           ),
                                           (processStageTask.image ?? "").isNotEmpty ?
                                           Container(
