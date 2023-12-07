@@ -771,7 +771,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
     List<Table> listTable1 =[];
     int form = 0;
     bool checkFormFour = false;
-    print("HoangCV: list : ${list} : ${form} : ${listSelect.length} : ${listSelect.first.toJson()}");
+    //print("HoangCV: list : ${list} : ${form} : ${listSelect.length} : ${listSelect.first.toJson()}");
     for(int i = 0 ; i < list.length; i++) {
       List<Table> tableSub = [];
       List<TableRow> tableRow = [];
@@ -1119,7 +1119,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                     listSelect, context, isFirst: i == 0 ? true : false));
               }else {
                 form = 3;
-                print("HoangCV:falseform = 3; $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
+                //print("HoangCV:falseform = 3; $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
                 if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
                   tableRow.add(tableRowCheckBoxTextField(
                       list[i].suggestedAnswerIds[j].value ?? '',
@@ -1173,7 +1173,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       if(!checkFormFour) {
         if (tableSub.isEmpty && form != 0 && form != 1 && form != 2 &&
             list[i].questionType != "table") {
-          print("HoangCV: tableSub.isEmpty: ${tableSub.isEmpty} : ${list[i].title} : ${tableRowSub.isNotEmpty}");
+          //print("HoangCV: tableSub.isEmpty: ${tableSub.isEmpty} : ${list[i].title} : ${tableRowSub.isNotEmpty}");
           if(tableRowSub.isNotEmpty) {
             listTable1.add(Table(
               defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -1363,7 +1363,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
             ],
           ));
         }
-        print("HoangcVAS:DA sdas : ${tableSub.length}");
+        //print("HoangcVAS:DA sdas : ${tableSub.length}");
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           columnWidths: {

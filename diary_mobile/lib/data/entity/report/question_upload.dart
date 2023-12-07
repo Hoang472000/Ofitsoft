@@ -31,6 +31,8 @@ class QuestionUpload implements Insertable<QuestionUpload> {
   int? internalInspectorId;
   String? monitoringVisitType;
   String? visitDate;
+  int? tableAnswerId;
+  int? rowLinkId;
 
   QuestionUpload({
     this.api,
@@ -56,6 +58,8 @@ class QuestionUpload implements Insertable<QuestionUpload> {
     this.visitDate,
     this.farmId,
     this.farmCode,
+    this.tableAnswerId,
+    this.rowLinkId,
   });
 
   factory QuestionUpload.fromJson(QuestionUpload json, String api) {
@@ -84,6 +88,8 @@ class QuestionUpload implements Insertable<QuestionUpload> {
       visitDate: json.visitDate,
       farmId: json.farmId,
       farmCode: json.farmCode,
+      tableAnswerId: json.tableAnswerId,
+      rowLinkId: json.rowLinkId,
     );
   }
 
@@ -114,6 +120,8 @@ class QuestionUpload implements Insertable<QuestionUpload> {
       visitDate: json['visitDate'] ?? '',
       farmId: json['farmId'],
       farmCode: json['farmCode'] ?? '',
+        tableAnswerId: json['tableAnswerId'],
+        rowLinkId: json['rowLinkId'],
     );
   }
 
@@ -143,6 +151,8 @@ class QuestionUpload implements Insertable<QuestionUpload> {
     data['internal_inspector_id'] = internalInspectorId;
     data['monitoring_visit_type'] = monitoringVisitType;
     data['visit_date'] = visitDate;
+    data['table_answer_id'] = tableAnswerId;
+    data['row_link_id'] = rowLinkId;
     return data;
   }
 

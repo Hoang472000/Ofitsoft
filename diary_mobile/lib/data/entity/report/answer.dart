@@ -17,13 +17,16 @@ class Answer {
   int? tableRowId;
   String? valueRowTable;
   int? suggestedAnswerId;
+  // result selection
+  int? tableAnswerId;
+  int? rowLinkId;
 
   bool? checkResult;
   String? valueResult;
   //check color
   bool? isError;
   bool? constrMandatory;
-  String? linkingField;
+  int? linkingField;
   bool? isSelectionAnswer;
   List<ItemBasic> selectionAnswerIds;
 
@@ -41,6 +44,9 @@ class Answer {
     this.tableRowId,
     this.valueRowTable,
     this.suggestedAnswerId,
+
+    this.tableAnswerId,
+    this.rowLinkId,
 
     this.checkResult,
     this.valueResult,
@@ -66,6 +72,9 @@ class Answer {
         tableRowId = other.tableRowId,
         valueRowTable = other.valueRowTable,
         suggestedAnswerId = other.suggestedAnswerId,
+
+        tableAnswerId = other.tableAnswerId,
+        rowLinkId = other.rowLinkId,
 
         checkResult = other.checkResult,
         valueResult = other.valueResult,
@@ -94,18 +103,21 @@ class Answer {
       valueRowTable: json['value_row_table'] ?? '',
       suggestedAnswerId: json['suggested_answer_id'] ?? -1,
 
+      tableAnswerId: json['table_answer_id'] ?? -1,
+      rowLinkId: json['row_link_id'] ?? -1,
+
       checkResult: json['check_result'] ?? false,
       valueResult: json['value_result'] ?? '',
 
       constrMandatory: json['constr_mandatory'] ?? false,
       isError: json['isError'] ?? false,
-        linkingField: json['linking_field'] ?? "",
-        isSelectionAnswer: json['is_selection_answer'] ?? false,
-        selectionAnswerIds: json['selection_answer_ids'] != null
-            ? (json['selection_answer_ids'] as List<dynamic>)
-            .map((itemJson) => ItemBasic.fromJson(itemJson))
-            .toList()
-            : [],
+      linkingField: json['linking_field'] ?? -1,
+      isSelectionAnswer: json['is_selection_answer'] ?? false,
+      selectionAnswerIds: json['selection_answer_ids'] != null
+          ? (json['selection_answer_ids'] as List<dynamic>)
+          .map((itemJson) => ItemBasic.fromJson(itemJson))
+          .toList()
+          : [],
     );
   }
 
@@ -122,6 +134,9 @@ class Answer {
     data['table_row_id'] = tableRowId;
     data['value_row_table'] = valueRowTable;
     data['suggested_answer_id'] = suggestedAnswerId;
+
+    data['table_answer_id'] = tableAnswerId;
+    data['row_link_id'] = rowLinkId;
 
     data['check_result'] = checkResult;
     data['value_result'] = valueResult;

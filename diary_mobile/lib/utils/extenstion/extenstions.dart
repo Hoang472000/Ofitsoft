@@ -1,6 +1,7 @@
 import 'package:diary_mobile/data/entity/activity/season_farm.dart';
 import 'package:diary_mobile/data/entity/diary/area_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
+import 'package:diary_mobile/data/entity/item_default/item_basic.dart';
 import 'package:diary_mobile/data/entity/item_default/item_default.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
@@ -75,6 +76,7 @@ class Extension {
       case SeasonFarm:
       case SeasonEntity:
       case AreaEntity:
+      case ItemBasic:
         return model.name;
 /*
       case People:

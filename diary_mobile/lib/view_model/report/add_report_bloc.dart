@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:ffi';
 
+import 'package:diary_mobile/data/entity/item_default/item_basic.dart';
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:flutter/material.dart';
@@ -30,8 +31,11 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
   AddReportBloc(this.repository) : super(AddReportState()) {
     on<GetAddReportEvent>(_getAddReport);
     on<OnSelectValueEvent>(_onSelectValue);
+    on<OnSelectionValueEvent>(_onSelectionValue);
+    on<OnSelectionFieldValueEvent>(_onSelectionFieldValue);
     on<UpdateAddReportEvent>(updateAddReport);
     on<UpdateAddTableEvent>(updateAddTable);
+    on<UpdateAddTableFieldEvent>(updateAddTableField);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
     on<SubmitReportEvent>(submitReport);
     on<AddTableRowEvent>(addNewTableRow);
@@ -255,6 +259,28 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             farmerInspector: state.farmerInspector,
             listFarm: state.listFarmer[result].farmIds,
             ));
+            // HoangCV selection
+            List<TableQuestion> listTableField = [];
+            List<List<Controller>> listControllerTableField = [];
+            int i = 0;
+            addTableFieldRow(state.listReport[0].questionAndPageIds, listTableField, i,
+                event.list[event.index].listValue[result].farmIds);
+            listTableField.forEach((element) {
+        print("HoangCV:listTable:  ${listTableField.toString()}");
+        element.listQuestion.forEach((e) {
+          print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
+          e.suggestedAnswerIds.forEach((el){
+            print("HoangCV:listQuestion:  ${el.toString()} : ${el.rowId}");
+          });
+        });
+      });
+            List<List<Controller>> listCtrlTableField = createTECTBListsField(listTableField,);
+            listControllerTableField.addAll(listCtrlTableField);
+            emit(state.copyWith(
+              isShowProgress: false,
+              listControllerTableField: listControllerTableField,
+              listTableField: listTableField,
+            ));
           } else if (event.index == 2) {
             state.farmerInspector!.internalInspectorId = state.listInspector[result].id;
             emit(state.copyWith(
@@ -299,6 +325,103 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     }
   }
 
+  Future<FutureOr<void>> _onSelectionValue(
+      OnSelectionValueEvent event, Emitter<AddReportState> emit) async {
+    int result;
+    bool checkPass = true;
+    if(checkPass) {
+      result = await Extension().showBottomSheetSelection(
+          event.context,
+          event.input.listValue,
+          event.input.positionSelected,
+          "${event.input.title}",
+          hasSearch: event.input.hasSearch ?? false);
+      if (result != -1) {
+        //   setState(() {
+        event.input.positionSelected = result;
+        event.input.valueDefault = null;
+        event.input.valueSelected =
+        event.input.listValue[result];
+        event.input.error = null;
+        // });
+        // can gi de update report
+          QuestionUpload questionUpload = QuestionUpload(
+              idOffline: state.idOffline,
+              userInputId: state.reportId,
+              surveyId: state.listReport[0].id,
+              questionId: event.questionId,
+              suggestedAnswerId: event.answerId,
+              answerType: 'table',
+              valueText: '',
+              tableAnswerId: event.input.listValue[result].id,
+              isAnswerExist: true,
+              tableRowId: event.rowId + 1,
+              listIdSuggested: []
+          );
+          ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
+          if (objectResult.responseCode == StatusConst.code00) {
+            emit(state.copyWith(
+                isShowProgress: false,
+                reportId: objectResult.response is int ? objectResult.response : null,
+                formStatus: SubmissionSuccess(/*success: result.message*/)));
+          } else if (objectResult.responseCode == StatusConst.code01){
+            emit(state.copyWith(
+                isShowProgress: false,
+                formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+          }
+      }
+    }
+  }
+
+  Future<FutureOr<void>> _onSelectionFieldValue(
+      OnSelectionFieldValueEvent event, Emitter<AddReportState> emit) async {
+    int result;
+    bool checkPass = true;
+    if(checkPass) {
+      result = await Extension().showBottomSheetSelection(
+          event.context,
+          event.input.listValue,
+          event.input.positionSelected,
+          "${event.input.title}",
+          hasSearch: event.input.hasSearch ?? false);
+      if (result != -1) {
+        //   setState(() {
+        event.input.positionSelected = result;
+        event.input.valueDefault = null;
+        event.input.valueSelected =
+        event.input.listValue[result];
+        event.input.error = null;
+        // });
+        // can gi de update report
+        QuestionUpload questionUpload = QuestionUpload(
+            idOffline: state.idOffline,
+            userInputId: state.reportId,
+            surveyId: state.listReport[0].id,
+            questionId: event.questionId,
+            suggestedAnswerId: event.answerId,
+            answerType: 'table',
+            valueText: '',
+            tableAnswerId: event.input.listValue[result].id,
+            rowLinkId: state.listFarm[event.rowId].id,
+            isAnswerExist: true,
+            tableRowId: event.rowId + 1,
+            listIdSuggested: []
+        );
+        ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
+        if (objectResult.responseCode == StatusConst.code00) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              reportId: objectResult.response is int ? objectResult.response : null,
+              formStatus: SubmissionSuccess(/*success: result.message*/)));
+        } else if (objectResult.responseCode == StatusConst.code01){
+          emit(state.copyWith(
+              isShowProgress: false,
+              formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+        }
+      }
+    }
+  }
+
   void _getAddReport(
       GetAddReportEvent event, Emitter<AddReportState> emitter) async {
     var uuid = Uuid();
@@ -319,6 +442,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
     List<List<Controller>> listControllerTable = [];
+    List<List<Controller>> listControllerTableField = [];
     List<TableQuestion> listTable = [];
     List<People> listFarmer = [];
     List<People> listInspector = [];
@@ -431,6 +555,57 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     for (dynamic item in items) {
       if (item is Question) {
         addTableRow(item.questionAndPageIds, listTable, id);
+      }
+    }
+  }
+
+  void addTableFieldRow(List<dynamic> items, List<TableQuestion> listTable, int id, List<People> listFarm) {
+    for (dynamic item in items) {
+      if (item is Question) {
+        if (item.questionType == 'table_field') {
+          List<Question> list = [];
+          for (int i = 0; i < listFarm.length; i++) {
+            List<Answer> listAs = [];
+            for (Answer answer in item.suggestedAnswerIds) {
+              Answer clonedAnswer = Answer.copy(answer);
+              clonedAnswer.tableRowId = id;
+              int index = listFarm[i].linkkinkField.indexWhere((element) =>
+              element.id == clonedAnswer.linkingField);
+              if(index != -1){
+                clonedAnswer.valueResult = listFarm[i].linkkinkField[index].name;
+              }
+              List<Answer> las = [];
+              for (Answer as in clonedAnswer.suggestedAnswerIds) {
+                Answer clonedAs = Answer.copy(as);
+                clonedAs.tableRowId = id;
+                int index = listFarm[i].linkkinkField.indexWhere((element) =>
+                element.id == clonedAs.linkingField);
+                if(index != -1){
+                  clonedAs.valueResult = listFarm[i].linkkinkField[index].name;
+                }
+                las.add(clonedAs);
+              }
+              if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+                clonedAnswer.suggestedAnswerIds = las;
+              }
+              listAs.add(clonedAnswer);
+            }
+            Question qs = Question.copy(item);
+            qs.suggestedAnswerIds = listAs;
+            qs.rowId = id;
+            id++;
+            list.add(qs);
+          }
+          listTable.add(TableQuestion(item.id!, item.title!, list));
+        }
+      }
+      id = 0;
+    }
+
+    // Gọi đệ quy sau khi xử lý toàn bộ danh sách items
+    for (dynamic item in items) {
+      if (item is Question) {
+        addTableFieldRow(item.questionAndPageIds, listTable, id, listFarm);
       }
     }
   }
@@ -647,10 +822,31 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         final List<Controller> textEditingControllerList = [];
 
         // Thêm TextEditingController cho câu hỏi cha
-        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController(), checkQuestionType(question.questionType ?? ''), question.title!));
+        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController()
+            , checkQuestionType(question.questionType ?? ''), question.title!));
 
         // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
         initTextControllersTable(question, textEditingControllerList);
+
+        textEditingControllerLists.add(textEditingControllerList);
+      }
+    });
+    return textEditingControllerLists;
+  }
+
+  List<List<Controller>> createTECTBListsField(
+      List<TableQuestion> tableQs,) {
+    final List<List<Controller>> textEditingControllerLists = [];
+    tableQs.forEach((questions) {
+      for (Question question in questions.listQuestion) {
+        final List<Controller> textEditingControllerList = [];
+
+        // Thêm TextEditingController cho câu hỏi cha
+        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController()
+            , checkQuestionType(question.questionType ?? ''), question.title!));
+
+        // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
+        initTextControllersTableField(question, textEditingControllerList);
 
         textEditingControllerLists.add(textEditingControllerList);
       }
@@ -692,13 +888,86 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        //print("HoangCV: childAnswer: ${childAnswer.rowId} : ${childAnswer.idSelected} : ${childAnswer.value}");
-        textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(),
-                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.tableRowId, title: childAnswer.value,
-                constrMandatory: childAnswer.constrMandatory));
+        //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+
+        if(childAnswer.isSelectionAnswer == true) {
+          print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory,
+                  input: InputRegisterModel<ItemBasic, ItemBasic>(
+                      noBorder: true,
+                      title: "",
+                      isCompulsory: false,
+                      type: TypeInputRegister.Select,
+                      icon: Icons.arrow_drop_down,
+                      positionSelected: -1,
+                      listValue: childAnswer.selectionAnswerIds,
+                      typeInputEnum: TypeInputEnum.dmucItem,
+                      textAlign: TextAlign.left
+                  )));
+        } else{
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
+        }
         initTextControllersTable(childAnswer, textEditingControllerList);
+      }
+    }
+  }
+  void initTextControllersTableField(dynamic item, List<Controller> textEditingControllerList) {
+    if (item is Question || item is Answer) {
+      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
+      for (Question childQuestion in item.questionAndPageIds) {
+        textEditingControllerList.add(
+            Controller(childQuestion.idSelected!, TextEditingController(),
+                checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+        initTextControllersTableField(childQuestion, textEditingControllerList);
+      }
+
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+
+        if(childAnswer.isSelectionAnswer == true) {
+          print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory,
+                  input: InputRegisterModel<ItemBasic, ItemBasic>(
+                      noBorder: true,
+                      title: "",
+                      isCompulsory: false,
+                      type: TypeInputRegister.Select,
+                      icon: Icons.arrow_drop_down,
+                      positionSelected: -1,
+                      listValue: childAnswer.selectionAnswerIds,
+                      typeInputEnum: TypeInputEnum.dmucItem,
+                      textAlign: TextAlign.left
+                  )));
+        } else{
+          print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
+        }
+        initTextControllersTableField(childAnswer, textEditingControllerList);
       }
     }
   }
@@ -1071,6 +1340,66 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       }
     }
   }
+
+  Future<FutureOr<void>> updateAddTableField(
+      UpdateAddTableFieldEvent event, Emitter<AddReportState> emit) async {
+    emit(state.copyWith(
+        isShowProgress: true, formStatus: const InitialFormStatus()));
+
+    List<Question> listQs = state.listReport[0].questionAndPageIds;
+    bool checkBreak = false;
+    for (int i = 0; i < listQs.length; i++) {
+      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+        if (listQs[i].questionAndPageIds[h].questionType == "table") {
+          for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
+            print("HoangCV: table controller: ${event.answerId} : ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id} ");
+            if (event.answerId == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].id) {
+              if(event.value.isNotEmpty) {
+                listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError =
+                false;
+              }
+              checkBreak = true;
+              break;
+            }
+          }
+        }
+        if (checkBreak) {
+          break;
+        }
+      }
+      if (checkBreak) {
+        break;
+      }
+    }
+
+    if(event.value.isNotEmpty) {
+      QuestionUpload questionUpload = QuestionUpload(
+          idOffline: state.idOffline,
+          userInputId: state.reportId,
+          surveyId: state.listReport[0].id,
+          questionId: event.questionId,
+          suggestedAnswerId: event.answerId,
+          answerType: 'table',
+          valueText: event.value,
+          isAnswerExist: true,
+          tableRowId: event.rowId + 1,
+          rowLinkId: state.listFarm[event.rowId].id,
+          listIdSuggested: []
+      );
+      ObjectResult result = await repository.uploadQuestion(questionUpload);
+      if (result.responseCode == StatusConst.code00) {
+        emit(state.copyWith(
+            isShowProgress: false,
+            reportId: result.response is int ? result.response : null,
+            formStatus: SubmissionSuccess(/*success: result.message*/)));
+      } else if (result.responseCode == StatusConst.code01){
+        emit(state.copyWith(
+            isShowProgress: false,
+            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+      }
+    }
+  }
+
 
   Future<FutureOr<void>> updateFarmerInspector(UpdateFarmerInspectorEvent event, Emitter<AddReportState> emit) async {
     state.farmerInspector!.monitoringVisitType = event.value;
@@ -1835,6 +2164,32 @@ class OnSelectValueEvent extends AddReportEvent {
   List<Object?> get props => [list, index, context, id, type];
 }
 
+class OnSelectionValueEvent extends AddReportEvent {
+  InputRegisterModel input;
+  BuildContext context;
+  final int questionId;
+  final int answerId;
+  final int rowId;
+
+  OnSelectionValueEvent(this.input, this.context, this.questionId, this.answerId, this.rowId,);
+
+  @override
+  List<Object?> get props => [questionId, answerId, rowId, input, context,];
+}
+
+class OnSelectionFieldValueEvent extends AddReportEvent {
+  InputRegisterModel input;
+  BuildContext context;
+  final int questionId;
+  final int answerId;
+  final int rowId;
+
+  OnSelectionFieldValueEvent(this.input, this.context, this.questionId, this.answerId, this.rowId,);
+
+  @override
+  List<Object?> get props => [questionId, answerId, rowId, input, context,];
+}
+
 class UpdateAddTableEvent extends AddReportEvent {
   final int questionId;
   final int answerId;
@@ -1842,6 +2197,18 @@ class UpdateAddTableEvent extends AddReportEvent {
   final String value;
 
   UpdateAddTableEvent(this.questionId, this.answerId, this.rowId, this.value);
+
+  @override
+  List<Object?> get props => [questionId, answerId, rowId, value];
+}
+
+class UpdateAddTableFieldEvent extends AddReportEvent {
+  final int questionId;
+  final int answerId;
+  final int rowId;
+  final String value;
+
+  UpdateAddTableFieldEvent(this.questionId, this.answerId, this.rowId, this.value);
 
   @override
   List<Object?> get props => [questionId, answerId, rowId, value];
@@ -1868,7 +2235,9 @@ class AddReportState extends BlocState {
         reportId,
         listVisible,
         listTable,
+        listTableField,
         listControllerTable,
+        listControllerTableField,
         listSelectedInspector,
         listWidget,
         listFarmer,
@@ -1888,8 +2257,10 @@ class AddReportState extends BlocState {
   final List<Select> listSelectedInspector;
   final List<List<Controller>> listController;
   final List<List<Controller>> listControllerTable;
+  List<List<Controller>> listControllerTableField;
   final List<List<Visible>> listVisible;
   final List<TableQuestion> listTable;
+  List<TableQuestion> listTableField;
   final FormSubmissionStatus formStatus;
   final List<InputRegisterModel> listWidget;
   final List<List<ListInputModel>> listInputModel;
@@ -1915,7 +2286,9 @@ class AddReportState extends BlocState {
     this.listController = const [],
     this.listVisible = const [],
     this.listTable = const [],
+    this.listTableField = const [],
     this.listControllerTable = const [],
+    this.listControllerTableField = const [],
     this.listSelectedInspector = const [],
     this.listWidget = const [],
     this.listInputModel = const [],
@@ -1941,7 +2314,9 @@ class AddReportState extends BlocState {
     List<List<Visible>>? listVisible,
     List<List<Controller>>? listController,
     List<TableQuestion>? listTable,
+    List<TableQuestion>? listTableField,
     List<List<Controller>>? listControllerTable,
+    List<List<Controller>>? listControllerTableField,
     List<Select>? listSelectedInspector,
     List<InputRegisterModel>? listWidget,
     List<List<ListInputModel>>? listInputModel,
@@ -1966,7 +2341,9 @@ class AddReportState extends BlocState {
         listController: listController ?? this.listController,
         listVisible: listVisible ?? this.listVisible,
         listTable: listTable ?? this.listTable,
+        listTableField: listTableField ?? this.listTableField,
         listControllerTable: listControllerTable ?? this.listControllerTable,
+        listControllerTableField: listControllerTableField ?? this.listControllerTableField,
         listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
         listWidget: listWidget ?? this.listWidget,
         listInputModel: listInputModel ?? this.listInputModel,

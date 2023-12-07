@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
+import '../../data/entity/item_default/item_basic.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
@@ -27,6 +28,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
   EditReportBloc(this.repository) : super(EditReportState()) {
     on<GetEditReportEvent>(_getEditReport);
     on<OnSelectValueEvent>(_onSelectValue);
+    on<OnSelectionValueEvent>(_onSelectionValue);
     on<UpdateEditReportEvent>(updateEditReport);
     on<UpdateEditTableEvent>(updateEditTable);
     on<UpdateFarmerInspectorEvent>(updateFarmerInspector);
@@ -322,6 +324,54 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       }
     }
   }
+
+  Future<FutureOr<void>> _onSelectionValue(
+      OnSelectionValueEvent event, Emitter<EditReportState> emit) async {
+    int result;
+    bool checkPass = true;
+    if(checkPass) {
+      result = await Extension().showBottomSheetSelection(
+          event.context,
+          event.input.listValue,
+          event.input.positionSelected,
+          "${event.input.title}",
+          hasSearch: event.input.hasSearch ?? false);
+      if (result != -1) {
+        //   setState(() {
+        event.input.positionSelected = result;
+        event.input.valueDefault = null;
+        event.input.valueSelected =
+        event.input.listValue[result];
+        event.input.error = null;
+        // });
+        // can gi de update report
+        QuestionUpload questionUpload = QuestionUpload(
+            userInputId: state.reportId,
+            surveyId: state.listReport[0].id,
+            questionId: event.questionId,
+            suggestedAnswerId: event.answerId,
+            answerType: 'table',
+            valueText: '',
+            tableAnswerId: event.input.listValue[result].id,
+            isAnswerExist: true,
+            tableRowId: event.rowId + 1,
+            listIdSuggested: []
+        );
+        ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
+        if (objectResult.responseCode == StatusConst.code00) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              reportId: objectResult.response is int ? objectResult.response : null,
+              formStatus: SubmissionSuccess(/*success: result.message*/)));
+        } else if (objectResult.responseCode == StatusConst.code01){
+          emit(state.copyWith(
+              isShowProgress: false,
+              formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+        }
+      }
+    }
+  }
+
 
   void _getEditReport(GetEditReportEvent event,
       Emitter<EditReportState> emitter) async {
@@ -873,14 +923,38 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
         print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer
-            .valueRowTable} : ${childAnswer.value}");
-        textEditingControllerList.add(
-            Controller(childAnswer.idSelected!,
-                TextEditingController(text: childAnswer.valueRowTable ?? ''),
-                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''),
-                childAnswer.value!,
-                idRow: childAnswer.tableRowId, title: childAnswer.value,
-                constrMandatory: childAnswer.constrMandatory));
+            .valueRowTable} : ${childAnswer.value} : ${childAnswer.isSelectionAnswer}");
+        if(childAnswer.isSelectionAnswer == true) {
+          print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.toJson()}");
+
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory,
+                  input: InputRegisterModel<ItemBasic, ItemBasic>(
+                      noBorder: true,
+                      title: "",
+                      isCompulsory: false,
+                      type: TypeInputRegister.Select,
+                      icon: Icons.arrow_drop_down,
+                      positionSelected: -1,
+                      listValue: childAnswer.selectionAnswerIds,
+                      typeInputEnum: TypeInputEnum.dmucItem,
+                      textAlign: TextAlign.left
+                  )));
+        } else {
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!,
+                  TextEditingController(text: childAnswer.valueRowTable ?? ''),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
+        }
         initTextControllersTable(childAnswer, textEditingControllerList);
       }
     }
@@ -2138,6 +2212,19 @@ class OnSelectValueEvent extends EditReportEvent {
 
   @override
   List<Object?> get props => [list, index, context, id, type];
+}
+
+class OnSelectionValueEvent extends EditReportEvent {
+  InputRegisterModel input;
+  BuildContext context;
+  final int questionId;
+  final int answerId;
+  final int rowId;
+
+  OnSelectionValueEvent(this.input, this.context, this.questionId, this.answerId, this.rowId,);
+
+  @override
+  List<Object?> get props => [questionId, answerId, rowId, input, context,];
 }
 
 class UpdateEditTableEvent extends EditReportEvent {

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:diary_mobile/data/entity/item_default/item_basic.dart';
 import 'package:diary_mobile/data/entity/report/question.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
+import 'package:diary_mobile/utils/extenstion/input_register_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,8 @@ class Report implements Insertable<Report> {
   String? stringListInternalInspector;
   String? stringListMonitoringVisitType;
 
-  Report({this.id,
+  Report({
+    this.id,
     this.isPage,
     this.pageId,
     this.surveyId,
@@ -63,44 +66,44 @@ class Report implements Insertable<Report> {
       timeLimit: json['time_limit'] ?? 0,
       questionAndPageIds: json['question_and_page_ids'] != null
           ? (json['question_and_page_ids'] as List<dynamic>)
-          .map((itemJson) => Question.fromJson(itemJson))
-          .toList()
+              .map((itemJson) => Question.fromJson(itemJson))
+              .toList()
           : [],
       //
       listFarmers: json['list_farmers'] != null
           ? (json['list_farmers'] as List<dynamic>)
-          .map((itemJson) => People.fromJson(itemJson))
-          .toList()
+              .map((itemJson) => People.fromJson(itemJson))
+              .toList()
           : [],
 
       listInternalInspector: json['list_internal_inspector'] != null
           ? (json['list_internal_inspector'] as List<dynamic>)
-          .map((itemJson) => People.fromJson(itemJson))
-          .toList()
+              .map((itemJson) => People.fromJson(itemJson))
+              .toList()
           : [],
 
       listMonitoringVisitType: json['list_monitoring_visit_type'] != null
           ? (json['list_monitoring_visit_type'] as List<dynamic>)
-          .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
-          .toList()
+              .map((itemJson) => MonitoringVisitType.fromJson(itemJson))
+              .toList()
           : [],
-      stringQuestionAndPageIds: jsonEncode(json['question_and_page_ids']) ?? '[]',
+      stringQuestionAndPageIds:
+          jsonEncode(json['question_and_page_ids']) ?? '[]',
       stringListFarmers: jsonEncode(json['list_farmers']) ?? '[]',
     );
   }
 
   String convertQuestionsListToJson() {
     final List<Map<String, dynamic>> questionListJson =
-    questionAndPageIds.map((question) => question.toJson()).toList();
+        questionAndPageIds.map((question) => question.toJson()).toList();
     return jsonEncode(questionListJson);
   }
 
   String convertListFarmersListToJson() {
     final List<Map<String, dynamic>> listFarmersListJson =
-    listFarmers.map((listFarmer) => listFarmer.toJson()).toList();
+        listFarmers.map((listFarmer) => listFarmer.toJson()).toList();
     return jsonEncode(listFarmersListJson);
   }
-
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -134,9 +137,8 @@ class Report implements Insertable<Report> {
             .map((answer) => Question.copy(answer))
             .toList(),
         stringQuestionAndPageIds = other.stringQuestionAndPageIds,
-        listFarmers = other.listFarmers
-            .map((answer) => People.copy(answer))
-            .toList(),
+        listFarmers =
+            other.listFarmers.map((answer) => People.copy(answer)).toList(),
         listInternalInspector = other.listInternalInspector
             .map((answer) => People.copy(answer))
             .toList(),
@@ -173,10 +175,7 @@ class MonitoringVisitType {
   });
 
   factory MonitoringVisitType.fromJson(Map<String, dynamic> json) {
-    return MonitoringVisitType(
-        type: json['type'],
-        value: json['value']
-    );
+    return MonitoringVisitType(type: json['type'], value: json['value']);
   }
 
   Map<String, dynamic> toJson() {
@@ -197,12 +196,18 @@ class People {
   final String? code;
   final String? image;
   final List<People> farmIds;
+  final int? areaId;
+  final String? areaName;
+  final List<ItemBasic> linkkinkField;
 
   People(
       {required this.id,
       required this.name,
       this.code,
       this.image,
+        this.areaId,
+        this.areaName,
+        this.linkkinkField = const [],
       this.farmIds = const []});
 
   factory People.fromJson(Map<String, dynamic> json) {
@@ -210,10 +215,17 @@ class People {
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
       code: json['code'] == false ? null : json['code'],
+      areaId: json['area_id'] ?? -1,
+      areaName: json['area_name'] ?? '',
       farmIds: json['farm_ids'] != null
           ? (json['farm_ids'] as List<dynamic>)
               .map((itemJson) => People.fromJson(itemJson))
               .toList()
+          : [],
+      linkkinkField: json['linkkink_field'] != null
+          ? (json['linkkink_field'] as List<dynamic>)
+          .map((itemJson) => ItemBasic.fromJson(itemJson))
+          .toList()
           : [],
     );
   }
@@ -221,13 +233,20 @@ class People {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     List<Map> listFarm = [];
-    for (int i = 0; i < (farmIds??[]).length; i++) {
-      listFarm.add((farmIds??[])[i].toJson());
+    for (int i = 0; i < (farmIds ?? []).length; i++) {
+      listFarm.add((farmIds ?? [])[i].toJson());
+    }
+    List<Map> listLinkkinkField = [];
+    for (int i = 0; i < (linkkinkField ?? []).length; i++) {
+      listLinkkinkField.add((linkkinkField ?? [])[i].toJson());
     }
     data['id'] = id;
     data['name'] = name;
     data['code'] = code;
     data['farm_ids'] = listFarm;
+    data['area_id'] = areaId;
+    data['area_name'] = areaName;
+    data['linkkink_field'] = listLinkkinkField;
     return data;
   }
 
@@ -236,6 +255,9 @@ class People {
         name = other.name,
         code = other.code,
         farmIds = other.farmIds.map((answer) => People.copy(answer)).toList(),
+        areaId = other.areaId,
+        areaName = other.areaName,
+        linkkinkField = other.linkkinkField.map((answer) => ItemBasic.copy(answer)).toList(),
         image = other.image;
 }
 
@@ -251,10 +273,10 @@ class Select {
 
   Select(this.id, this.value, this.title,
       {this.listId = const [],
-        this.listSubId = const [],
-        this.parentId = -1,
-        this.type = '',
-        this.typeSub = ''});
+      this.listSubId = const [],
+      this.parentId = -1,
+      this.type = '',
+      this.typeSub = ''});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -277,18 +299,24 @@ class Controller {
   int id;
   int? idRow;
   TextEditingController controller;
+  InputRegisterModel? input;
   String type;
   String value;
   String? title;
   bool? constrMandatory;
 
-  Controller(this.id, this.controller, this.type, this.value, {this.idRow, this.title, this.constrMandatory});
+  Controller(this.id, this.controller, this.type, this.value,
+      {this.input,
+      this.idRow,
+      this.title,
+      this.constrMandatory});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['idRow'] = idRow;
     data['controller'] = controller;
+    data['input'] = input;
     data['type'] = type;
     data['value'] = value;
     data['title'] = title;
@@ -304,4 +332,3 @@ class TableQuestion {
 
   TableQuestion(this.id, this.title, this.listQuestion);
 }
-

@@ -280,7 +280,7 @@ class ContainerInputWidget extends StatelessWidget {
   }
 
   Widget _rightWidget(BuildContext context) {
-    print("HoangCV:_rightWidget chạy vào đây");
+    //print("HoangCV:_rightWidget chạy vào đây");
     switch (inputRegisterModel.type) {
       case TypeInputRegister.TextField:
         int maxLength = 0;
