@@ -841,14 +841,23 @@ class RepositoryImpl extends Repository {
       list[1].listFarmers = list[0].listFarmers;
       DiaryDB.instance.insertListReport([list[1]]);
       //assignIdSelected(list[0].questionAndPageIds);
-      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 2, (index) => index + 1);
+      ///Bug: đoạn này đang gen sai số lượng idSelect /// Cần xem lại
+      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 10, (index) => index + 1);
+
+      print("HoangCV: idSelectedList: ${idSelectedList.length}");
       assignIdSelected(list[1].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportHierarchy(list);
-      hierarchyList.forEach((element) {
+   /*   hierarchyList.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
-      });
+      });*/
       // list.sort((a,b)=> (b.transactionDate??"").compareTo((a.transactionDate??"")));
       //DiaryDB.instance.insertListActivityDiary(list);
+  /*    hierarchyList[1].questionAndPageIds.forEach((element) {
+        print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
+      });*/
+      hierarchyList[1].questionAndPageIds[6].questionAndPageIds[0].suggestedAnswerIds.forEach((element) {
+        print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
+      });
       return [hierarchyList[1]];
     } else if(objectResult.responseCode == StatusConst.code02) {
 
@@ -863,7 +872,7 @@ class RepositoryImpl extends Repository {
 
     List<Report> list = await DiaryDB.instance.getListReport(id);
     list.add(list[0]);
-    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 2, (index) => index + 1);
+    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 10, (index) => index + 1);
     assignIdSelected(list[1].questionAndPageIds, idSelectedList);
     final hierarchyList = buildReportHierarchy(list);
     hierarchyList.forEach((element) {
@@ -1123,7 +1132,7 @@ class RepositoryImpl extends Repository {
           .toList();
       //assignIdSelected(list[0].questionAndPageIds);
       print("HoangCV: getListActivityReport: ${list[1].surveyId[0].questionAndPageIds.length}");
-      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 4, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 10, (index) => index + 1);
       assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportResult(list[1].surveyId);
       hierarchyList.forEach((element) {
@@ -1205,6 +1214,11 @@ class RepositoryImpl extends Repository {
 
       for (int i = 0; i < list2[k].questionAndPageIds.length; i++) {
         if (list2[k].questionAndPageIds[i].questionType == "table") {
+          if (list2[k].questionAndPageIds[i].suggestedAnswerIds.any((element) =>
+          element.linkingField != null && element.linkingField != -1)) {
+            result[k].questionAndPageIds[i].questionType = "table_field";
+            print("HoangCV: list2 length table_field1: ${result[k].questionAndPageIds[i].questionType}");
+          }
           for (int m = 0; m <
               list2[k].questionAndPageIds[i].suggestedAnswerIds.length; m++) {
             for (int n = m + 1; n <

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
+import '../../data/entity/item_default/item_basic.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
@@ -157,6 +158,8 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     List<List<Visible>> listVisible = [];
     List<List<Controller>> listController = [];
     List<List<Controller>> listControllerTable = [];
+    List<List<Controller>> listControllerTableField = [];
+    List<TableQuestion> listTableField = [];
     List<TableQuestion> listTable = [];
     List<People> listFarmer = [];
     List<People> listInspector = [];
@@ -166,9 +169,18 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       listVisible = createVisibleLists(report[1].surveyId[0].questionAndPageIds);
       listController = createTextEditingControllerLists(report[1].surveyId[0].questionAndPageIds);
       int i = 0;
+      int i1 = 0;
+
       addTableRow(report[1].surveyId[0].questionAndPageIds, listTable, i);
       List<List<Controller>> listCtrlTable = createTECTBLists(listTable);
       listControllerTable.addAll(listCtrlTable);
+
+      addTableFieldRow(report[1].surveyId[0].questionAndPageIds, listTableField, i1,
+          report[0].listFarmers[report[0].listFarmers.indexWhere((element) =>
+          element.id == report[0].farmerId)].farmIds);
+      List<List<Controller>> listCtrlTableField = createTECTBListsField(listTableField,);
+      listControllerTableField.addAll(listCtrlTableField);
+
       for (int i = 0; i < report[0].listMonitoringVisitType.length; i++) {
         listSelectedInspector.add(Select(i,
             report[0].listMonitoringVisitType[i].type == report[0].monitoringVisitType ? true : false,
@@ -209,6 +221,8 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       listController: listController,
       listControllerTable: listControllerTable,
       listTable: listTable,
+      listControllerTableField: listControllerTableField,
+      listTableField: listTableField,
       listSelectedInspector: listSelectedInspector,
       listInputModel: listInputModel,
     ));
@@ -284,6 +298,67 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     for (dynamic item in items) {
       if (item is Question) {
         addTableRow(item.questionAndPageIds, listTable, id);
+      }
+    }
+  }
+
+  void addTableFieldRow(List<dynamic> items, List<TableQuestion> listTable, int id, List<People> listFarm) {
+    for (dynamic item in items) {
+      if (item is Question) {
+        if (item.questionType == 'table_field') {
+          List<Question> list = [];
+          if(item.userInputLines.isNotEmpty) {
+            for (RowLine row in item.userInputLines) {
+              List<Answer> listAs = [];
+              for (Answer answer in row.userInputLineId) {
+                Answer clonedAnswer = Answer.copy(answer);
+                clonedAnswer.id = clonedAnswer.suggestedAnswerId;
+                if (clonedAnswer.tableRowId == null || clonedAnswer.tableRowId == -1) {
+                  clonedAnswer.tableRowId = row.rowId;
+                  clonedAnswer.rowId = row.rowId;
+                }
+                int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
+                element.id == clonedAnswer.linkingField);
+                if(index != -1){
+                  clonedAnswer.valueRowTable = listFarm[(row.rowId ?? -1)-1].linkkinkField[index].name;
+                }
+                List<Answer> las = [];
+                for (Answer as in clonedAnswer.suggestedAnswerIds) {
+                  Answer clonedAs = Answer.copy(as);
+                  clonedAs.id = clonedAs.suggestedAnswerId;
+                  if (clonedAs.tableRowId == null || clonedAs.tableRowId == -1) {
+                    clonedAs.tableRowId = row.rowId;
+                    clonedAs.rowId = row.rowId;
+                  }
+                  int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
+                  element.id == clonedAs.linkingField);
+                  if(index != -1){
+                    clonedAs.valueRowTable = listFarm[(row.rowId ?? -1)-1].linkkinkField[index].name;
+                  }
+                  las.add(clonedAs);
+                }
+                if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
+                  clonedAnswer.suggestedAnswerIds = las;
+                }
+                listAs.add(clonedAnswer);
+              }
+              Question qs = Question.copy(item);
+              qs.suggestedAnswerIds = listAs;
+              qs.rowId = row.rowId;
+              id++;
+              list.add(qs);
+            }
+          }
+          listTable.add(TableQuestion(item.id!, item.title!, list));
+        }
+      }
+      id = 0;
+    }
+
+    // Gọi đệ quy sau khi xử lý toàn bộ danh sách items
+    for (dynamic item in items) {
+      if (item is Question) {
+        addTableFieldRow(item.questionAndPageIds, listTable, id, listFarm);
       }
     }
   }
@@ -559,6 +634,26 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
     return textEditingControllerLists;
   }
 
+  List<List<Controller>> createTECTBListsField(
+      List<TableQuestion> tableQs,) {
+    final List<List<Controller>> textEditingControllerLists = [];
+    tableQs.forEach((questions) {
+      for (Question question in questions.listQuestion) {
+        final List<Controller> textEditingControllerList = [];
+
+        // Thêm TextEditingController cho câu hỏi cha
+        textEditingControllerList.add(Controller(question.idSelected!, TextEditingController()
+            , checkQuestionType(question.questionType ?? ''), question.title!));
+
+        // Gọi hàm đệ quy để thêm TextEditingController cho câu hỏi và câu trả lời con
+        initTextControllersTableField(question, textEditingControllerList);
+
+        textEditingControllerLists.add(textEditingControllerList);
+      }
+    });
+    return textEditingControllerLists;
+  }
+
   void initTextControllers(dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
       for (Question childQuestion in item.questionAndPageIds) {
@@ -585,22 +680,101 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
   }
   void initTextControllersTable(dynamic item, List<Controller> textEditingControllerList) {
     if (item is Question || item is Answer) {
-      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected} : ${item is Answer ? item.valueRowTable : ''}");
+      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
       for (Question childQuestion in item.questionAndPageIds) {
         textEditingControllerList.add(
-            Controller(childQuestion.idSelected!, TextEditingController(),
+            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ''),
                 checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
         initTextControllersTable(childQuestion, textEditingControllerList);
       }
 
       for (Answer childAnswer in item.suggestedAnswerIds) {
-        print("HoangCV: childAnswer: ${childAnswer.tableRowId} : ${childAnswer.valueRowTable} : ${childAnswer.value}");
-        textEditingControllerList.add(
-            Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
-                checkQuestionType(childAnswer.commentAnswer == true ? '' : ''), childAnswer.value!,
-                idRow: childAnswer.tableRowId, title: childAnswer.value,
-                constrMandatory: childAnswer.constrMandatory));
+        //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+
+        if(childAnswer.isSelectionAnswer == true) {
+          print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+          int index = childAnswer.selectionAnswerIds.indexWhere((element) => element.id == childAnswer.tableAnswerId);
+              textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory,
+                  input: InputRegisterModel<ItemBasic, ItemBasic>(
+                      noBorder: true,
+                      title: "",
+                      isCompulsory: false,
+                      type: TypeInputRegister.Non,
+                      icon: Icons.arrow_drop_down,
+                      positionSelected: index != -1 ? index : -1,
+                      listValue: childAnswer.selectionAnswerIds,
+                      valueSelected: index != -1 ? childAnswer.selectionAnswerIds[index] : null,
+                      controller: TextEditingController(text: index != -1 ? childAnswer.selectionAnswerIds[index].name : ""),
+                      typeInputEnum: TypeInputEnum.dmucItem,
+                      textAlign: TextAlign.left
+                  )));
+        } else{
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
+        }
         initTextControllersTable(childAnswer, textEditingControllerList);
+      }
+    }
+  }
+  void initTextControllersTableField(dynamic item, List<Controller> textEditingControllerList) {
+    if (item is Question || item is Answer) {
+      //print("HoangCV: initTextControllersTable: ${item.rowId} : ${item.idSelected}");
+      for (Question childQuestion in item.questionAndPageIds) {
+        textEditingControllerList.add(
+            Controller(childQuestion.idSelected!, TextEditingController(text: childQuestion.valueResult ?? ""),
+                checkQuestionType(childQuestion.questionType ?? ''), childQuestion.title!));
+        initTextControllersTableField(childQuestion, textEditingControllerList);
+      }
+
+      for (Answer childAnswer in item.suggestedAnswerIds) {
+        //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+
+        if(childAnswer.isSelectionAnswer == true) {
+          print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          int index = childAnswer.selectionAnswerIds.indexWhere((element) => element.id == childAnswer.tableAnswerId);
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory,
+                  input: InputRegisterModel<ItemBasic, ItemBasic>(
+                      noBorder: true,
+                      title: "",
+                      isCompulsory: false,
+                      type: TypeInputRegister.Non,
+                      icon: Icons.arrow_drop_down,
+                      positionSelected: index != -1 ? index : -1,
+                      listValue: childAnswer.selectionAnswerIds,
+                      valueSelected: index != -1 ? childAnswer.selectionAnswerIds[index] : null,
+                      controller: TextEditingController(text: index != -1 ? childAnswer.selectionAnswerIds[index].name : ""),
+                      typeInputEnum: TypeInputEnum.dmucItem,
+                      textAlign: TextAlign.left
+                  )));
+        } else{
+          print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ""),
+                  checkQuestionType(
+                      childAnswer.commentAnswer == true ? '' : ''),
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
+        }
+        initTextControllersTableField(childAnswer, textEditingControllerList);
       }
     }
   }
@@ -643,7 +817,9 @@ class DetailReportState extends BlocState {
     reportId,
     listVisible,
     listTable,
+    listTableField,
     listControllerTable,
+    listControllerTableField,
     listSelectedInspector,
     listWidget,
     listFarmer,
@@ -662,6 +838,8 @@ class DetailReportState extends BlocState {
   final List<Select> listSelectedInspector;
   final List<List<Controller>> listController;
   final List<List<Controller>> listControllerTable;
+  List<List<Controller>> listControllerTableField;
+  List<TableQuestion> listTableField;
   final List<List<Visible>> listVisible;
   final List<TableQuestion> listTable;
   final FormSubmissionStatus formStatus;
@@ -693,7 +871,9 @@ class DetailReportState extends BlocState {
     this.listController = const [],
     this.listVisible = const [],
     this.listTable = const [],
+    this.listTableField = const [],
     this.listControllerTable = const [],
+    this.listControllerTableField = const [],
     this.listSelectedInspector = const [],
     this.listWidget = const [],
     this.listInputModel = const [],
@@ -722,7 +902,9 @@ class DetailReportState extends BlocState {
     List<List<Visible>>? listVisible,
     List<List<Controller>>? listController,
     List<TableQuestion>? listTable,
+    List<TableQuestion>? listTableField,
     List<List<Controller>>? listControllerTable,
+    List<List<Controller>>? listControllerTableField,
     List<Select>? listSelectedInspector,
     List<InputRegisterModel>? listWidget,
     List<List<ListInputModel>>? listInputModel,
@@ -751,7 +933,9 @@ class DetailReportState extends BlocState {
         listController: listController ?? this.listController,
         listVisible: listVisible ?? this.listVisible,
         listTable: listTable ?? this.listTable,
+        listTableField: listTableField ?? this.listTableField,
         listControllerTable: listControllerTable ?? this.listControllerTable,
+        listControllerTableField: listControllerTableField ?? this.listControllerTableField,
         listSelectedInspector: listSelectedInspector ?? this.listSelectedInspector,
         listWidget: listWidget ?? this.listWidget,
         listInputModel: listInputModel ?? this.listInputModel,

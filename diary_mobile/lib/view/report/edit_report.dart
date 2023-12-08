@@ -127,8 +127,10 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                               state.listSelected[index-1],
                               state.listController[index-1],
                               state.listControllerTable,
+                              state.listControllerTableField,
                               blocContext,
                               state.listTable,
+                              state.listTableField,
                               state.farmerInspector ?? FarmerInspectorUpload(),
                               state.listInputModel[index -1]
                           ),
@@ -140,8 +142,10 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                           state.listSelected[index-1],
                           state.listController[index-1],
                           state.listControllerTable,
+                          state.listControllerTableField,
                           blocContext,
                           state.listTable,
+                          state.listTableField,
                           state.farmerInspector ?? FarmerInspectorUpload(),
                           state.listInputModel[index -1]
                       ),
@@ -527,6 +531,116 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       ],
     );
   }
+
+  Widget tableNonField(int questionId, int answerId, int idSelected, int idRow,
+      List<List<Controller>> controllers, BuildContext context, FarmerInspectorUpload farmerInspector) {
+    TextEditingController controller = TextEditingController();
+    String type = '';
+    int index = -1;
+
+    for (var element in controllers) {
+      index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
+
+      if (index != -1) {
+        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        controller = element[index].controller;
+        type = element[index].type;
+        return Padding(
+          padding: EdgeInsets.only(bottom: 4, top: 4),
+          child: Focus(
+            onFocusChange: (hasFocus){
+              context.read<EditReportBloc>().add(UpdateAddTableFieldEvent(questionId, answerId, idRow, controller.text));
+            },
+            child: TextField(
+              controller: controller,
+              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              onSubmitted: (str) {
+                context.read<EditReportBloc>().add(UpdateAddTableFieldEvent(questionId, answerId, idRow, str));
+              },
+              onChanged: (str) {
+                bool checkPass = true;
+                checkPass = Utils.checkPassFarm(farmerInspector);
+                if (checkPass) {
+                  //controller.text = str;
+                } else{
+                  controller.text = '';
+                }
+              },
+              decoration: const InputDecoration(
+                isDense: true,
+                border: InputBorder.none, // No border or underline
+                contentPadding: EdgeInsets.only(bottom: 4, top: 4, left: 4, right: 4),
+              ),
+              maxLines: 10,
+              minLines: 2,
+            ),
+          ),
+        );
+      }
+    }
+
+    // Trả về một giá trị mặc định nếu không tìm thấy phần tử thỏa mãn điều kiện
+    return SizedBox(); // Hoặc bạn có thể trả về một Widget mặc định khác tuỳ ý
+  }
+
+  Widget tableNonSelectionField(int questionId, int answerId, int idSelected, int idRow,
+      List<List<Controller>> controllers, BuildContext context, FarmerInspectorUpload farmerInspector) {
+    InputRegisterModel input;
+    String type = '';
+    int index = -1;
+
+    for (var element in controllers) {
+      index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
+
+      if (index != -1) {
+        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        input = element[index].input!;
+        type = element[index].type;
+        return Padding(
+          padding: EdgeInsets.only(bottom: 4, top: 4),
+          child: ContainerInputWidget(
+            contextParent: context,
+            color: AppColor.background,
+            inputRegisterModel: input,
+            onClick: () {
+              context
+                  .read<EditReportBloc>()
+                  .add(OnSelectionFieldValueEvent(input, context, questionId, answerId, idRow,));
+            },
+          ),
+        );
+      }
+    }
+
+    // Trả về một giá trị mặc định nếu không tìm thấy phần tử thỏa mãn điều kiện
+    return SizedBox(); // Hoặc bạn có thể trả về một Widget mặc định khác tuỳ ý
+  }
+
+  Table tableNonHasSubField(int questionId, int idRow, List<Answer> list, List<List<Controller>> controller,
+      BuildContext context, FarmerInspectorUpload farmerInspector) {
+    List<Widget> tabNonSub = [];
+    for (int i = 0; i < list.length; i++) {
+      if(list[i].isSelectionAnswer == true){
+        tabNonSub.add(tableNonSelectionField(questionId, list[i].id!, list[i].idSelected!, idRow,
+            controller, context, farmerInspector));
+      } else {
+        print("HoangCV: run 1: ${list[i].idSelected!}");
+        tabNonSub.add(tableNonField(questionId, list[i].id!, list[i].idSelected!, idRow,
+            controller, context, farmerInspector),);
+      }
+    }
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+      columnWidths: {
+        0: FlexColumnWidth(1),
+        1: FlexColumnWidth(1),
+      },
+      border: TableBorder.all(color: AppColor.black22),//const TableBorder(verticalInside: BorderSide(color: AppColor.black22)),
+      children: [
+        TableRow(children: tabNonSub),
+      ],
+    );
+  }
   TableRow tableRowCheckBoxTextField(String title, bool isError, int id, List<Select> listSelected, List<Controller> controller, BuildContext context, FarmerInspectorUpload farmerInspector, {bool isFirst = false}) {
     int index = controller.indexWhere((element) => element.id == id);
     return TableRow(children: [
@@ -862,7 +976,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         ]),
       ],
     ),);
-    listTable1.add(Table(
+/*    listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
         0: FlexColumnWidth(1),
@@ -895,7 +1009,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           ),
         ]),
       ],
-    ),);
+    ),);*/
     listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
@@ -991,8 +1105,11 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
 
   Widget tableDetailResult(List<Question> list, List<Question> listParent,
       List<Select> listSelect, List<Controller> listController,
-      List<List<Controller>> listControllerTable, BuildContext context,
-      List<TableQuestion> listTable, FarmerInspectorUpload farmerInspector,
+      List<List<Controller>> listControllerTable,
+      List<List<Controller>> listControllerTableField,
+      BuildContext context,
+      List<TableQuestion> listTable, List<TableQuestion> listTableField,
+      FarmerInspectorUpload farmerInspector,
       List<ListInputModel> listInputModel){
     List<Table> listTable1 =[];
     int form = 0;
@@ -1003,10 +1120,12 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       List<TableRow> tableRow = [];
       List<TableRow> tableRowSub = [];
       List<Widget> tableWidgetText = [];
+      List<Widget> tableWidgetTextField = [];
       List<List<Widget>> tableWidgetFive = [];
       List<List<Widget>> listRow= [];
+      List<List<Widget>> listRowField= [];
       form = checkForm(list[i]);
-      print("HoangCV: list title : ${list[i].title} ${list[i].questionType} : ${form} : ${list[i].questionAndPageIds.length}");
+      //print("HoangCV: list title : ${list[i].title} ${list[i].questionType} : ${form} : ${list[i].questionAndPageIds.length}");
       if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"
           || list[i].questionType == "title"){
         if(list[i].questionAndPageIds.length>0){
@@ -1176,7 +1295,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                 ) : Container(),
               ]);
             }
-            else if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && listParent[i].questionType != "table") {
+            else if(tableSub.isEmpty && form != 0 && form != 1 && form != 2
+                && listParent[i].questionType != "table" && listParent[i].questionType != "table_field") {
               tableWidgetFive.add([
                 Padding(
                   padding: EdgeInsets.only(bottom: 16, top: 16),
@@ -1210,10 +1330,10 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               ]);
             }
             else if(tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2
-                && listParent[i].questionType != "table"){
+                && listParent[i].questionType != "table" && listParent[i].questionType != "table_field"){
             }
             if(tableSub.isNotEmpty && form != 0 && form != 1 && form != 2
-                && listParent[i].questionType != "table") {
+                && listParent[i].questionType != "table" && listParent[i].questionType != "table_field") {
               listTable1.add(Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 columnWidths: {
@@ -1230,7 +1350,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
               ),);
             }
             else if(tableSub.isNotEmpty && form != 0 && form != 1 && form == 2
-                && listParent[i].questionType != "table") {
+                && listParent[i].questionType != "table" && listParent[i].questionType != "table_field") {
               listTable1.add(Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.top,
                 columnWidths: {
@@ -1430,9 +1550,77 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           listRow.add(tableWidgetNon);
         }
       }
+      else if(list[i].questionType == "table_field"){
+        checkFormFour = false;
+        for (int j = 0; j < list[i].suggestedAnswerIds.length; j++) {
+          if (list[i].suggestedAnswerIds[j].suggestedAnswerIds.isNotEmpty) {
+            tableWidgetTextField.add(tableRowTextHasSub(
+                list[i].suggestedAnswerIds[j].value ?? '',
+                list[i].suggestedAnswerIds[j].isError ?? false,
+                list[i].suggestedAnswerIds[j].suggestedAnswerIds));
+          } else {
+            tableWidgetTextField.add(tableRowText(
+              list[i].suggestedAnswerIds[j].value ?? '',
+              list[i].suggestedAnswerIds[j].isError ?? false,));
+          }
+        }
+        int index = listTableField.indexWhere((element) => element.id == list[i].id);
+        if(index != -1) {
+          for (int a = 0; a < listTableField[index].listQuestion.length; a ++) {
+            //print("HoangCV: listQuestion[a]:  ${a} : ${listTableField[index].listQuestion[a].idSelected} : ${listTableField[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId}");
+
+            List<Widget> tableWidgetNon = [];
+            for (int g = 0; g <
+                listTableField[index].listQuestion[a].suggestedAnswerIds
+                    .length; g++) {
+              if (listTableField[index].listQuestion[a].suggestedAnswerIds[g]
+                  .suggestedAnswerIds.isNotEmpty) {
+                tableWidgetNon.add(
+                    tableNonHasSubField(listTableField[index].listQuestion[a].id!,
+                        listTableField[index].listQuestion[a].rowId!,
+                        listTableField[index].listQuestion[a]
+                            .suggestedAnswerIds[g].suggestedAnswerIds,
+                        listControllerTableField, context, farmerInspector));
+              } else {
+                if (listTableField[index].listQuestion[a].suggestedAnswerIds[g]
+                    .isSelectionAnswer == true) {
+                  tableWidgetNon.add(tableNonSelectionField(
+                      listTableField[index].listQuestion[a].id!,
+                      listTableField[index].listQuestion[a]
+                          .suggestedAnswerIds[g].id!,
+                      listTableField[index].listQuestion[a]
+                          .suggestedAnswerIds[g].idSelected!,
+                      listTableField[index].listQuestion[a].rowId!,
+                      listControllerTableField,
+                      context,
+                      farmerInspector));
+                }
+                else {
+                  tableWidgetNon.add(tableNonField(
+                      listTableField[index].listQuestion[a].id!,
+                      listTableField[index].listQuestion[a]
+                          .suggestedAnswerIds[g].id!,
+                      listTableField[index].listQuestion[a]
+                          .suggestedAnswerIds[g].idSelected!,
+                      listTableField[index].listQuestion[a].rowId!,
+                      listControllerTableField,
+                      context,
+                      farmerInspector));
+/*                  print("HoangCV: rowID:  ${a} : ${listTableField[index].listQuestion[a]
+                      .suggestedAnswerIds[g].toJson()} : "
+                      "${listTableField[index].listQuestion[a].rowId} : ${listTableField[index].listQuestion[a].title}");*/
+
+                }
+              }
+            }
+            listRowField.add(tableWidgetNon);
+            //print("HoangCV: listQuestion[g]:  ${listRow.length} : ${tableWidgetNon.length} : ${listRowField.length}");
+          }
+        }
+      }
       if(!checkFormFour) {
         if (tableSub.isEmpty && form != 0 && form != 1 && form != 2 &&
-            list[i].questionType != "table") {
+            list[i].questionType != "table" && list[i].questionType != "table_field") {
           //print("HoangCV: tableSub.isEmpty: ${tableSub.isEmpty} : ${list[i].title} : ${tableRowSub.isNotEmpty}");
           if(tableRowSub.isNotEmpty) {
             listTable1.add(Table(
@@ -1515,9 +1703,9 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           }
         }
         else if (tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2 &&
-            list[i].questionType != "table") {}
+            list[i].questionType != "table" && list[i].questionType != "table_field") {}
         if (tableSub.isNotEmpty && form != 0 && form != 1 && form != 2 &&
-            list[i].questionType != "table") {
+            list[i].questionType != "table" && list[i].questionType != "table_field") {
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             columnWidths: {
@@ -1534,7 +1722,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           ),);
         }
         else if (tableSub.isNotEmpty && form != 0 && form != 1 && form == 2 &&
-            list[i].questionType != "table") {
+            list[i].questionType != "table" && list[i].questionType != "table_field") {
           // form 5. thu hoach
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
@@ -1713,6 +1901,32 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           ),);
         }
       }
+      else if(list[i].questionType  == "table_field" && tableWidgetTextField.isNotEmpty){
+        // table
+        //print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
+        listTable1.add(Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          columnWidths: {
+          },
+          border: TableBorder.all(color: AppColor.black22),
+          children: [
+            TableRow(children: tableWidgetTextField),
+          ],
+        ),);
+        for(int i = 0; i< listRowField.length; i++) {
+          listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(
+                    children: listRowField[i]
+                )
+              ]
+          ),);
+        }
+      }
     }
 
     return Container(
@@ -1751,7 +1965,10 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
   }
 
   double checkTable(List<Question> list){
-    if(list.length == 1 && list.first.questionType == "table"){
+    if(list.length == 1 && (list.first.questionType == "table" || list.first.questionType == "table_field")){
+      if(list.first.suggestedAnswerIds.length > 6){
+        return 2;
+      }
       if(list.first.suggestedAnswerIds.length > 4){
         return 1.5;
       } else if(list.first.suggestedAnswerIds.length > 2) {
@@ -1759,7 +1976,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       } else{
         return 1.0;
       }
-    } else if(list.length == 1 && list.first.questionType != "table"){
+    } else if(list.length == 1 && list.first.questionType != "table"  && list.first.questionType != "table_field"){
       return 1.1;
     }
     return 1.3;
@@ -1820,6 +2037,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
     //print("HoangCV: questiontype: ${qs.title} : ${qs.questionType}");
     if(qs.questionType=="table"){
       return 7;
+    } else if(qs.questionType=="table_field"){
+      return 8;
     }
     if(qs.suggestedAnswerIds.isNotEmpty){
       count++;

@@ -2258,9 +2258,9 @@ class AddReportState extends BlocState {
   final List<List<Controller>> listController;
   final List<List<Controller>> listControllerTable;
   List<List<Controller>> listControllerTableField;
+  List<TableQuestion> listTableField;
   final List<List<Visible>> listVisible;
   final List<TableQuestion> listTable;
-  List<TableQuestion> listTableField;
   final FormSubmissionStatus formStatus;
   final List<InputRegisterModel> listWidget;
   final List<List<ListInputModel>> listInputModel;

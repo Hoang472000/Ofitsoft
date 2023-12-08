@@ -921,10 +921,10 @@ class Utils {
     if (farmerInspector.farmerId == null) {
       Toast.showLongTop("Vui lòng chọn Tên nông dân");
       return false;
-    } else if (farmerInspector.farmId == null) {
+    } /*else if (farmerInspector.farmId == null) {
       Toast.showLongTop("Vui lòng chọn Tên lô trồng");
       return false;
-    }
+    }*/
     /* else if (farmerInspector.internal_inspector_id == null) {
       Toast.showLongTop("Vui lòng chọn Thanh tra viên nội bộ");
       return false;

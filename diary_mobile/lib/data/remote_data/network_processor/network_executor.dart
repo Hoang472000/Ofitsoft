@@ -187,7 +187,11 @@ class NetworkExecutor{
          // print("HoangCV: result: ${response.data['result']}");
        /*   Map<String, dynamic> jsonMap = json.decode(response.data);
           Map<String, dynamic> result = jsonMap['result'];*/
-          objectResult = ObjectResult.fromJson(response.data['result']);
+          try {
+            objectResult = ObjectResult.fromJson(response.data['result']);
+          } catch(_){
+            objectResult= ObjectResult(1, "Error System" , "Lỗi hệ thống!\n Vui lòng thử lại sau.", "01",false , true);
+          }
           // Đoạn này là đoạn refresh token nếu token hết hạn
           /*if (objectResult.responseCode == StatusConst.code03) {
             reFetchApi = true; // neu token het han thi re fetch lai api

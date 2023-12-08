@@ -174,8 +174,8 @@ class _ItemReportResultState extends State<ItemReportResult> {
                                 margin: const EdgeInsets.only(top: 5),
                                 child: RichText(
                                   text: Utils.convertText(
-                                      "Vùng trồng: ",
-                                      "${widget.reportResult.farmName}",
+                                      "Nông hộ: ",
+                                      "${widget.reportResult.farmerName}",
                                       AppColor.blue15,
                                       14),
                                   maxLines: 1,

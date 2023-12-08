@@ -523,7 +523,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
 
       if (index != -1) {
-        print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
         controller = element[index].controller;
         type = element[index].type;
         return Padding(
@@ -981,7 +981,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         ]),
       ],
     ),);
-    listTable1.add(Table(
+    /*listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
         0: FlexColumnWidth(1),
@@ -1014,7 +1014,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           ),
         ]),
       ],
-    ),);
+    ),);*/
     listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
@@ -1691,9 +1691,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               list[i].suggestedAnswerIds[j].isError ?? false,));
           }
         }
-        int index = listTableField.indexWhere((element) =>
-        element.id == list[i].id
-        );
+        int index = listTableField.indexWhere((element) => element.id == list[i].id);
         if(index != -1) {
           for (int a = 0; a < listTableField[index].listQuestion.length; a ++) {
             //print("HoangCV: listQuestion[a]:  ${a} : ${listTableField[index].listQuestion[a].idSelected} : ${listTableField[index].listQuestion[a].title} : ${listTable[index].listQuestion[a].rowId}");
@@ -1735,7 +1733,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       listControllerTableField,
                       context,
                       farmerInspector));
-                  //print("HoangCV: rowID:  ${a} : ${listTableField[index].listQuestion[a].rowId} : ${listTableField[index].listQuestion[a].title}");
+/*                  print("HoangCV: rowID:  ${a} : ${listTableField[index].listQuestion[a]
+                      .suggestedAnswerIds[g].toJson()} : "
+                      "${listTableField[index].listQuestion[a].rowId} : ${listTableField[index].listQuestion[a].title}");*/
 
                 }
               }
@@ -2029,7 +2029,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               ]
           ),);
         }
-      }else if(list[i].questionType  == "table_field" && tableWidgetTextField.isNotEmpty){
+      }
+      else if(list[i].questionType  == "table_field" && tableWidgetTextField.isNotEmpty){
         // table
         //print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
         listTable1.add(Table(
