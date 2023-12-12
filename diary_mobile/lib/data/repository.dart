@@ -143,4 +143,6 @@ abstract class Repository {
   Future<List<ProductBatch>> getListProductBatch();
 
   Future<DetailProductBatch> getDetailProductBatch(int id);
+
+  Future<ObjectResult> getVersionApp();
 }

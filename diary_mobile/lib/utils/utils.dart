@@ -18,6 +18,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../data/entity/image/image_entity.dart';
 import '../generated/l10n.dart';
@@ -374,6 +375,16 @@ class Utils {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
   }
+
+  static void openAppInStore(String appId) async {
+    String appId = "https://play.google.com/store/apps/details?id=com.ofitsoft.diary.diary_mobile";
+    if (await canLaunchUrlString(appId)) {
+      await launchUrlString(appId, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $appId';
+    }
+  }
+
   //DatNVh open GoogleMap
   static Future<void> launchMapUrl(String address) async {
     String encodedAddress = Uri.encodeComponent(address);
@@ -436,23 +447,15 @@ class Utils {
 
   //DatNVh open browser
   static Future<void> launchBrowserUrl(String url) async {
-    if(Platform.isAndroid){
-      if(await canLaunch(url)){
-        await launch(url,forceWebView: false);
-      }
-      else{
-        throw("the action is not supported.");
-      }
-    }
-    if(Platform.isIOS){
-      if(await canLaunch(url)){
-        await launch(url,forceSafariVC: false);
-      }
-      else{
-        throw("the action is not supported.");
-      }
+    if (await canLaunchUrlString(url)) {
+      //https://www.google.com/maps/d/u/0/edit?mid=1aw4WzmDIeCzhr80tSGT-siVOPos5Nn-E&ll=11.60634274655824%2C107.03177262938478&z=14
+      await launchUrlString(url,
+          mode: LaunchMode.externalNonBrowserApplication);
+    } else {
+      throw ("the action is not supported.");
     }
   }
+
   ///cap nhat avatar
   static formatText(data) {
     var str = data;

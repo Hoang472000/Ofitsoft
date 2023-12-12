@@ -64,6 +64,17 @@ class LocalNotificationService {
       Utils.launchAppFromNotification(jsonDecode(payload));
     }
   }
+/*  static Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      SharePreferUtils.getAccessToken().then((value) {
+        if (value != null) {
+          Navigator.pushNamed(navigatorKey.currentContext, "/danhsachhomthu");
+        }else{
+          Navigator.pushNamed(navigatorKey.currentContext, "/");
+        }
+      });
+    }
+  }*/
 
   Future<void> showNotificationFirebase(RemoteMessage message) async {
     var androidDetails = const AndroidNotificationDetails(

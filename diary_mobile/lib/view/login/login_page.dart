@@ -302,11 +302,12 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   Widget _passwordField() {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      if(state.password.isNotEmpty) {
+      if(state.password.isNotEmpty && state.fillFirst == 1) {
         _inputPasswordController = TextEditingController(
             text: _inputPasswordController.text.isNotEmpty
                 ? _inputPasswordController.text
                 : state.password);
+        context.read<LoginBloc>().add(UpdateFillEvent(2));
       }
       return Focus(
         child: Container(
@@ -321,11 +322,11 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                 (lostFocus) {},
                 false,
                 false)),
-        onFocusChange: (hasFocus) {
+        /*onFocusChange: (hasFocus) {
           if (hasFocus) {
             context.read<LoginBloc>().add(EventFocusTextField());
           }
-        },
+        },*/
       );
     });
   }

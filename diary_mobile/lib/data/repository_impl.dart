@@ -1836,4 +1836,29 @@ class RepositoryImpl extends Repository {
     return DetailProductBatch();
   }
 
+  @override
+  Future<ObjectResult> getVersionApp() async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getVersionApp,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {}
+            )));
+    print("HoangCV: getVersionApp response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    }
+    /*else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }*/
+    return objectResult;
+  }
+
 }

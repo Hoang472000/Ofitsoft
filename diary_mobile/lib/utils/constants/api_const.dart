@@ -74,9 +74,14 @@ class ApiConst {
 
   static const String exportPdf = "/export/xlsx_invoice/";
 
+  //version app
+  static const String getVersionApp = "/get/version";
+  static const String addVersionApp = "/add/version";
+
   //update
-  static const packageIdIOS = "com.bkav.aibooks";
-  static const packageIdANDROID = "com.bkav.aibooks";
+  static const packageIdIOS = "com.ofitsoft.ofitone.vn";
+  static const appIdIOS = "6473613905";
+  static const packageIdANDROID = "com.ofitsoft.diary.diary_mobile";
 
   static const bool isRememberDefault = true; // gia tri mac dinh nho mat khau
   /// command data type const, chi tiet xem : https://docs.google.com/document/d/1gWTu8AJHOQel5a13lkp51cdm658tE2R9/edit#heading=h.50ej0584cnw

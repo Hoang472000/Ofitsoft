@@ -2,12 +2,14 @@ import 'dart:io';
 
 import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
 import 'package:diary_mobile/utils/constants/config_build.dart';
+import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'data/entity/notify/notify_push.dart';
 import 'data/repository.dart';
@@ -112,7 +114,7 @@ Future<void> initOfit() async{
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
         "Bkav onMessage.listen ${message.toMap().toString()}");
-    Utils.handle(message, false);
+    //Utils.handle(message, false);
   });
   messaging.requestPermission(
     alert: true,
@@ -123,7 +125,17 @@ Future<void> initOfit() async{
     provisional: false,
     sound: true,
   );
-
+  PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  String version = packageInfo.version;
+  String buildNumber = packageInfo.buildNumber;
+  print("HoangCV: buildNumber: $buildNumber");
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  if (Platform.isIOS) {
+    sharedPreferences.setString(SharedPreferencesKey.iosVersion, buildNumber);
+  } else{
+    sharedPreferences.setString(SharedPreferencesKey.androidVersion, buildNumber);
+  }
+  
   if (Platform.isIOS) {
     messaging.setForegroundNotificationPresentationOptions(
       alert: true, // Required to display a heads up notification
@@ -196,25 +208,25 @@ class _MyAppState extends State<MyApp> {
       value: repository,
       child: BlocProvider(
         create: (_) => AuthenticationBloc(repository: repository),
-        child: _AIBookView(),
+        child: _DiaryMobileView(),
       ),
     );/*BlocProvider<AuthenticationBloc>(
         create: (context) => AuthenticationBloc(),
-    child: _AIBookView());*//*RepositoryProvider(
+    child: _DiaryMobileView());*//*RepositoryProvider(
       create: (_)=>  BlocProvider(
         create: (_) => AuthenticationBloc(),
-        child: _AIBookView(),
+        child: _DiaryMobileView(),
       ),
     );*/
   }
 }
 
-class _AIBookView extends StatefulWidget {
+class _DiaryMobileView extends StatefulWidget {
   @override
-  State<_AIBookView> createState() => _AIBookState();
+  State<_DiaryMobileView> createState() => _AIBookState();
 }
 
-class _AIBookState extends State<_AIBookView> {
+class _AIBookState extends State<_DiaryMobileView> {
   final _navigatorKey = NavigationService.navigatorKey;
   NavigatorState get _navigator => _navigatorKey.currentState!;
 

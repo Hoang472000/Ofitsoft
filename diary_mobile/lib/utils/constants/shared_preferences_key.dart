@@ -20,6 +20,9 @@ class SharedPreferencesKey {
   static String isFaceIDLogin= "isFaceIDLogin";
   static String OTP= "OTP";
   static String orgGuid= "orgGuid";
+  //version app
+  static String iosVersion = "version_ios";
+  static String androidVersion = "android_ios";
 
   //
   static String unitArea= "unit_area";

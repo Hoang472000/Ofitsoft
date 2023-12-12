@@ -679,4 +679,10 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getListProductBatch
     throw UnimplementedError();
   }
+
+  @override
+  Future<ObjectResult> getVersionApp() {
+    // TODO: implement getVersionApp
+    throw UnimplementedError();
+  }
 }

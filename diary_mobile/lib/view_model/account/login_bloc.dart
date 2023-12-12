@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
+import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,7 @@ import '../../generated/l10n.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
+import '../../utils/utils.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 import 'package:crypto/crypto.dart' as crypto;
@@ -30,6 +33,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<EventFocusTextField>(_eventFocusTextField);
     on<GetUserInfoEvent>(_getUserInfo);
     on<LoginWithGoogle>(_loginGoogle);
+    on<UpdateFillEvent>(_fillFirst);
     add(GetUserInfoEvent());
     //on<RememberLoginChanged>(_rememberPassChange);
     /*on<LoginRemember>(_getRememberPassword);
@@ -125,10 +129,65 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
 
   FutureOr<void> _getUserInfo(GetUserInfoEvent event, Emitter<LoginState> emit) async{
+    emit(state.copyWith(formStatus: const InitialFormStatus(), fillFirst: 1));
     SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
     String username= sharedPreferences.getString(SharedPreferencesKey.userName) ?? "";
     String password= sharedPreferences.getString(SharedPreferencesKey.passwordEncode) ?? "";
-    emit(state.copyWith(username: username, password: password));
+    emit(state.copyWith(username: username, password: password, formStatus: InitialFormStatus()));
+    ObjectResult objectResult = await repository.getVersionApp();
+    if(objectResult.responseCode == StatusConst.code00) {
+      Map<String, dynamic> firstResponse = objectResult.response[0];
+      print("HoangCV: getVersionApp");
+      if (Platform.isIOS) {
+        String iosVersion = sharedPreferences.getString(
+            SharedPreferencesKey.iosVersion) ?? "";
+
+        if (iosVersion.compareTo("${firstResponse["version_ios"]}") != 0) {
+          DiaLogManager.displayDialog(
+              context,
+              "Cập nhật phiên bản",
+              "Vui lòng cập nhật phiên bản mới nhất để sử dụng. Bấm \"Đồng ý\" để cập nhật.",
+                  () {
+                Utils.openAppInStore(
+                    "https://apps.apple.com/us/app/id${ApiConst.appIdIOS}");
+                if (Get.isLogEnable) {
+                  Get.back();
+                }
+              },
+                  () {},
+              "",
+              "Đồng ý",
+              dismissible: false);
+        }
+      } else {
+        String androidVersion = sharedPreferences.getString(
+            SharedPreferencesKey.androidVersion) ?? "";
+        print("HoangCV: getVersionApp: iosAndroid: ${androidVersion}");
+
+        if (androidVersion.compareTo("${firstResponse["version_android"]}") !=
+            0) {
+          DiaLogManager.displayDialog(
+              context,
+              "Cập nhật phiên bản",
+              "Vui lòng cập nhật phiên bản mới nhất để sử dụng. Bấm \"Đồng ý\" để cập nhật.",
+                  () {
+                Utils.openAppInStore(
+                    "https://play.google.com/store/apps/details?id=com.ofitsoft.diary.diary_mobile");
+                if (Get.isLogEnable) {
+                  Get.back();
+                }
+              },
+                  () {},
+              "",
+              "Đồng ý",
+              dismissible: false);
+        }
+      }
+    }
+  }
+
+  FutureOr<void> _fillFirst(UpdateFillEvent event, Emitter<LoginState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus(), fillFirst: event.fill));
   }
 }
 
@@ -144,6 +203,15 @@ class LoginUserNameChanged extends LoginEvent {
 
   @override
   List<Object?> get props => [userName];
+}
+
+class UpdateFillEvent extends LoginEvent {
+  final int fill;
+
+  UpdateFillEvent(this.fill);
+
+  @override
+  List<Object?> get props => [fill];
 }
 
 class LoginPasswordChanged extends LoginEvent {
@@ -193,7 +261,7 @@ class GetUserInfoEvent extends LoginEvent{}
 class LoginState extends BlocState {
   @override
   List<Object?> get props =>
-      [username, password, formStatus, isChangePassWordFirstTime];
+      [username, password, formStatus, isChangePassWordFirstTime, fillFirst];
 
   final String username;
   final String password;
@@ -201,13 +269,15 @@ class LoginState extends BlocState {
   final FormSubmissionStatus formStatus;
   final bool isChangePassWordFirstTime;
   final bool isRememberLogin;
+  final int fillFirst;
 
   LoginState({
     this.username = '',
     this.password = '',
     this.formStatus = const InitialFormStatus(),
     this.isRememberLogin = false,
-    this.isChangePassWordFirstTime = false
+    this.isChangePassWordFirstTime = false,
+    this.fillFirst = 0,
   });
 
   LoginState copyWith({
@@ -216,7 +286,8 @@ class LoginState extends BlocState {
     String? password,
     FormSubmissionStatus? formStatus,
     bool? isRememderPass,
-    bool? isChangePassWordFirstTime
+    bool? isChangePassWordFirstTime,
+    int? fillFirst,
   }) {
     return LoginState(
         username: username ?? this.username,
@@ -224,7 +295,8 @@ class LoginState extends BlocState {
         formStatus: formStatus ?? this.formStatus,
         isRememberLogin: isRememderPass ?? isRememberLogin,
         isChangePassWordFirstTime: isChangePassWordFirstTime ??
-            this.isChangePassWordFirstTime
+            this.isChangePassWordFirstTime,
+        fillFirst: fillFirst ?? this.fillFirst
     );
   }
 }

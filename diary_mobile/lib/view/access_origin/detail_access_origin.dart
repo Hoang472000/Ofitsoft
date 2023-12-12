@@ -54,7 +54,7 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                 child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
                   : Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 40),
+                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
                   child: SingleChildScrollView(
                     //physics: const NeverScrollableScrollPhysics(),
                     child: state.detailAccessOrigin !=null ? Column(
