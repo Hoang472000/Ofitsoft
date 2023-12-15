@@ -209,49 +209,42 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                                     style: StyleOfit.textStyleFW600(Colors.black, 16),
                                   ),
                                 ),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    atomBackground(),
-                                    Container(
-                                      padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
-                                      child: GridView.builder(
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                          mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                        ),
-                                        itemCount: state.listActivityFarm.length,
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var activity = state.listActivityFarm[index];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              if (activity.id == 1) {
-                                                Navigator.push(context, ActivityPurchasePage.route("purchase"));
-                                              } else if (activity.id == 2) {
-                                                Navigator.push(context, ListReportResultView.route());
-                                              } else if (activity.id == 3) {
-                                                Navigator.push(context, AccessOriginPage.route());
-                                              } else if (activity.id == 4) {
-                                                Navigator.push(context, FeedbackPage.route());
-                                              } else if (activity.id == 5) {
-                                                Navigator.push(context, ListPDFPage.route());
-                                              } else if (activity.id == 6) {
-                                                Navigator.push(context, ContactPage.route());
-                                              } else if (activity.id == 7) {
-                                                Navigator.push(context, AddRecordDiaryPage.route("record"));
-                                              }
-                                            },
-                                            child: item(activity),
-                                          );
-                                        },
-                                      ),
+                                Container(
+                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
+                                  child: GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
                                     ),
-                                    //atomBackground(),
-                                  ],
+                                    itemCount: state.listActivityFarm.length,
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      var activity = state.listActivityFarm[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          if (activity.id == 1) {
+                                            Navigator.push(context, ActivityPurchasePage.route("purchase"));
+                                          } else if (activity.id == 2) {
+                                            Navigator.push(context, ListReportResultView.route());
+                                          } else if (activity.id == 3) {
+                                            Navigator.push(context, AccessOriginPage.route());
+                                          } else if (activity.id == 4) {
+                                            Navigator.push(context, FeedbackPage.route());
+                                          } else if (activity.id == 5) {
+                                            Navigator.push(context, ListPDFPage.route());
+                                          } else if (activity.id == 6) {
+                                            Navigator.push(context, ContactPage.route());
+                                          } else if (activity.id == 7) {
+                                            Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                          }
+                                        },
+                                        child: item(activity),
+                                      );
+                                    },
+                                  ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(left: MediaQuery.sizeOf(context).width/56,
@@ -360,22 +353,28 @@ class _HomeRecordViewState extends State<HomeRecordView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(
-              image: AssetImage(activity.iconActivity),
-              width: 40,
-              fit: BoxFit.contain,
+            Expanded(
+              flex: 3,
+              child: Image(
+                image: AssetImage(activity.iconActivity),
+                height: 40,
+                fit: BoxFit.contain,
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                activity.nameActivity,
-                style: StyleOfit.textStyleFW500(
-                  AppColor.main,
-                  16,
-                  overflow: TextOverflow.visible,
-                  height: 1.2,
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  activity.nameActivity,
+                  style: StyleOfit.textStyleFW500(
+                    AppColor.black22,
+                    16,
+                    overflow: TextOverflow.visible,
+                    height: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ],

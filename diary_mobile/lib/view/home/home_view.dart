@@ -42,8 +42,6 @@ class _HomeViewState extends State<HomeView> {
   int _currentPage = 0;
   final int _totalPages = 5;
   Timer? _timer;
-  bool _showAppbar = true;
-  final ScrollController _scrollBottomBarController = ScrollController();
   bool isScrollingDown = false;
   double bottomBarHeight = 75;
   String userName = '';
@@ -58,7 +56,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   void dispose() {
     _timer?.cancel();
-    _scrollBottomBarController.removeListener(() {});
     super.dispose();
   }
 
@@ -79,22 +76,6 @@ class _HomeViewState extends State<HomeView> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       userName = sharedPreferences.getString(SharedPreferencesKey.fullName) ?? "";
-    });
-    _scrollBottomBarController.addListener(() {
-      if (_scrollBottomBarController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          _showAppbar = false;
-        }
-      }
-      if (_scrollBottomBarController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          _showAppbar = true;
-        }
-      }
     });
   }
 
@@ -230,49 +211,42 @@ class _HomeViewState extends State<HomeView> {
                                     style: StyleOfit.textStyleFW600(Colors.black, 16),
                                   ),
                                 ),
-                                Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    atomBackground(),
-                                    Container(
-                                      padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
-                                      child: GridView.builder(
-                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 3,
-                                          crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                          mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                        ),
-                                        itemCount: state.listActivityFarm.length,
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          var activity = state.listActivityFarm[index];
-                                          return GestureDetector(
-                                            onTap: () {
-                                              if (activity.id == 1) {
-                                                Navigator.push(context, ActivityPurchasePage.route("purchase"));
-                                              } else if (activity.id == 2) {
-                                                Navigator.push(context, ListReportResultView.route());
-                                              } else if (activity.id == 3) {
-                                                Navigator.push(context, AccessOriginPage.route());
-                                              } else if (activity.id == 4) {
-                                                Navigator.push(context, FeedbackPage.route());
-                                              } else if (activity.id == 5) {
-                                                Navigator.push(context, ListPDFPage.route());
-                                              } else if (activity.id == 6) {
-                                                Navigator.push(context, ContactPage.route());
-                                              } else if (activity.id == 7) {
-                                                Navigator.push(context, AddRecordDiaryPage.route("record"));
-                                              }
-                                            },
-                                            child: item(activity),
-                                          );
-                                        },
-                                      ),
+                                Container(
+                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
+                                  child: GridView.builder(
+                                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
                                     ),
-                                    //atomBackground(),
-                                  ],
+                                    itemCount: state.listActivityFarm.length,
+                                    padding: EdgeInsets.zero,
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    itemBuilder: (context, index) {
+                                      var activity = state.listActivityFarm[index];
+                                      return GestureDetector(
+                                        onTap: () {
+                                          if (activity.id == 1) {
+                                            Navigator.push(context, ActivityPurchasePage.route("purchase"));
+                                          } else if (activity.id == 2) {
+                                            Navigator.push(context, ListReportResultView.route());
+                                          } else if (activity.id == 3) {
+                                            Navigator.push(context, AccessOriginPage.route());
+                                          } else if (activity.id == 4) {
+                                            Navigator.push(context, FeedbackPage.route());
+                                          } else if (activity.id == 5) {
+                                            Navigator.push(context, ListPDFPage.route());
+                                          } else if (activity.id == 6) {
+                                            Navigator.push(context, ContactPage.route());
+                                          } else if (activity.id == 7) {
+                                            Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                          }
+                                        },
+                                        child: item(activity),
+                                      );
+                                    },
+                                  ),
                                 ),
                                 Container(
                                   padding: EdgeInsets.only(left: MediaQuery.sizeOf(context).width/56,
@@ -381,22 +355,28 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(
-              image: AssetImage(activity.iconActivity),
-              width: 40,
-              fit: BoxFit.contain,
+            Expanded(
+              flex: 3,
+              child: Image(
+                image: AssetImage(activity.iconActivity),
+                height: 40,
+                fit: BoxFit.contain,
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Text(
-                activity.nameActivity,
-                style: StyleOfit.textStyleFW500(
-                  AppColor.main,
-                  16,
-                  overflow: TextOverflow.visible,
-                  height: 1.2,
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  activity.nameActivity,
+                  style: StyleOfit.textStyleFW500(
+                    AppColor.black22,
+                    16,
+                    overflow: TextOverflow.visible,
+                    height: 1.2,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
               ),
             ),
           ],

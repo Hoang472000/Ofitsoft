@@ -78,7 +78,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     } if(check[4]){
       list.add(ActivityFarm(
           id: 2,
-          nameActivity: "Đánh giá Khảo sát",
+          nameActivity: "Đánh giá khảo sát",
           iconActivity: ImageAsset.imageManager));
     }
     if(check[3] || check[4] || check[2]) {
