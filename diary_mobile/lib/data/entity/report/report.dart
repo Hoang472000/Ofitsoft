@@ -193,6 +193,7 @@ class MonitoringVisitType {
 class People {
   final int id;
   final String name;
+  final String? userCode;
   final String? code;
   final String? image;
   final List<People> farmIds;
@@ -205,9 +206,10 @@ class People {
       required this.name,
       this.code,
       this.image,
-        this.areaId,
-        this.areaName,
-        this.linkkinkField = const [],
+      this.areaId,
+      this.areaName,
+      this.linkkinkField = const [],
+      this.userCode,
       this.farmIds = const []});
 
   factory People.fromJson(Map<String, dynamic> json) {
@@ -215,6 +217,7 @@ class People {
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
       code: json['code'] == false ? null : json['code'],
+      userCode: json['user_code'] == false ? null : json['user_code'],
       areaId: json['area_id'] ?? -1,
       areaName: json['area_name'] ?? '',
       farmIds: json['farm_ids'] != null
@@ -243,6 +246,7 @@ class People {
     data['id'] = id;
     data['name'] = name;
     data['code'] = code;
+    data['user_code'] = userCode;
     data['farm_ids'] = listFarm;
     data['area_id'] = areaId;
     data['area_name'] = areaName;
@@ -254,6 +258,7 @@ class People {
       : id = other.id,
         name = other.name,
         code = other.code,
+        userCode = other.userCode,
         farmIds = other.farmIds.map((answer) => People.copy(answer)).toList(),
         areaId = other.areaId,
         areaName = other.areaName,
@@ -331,4 +336,11 @@ class TableQuestion {
   List<Question> listQuestion;
 
   TableQuestion(this.id, this.title, this.listQuestion);
+
+  TableQuestion.copy(TableQuestion other)
+      : id = other.id,
+        title = other.title,
+        listQuestion = other.listQuestion
+            .map((answer) => Question.copy(answer))
+            .toList();
 }

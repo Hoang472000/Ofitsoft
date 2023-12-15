@@ -6681,8 +6681,20 @@ class $ReportSelectTableTable extends ReportSelectTable
   late final GeneratedColumn<String> title = GeneratedColumn<String>(
       'title', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isInitialAssessmentMeta =
+      const VerificationMeta('isInitialAssessment');
   @override
-  List<GeneratedColumn> get $columns => [id, title];
+  late final GeneratedColumn<bool> isInitialAssessment =
+      GeneratedColumn<bool>('is_initial_assessment', aliasedName, true,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: false,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("is_initial_assessment" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
+  @override
+  List<GeneratedColumn> get $columns => [id, title, isInitialAssessment];
   @override
   String get aliasedName => _alias ?? 'report_select_table';
   @override
@@ -6699,6 +6711,12 @@ class $ReportSelectTableTable extends ReportSelectTable
       context.handle(
           _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     }
+    if (data.containsKey('is_initial_assessment')) {
+      context.handle(
+          _isInitialAssessmentMeta,
+          isInitialAssessment.isAcceptableOrUnknown(
+              data['is_initial_assessment']!, _isInitialAssessmentMeta));
+    }
     return context;
   }
 
@@ -6712,6 +6730,8 @@ class $ReportSelectTableTable extends ReportSelectTable
           .read(DriftSqlType.int, data['${effectivePrefix}id']),
       title: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}title']),
+      isInitialAssessment: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_initial_assessment']),
     );
   }
 
@@ -6724,29 +6744,38 @@ class $ReportSelectTableTable extends ReportSelectTable
 class ReportSelectTableCompanion extends UpdateCompanion<ReportSelect> {
   final Value<int?> id;
   final Value<String?> title;
+  final Value<bool?> isInitialAssessment;
   const ReportSelectTableCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
+    this.isInitialAssessment = const Value.absent(),
   });
   ReportSelectTableCompanion.insert({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
+    this.isInitialAssessment = const Value.absent(),
   });
   static Insertable<ReportSelect> custom({
     Expression<int>? id,
     Expression<String>? title,
+    Expression<bool>? isInitialAssessment,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (title != null) 'title': title,
+      if (isInitialAssessment != null)
+        'is_initial_assessment': isInitialAssessment,
     });
   }
 
   ReportSelectTableCompanion copyWith(
-      {Value<int?>? id, Value<String?>? title}) {
+      {Value<int?>? id,
+      Value<String?>? title,
+      Value<bool?>? isInitialAssessment}) {
     return ReportSelectTableCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
+      isInitialAssessment: isInitialAssessment ?? this.isInitialAssessment,
     );
   }
 
@@ -6759,6 +6788,9 @@ class ReportSelectTableCompanion extends UpdateCompanion<ReportSelect> {
     if (title.present) {
       map['title'] = Variable<String>(title.value);
     }
+    if (isInitialAssessment.present) {
+      map['is_initial_assessment'] = Variable<bool>(isInitialAssessment.value);
+    }
     return map;
   }
 
@@ -6766,7 +6798,8 @@ class ReportSelectTableCompanion extends UpdateCompanion<ReportSelect> {
   String toString() {
     return (StringBuffer('ReportSelectTableCompanion(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('title: $title, ')
+          ..write('isInitialAssessment: $isInitialAssessment')
           ..write(')'))
         .toString();
   }

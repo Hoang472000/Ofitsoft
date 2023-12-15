@@ -48,6 +48,7 @@ class Diary implements Insertable<Diary> {
   int? productProcessId;
   String? productProcessName;
   int? areaId;
+  String? image;
 
   Diary({
     this.userId,
@@ -88,6 +89,7 @@ class Diary implements Insertable<Diary> {
     this.productProcessId,
     this.productProcessName,
     this.areaId,
+    this.image,
   });
 
   factory Diary.fromJson(Map<String, dynamic> json, int userId, String action) {

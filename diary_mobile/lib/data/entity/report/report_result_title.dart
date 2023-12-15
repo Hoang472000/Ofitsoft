@@ -12,6 +12,7 @@ class ReportResult {
   String? monitoringVisitType;
   String? createDate;
   String? state;
+  bool? isInitialAssessment;
   ReportResult(
       {this.id,
         this.surveyId,
@@ -25,7 +26,9 @@ class ReportResult {
         this.internalInspector,
         this.monitoringVisitType,
         this.state,
-        this.createDate});
+        this.createDate,
+        this.isInitialAssessment
+      });
 
   factory ReportResult.fromJson(Map<String, dynamic> json) {
     return ReportResult(
@@ -40,7 +43,8 @@ class ReportResult {
       internalInspectorId: json['internal_inspector_id'] ?? -1,
       internalInspector: json['internal_inspector'] ?? '',
       createDate: json['create_date'] ?? '',
-      state: json['state'] == false ? 'in_progress' : json['state'] ?? 'in_progress'
+      state: json['state'] == false ? 'in_progress' : json['state'] ?? 'in_progress',
+      isInitialAssessment: json['is_initial_assessment'] ?? '',
     );
   }
 
@@ -59,7 +63,22 @@ class ReportResult {
     data['internal_inspector'] = internalInspector;
     data['create_date'] = createDate;
     data['state'] = state;
+    data['is_initial_assessment'] = isInitialAssessment;
     return data;
   }
 
+  ReportResult.copy(ReportResult other)
+      : id = other.id,
+        surveyId = other.surveyId,
+        farmerId = other.farmerId,
+        farmerName = other.farmerName,
+        farmerCode = other.farmerCode,
+        farmId = other.farmId,
+        farmName = other.farmName,
+        farmCode = other.farmCode,
+        internalInspectorId = other.internalInspectorId,
+        internalInspector = other.internalInspector,
+        createDate = other.createDate,
+        state = other.state,
+        isInitialAssessment = other.isInitialAssessment;
 }

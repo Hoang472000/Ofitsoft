@@ -266,9 +266,9 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             addTableFieldRow(state.listReport[0].questionAndPageIds, listTableField, i,
                 event.list[event.index].listValue[result].farmIds);
             listTableField.forEach((element) {
-        print("HoangCV:listTable:  ${listTableField.toString()}");
+        //print("HoangCV:listTable:  ${listTableField.toString()}");
         element.listQuestion.forEach((e) {
-          print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
+          //print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
           e.suggestedAnswerIds.forEach((el){
             print("HoangCV:listQuestion:  ${el.toString()} : ${el.rowId}");
           });
@@ -2063,12 +2063,12 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     for (dynamic item in items) {
       if (item is Question) {
         if (item.questionType == 'table') {
-          print("HaongCV: item: ${item.title}");
+          //print("HaongCV: item: ${item.title}");
           List<Question> list = [];
             List<Answer> listAs = [];
             for (Answer answer in item.suggestedAnswerIds) {
 
-              print("HaongCV: answer: ${answer.value}");
+              //print("HaongCV: answer: ${answer.value}");
               Answer clonedAnswer = Answer.copy(answer);
               clonedAnswer.tableRowId = id;
               List<Answer> las = [];

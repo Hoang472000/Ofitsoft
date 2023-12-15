@@ -3,7 +3,6 @@ import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
-import 'package:diary_mobile/data/entity/workflow/workflow.dart';
 import 'package:diary_mobile/generated/l10n.dart';
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/utils/constants/shared_preferences.dart';
@@ -21,83 +20,66 @@ import '../../../utils/status/form_submission_status.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
-class WorkflowBloc extends Bloc<WorkflowEvent, WorkflowState> {
+class InfoDiaryViewBloc extends Bloc<InfoDiaryViewEvent, InfoDiaryViewState> {
   final Repository repository;
 
-  WorkflowBloc(this.repository) : super(WorkflowState()) {
-    on<GetWorkflowEvent>(_getWorkflow);
+  InfoDiaryViewBloc(this.repository) : super(InfoDiaryViewState()) {
+    on<GetInfoDiaryViewEvent>(_getInfoDiaryView);
   }
 
-  void _getWorkflow(
-      GetWorkflowEvent event, Emitter<WorkflowState> emitter) async {
+  void _getInfoDiaryView(
+      GetInfoDiaryViewEvent event, Emitter<InfoDiaryViewState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    final workflow = await DiaryDB.instance.getListWorkflow(event.id);
-    //print("HoangCV: workflow : ${workflow.first.toJson()}");
- /*   workflow.first.processStageIds.forEach((element) {
-      print("HoangCV: processStageIds : ${element.toJson()}");
-    });*/
-    if(workflow.isNotEmpty) {
+    final listActivity = await repository.getListActivityDiary(event.id);
       emitter(state.copyWith(
         isShowProgress: false,
-        workflow: workflow.first,
-      ));
-    } else{
-      emitter(state.copyWith(
-        isShowProgress: false,
-        empty: true,
-      ));
-    }
+          listActivity: listActivity,));
   }
 }
 
-class WorkflowEvent extends BlocEvent {
+class InfoDiaryViewEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class GetWorkflowEvent extends WorkflowEvent {
+class GetInfoDiaryViewEvent extends InfoDiaryViewEvent {
   int id;
 
-  GetWorkflowEvent(this.id);
+  GetInfoDiaryViewEvent(this.id,);
 }
 
-class UpdateAvatarEvent extends WorkflowEvent {
+class UpdateAvatarEvent extends InfoDiaryViewEvent {
   //final ImageSource source;
   UpdateAvatarEvent();
 }
 
-class WorkflowState extends BlocState {
+class InfoDiaryViewState extends BlocState {
   @override
   List<Object?> get props => [
-    workflow,
     formStatus,
     isShowProgress,
-    empty,
+    listActivity,
   ];
-  final Workflow? workflow;
+  
+  final List<ActivityDiary>? listActivity;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
-  final bool empty;
 
-  WorkflowState({
-    this.workflow,
+  InfoDiaryViewState({
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
-    this.empty = false,
+    this.listActivity = const [],
   });
 
-  WorkflowState copyWith({
-    Workflow? workflow,
-    bool? empty,
+  InfoDiaryViewState copyWith({
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
-
+    List<ActivityDiary>? listActivity,
   }) {
-    return WorkflowState(
-        workflow: workflow ?? this.workflow,
+    return InfoDiaryViewState(
         formStatus: formStatus ?? this.formStatus,
         isShowProgress: isShowProgress ?? this.isShowProgress,
-        empty: empty ?? this.empty);
+        listActivity: listActivity ?? this.listActivity,);
   }
 }
 

@@ -92,44 +92,47 @@ class _SettingViewState extends State<SettingView> {
                         radius: 40,
                         child:ClipOval(
                             child: image == '' ?
-                            Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
-                            Image.memory(base64Decode(image),gaplessPlayback: true, fit: BoxFit.cover, width: 80, height: 80,
-                              errorBuilder: (context, error, stackTrace) {
+                            Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,
+                              width: MediaQuery.sizeOf(context).width/5,
+                              height: MediaQuery.sizeOf(context).width/5,) :
+                            Image.memory(
+                                    base64Decode(image),
+                                    gaplessPlayback: true,
+                                    fit: BoxFit.cover,
+                              width: MediaQuery.sizeOf(context).width/5,
+                              height: MediaQuery.sizeOf(context).width/5,
+                                    errorBuilder: (context, error, stackTrace) {
                                 // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
                                 print("HoangCV: run way");
                                 return Image.asset(
                                   ImageAsset.imagePersonProfile,
                                   fit: BoxFit.fitHeight,
-                                  width: 80,
-                                  height: 80,
+                                  width: MediaQuery.sizeOf(context).width/5,
+                                  height: MediaQuery.sizeOf(context).width/5,
                                 );
                               },
                             )), //CircleAvatar
                       ),
                     ),
                     SizedBox(
-                      height: 100,
+                      height: MediaQuery.sizeOf(context).width/4,
+                      width: MediaQuery.sizeOf(context).width/1.5,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Flexible(
-                            child: Container(
-                                padding: const EdgeInsets.only(bottom: 5),
-                                child: RichText(
-                                    text: TextSpan(
-                                        text: fullName,
-                                        style: StyleOfit.textStyleFW700(
-                                            Colors.black, 18,
-                                            overflow: TextOverflow.visible)))),
-                          ),
-                          Flexible(
-                              child: RichText(
-                                  text: TextSpan(
-                                      text: group,
-                                      style: StyleOfit.textStyleFW400(
-                                          Colors.black, 14,
-                                          overflow: TextOverflow.visible)))),
+                          Container(
+                              padding: const EdgeInsets.only(bottom: 5),
+                              child: Text(
+                                      fullName,
+                                      style: StyleOfit.textStyleFW700(
+                                          Colors.black, 18,
+                                          overflow: TextOverflow.visible))),
+                          Text(group,
+                                  style: StyleOfit.textStyleFW400(
+                                      Colors.black, 14,
+                                      overflow: TextOverflow.visible),
+                          maxLines: 3,),
                         ],
                       ),
                     ),

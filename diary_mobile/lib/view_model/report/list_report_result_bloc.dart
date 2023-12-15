@@ -18,6 +18,7 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
   ListReportResultBloc(this.repository) : super(ListReportResultState()) {
     on<GetListReportResultEvent>(_getListReportResult);
     on<DeleteReportResultEvent>(_deleteReportResult);
+    on<UpdateRadioButtonEvent>(_updateRadioButton);
   }
 
   void _getListReportResult(
@@ -27,20 +28,33 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
         formStatus: const InitialFormStatus(),));
     if(event.checkUpdate){
       final listReportResult = await repository.getListReportResult();
+      final listReportResultCopy = listReportResult
+          .map((report) => ReportResult.copy(report))
+          .toList();
+      listReportResultCopy.removeWhere((element) =>
+      element.isInitialAssessment == true);
       if(listReportResult.isNotEmpty) {
         emitter(state.copyWith(
             isShowProgress: false,
             formStatus: SubmissionSuccess(),
-            listReport: listReportResult));
+            listReportFilter: listReportResult,
+            listReport: listReportResultCopy, reportEnum: ReportEnum.report));
       }
     }else {
       final listReportResult = await repository.getListReportResult();
       final listSelect = await repository.getListReportSelect();
+      final listReportResultCopy = listReportResult
+          .map((report) => ReportResult.copy(report))
+          .toList();
+      listReportResultCopy.removeWhere((element) =>
+      element.isInitialAssessment == true);
       emitter(state.copyWith(
           isShowProgress: false,
           formStatus: const InitialFormStatus(),
-          listReport: listReportResult,
-          listReportSelect: listSelect));
+          listReport: listReportResultCopy,
+          listReportSelect: listSelect,
+          listReportFilter: listReportResult,
+          reportEnum: ReportEnum.report));
     }
   }
 
@@ -61,6 +75,24 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));
     }
+  }
+
+  FutureOr<void> _updateRadioButton(UpdateRadioButtonEvent event, Emitter<ListReportResultState> emit) {
+    final listReportResult = state.listReportFilter
+        .map((report) => ReportResult.copy(report))
+        .toList();
+    if(event.reportEnum == ReportEnum.report) {
+      listReportResult.removeWhere((element) =>
+      element.isInitialAssessment == true);
+    } else{
+      listReportResult.removeWhere((element) =>
+      element.isInitialAssessment == false);
+    }
+    emit(state.copyWith(
+        isShowProgress: false,
+        formStatus: const InitialFormStatus(),
+        listReport: listReportResult,
+        reportEnum: event.reportEnum));
   }
 }
 
@@ -87,6 +119,15 @@ class DeleteReportResultEvent extends ListReportResultEvent {
   List<Object?> get props => [];
 }
 
+class UpdateRadioButtonEvent extends ListReportResultEvent {
+  final ReportEnum reportEnum;
+
+  UpdateRadioButtonEvent(this.reportEnum);
+
+  @override
+  List<Object?> get props => [reportEnum];
+}
+
 class ListReportResultState extends BlocState {
   @override
   List<Object?> get props => [
@@ -94,11 +135,14 @@ class ListReportResultState extends BlocState {
     formStatus,
     isShowProgress,
     listReportSelect,
+    reportEnum,
   ];
   final List<ReportResult> listReport;
   final FormSubmissionStatus formStatus;
   final bool isShowProgress;
   final List<ReportSelect> listReportSelect;
+  final List<ReportResult> listReportFilter;
+  ReportEnum reportEnum;
 
 
   ListReportResultState({
@@ -106,7 +150,8 @@ class ListReportResultState extends BlocState {
     this.formStatus = const InitialFormStatus(),
     this.isShowProgress = true,
     this.listReportSelect = const [],
-
+    this.listReportFilter = const [],
+    this.reportEnum = ReportEnum.report,
   });
 
   ListReportResultState copyWith({
@@ -114,11 +159,18 @@ class ListReportResultState extends BlocState {
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
     List<ReportSelect>? listReportSelect,
+    List<ReportResult>? listReportFilter,
+    ReportEnum? reportEnum,
   }) {
     return ListReportResultState(
       listReport: listReport ?? this.listReport,
         formStatus: formStatus ?? this.formStatus,
         isShowProgress: isShowProgress ?? this.isShowProgress,
-        listReportSelect: listReportSelect ?? this.listReportSelect);
+        listReportSelect: listReportSelect ?? this.listReportSelect,
+        listReportFilter: listReportFilter ?? this.listReportFilter,
+        reportEnum: reportEnum ?? this.reportEnum,
+    );
   }
 }
+
+enum ReportEnum { report, survey }

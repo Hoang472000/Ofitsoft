@@ -256,7 +256,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "google": MessageLookupByLibrary.simpleMessage(" Google"),
         "hello": MessageLookupByLibrary.simpleMessage("Chào mừng "),
         "hi": MessageLookupByLibrary.simpleMessage("Xin chào!"),
-        "home_label": MessageLookupByLibrary.simpleMessage("Tổng quan"),
+        "home_label": MessageLookupByLibrary.simpleMessage("Trang chủ"),
         "image_item_label": MessageLookupByLibrary.simpleMessage("Ảnh :"),
         "info_account":
             MessageLookupByLibrary.simpleMessage("Thông tin tài khoản"),

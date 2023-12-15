@@ -148,11 +148,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               "Cập nhật phiên bản",
               "Vui lòng cập nhật phiên bản mới nhất để sử dụng. Bấm \"Đồng ý\" để cập nhật.",
                   () {
+                Navigator.pop(context);
                 Utils.openAppInStore(
                     "https://apps.apple.com/us/app/id${ApiConst.appIdIOS}");
-                if (Get.isLogEnable) {
+                /*if (Get.isLogEnable) {
                   Get.back();
-                }
+                }*/
               },
                   () {},
               "",

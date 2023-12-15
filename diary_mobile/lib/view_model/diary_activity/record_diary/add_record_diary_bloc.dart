@@ -26,66 +26,42 @@ import '../../../utils/widgets/dialog/toast_widget.dart';
 import '../../bloc_event.dart';
 import '../../bloc_state.dart';
 
-class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
+class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> {
   final Repository repository;
 
-  AddActivityBloc(this.repository) : super(AddActivityState()) {
-    on<InitAddActivityEvent>(_initAddActivity);
+  AddRecordDiaryBloc(this.repository) : super(AddRecordDiaryState()) {
+    on<InitAddRecordDiaryEvent>(_initAddRecordDiary);
     on<OnSelectValueEvent>(_onSelectValue);
     on<AddOrDeleteImageEvent>(_addOrDeleteImage);
-    on<AddActivityDiaryEvent>(_addActivityDiary);
+    on<AddRecordDiaryDiaryEvent>(_addRecordDiaryDiary);
     on<SaveValueTextFieldEvent>(_saveValueTextField);
-    // add(InitAddActivityEvent());
+    // add(InitAddRecordDiaryEvent());
   }
 
   bool edit = false;
 
-  void _initViewAdd(Emitter<AddActivityState> emitter, String action) {
+  void _initViewAdd(Emitter<AddRecordDiaryState> emitter, String action) {
     List<InputRegisterModel> list = [];
     List<InputRegisterModel> listCC = [];
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
-    print(
+/*    print(
         "HoangCV:state.listUnitArea: ${state.listUnitArea.length} : ${state.indexArea}  ");
     int indexHarvesting = -1;
     if(action == "harvesting"){
       indexHarvesting = state.listActivity
           .indexWhere((element) => element.harvesting == true);
-    }
-    if(indexHarvesting != -1){
-      list.add(InputRegisterModel<Activity, Activity>(
-          title: "Tên công việc",
-          isCompulsory: true,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: indexHarvesting,
-          valueSelected: state.listActivity[indexHarvesting],
-          listValue: state.listActivity,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          hasSearch: true,
-          image: ImageAsset.imageActivityFarm));
-        List<InputRegisterModel> listYield = [];
-        listYield.add(InputRegisterModel(
-          title: "Sản lượng",
-          isCompulsory: false,
-          type: TypeInputRegister.TextField,
-          typeInput: TextInputType.number,
-          controller: state.yieldController,
-          maxLengthTextInput: 10,
-          image: ImageAsset.imageBudget,
-        ));
-
-        listYield.add(InputRegisterModel(
-          title: "Đơn vị",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: -1,
-          listValue: state.listUnitYield,
-          typeInputEnum: TypeInputEnum.dmucItem,
-        ));
-        emit(state.copyWith(listWidgetYield: listYield, indexActivity: indexHarvesting));
-  } else {
+    }*/
+    list.add(InputRegisterModel<Diary, Diary>(
+        title: "Tên nhật ký",
+        isCompulsory: true,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: -1,
+        listValue: state.listDiary,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+        image: ImageAsset.imageDiary));
       list.add(InputRegisterModel<Activity, Activity>(
           title: "Tên công việc",
           isCompulsory: true,
@@ -96,7 +72,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
           typeInputEnum: TypeInputEnum.dmucItem,
           hasSearch: true,
           image: ImageAsset.imageActivityFarm));
-    }
     list.add(InputRegisterModel(
         title: "Chi tiết công việc",
         isCompulsory: false,
@@ -116,14 +91,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         image: ImageAsset.imageCalendarBegin,
         icon: Icons.calendar_today));
 
-/*    list.add(InputRegisterModel<String, DateTime>(
-        title: "Ngày kết thúc",
-        isCompulsory: true,
-        typeInputEnum: TypeInputEnum.date,
-        type: TypeInputRegister.Select,
-        valueSelected: DateTime.now(),
-        image: ImageAsset.imageCalendarEnd,
-        icon: Icons.calendar_today));*/
     listArea.add(InputRegisterModel(
       title: "Diện tích",
       isCompulsory: false,
@@ -141,7 +108,6 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       icon: Icons.arrow_drop_down,
       positionSelected: -1,
       listValue: state.listUnitArea,
-      //valueSelected: state.listUnitArea[state.indexArea],
       typeInputEnum: TypeInputEnum.dmucItem,
     ));
 
@@ -193,8 +159,8 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         formStatus: const InitialFormStatus()));
   }
 
-  void _initAddActivity(
-      InitAddActivityEvent event, Emitter<AddActivityState> emitter) async {
+  void _initAddRecordDiary(
+      InitAddRecordDiaryEvent event, Emitter<AddRecordDiaryState> emitter) async {
     emitter(state.copyWith(
         isShowProgress: true,
         listWidget: [],
@@ -203,6 +169,12 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         listWidgetArea: [],
         listCongCuAdd: [],
         listVatTuAdd: []));
+    List<Diary> listDiary;
+    if(event.action == "farmer") {
+      listDiary = await repository.getListDiary("farmer");
+    } else {
+      listDiary = await repository.getListBackupDiary("record");
+    }
     final listActivity = await DiaryDB.instance.getListActivity();
     final listTool = await DiaryDB.instance.getListTool();
     final listMaterial = await DiaryDB.instance.getListMaterial();
@@ -215,24 +187,25 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         sharedPreferences.getInt(SharedPreferencesKey.unitYield) ?? -1;
     final listUnitArea = await DiaryDB.instance.getListUnit(categoryIdUnitArea);
     final listUnitAmount =
-        await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
+    await DiaryDB.instance.getListUnit(categoryIdUnitAmount);
     final listUnitYield =
-        await DiaryDB.instance.getListUnit(categoryIdUnitYield);
+    await DiaryDB.instance.getListUnit(categoryIdUnitYield);
 /*    listActivity.forEach((element) {
       print("HoangCV: indexArea:`11 ${element.toolIds} : ${element.materialIds}");
     });*/
-    if(event.action == "harvesting"){
+/*    if(event.action == "harvesting"){
       listActivity.removeWhere((element) => element.harvesting == false);
     } else {
       listActivity.removeWhere((element) => element.harvesting == true);
-    }
-    int indexAreaUnit = listUnitArea
+    }*/
+/*    int indexAreaUnit = listUnitArea
         .indexWhere((element) => element.id == event.diary.areaUnitId);
-    print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId} : ${event.seasonId}");
+    print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId}");*/
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
-       detailActivity: event.diary,
+      //detailActivity: event.diary,
+      listDiary: listDiary,
       listActivity: listActivity,
       listMaterial: listMaterial,
       listTool: listTool,
@@ -241,16 +214,16 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       listUnitAmount: listUnitAmount,
       listUnitArea: listUnitArea,
       listUnitYield: listUnitYield,
-      indexArea: indexAreaUnit,
-      seasonId: event.seasonId,
+      //indexArea: indexAreaUnit,
+      //seasonId: event.seasonId,
       startTimeController:
-          TextEditingController(text: DateTime.now().toString().split('.')[0]),
-      areaController: TextEditingController(text: "${event.diary.area ?? 0}"),
+      TextEditingController(text: DateTime.now().toString().split('.')[0]),
+      areaController: TextEditingController(/*text: "${event.diary.area ?? 0}"*/),
       moTaController: TextEditingController(),
       yieldController: TextEditingController(),
     ));
     _initViewAdd(emitter, event.action);
-    if(indexAreaUnit != -1){
+    /*if(indexAreaUnit != -1){
       state.listWidgetArea[1].valueSelected = state.listUnitArea[indexAreaUnit];
       state.listWidgetArea[1].positionSelected = indexAreaUnit;
       emit(state.copyWith(listWidgetArea: state.listWidgetArea,
@@ -258,19 +231,23 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         areaMax: (event.diary.area ?? 0.0) * double.parse('${listUnitArea[indexAreaUnit].convert}'),
         isShowProgress: false,));
 
-    }
+    }*/
     emitter(state.copyWith(listWidget: state.listWidget));
-    print("state.indexArea: ${state.indexArea} : $indexAreaUnit : ${state.indexActivity} : ${state.detailActivity?.areaUnitId}");
+    //print("state.indexArea: ${state.indexArea} : $indexAreaUnit : ${state.indexActivity} : ${state.detailActivity?.areaUnitId}");
   }
 
   Future<FutureOr<void>> _onSelectValue(
-      OnSelectValueEvent event, Emitter<AddActivityState> emit) async {
+      OnSelectValueEvent event, Emitter<AddRecordDiaryState> emit) async {
     int result;
     bool checkPass = true;
-    if(event.index == 0 && state.listActivity.isEmpty) {
+    if(event.index == 0 && state.listDiary.isEmpty) {
       Toast.showLongTop("Không có danh sách công việc");
       checkPass = false;
-    }else if(event.index == 1 && state.listUnitArea.isEmpty) {
+    }
+    else if(event.index == 1 && state.listActivity.isEmpty && event.list[event.index].title == "Tên công việc") {
+      Toast.showLongTop("Không có danh sách công việc");
+      checkPass = false;
+    }else if(event.index == 1 && state.listUnitArea.isEmpty && event.list[event.index].title == "Đơn vị") {
       Toast.showLongTop("Không có danh sách đơn vị diện tích");
       checkPass = false;
     }
@@ -312,6 +289,9 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         }
 //      });
       } else {
+        state.listWidget[0].error = null;
+        state.listWidget[1].error = null;
+        //state.listWidgetYield[0].error = null;
         result = await Extension().showBottomSheetSelection(
             event.context,
             event.list[event.index].listValue,
@@ -326,6 +306,44 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
           event.list[event.index].listValue[result];
           event.list[event.index].error = null;
           // });
+          if (event.list[event.index].title.compareTo("Tên nhật ký") == 0) {
+            emit(state.copyWith(
+                diaryController: TextEditingController(
+                    text: event.list[event.index].valueSelected.name),
+                indexDiary: result,
+            areaMax: event.list[event.index].valueSelected.area));
+            int indexAreaUnit = state.listUnitArea
+                .indexWhere((element) => element.id == event.list[event.index].valueSelected.areaUnitId);
+            if (indexAreaUnit != -1) {
+              //List<Diary>
+              emit(state.copyWith(
+                  areaController: TextEditingController(
+                      text: "${event.list[event.index].valueSelected.area}"),
+                  indexArea: indexAreaUnit));
+              List<InputRegisterModel> listArea = [];
+              listArea.add(InputRegisterModel(
+                title: "Diện tích",
+                isCompulsory: false,
+                type: TypeInputRegister.TextField,
+                typeInput: TextInputType.number,
+                controller: state.areaController,
+                maxLengthTextInput: 10,
+                image: ImageAsset.imageManagement,
+              ));
+
+              listArea.add(InputRegisterModel(
+                title: "Đơn vị",
+                isCompulsory: false,
+                type: TypeInputRegister.Select,
+                icon: Icons.arrow_drop_down,
+                positionSelected: indexAreaUnit,
+                valueSelected: state.listUnitArea[indexAreaUnit],
+                listValue: state.listUnitArea,
+                typeInputEnum: TypeInputEnum.dmucItem,
+              ));
+              emit(state.copyWith(listWidgetArea: listArea));
+            }
+          }
           if (event.list[event.index].title.compareTo("Tên công việc") == 0) {
             emit(state.copyWith(
                 nameController: TextEditingController(
@@ -415,7 +433,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
   }
 
   FutureOr<void> _addOrDeleteImage(
-      AddOrDeleteImageEvent event, Emitter<AddActivityState> emit) async {
+      AddOrDeleteImageEvent event, Emitter<AddRecordDiaryState> emit) async {
     print("HoangCV: event. image: ${event.listImage.length}");
     List<ImageEntity> list = List.from(state.listImage);
     event.listImage.forEach((element) {
@@ -447,9 +465,8 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
         formStatus: const InitialFormStatus()));
   }
 
-  FutureOr<void> _addActivityDiary(
-      AddActivityDiaryEvent event, Emitter<AddActivityState> emit) async {
-    print("HoangCV: state.indexActivity: ${state.indexActivity} : ${state.yieldController!.text.isEmpty}");
+  FutureOr<void> _addRecordDiaryDiary(
+      AddRecordDiaryDiaryEvent event, Emitter<AddRecordDiaryState> emit) async {
     if(state.listWidgetYield.isNotEmpty) {
       state.listWidgetYield[0].error = null;
       state.listWidgetYield[1].error = null;
@@ -459,9 +476,13 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     List<InputRegisterModel> list = List.from(state.listWidget);
     List<InputRegisterModel> listArea = List.from(state.listWidgetArea);
     bool validate = true;
+    if (state.indexDiary == -1) {
+      validate = false;
+      state.listWidget[0].error = "Vui lòng chọn tên nhật ký";
+    }
     if (state.indexActivity == -1) {
       validate = false;
-      state.listWidget[0].error = "Vui lòng chọn tên công việc";
+      state.listWidget[1].error = "Vui lòng chọn tên công việc";
     } else if(state.areaController!.text.isEmpty){
       validate = false;
       state.listWidgetArea[0].error = "Vui lòng nhập diện tích";
@@ -495,20 +516,20 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
     }
     if (!validate) {
       emit(state.copyWith(isShowProgress: false));
-      print("HoangCV: state.indexActivity: ${state.indexActivity} : ${state.seasonId}");
+      print("HoangCV: state.indexActivity: ${state.indexActivity}");
     } else {
       emit(state.copyWith(isShowProgress: false, formStatus: FormSubmitting()));
       ActivityDiary diary = ActivityDiary(
-        seasonFarmId: state.seasonId,
+        seasonFarmId: state.listDiary[state.indexDiary].seasonId,
         activityId: state.listActivity[state.indexActivity].id,
         activityName: state.listActivity[state.indexActivity].name,
-        actionTime: state.listWidget[2].valueSelected.toString().split('.')[
-            0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
+        actionTime: state.listWidget[3].valueSelected.toString().split('.')[
+        0] /* Utils.formatDateTimeToStringFull(state.listWidget[2].valueSelected)*/,
         actionArea: state.areaController!.text.isNotEmpty
             ? double.parse(state.areaController!.text)
             : null,
         actionAreaUnitId: /*state.listWidgetArea[1].valueSelected != null ? */
-            state.listWidgetArea[1].valueSelected?.id,
+        state.listWidgetArea[1].valueSelected?.id,
         actionAreaUnitName: state.listWidgetArea[1].valueSelected?.name,
         harvesting: state.listActivity[state.indexActivity].harvesting,
         amount: state.yieldController!.text.isNotEmpty
@@ -544,7 +565,7 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
   }
 
   FutureOr<void> _saveValueTextField(
-      SaveValueTextFieldEvent event, Emitter<AddActivityState> emit) {
+      SaveValueTextFieldEvent event, Emitter<AddRecordDiaryState> emit) {
     emit(state.copyWith(formStatus: const InitialFormStatus()));
     print("HoangCV: bug: ${event.text} : ${event.inputRegisterModel.title}");
     if (event.inputRegisterModel.title.compareTo("Chi tiết công việc") == 0) {
@@ -567,28 +588,27 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
   }
 }
 
-class AddActivityEvent extends BlocEvent {
+class AddRecordDiaryEvent extends BlocEvent {
   @override
   List<Object?> get props => [];
 }
 
-class InitAddActivityEvent extends AddActivityEvent {
-  int seasonId;
-  final Diary diary;
+class InitAddRecordDiaryEvent extends AddRecordDiaryEvent {
+
   String action;
 
-  InitAddActivityEvent(this.seasonId, this.diary, this.action);
+  InitAddRecordDiaryEvent(this.action);
 
   @override
-  List<Object?> get props => [seasonId, diary, action];
+  List<Object?> get props => [action];
 }
 
-class ChangeEditActivityEvent extends AddActivityEvent {
+class ChangeEditActivityEvent extends AddRecordDiaryEvent {
   ChangeEditActivityEvent();
 }
 
 
-class OnSelectValueEvent extends AddActivityEvent {
+class OnSelectValueEvent extends AddRecordDiaryEvent {
   List<InputRegisterModel> list;
   int index;
   BuildContext context;
@@ -599,93 +619,98 @@ class OnSelectValueEvent extends AddActivityEvent {
   List<Object?> get props => [list, index, context];
 }
 
-class AddOrDeleteImageEvent extends AddActivityEvent {
+class AddOrDeleteImageEvent extends AddRecordDiaryEvent {
   final List<ImageEntity> listImage;
   final int index;
   final BuildContext context;
 
   AddOrDeleteImageEvent(
-    this.listImage,
-    this.index,
-    this.context,
-  );
+      this.listImage,
+      this.index,
+      this.context,
+      );
 
   @override
   List<Object?> get props => [
-        listImage,
-        index,
-        context,
-      ];
+    listImage,
+    index,
+    context,
+  ];
 }
 
-class SaveValueTextFieldEvent extends AddActivityEvent {
+class SaveValueTextFieldEvent extends AddRecordDiaryEvent {
   final InputRegisterModel inputRegisterModel;
   final String text;
   final int index;
 
   SaveValueTextFieldEvent(
-    this.text,
-    this.inputRegisterModel,
-    this.index,
-  );
+      this.text,
+      this.inputRegisterModel,
+      this.index,
+      );
 
   @override
   List<Object?> get props => [
-        inputRegisterModel,
-        index,
-      ];
+    inputRegisterModel,
+    index,
+  ];
 }
 
-class AddActivityDiaryEvent extends AddActivityEvent {
-  AddActivityDiaryEvent();
+class AddRecordDiaryDiaryEvent extends AddRecordDiaryEvent {
+  AddRecordDiaryDiaryEvent();
 
   @override
   List<Object?> get props => [];
 }
 
-class UpdateAvatarEvent extends AddActivityEvent {
+class UpdateAvatarEvent extends AddRecordDiaryEvent {
   //final ImageSource source;
   UpdateAvatarEvent();
 }
 
-class AddActivityState extends BlocState {
+class AddRecordDiaryState extends BlocState {
   @override
   List<Object?> get props => [
-        detailActivity,
-        formStatus,
-        isShowProgress,
-        listMaterial,
-        listTool,
-        listUnitArea,
-        listUnitAmount,
-        listWidgetArea,
-        listActivity,
-        listWidget,
-        listWidgetVT,
-        listWidgetCC,
-        listImage,
-        listVatTuAdd,
-        listCongCuAdd,
-        nameController,
-        soCayController,
-        soLuongController,
-        moTaController,
-        donViController,
-        peopleController,
-        startTimeController,
-        endTimeController,
-        areaController,
-        isEdit,
-        indexActivity,
-        indexArea,
-        seasonId,
-        listWidgetYield,
-        listUnitYield,
-        yieldController,
-        areaMax,
-        listMaterialAll,
-        listToolAll,
-      ];
+    detailActivity,
+    formStatus,
+    isShowProgress,
+    listMaterial,
+    listTool,
+    listUnitArea,
+    listUnitAmount,
+    listWidgetArea,
+    listActivity,
+    listWidget,
+    listWidgetVT,
+    listWidgetCC,
+    listImage,
+    listVatTuAdd,
+    listCongCuAdd,
+    nameController,
+    soCayController,
+    soLuongController,
+    moTaController,
+    donViController,
+    peopleController,
+    startTimeController,
+    endTimeController,
+    areaController,
+    isEdit,
+    indexActivity,
+    indexArea,
+    seasonId,
+    listWidgetYield,
+    listUnitYield,
+    yieldController,
+    areaMax,
+    listMaterialAll,
+    listToolAll,
+    listDiary,
+    indexDiary,
+    diaryController,
+
+  ];
+  final List<Diary> listDiary;
   final Diary? detailActivity;
   final List<MaterialEntity> listMaterial;
   final List<Tool> listTool;
@@ -704,6 +729,7 @@ class AddActivityState extends BlocState {
   List<Tool> listCongCuAdd = [];
   List<InputRegisterModel> listWidgetArea;
   final int seasonId;
+  TextEditingController? diaryController = TextEditingController();
   TextEditingController? nameController = TextEditingController();
   TextEditingController? soCayController = TextEditingController();
   TextEditingController? soLuongController = TextEditingController();
@@ -717,13 +743,15 @@ class AddActivityState extends BlocState {
   List<InputRegisterModel> listWidgetYield;
   final List<Unit> listUnitYield;
   bool isEdit;
+  final int indexDiary;
   final int indexActivity;
   final int indexArea;
   double imageWidth;
   double imageHeight;
   final double areaMax;
 
-  AddActivityState({
+  AddRecordDiaryState({
+    this.listDiary = const [],
     this.detailActivity,
     this.seasonId = -1,
     this.formStatus = const InitialFormStatus(),
@@ -754,15 +782,18 @@ class AddActivityState extends BlocState {
     this.isEdit = false,
     this.imageWidth = 130,
     this.imageHeight = 100,
+    this.indexDiary = -1,
     this.indexActivity = -1,
     this.indexArea = -1,
     this.yieldController,
     this.listUnitYield = const [],
     this.listWidgetYield = const [],
     this.areaMax = 0,
+    this.diaryController,
   });
 
-  AddActivityState copyWith({
+  AddRecordDiaryState copyWith({
+    List<Diary>? listDiary,
     Diary? detailActivity,
     FormSubmissionStatus? formStatus,
     bool? isShowProgress,
@@ -781,6 +812,7 @@ class AddActivityState extends BlocState {
     List<ImageEntity>? listImage,
     List<MaterialEntity>? listVatTuAdd,
     List<Tool>? listCongCuAdd,
+    TextEditingController? diaryController,
     TextEditingController? nameController,
     TextEditingController? soCayController,
     TextEditingController? soLuongController,
@@ -794,13 +826,15 @@ class AddActivityState extends BlocState {
     List<InputRegisterModel>? listWidgetYield,
     List<Unit>? listUnitYield,
     bool? isEdit,
+    int? indexDiary,
     int? indexActivity,
     int? indexArea,
     double? imageWidth,
     double? imageHeight,
     double? areaMax,
   }) {
-    return AddActivityState(
+    return AddRecordDiaryState(
+      listDiary: listDiary ?? this.listDiary,
       detailActivity: detailActivity ?? this.detailActivity,
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,
@@ -819,6 +853,7 @@ class AddActivityState extends BlocState {
       listImage: listImage ?? this.listImage,
       listVatTuAdd: listVatTuAdd ?? this.listVatTuAdd,
       listCongCuAdd: listCongCuAdd ?? this.listCongCuAdd,
+      diaryController: diaryController ?? this.diaryController,
       nameController: nameController ?? this.nameController,
       soCayController: soCayController ?? this.soCayController,
       soLuongController: soLuongController ?? this.soLuongController,
@@ -836,6 +871,7 @@ class AddActivityState extends BlocState {
       listWidgetYield: listWidgetYield ?? this.listWidgetYield,
       yieldController: yieldController ?? this.yieldController,
       areaMax: areaMax ?? this.areaMax,
+      indexDiary: indexDiary ?? this.indexDiary,
     );
   }
 }

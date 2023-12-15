@@ -67,44 +67,6 @@ class DiaryDB extends _$DiaryDB {
   @override
   int get schemaVersion => 1;
 
-/*  Future<void> deleteDatabase() async {
-    try {
-      // Lấy đường dẫn đến thư mục lưu trữ cơ sở dữ liệu
-      final dbFolder = await getApplicationDocumentsDirectory();
-      final path = p.join(dbFolder.path, 'db.sqlite');
-
-      // Tạo LazyDatabase từ đường dẫn
-      final db = LazyDatabase(() async {
-        final file = File(path);
-        return NativeDatabase.createInBackground(file);
-      });
-
-      // Mở kết nối với cơ sở dữ liệu
-      await db.opener();
-
-      // Xóa cơ sở dữ liệu
-      await db.close(); // Đảm bảo rằng cơ sở dữ liệu đã được đóng trước khi xóa
-      await deleteDatabaseFile(path);
-      print('Cơ sở dữ liệu đã được xóa.');
-    } catch (e) {
-      print('Lỗi xóa cơ sở dữ liệu: $e');
-    }
-  }
-
-  Future<void> deleteDatabaseFile(String path) async {
-    final file = File(path);
-    if (await file.exists()) {
-      await file.delete();
-    }
-  }*/
-/*  Future<void> deleteDiaryData() async {
-    try {
-      await into(diaryTable).database.delete(table); // Xóa toàn bộ dữ liệu từ bảng 'diaryTable'
-      print('Dữ liệu trong bảng đã được xóa.');
-    } catch (e) {
-      print('Lỗi xóa dữ liệu: $e');
-    }
-  }*/
   Future<void> deleteEverything() {
     return transaction(() async {
       // you only need this if you've manually enabled foreign keys
@@ -158,7 +120,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertListActivityDiary(List<ActivityDiary> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.toJson()}");
+        //print("HoangCV: entry: ${entry.toJson()}");
         final ActivityDiaryTableCompanion entryCompanion = ActivityDiaryTableCompanion(
           id: Value(entry.id),
           seasonFarmId: Value(entry.seasonFarmId),
@@ -188,7 +150,7 @@ class DiaryDB extends _$DiaryDB {
           total: Value(entry.total),
           buyer: Value(entry.buyer),// Chuyển đổi thành chuỗi JSON
         );
-        print("HoangCV: stringTool: ${entryCompanion.stringTool}");
+        //print("HoangCV: stringTool: ${entryCompanion.stringTool}");
         batch.insertAllOnConflictUpdate(activityDiaryTable, [entryCompanion]);
       }
     });
@@ -789,6 +751,30 @@ class DiaryDB extends _$DiaryDB {
       batch.insertAllOnConflictUpdate(userInfoTable, values);
     });
   }*/
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (m) async {
+        await m.createAll(); // Important! This is what gets called if `onCreate` not provided
+        //await m.createIndex(SomeIndexName());
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        print("HoangCV : m: ${m} : ${from} : ${to}" );
+        if (from == 1) {
+          //m.createTable(images);
+          m.deleteTable("report_select_table");
+          m.createTable(reportSelectTable);
+        }
+        else if (from == 2) {
+          //m.createTable(images);
+          m.deleteTable("report_select_table");
+          m.createTable(reportSelectTable);
+          //await m.addColumn(reportSelectTable, reportSelectTable.isInitialAssessment);
+        }
+      },
+    );
+  }
 
 }
 

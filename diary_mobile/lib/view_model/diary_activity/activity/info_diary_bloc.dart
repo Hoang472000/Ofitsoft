@@ -30,58 +30,12 @@ class DetailDiaryBloc extends Bloc<DetailDiaryEvent, DetailDiaryState> {
   void _getDetailDiary(
       GetDetailDiaryEvent event, Emitter<DetailDiaryState> emitter) async {
     emitter(state.copyWith(isShowProgress: true));
-    print("HoangCV: all. ${event.updateHarvesting} : ${event.listTransaction.isNotEmpty} : ${event.list.isNotEmpty}");
-    if (event.updateHarvesting && event.listReport.isNotEmpty) {
-      emitter(state.copyWith(
-          isShowProgress: false,
-          listReportResult: event.listReport));
-      print("HoangCV: update activity harvesting. ${event.updateHarvesting} : ${event.listTransaction.length} : ${event.list.length}");
-    } else if (event.updateHarvesting && event.listTransaction.isEmpty) {
+    print("HoangCV: detailDiary: id : ${event.id}");
       final detailDiary = await repository.getInfoDiary(event.id);
+      print("HoangCV: detailDiary: ${detailDiary.name} : ${event.id}");
       emitter(state.copyWith(
           isShowProgress: false,
-          detailDiary: detailDiary,
-          listActivityDiary: event.list));
-      print("HoangCV: detailDiary.productProcessId. ${detailDiary.productProcessId} : ${event.listTransaction.length} : ${event.list.length}");
-    } else if (!event.updateHarvesting && event.list.isNotEmpty) {
-      print("HoangCV: update list activity canh tac. ${event.list.length}");
-      emitter(
-          state.copyWith(isShowProgress: false, listActivityDiary: event.list));
-    } else if(event.updateHarvesting && event.listTransaction.isNotEmpty){
-      print("HoangCV: update activity sell ${event.listTransaction.length}");
-      emitter(
-          state.copyWith(isShowProgress: false, listActivityTransaction: event.listTransaction));
-    }else {
-      final detailDiary = await repository.getInfoDiary(event.id);
-      final listActivityDiary = await repository.getListActivityDiary(event.id);
-      final listActivityTransaction = await repository.getListActivityTransaction(event.id);
-      print("HoangCV: detailDiary.productProcessId. ${detailDiary.productProcessId} ");
-      List<bool> check = await SharedPreDiary.getRole();
-      List<ActivityFarm> list = [];
-      list.add(ActivityFarm(
-          id: 1,
-          nameActivity: "HOẠT ĐỘNG CANH TÁC",
-          iconActivity: ImageAsset.imageActivityFarm));
-      list.add(ActivityFarm(
-          id: 2,
-          nameActivity: "HOẠT ĐỘNG THU HOẠCH",
-          iconActivity: ImageAsset.imagePlantCrop));
-       if(detailDiary!.productProcessId != -1) {
-         list.add(ActivityFarm(
-             id: 3,
-             nameActivity: "QUY TRÌNH LÀM VIỆC",
-             iconActivity: ImageAsset.imageWorkProcess));
-       }
-      if (check[0]) {
-      }
-      print("HoangCV: detailDiary: ${detailDiary.name}");
-      emitter(state.copyWith(
-          isShowProgress: false,
-          detailDiary: detailDiary,
-          listActivityFarm: list,
-          listActivityTransaction: listActivityTransaction,
-          listActivityDiary: listActivityDiary));
-    }
+          detailDiary: detailDiary));
   }
 }
 

@@ -38,8 +38,10 @@ class IconAsset {
   static const String icPurchase = "${iCons}ic_purchase.svg";
   static const String icPay = "${iCons}ic_pay.svg";
   static const String icHome = "${iCons}ic_home.svg";
+  static const String icHome2 = "${iCons}ic_home_2.svg";
   static const String icCartt = "${iCons}ic_cartt.svg";
   static const String icNotifi = "${iCons}ic_notifi.svg";
+  static const String icBell = "${iCons}ic_bell.svg";
   static const String icMore = "${iCons}ic_more.svg";
   static const String icSelll = "${iCons}ic_selll.svg";
   static const String icPaste = "${iCons}ic_paste.svg";

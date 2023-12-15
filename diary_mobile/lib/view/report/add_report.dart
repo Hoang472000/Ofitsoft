@@ -501,9 +501,14 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             color: AppColor.background,
             inputRegisterModel: input,
             onClick: () {
-              context
-                  .read<AddReportBloc>()
-                  .add(OnSelectionValueEvent(input, context, questionId, answerId, idRow,));
+              bool checkPass = true;
+              checkPass = Utils.checkPassFarm(farmerInspector);
+              if(checkPass) {
+                context
+                    .read<AddReportBloc>()
+                    .add(OnSelectionValueEvent(
+                  input, context, questionId, answerId, idRow,));
+              }
             },
           ),
         );

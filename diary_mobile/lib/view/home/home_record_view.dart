@@ -1,10 +1,13 @@
 import 'dart:async';
 
+import 'package:create_atom/create_atom.dart';
+import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:diary_mobile/view/access_origin/access_origin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
@@ -12,12 +15,17 @@ import '../../resource/style.dart';
 import '../../utils/utils.dart';
 import '../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
+import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/home_bloc.dart';
+import '../diary/diary_view.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
+import '../diary_activity/record_diary/add_record_diary.dart';
 import '../manager/manager_page.dart';
+import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
 import '../setting/mananger/list_pdf_page.dart';
+import 'dart:math' as math;
 
 class HomeRecordView extends StatefulWidget {
   const HomeRecordView({super.key});
@@ -33,9 +41,9 @@ class _HomeRecordViewState extends State<HomeRecordView> {
   final int _totalPages = 5;
   Timer? _timer;
   bool _showAppbar = true;
-  final ScrollController _scrollBottomBarController = ScrollController();
   bool isScrollingDown = false;
   double bottomBarHeight = 75;
+  String userName = '';
 
   @override
   void initState() {
@@ -47,7 +55,6 @@ class _HomeRecordViewState extends State<HomeRecordView> {
   @override
   void dispose() {
     _timer?.cancel();
-    _scrollBottomBarController.removeListener(() {});
     super.dispose();
   }
 
@@ -65,31 +72,18 @@ class _HomeRecordViewState extends State<HomeRecordView> {
   }
 
   void myScroll() async {
-    _scrollBottomBarController.addListener(() {
-      if (_scrollBottomBarController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        if (!isScrollingDown) {
-          isScrollingDown = true;
-          _showAppbar = false;
-        }
-      }
-      if (_scrollBottomBarController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        if (isScrollingDown) {
-          isScrollingDown = false;
-          _showAppbar = true;
-        }
-      }
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      userName = sharedPreferences.getString(SharedPreferencesKey.fullName) ?? "";
     });
   }
-  @override
   Widget build(BuildContext context) {
     //print("runqay Home record view");
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
         //backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        appBar: _showAppbar ? OfitAppBar(
+        /*appBar: _showAppbar ? OfitAppBar(
           context,
           centerTitle: true,
           showDefaultBackButton: false,
@@ -105,202 +99,288 @@ class _HomeRecordViewState extends State<HomeRecordView> {
             : PreferredSize(
           child: Container(),
           preferredSize: Size(0.0, 0.0),
-        ),
+        ),*/
         body: Utils.bkavCheckOrientation(
             context,
-            FractionallySizedBox(
-              widthFactor: 1.0,
-              heightFactor: 1.0,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          opacity: 1,
-                          image: AssetImage(
-                              ImageAsset.imageOfitSoftBackground),
-                          fit: BoxFit.fill),
-                    ), ),
-                     SingleChildScrollView(
-                         controller: _scrollBottomBarController,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          //height: MediaQuery.of(context).size.height,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 80,),
-                              Container(
-                                  width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 16, horizontal: 14),
-                                  //color: const Color(0xFFEFF2F5),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(bottom: 12.0),
-                                        child: Text(
-                                          "OFITSOFT xin chào",
-                                          style: StyleOfit.textStyleFW600(Colors.orange, 16),
-                                        ),
-                                      ),
-                                      Text(
-                                        "Chúc bạn một ngày làm việc hiệu quả",
-                                        style: StyleOfit.textStyleFW400(Colors.black, 14),
-                                      ),
-                                    ],
-                                  )),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: Colors.white,
-                                ),
-                                margin: const EdgeInsets.only(left: 24.0, right: 24),
-                                //height: 80,
-                                width: double.infinity,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: state.listActivityFarm.map((activity) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        if(activity.id == 1){
-                                          Navigator.push(context, ManagerPage.route());
-                                        } else if(activity.id == 2){
-                                          Navigator.push(context, AccessOriginPage.route());
-                                        } else if(activity.id == 3){
-                                          Navigator.push(context, FeedbackPage.route());
-                                        } else if(activity.id == 4){
-                                          Navigator.push(context, ListPDFPage.route());
-                                        }
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Image(
-                                              image: AssetImage(activity.iconActivity),
-                                              width: 34,
-                                              fit: BoxFit.contain,
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.all(4.0),
-                                              child: Text(
-                                                activity.nameActivity,
-                                                style: StyleOfit.textStyleFW500(
-                                                  AppColor.main,
-                                                  12,
-                                                  overflow: TextOverflow.visible,
-                                                  height: 1.2,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 8, right: 8, top: 16,),
-                                width: double.infinity,
-                                height: 130,
-                                child: PageView.builder(
-                                  controller: _pageController,
-                                  //pageSnapping: false,
-                                  key: const PageStorageKey('uniqueKey'),
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: _totalPages,
-                                 // viewportFraction: 0.8,
-                                  onPageChanged: (index) {
-                                    setState(() {
-                                      _currentPage = index;
-                                    });
-                                  },
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.only(left: 16, right: 16.0), // Khoảng cách giữa các item
-                                      child: Center(
-                                        child: Container(
-                                          width: double.infinity,
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                'assets/images/image_$index.jpg',
-                                              ),
-                                              fit: BoxFit.fill,
-                                            ),
-                                            borderRadius: BorderRadius.circular(12.0),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Center(
-                                child: Container(
-                                  //height: double.infinity,
-                                  //color: AppColor.background,
-                                  margin: EdgeInsets.only(top: 16),
-                                  padding:
-                                  const EdgeInsets.symmetric(horizontal: 24),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      GestureDetector(
-                                        onTap: (){
-                                          Navigator.push(context, ContactPage.route());
-                                        },
-                                        child: Container(
-                                            margin: const EdgeInsets.symmetric(vertical: 15),
-                                            padding: const EdgeInsets.all(10),
-                                            height: 250,
-                                            width: MediaQuery.of(context).size.width,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius: BorderRadius.circular(20),
-                                              image: DecorationImage(
-                                                image:
-                                                AssetImage(ImageAsset.imageTeamSupport),
-                                                fit: BoxFit.fill,
-                                                colorFilter: ColorFilter.mode(
-                                                    Colors.black.withOpacity(0.2),
-                                                    BlendMode.darken
-                                                ),),
-                                            ),
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.end,
-                                              children: [
-                                                Image(image: AssetImage(ImageAsset.imageOfitsoftText), opacity: const AlwaysStoppedAnimation(.8), height: 70,),
-                                                Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    "Hỗ trợ hỏi đáp",
-                                                    style:
-                                                    StyleOfit.textStyleFW600(Colors.white, 22),
-                                                  ),
-                                                ),
-                                              ],
-                                            )),
-                                      ),
-                                    ],
+            Stack(
+              children: [
+                Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        opacity: 1,
+                        image: AssetImage(
+                            ImageAsset.imageOfitSoftBackground),
+                        fit: BoxFit.fill),
+                  ),
+                  child:  Container(
+                      width: double.infinity,
+                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 13,
+                          left: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 4,
+                          right: MediaQuery.of(context).size.width / 20),
+                      //color: const Color(0xFFEFF2F5),
+                      child: Row(
+                        children: [
+                          /*SizedBox(
+                          width: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 3.5,
+                        ),*/
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(
+                                    "Xin chào",
+                                    style: StyleOfit.textStyleFW600(Colors.orange, 17),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              )
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(
+                                    userName,
+                                    style: StyleOfit.textStyleFW600(Colors.black, 20),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "Chúc bạn một ngày làm việc hiệu quả",
+                                    style: StyleOfit.textStyleFW400(Colors.black, 14, overflow: TextOverflow.visible),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.visible,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        )),
-
-                ],
-              ),
+                        ],
+                      )),),
+                Container(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 15, left: MediaQuery.of(context).size.width / 20),
+                  child: Image(
+                    image: AssetImage(
+                        ImageAsset.imageOfitsoftText),
+                    opacity: const AlwaysStoppedAnimation(.8),
+                    height: MediaQuery.of(context).size.width / 4,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.5),
+                  child: Container(
+                    //height: MediaQuery.of(context).size.height / 9,
+                    decoration: ShapeDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Colors.white,Colors.white ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      shadows: [
+                        BoxShadow(
+                          color: AppColor.grayDC,
+                          offset: const Offset(0, -2), // Dịch shadow lên trên (âm số)
+                          blurRadius: 3, // Bán kính blur của shadow
+                          spreadRadius: 0, // Khoảng lan rộng của shadow
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height / 3.5,
+                    ),
+                    Expanded(
+                      child: SingleChildScrollView(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.only(left: 18, top: 18),
+                                  child: Text(
+                                    "Tính năng",
+                                    style: StyleOfit.textStyleFW600(Colors.black, 16),
+                                  ),
+                                ),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    atomBackground(),
+                                    Container(
+                                      padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
+                                      child: GridView.builder(
+                                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 3,
+                                          crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                          mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                        ),
+                                        itemCount: state.listActivityFarm.length,
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          var activity = state.listActivityFarm[index];
+                                          return GestureDetector(
+                                            onTap: () {
+                                              if (activity.id == 1) {
+                                                Navigator.push(context, ActivityPurchasePage.route("purchase"));
+                                              } else if (activity.id == 2) {
+                                                Navigator.push(context, ListReportResultView.route());
+                                              } else if (activity.id == 3) {
+                                                Navigator.push(context, AccessOriginPage.route());
+                                              } else if (activity.id == 4) {
+                                                Navigator.push(context, FeedbackPage.route());
+                                              } else if (activity.id == 5) {
+                                                Navigator.push(context, ListPDFPage.route());
+                                              } else if (activity.id == 6) {
+                                                Navigator.push(context, ContactPage.route());
+                                              } else if (activity.id == 7) {
+                                                Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                              }
+                                            },
+                                            child: item(activity),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    //atomBackground(),
+                                  ],
+                                ),
+                                Container(
+                                  padding: EdgeInsets.only(left: MediaQuery.sizeOf(context).width/56,
+                                    right: MediaQuery.sizeOf(context).width/56,
+                                    top: MediaQuery.sizeOf(context).width/25,),
+                                  width: double.infinity,
+                                  height: MediaQuery.sizeOf(context).width/3,
+                                  child: PageView.builder(
+                                    controller: _pageController,
+                                    //pageSnapping: false,
+                                    key: const PageStorageKey('uniqueKey'),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _totalPages,
+                                    // viewportFraction: 0.8,
+                                    onPageChanged: (index) {
+                                      setState(() {
+                                        _currentPage = index;
+                                      });
+                                    },
+                                    itemBuilder: (context, index) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(left: MediaQuery.sizeOf(context).width/28,
+                                            right: MediaQuery.sizeOf(context).width/28,), // Khoảng cách giữa các item
+                                        child: Center(
+                                          child: Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                  'assets/images/image_$index.jpg',
+                                                ),
+                                                fit: BoxFit.fill,
+                                              ),
+                                              borderRadius: BorderRadius.circular(12.0),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 30,
+                                )
+                              ],
+                            ),
+                          )),
+                    ),
+                  ],
+                ),
+              ],
             )),
       );
     });
+  }
+
+  Widget atomBackground(){
+    return Center(
+      child: Container(
+        alignment: Alignment.center,
+        width: MediaQuery.sizeOf(context).width/2.5,
+        height: MediaQuery.sizeOf(context).width/2.5,
+        color: Colors.transparent,
+        child: Atom(
+          size: MediaQuery.sizeOf(context).width/2.5,
+          nucleusRadiusFactor: 3.5,
+          orbitsWidthFactor: 2.0,
+
+          orbit1Angle: math.pi / 2,
+          orbit2Angle: math.pi / 6,
+          orbit3Angle: - math.pi / 6,
+
+          orbitsColor: AppColor.green2.withOpacity(0.3),
+          electronsColor: AppColor.main.withOpacity(0.3),
+          nucleusColor: AppColor.green2.withOpacity(0.3),
+
+          animDuration1: Duration(seconds: 3),
+          animDuration2: Duration(seconds: 4),
+          animDuration3: Duration(seconds: 6),
+          centerWidget: Container(),
+        ),
+      ),
+    );
+  }
+  Widget item(ActivityFarm activity){
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 120),
+      decoration: ShapeDecoration(
+        gradient: const LinearGradient(
+          colors: [AppColor.background,AppColor.whiteF2],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        shadows: [
+          BoxShadow(
+            color: AppColor.background,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image(
+              image: AssetImage(activity.iconActivity),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: Text(
+                activity.nameActivity,
+                style: StyleOfit.textStyleFW500(
+                  AppColor.main,
+                  16,
+                  overflow: TextOverflow.visible,
+                  height: 1.2,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -86,29 +86,8 @@ class _ManagerPageState extends State<ManagerPage> {
                 child: Column(
                   children: [
                     Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 32, horizontal: 24),
-                        //color: const Color(0xFFEFF2F5),
-                        child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(
-                                      "OFITSOFT xin chào",
-                                      style: StyleOfit.textStyleFW600(Colors.orange, 16),
-                                    ),
-                                  ),
-                                  Text(
-                                    "Chúc bạn một ngày làm việc vui vẻ",
-                                    style: StyleOfit.textStyleFW400(Colors.black, 14),
-                                  ),
-                                ],
-                              )),
-                    Container(
                       padding:
-                      const EdgeInsets.symmetric(horizontal: 24),
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 30),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -116,10 +95,9 @@ class _ManagerPageState extends State<ManagerPage> {
                             onTap: () async {
                               var result = await Navigator.push(context,
                                   ActivityPurchasePage.route("purchase"));
-
                             },
                             child: Container(
-                                margin: const EdgeInsets.symmetric(vertical: 15),
+                                margin: const EdgeInsets.symmetric(vertical: 10),
                                 height: 250,
                                 width: MediaQuery.of(context).size.width,
                                 padding: const EdgeInsets.all(16),

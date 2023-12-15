@@ -9,6 +9,8 @@ class ReportSelectTable extends Table {
 
   IntColumn get id => integer().nullable()();
   TextColumn get title => text().nullable()();
+  BoolColumn get isInitialAssessment => boolean().nullable()();
+
   @override
   Set<Column>? get primaryKey => {id};
 }

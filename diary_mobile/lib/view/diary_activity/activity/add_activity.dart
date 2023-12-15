@@ -66,7 +66,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
           showDefaultBackButton: true,
           callback: const [false],
           title: Text(
-            "Thêm hoạt động",
+            widget.action == "activity" ? "Thêm hoạt động canh tác" : "Thêm hoạt động thu hoạch",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.main,

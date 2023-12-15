@@ -2322,9 +2322,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     emit(state.copyWith(
         isShowProgress: true
     ));
-    List<TableQuestion> listTable = state.listTable;
+    List<TableQuestion> listTable = state.listTable.map((e) => TableQuestion.copy(e)).toList();
     //int indexTable = listTable.indexWhere((element) => element.id == event.idTable);
-    int i = state.listTable[event.idTable].listQuestion.length;
+    int i = state.listTable[event.idTable].listQuestion.last.rowId! + 1;
+    print("HoangCV:111bug ${state.listTable[event.idTable].listQuestion.last.rowId}");
     addNewRow(event.list, listTable, i, event.idTable);
     listTable.forEach((element) {
       print("HoangCV:listTable:  ${listTable.toString()}");
@@ -2343,7 +2344,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     state.listTable.forEach((element) {
       print("HoangCV:state.listTable:  ${listTable.toString()}");
       element.listQuestion.forEach((e) {
-        print("HoangCV:state.listTable e:  ${element.listQuestion.toString()}");
+        print("HoangCV:state.listTable e:  ${e.rowId} : ${e.userInputLines.last.userInputLineId.last.toJson()}");
       });
     });
   }
@@ -2354,7 +2355,7 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       if (item is Question) {
         if (item.questionType == 'table') {
           print("HaongCV: item: ${item.title}");
-          List<Question> list = [];
+          List<Question> list = listTable[idTable].listQuestion;
           List<Answer> listAs = [];
           for (Answer answer in item.suggestedAnswerIds) {
             print("HaongCV: answer: ${answer.value}");
@@ -2375,8 +2376,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
           qs.suggestedAnswerIds = listAs;
           qs.rowId = id;
           id++;
-          list.add(qs);
+          //list.add(qs);
           listTable[idTable].listQuestion.add(qs);
+          //listTable[idTable].listQuestion[0].userInputLines.add(RowLine(rowId: id, userInputLineId: listAs));
+          //listTable.add(TableQuestion(item.id!, item.title!, list));
         }
       }
     }

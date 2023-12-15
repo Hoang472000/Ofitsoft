@@ -5,6 +5,7 @@ import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../diary_activity/infomation_diary/Info_diary_view.dart';
 import '../../diary_activity/infomation_diary/info_diary_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {
@@ -58,7 +59,7 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: OfitAppBar(context,
+/*      appBar: OfitAppBar(context,
           centerTitle: true,
           hasBottom: true,
           showDefaultBackButton: true,
@@ -67,8 +68,8 @@ class _DetailDiaryPageState extends State<DetailDiaryPage>
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
-         ),
-      body: InfoDiaryPage(
+         ),*/
+      body: InfoDiaryView(
         id: widget.seasonFarmId,
         diary: widget.diary,
       )

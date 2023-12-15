@@ -9,6 +9,7 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
+import '../../../utils/widgets/empty_widget.dart';
 import '../../../view_model/diary_activity/activity/workflow_bloc.dart';
 
 class WorkflowPage extends StatefulWidget {
@@ -41,9 +42,9 @@ class _WorkflowPageState extends State<WorkflowPage> {
         appBar: OfitAppBar(
           context,
           centerTitle: true,
-          showDefaultBackButton: true,
+          showDefaultBackButton: false,
           title: Text(
-            "QUY TRÌNH LÀM VIỆC",
+            "Quy trình làm việc",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
           ),
           backgroundColor: AppColor.background,
@@ -54,7 +55,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
               return state.isShowProgress ?
               const Center(
                 child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-                  : Container(
+                  : state.empty ? const EmptyWidget() : Container(
                   width: double.infinity,
                   padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
                   child: SingleChildScrollView(

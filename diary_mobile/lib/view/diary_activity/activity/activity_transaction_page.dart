@@ -77,7 +77,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
     return BlocProvider(
       create: (context) => ActivityBloc(context.read<Repository>())
         ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false,
-            widget.listActivityDiary, widget.listActivityTransaction)),
+            widget.listActivityDiary, widget.listActivityTransaction, (_){})),
       child: Scaffold(
         appBar: OfitAppBar(context,
             centerTitle: true,
@@ -116,7 +116,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           widget.seasonFarmId,
                                           widget.action,
                                           result[0],
-                                          widget.listActivityDiary, []));
+                                          widget.listActivityDiary, [], (_){}));
                                 }
                               }
                             }),
@@ -162,7 +162,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
               : RefreshIndicator(
                   onRefresh: () async {
                     blocContext.read<ActivityBloc>().add(GetListActivityEvent(
-                        widget.seasonFarmId, widget.action, false, [], []));
+                        widget.seasonFarmId, widget.action, false, [], [], (_){}));
                   },
                   child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
                       : SingleChildScrollView(
@@ -191,7 +191,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                           GetListActivityEvent(
                                               widget.seasonFarmId,
                                               widget.action,
-                                              result[1], widget.listActivityDiary, []));
+                                              result[1], widget.listActivityDiary, [], (_){}));
                                     }
                                   //}
                                 },
@@ -200,7 +200,7 @@ class _ActivityTransactionPageState extends State<ActivityTransactionPage> {
                                       RemoveActivityEvent(
                                           state.listActivityTransaction[index].id ??
                                               -1,
-                                          widget.action));
+                                          widget.action, (_){}));
                                 }, callbackExport: (){},
                             callbackChooseItem: (isChoose){
 

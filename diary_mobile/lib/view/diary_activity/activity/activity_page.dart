@@ -38,19 +38,23 @@ class ActivityPage extends StatefulWidget {
       required this.seasonFarmId,
       required this.activityFarm,
       required this.diary,
-      required this.listActivity});
+      required this.listActivity,
+      required this.onListActivityChanged
+      });
 
   final String action;
   final ActivityFarm activityFarm;
   final int seasonFarmId;
   final Diary diary;
   final List<ActivityDiary> listActivity;
+  final Function(List<ActivityDiary>) onListActivityChanged;
 
   @override
   _ActivityPageState createState() => _ActivityPageState();
 
   static Route route(String action, int seasonFarmId, Diary diary,
-      ActivityFarm activityFarm, List<ActivityDiary> listActivity) {
+      ActivityFarm activityFarm, List<ActivityDiary> listActivity,
+      Function(List<ActivityDiary>) onListActivityChanged) {
     return Utils.pageRouteBuilder(
         ActivityPage(
           activityFarm: activityFarm,
@@ -58,6 +62,7 @@ class ActivityPage extends StatefulWidget {
           seasonFarmId: seasonFarmId,
           diary: diary,
           listActivity: listActivity,
+            onListActivityChanged: onListActivityChanged
         ),
         true);
   }
@@ -88,7 +93,7 @@ class _ActivityPageState extends State<ActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ActivityBloc(context.read<Repository>())
-        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false, widget.listActivity, [])),
+        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false, widget.listActivity, [], (_){})),
       child: GestureDetector(
         onTap: () {
 /*          setState(() {
@@ -117,7 +122,7 @@ class _ActivityPageState extends State<ActivityPage> {
                   Visibility(
                     visible: visible,
                     child: floatingActionButton(
-                        "Ghi nhật ký", Icons.note_add,   (widget.diary.status??'').compareTo("done") == 0 ||
+                        "", Icons.add,   (widget.diary.status??'').compareTo("done") == 0 ||
                         (widget.diary.status??'').compareTo("cancelled") == 0 ?
                         () {
                       print("HoangCV: bug:Asdas : ${widget.diary.status}");
@@ -156,7 +161,8 @@ class _ActivityPageState extends State<ActivityPage> {
                           contextBloc.read<ActivityBloc>().add(
                               GetListActivityEvent(
                                   widget.seasonFarmId, widget.action,
-                                  result[1], [], []));
+                                  result[1], [], [], (listCallback){
+                                    widget.onListActivityChanged(listCallback);}));
                         }
                       }),
                   ),
@@ -197,7 +203,7 @@ class _ActivityPageState extends State<ActivityPage> {
                 : RefreshIndicator(
                     onRefresh: () async {
                       blocContext.read<ActivityBloc>().add(GetListActivityEvent(
-                          widget.seasonFarmId, widget.action, false, [], []));
+                          widget.seasonFarmId, widget.action, false, [], [], (_){}));
                     },
                     child: ((widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 || widget.action.compareTo('sell') == 0) && state.listDiaryActivity.isEmpty) ||
                         ((widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0) && state.listDiaryMonitor.isEmpty)
@@ -230,7 +236,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                             GetListActivityEvent(
                                                 widget.seasonFarmId,
                                                 widget.action,
-                                                result[1], [], []));
+                                                result[1], [], [], (listCallback){
+                                              widget.onListActivityChanged(listCallback);}));
                                       }
                                     } else {
                                       var result = await Navigator.push(
@@ -242,7 +249,7 @@ class _ActivityPageState extends State<ActivityPage> {
                                             GetListActivityEvent(
                                                 widget.seasonFarmId,
                                                 widget.action,
-                                                false, [], []));
+                                                false, [], [], (_){}));
                                       }
                                     }
                                   },
@@ -250,7 +257,8 @@ class _ActivityPageState extends State<ActivityPage> {
                                     blocContext.read<ActivityBloc>().add(
                                         RemoveActivityEvent(
                                             state.listDiaryActivity[index].id ?? -1,
-                                            widget.action));
+                                            widget.action, (listCallback){
+                                          widget.onListActivityChanged(listCallback);}));
                                   });
                             },
                             shrinkWrap: true,
@@ -273,49 +281,20 @@ class _ActivityPageState extends State<ActivityPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColor.gray57,
-                      blurRadius: 1,
-                      offset: Offset(0, 0),
-                    ),
-                  ],      gradient:const LinearGradient(
-                colors: [AppColor.main, AppColor.green99],
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-              ),
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white),
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.all(8.0),
-              child: RichText(
-                text: TextSpan(
-                  text: name,
-                  style: StyleOfit.textStyleFW500(AppColor.whiteF2, 14),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "", // Chữ bị gạch chân sẽ được thay bằng chuỗi rỗng
-                    ),
-                  ],
-                ),
-              )
-          ),
-        ),
         Container(
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColor.main, AppColor.green99],
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-            ),
-            borderRadius: BorderRadius.circular(36.0), // Adjust the border radius as needed
-          ),
+              boxShadow: const [
+                BoxShadow(
+                  color: AppColor.green2,
+                  blurRadius: 0,
+                  offset: Offset(0, 1),
+                ),
+              ],
+              borderRadius: BorderRadius.circular(36),
+              /*color:
+              AppColor.green2*/),
           child: FloatingActionButton(
-              backgroundColor: Colors.transparent,
+              //backgroundColor: Colors.transparent,
               onPressed: onTap,
               child: Icon(icon)
           ),

@@ -241,7 +241,7 @@ class NetworkExecutor{
           } else {
 /*            Logger.loggerDebug("call api ${route.body.commandType} request DioError other: ${dioError.error?? ""}");*/
           }
-          objectResult= ObjectResult(1, "Unknown error", dioError.message??"", "08", false, true);
+          objectResult= ObjectResult(1, "Unknown error", "Hệ thống đang bảo trì!\nVui lòng thử lại sau.", "08", false, true);
         }
     }
     handlerError(objectResult, isHandlerError);

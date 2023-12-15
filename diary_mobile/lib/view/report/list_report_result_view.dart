@@ -62,7 +62,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
               showDefaultBackButton: true,
               callback: [updateHarvesting, listCallback],
               title: Text(
-                "Báo cáo đánh giá nội bộ",
+                "Đánh giá & Khảo sát",
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               )),
           //resizeToAvoidBottomInset: true,
@@ -132,36 +132,83 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                 blocContext.read<ListReportResultBloc>().add(
                     GetListReportResultEvent(checkUpdate: true));
               },
-              child: (state.listReport.isEmpty)
-                  ? const EmptyWidget()
-                  : SingleChildScrollView(
+              child: SingleChildScrollView(
                 //physics: const NeverScrollableScrollPhysics(),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    ListView.builder(
-                      itemCount: state.listReport.length,
-                      itemBuilder: (BuildContext contextBloc, int index) {
-                        return ItemReportResult(
-                            reportResult: state.listReport[index],
-                            callbackChooseItem: () {
-                              Navigator.of(context)
-                                  .push(DetailReportViewPage.route(state.listReport[index].id??-1));
+                    Flexible(
+                      child: Row(
+                      children: <Widget>[
+                        Flexible(
+                        child: GestureDetector(
+                          onTap: (){
+                            blocContext.read<ListReportResultBloc>().add(
+                                UpdateRadioButtonEvent(ReportEnum.report));
+                          },
+                          child: ListTile(
+                              title: const Text('Đánh giá nội bộ'),
+                          leading: Radio<ReportEnum>(
+                            value: ReportEnum.report,
+                            groupValue: state.reportEnum,
+                            onChanged: (ReportEnum? value) {
+                              blocContext.read<ListReportResultBloc>().add(
+                                  UpdateRadioButtonEvent(value as ReportEnum));
                             },
-                            callbackDelete: () {
-                                contextBloc.read<ListReportResultBloc>().add(
-                                    DeleteReportResultEvent(state.listReport[index].id??-1));
-                            },
-                          callbackEdit: () async {
-                          var result = await Navigator.of(context)
-                              .push(EditReportViewPage.route(state.listReport[index].id??-1));
-                          if (result != null && result[0]) {
-                            contextBloc.read<ListReportResultBloc>().add(
-                                GetListReportResultEvent(checkUpdate: true));
-                          }
-                        }, overlayEntry: overlayEntry,);
+                          ),
+                  ),
+                        ),
+                      ),
+                        Flexible(
+                    child: GestureDetector(
+                      onTap: (){
+                        blocContext.read<ListReportResultBloc>().add(
+                            UpdateRadioButtonEvent(ReportEnum.survey));
                       },
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                      child: ListTile(
+                          title: const Text('Khảo sát ban đầu'),
+                          leading: Radio<ReportEnum>(
+                            value: ReportEnum.survey,
+                            groupValue: state.reportEnum,
+                            onChanged: (ReportEnum? value) {
+                              blocContext.read<ListReportResultBloc>().add(
+                                  UpdateRadioButtonEvent(value as ReportEnum));
+                            },
+                          ),
+                      ),
+                    ),
+                  ),
+                  ],
+                ),
+                    ),
+                    (state.listReport.isEmpty)
+                        ? const EmptyWidget()
+                        : Flexible(
+                      child: ListView.builder(
+                        itemCount: state.listReport.length,
+                        itemBuilder: (BuildContext contextBloc, int index) {
+                          return ItemReportResult(
+                              reportResult: state.listReport[index],
+                              callbackChooseItem: () {
+                                Navigator.of(context)
+                                    .push(DetailReportViewPage.route(state.listReport[index].id??-1));
+                              },
+                              callbackDelete: () {
+                                  contextBloc.read<ListReportResultBloc>().add(
+                                      DeleteReportResultEvent(state.listReport[index].id??-1));
+                              },
+                            callbackEdit: () async {
+                            var result = await Navigator.of(context)
+                                .push(EditReportViewPage.route(state.listReport[index].id??-1));
+                            if (result != null && result[0]) {
+                              contextBloc.read<ListReportResultBloc>().add(
+                                  GetListReportResultEvent(checkUpdate: true));
+                            }
+                          }, overlayEntry: overlayEntry,);
+                        },
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                      ),
                     ),
                     SizedBox(
                       height: 60,

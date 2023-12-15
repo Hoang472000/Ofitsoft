@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import '../../../data/entity/diary/diary.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
+import '../../../view/diary_activity/activity/add_activity.dart';
 import '../../utils.dart';
 import '../../../view/diary/detail_diary/detail_diary_page.dart';
 
@@ -81,77 +83,112 @@ class _ItemDiaryState extends State<ItemDiary> {
                       )),
                 )),
             Container(
-              padding:
-                  const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
               margin: widget.amountSelected > 0
                   ? const EdgeInsets.only(
-                      left: 52, right: 16, top: 4, bottom: 4)
+                  left: 52, right: 16, top: 4, bottom: 4)
                   : const EdgeInsets.only(
-                      left: 16, right: 16, top: 4, bottom: 4),
-              /*            margin: const EdgeInsets.only(
-                  left: 20, right: 16, top: 4, bottom: 4),*/
-              decoration: BoxDecoration(boxShadow: const [
-                BoxShadow(
-                  color: AppColor.gray57,
-                  blurRadius: 1,
-                  offset: Offset(0, 0),
+                  left: 16, right: 16, top: 4, bottom: 4),
+              child: Slidable(
+                endActionPane: ActionPane(
+                  extentRatio: 1 / 2.5,
+                  motion: const BehindMotion(),
+                  children: [
+                    CustomSlidableAction(
+                      borderRadius: BorderRadius.circular(8),
+                      backgroundColor: AppColor.grayC7,
+                      onPressed: (context){
+                        Navigator.of(context)
+                            .push(AddActivityPage.route(
+                            widget.diary.id ?? -1, widget.diary, "activity"));
+                      },child: Image(
+                        image: AssetImage(ImageAsset.imageActivityFarm),
+                        fit: BoxFit.contain,
+                      )),
+                    CustomSlidableAction(
+                      borderRadius: BorderRadius.circular(8),
+                      backgroundColor: AppColor.grayC7,
+                      onPressed: (context){
+                      Navigator.of(context)
+                          .push(AddActivityPage.route(
+                          widget.diary.id ?? -1, widget.diary, "harvesting"));
+                    },child: Image(
+                      image: AssetImage(ImageAsset.imagePlantCrop),
+                      fit: BoxFit.contain,
+                    ),),
+                  ],
                 ),
-              ], borderRadius: BorderRadius.circular(8), color: Colors.white),
-              child: Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                        child: Text(
-                          Utils.formatTime(widget.diary.startDate ?? ""),
-                          style:
-                              StyleOfit.textStyleFW400(AppColor.black22, 14),
-                        ),
-                      ),
-                      Text(widget.diary.name.toString(),
-                          style: StyleOfit.textStyleFW500(AppColor.main, 16),
-                          maxLines: 3,
-                          overflow: TextOverflow.visible),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                        child: RichText(
-                          text: Utils.convertText(
-                              "Cây trồng: ",
-                              "${widget.diary.cropName}",
-                              AppColor.blue15,
-                              14),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: RichText(
-                          text: Utils.convertText(
-                              "Thực hiện: ",
-                              "${widget.diary.farmerName}",
-                              AppColor.blue15,
-                              12),
-                          maxLines: 3,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      )
-                    ],
-                  ),
-                ],
+                child: _item(context),
               ),
-            ),
-            /*   Positioned(
-              right: 12,
-              // padding: EdgeInsets.only(bottom: 10),
-              // margin: EdgeInsets.only(right: 17, top: 0, bottom: 10),
-              child: _widgetViewEditAndCancel(context, widget.callbackEdit),
-            )*/
+            )
           ],
         ),
       ),
+    );
+  }
+
+  Widget _item(BuildContext context) {
+    return Container(
+      padding:
+      const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
+/*      margin: widget.amountSelected > 0
+          ? const EdgeInsets.only(
+          left: 52, right: 16, top: 4, bottom: 4)
+          : const EdgeInsets.only(
+          left: 16, right: 16, top: 4, bottom: 4),*/
+      /*            margin: const EdgeInsets.only(
+                  left: 20, right: 16, top: 4, bottom: 4),*/
+      decoration: BoxDecoration(boxShadow: const [
+        BoxShadow(
+          color: AppColor.gray57,
+          blurRadius: 1,
+          offset: Offset(0, 0),
+        ),
+      ], borderRadius: BorderRadius.circular(8), color: Colors.white),
+      child: Row(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                  child: Text(
+                    Utils.formatTime(widget.diary.startDate ?? ""),
+                    style:
+                    StyleOfit.textStyleFW400(AppColor.black22, 14),
+                  ),
+                ),
+                Text(widget.diary.name.toString(),
+                    style: StyleOfit.textStyleFW500(AppColor.main, 16),
+                    maxLines: 3,
+                    overflow: TextOverflow.visible),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0, bottom: 8),
+                  child: RichText(
+                    text: Utils.convertText(
+                        "Cây trồng: ",
+                        "${widget.diary.cropName}",
+                        AppColor.blue15,
+                        14),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: RichText(
+                    text: Utils.convertText(
+                        "Thực hiện: ",
+                        "${widget.diary.farmerName}",
+                        AppColor.blue15,
+                        12),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
     );
   }
 }

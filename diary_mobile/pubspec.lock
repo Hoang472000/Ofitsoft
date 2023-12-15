@@ -289,6 +289,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  create_atom:
+    dependency: "direct main"
+    description:
+      name: create_atom
+      sha256: a29af4f1356851059ace1e7028a7009acf4bdd71dbefd92bec6db1d1e89b0863
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0-nullsafety"
   cross_file:
     dependency: transitive
     description:
@@ -603,6 +611,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.15"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      sha256: "19ed4813003a6ff4e9c6bcce37e792a2a358919d7603b2b31ff200229191e44c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.1"
   flutter_svg:
     dependency: "direct main"
     description:

@@ -308,6 +308,7 @@ class RepositoryImpl extends Repository {
     if(isAllTrueExceptFirst || monitor){
       path += "$userId";
     } else{
+      return [];
     }
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
@@ -357,7 +358,7 @@ class RepositoryImpl extends Repository {
           .toList();
       list.sort((a,b)=> (b.actionTime??"").compareTo((a.actionTime??"")));
       /////
-      DiaryDB.instance.insertListActivityDiary(list);
+      //DiaryDB.instance.insertListActivityDiary(list);
       return list;
     }
     else {
@@ -855,9 +856,9 @@ class RepositoryImpl extends Repository {
   /*    hierarchyList[1].questionAndPageIds.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
       });*/
-      hierarchyList[1].questionAndPageIds[6].questionAndPageIds[0].suggestedAnswerIds.forEach((element) {
+   /*   hierarchyList[1].questionAndPageIds[6].questionAndPageIds[0].suggestedAnswerIds.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
-      });
+      });*/
       return [hierarchyList[1]];
     } else if(objectResult.responseCode == StatusConst.code02) {
 

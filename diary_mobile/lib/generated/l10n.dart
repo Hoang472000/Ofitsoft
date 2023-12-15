@@ -2370,10 +2370,10 @@ class S {
     );
   }
 
-  /// `Tổng quan`
+  /// `Trang chủ`
   String get home_label {
     return Intl.message(
-      'Tổng quan',
+      'Trang chủ',
       name: 'home_label',
       desc: '',
       args: [],

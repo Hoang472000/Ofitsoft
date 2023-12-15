@@ -11,6 +11,7 @@ import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
+import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../report/list_report_result_view.dart';
@@ -37,8 +38,17 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
     return BlocProvider(
       create: (context) => DetailDiaryBloc(context.read<Repository>())..add(GetDetailDiaryEvent(widget.id)),
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
+        appBar: OfitAppBar(context,
+            centerTitle: true,
+            hasBottom: true,
+            showDefaultBackButton: false,
+            title: Text(
+              "Thông tin chi tiết",
+              style: StyleOfit.textStyleFW700(Colors.white, 20),
+            )),
+        //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
+        resizeToAvoidBottomInset: true,
         body: BlocBuilder<DetailDiaryBloc, DetailDiaryState>(
             builder: (blocContext, state) {
               return state.isShowProgress ?
@@ -52,7 +62,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     child: state.detailDiary !=null ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Padding(
+                        /*Padding(
                           padding: const EdgeInsets.only(top: 8.0, bottom: 8),
                           child: GridView.builder(
                               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -93,7 +103,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                               WorkflowPage.route(
                                                   state.detailDiary!.productProcessId ??
                                                       -1));
-                                          /*var result = await Navigator.push(context,
+                                          *//*var result = await Navigator.push(context,
                                               ActivityTransactionPage.route("sell",
                                                 seasonFarmId: widget.id,
                                                   diary: widget.diary,
@@ -101,11 +111,11 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                                                   listActivityDiary: state.listActivityDiary));
                                           if(result != null && result[0]){
                                             blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
-                                          }*/
+                                          }*//*
                                         }
                                       });
                                 }),
-                        ),
+                        ),*/
                           CardTile(
                             label: "Tên nhật ký",
                             value: "${state.detailDiary!.name}",

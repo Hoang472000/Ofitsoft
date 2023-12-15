@@ -31,30 +31,30 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
   bool isOpening = true;
   bool enableAdd = true;
 
-  late TabController _tabController;
+  //late TabController _tabController;
   bool _tabControllerInitialized = false;
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _tabController.dispose();
+    //_tabController.dispose();
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initializeTabController();
+    //_initializeTabController();
   }
 
   Future<void> _initializeTabController() async {
     int tabLength = await calculateLength();
     print("HoangCV: tabLength : ${tabLength}");
-    _tabController = TabController(vsync: this, length: tabLength);
+  /*  _tabController = TabController(vsync: this, length: tabLength);
     setState(() {
       _tabControllerInitialized = true;
-    });
+    });*/
     // Không cần return ở đây.
   }
 
@@ -75,11 +75,11 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
   }
 
   void _handleTabIndex() {
-    if (_tabController.index != 1) {
+/*    if (_tabController.index != 1) {
       enableAdd = false;
     } else {
       if (isOpening) enableAdd = true;
-    }
+    }*/
     setState(() {});
   }
 
@@ -91,7 +91,7 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
         ..add(GetDiaryMonitorEvent()),
       child: BlocBuilder<DiaryMonitorBloc, DiaryMonitorState>(
         builder: (context, state) {
-          return state.isShowProgress || !_tabControllerInitialized
+          return state.isShowProgress /*|| !_tabControllerInitialized*/
               ? const Center(
             child: DashedCircle(
                 size: 39, stringIcon: IconAsset.icLoadOtp),
@@ -102,13 +102,13 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
                   centerTitle: true,
                   showDefaultBackButton: false,
                   title: Text(
-                    "Danh sách nhật ký",
+                    "Nhật ký ghi hộ",
                     style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
                   //backgroundColor: AppColor.background,
                   actions: [],
                   hasBottom: true,
-                bottom: _tabControllerInitialized
+                bottom: /*_tabControllerInitialized
                     ? TabBar(
                   controller: _tabController ?? TabController(length: 0, vsync: this),
                   indicatorWeight: 4,
@@ -120,25 +120,25 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
                     return Tab(text: element.nameActivity);
                   }).toList(),
                 )
-                    : null, // Set to null when _tabController is not initialized.
+                    : */null, // Set to null when _tabController is not initialized.
 
               ),
               body: BlocBuilder<DiaryMonitorBloc, DiaryMonitorState>(
                 builder: (context, state) {
-                  return state.isShowProgress || !_tabControllerInitialized
+                  return state.isShowProgress /*|| !_tabControllerInitialized*/
                       ? const Center(
                     child: DashedCircle(
                         size: 39, stringIcon: IconAsset.icLoadOtp),
                   )
-                      : _tabControllerInitialized ? TabBarView(
+                      : /*_tabControllerInitialized ? TabBarView(
                     controller: _tabController ?? TabController(vsync: this, length: 0),
                     children: state.listActivityFarm.map((element) {
-                      return DiaryMonitorChild(
-                        diary: element.action == 'farmer' ? state.listFarmerDiary :
-                        element.action == 'record' ? state.listBackupDiary : state.listMonitorDiary,
-                        action: element.action,
+                      return */DiaryMonitorChild(
+                        diary: /*element.action == 'farmer' ? state.listFarmerDiary :
+                        element.action == 'record' ? */state.listBackupDiary /*: state.listMonitorDiary*/,
+                        action: /*element.action*/"record",
                       );
-                    }).toList(),/*<Widget>[
+                    /*}).toList(),*//*<Widget>[
                       DiaryMonitorChild(
                         diary: state.listFarmerDiary,
                         action: "farmer",
@@ -152,7 +152,7 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
                         action: "monitor",
                       ),
                     ],*/
-                  ): SizedBox();
+                 // ): SizedBox();
                 },
               ));
         },

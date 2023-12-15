@@ -75,6 +75,8 @@ dependencies:
   external_app_launcher:
   qr_flutter:
   package_info_plus:
+  flutter_slidable: ^3.0.1
+  create_atom: ^2.1.0-nullsafety
 
 dev_dependencies:
   flutter_test:

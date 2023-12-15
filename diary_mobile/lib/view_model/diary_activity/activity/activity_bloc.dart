@@ -37,7 +37,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     List<ActivityDiary> listCallback = [];
     List<ActivityTransaction> listActivityTransaction = [];
     List<ActivityTransaction> listCallbackTransaction = [];
-    print("HoangCV: listActivity: ${event.list.length}");
+    bool saveDB = false;
+    print("HoangCV: listActivity: ${event.list.length} : ${event.id}");
     if (event.action.compareTo("activity") == 0 ||
         event.action.compareTo("harvesting") == 0) {
       if (event.list.isNotEmpty) {
@@ -45,7 +46,10 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       } else {
         listDiaryActivity
             .addAll(await repository.getListActivityDiary(event.id));
+        saveDB = true;
         listCallback.addAll(listDiaryActivity);
+        print("HoangCV:        event.callBack(listCallback);");
+        event.callBack(listCallback);
       }
       if (event.action.compareTo("activity") == 0) {
         listDiaryActivity.removeWhere((element) => element.harvesting == true);
@@ -54,7 +58,11 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       }
       emitter(state.copyWith(
           isShowProgress: false, listDiaryActivity: listDiaryActivity));
-    } else if (event.action.compareTo("sell") == 0) {
+      if(saveDB){
+        DiaryDB.instance.insertListActivityDiary(listDiaryActivity);
+      }
+    }
+    else if (event.action.compareTo("sell") == 0) {
       listDiaryActivity.addAll(event.list);
       listDiaryActivity.removeWhere((element) => element.harvesting == false);
       /*if (event.harvesting) {*/
@@ -90,12 +98,12 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
       print("HoangCV: listDiaryMonitor: ${listDiaryMonitor.length}");
       emitter(state.copyWith(listDiaryMonitor: listDiaryMonitor));
     }
+    emit(state.copyWith(isShowProgress: false, listCallback: listCallback, listCallbackTransaction: listCallbackTransaction));
+    //DiaryDB.instance.getListDiary();
     if (event.harvesting) {// bug
       repository.getUpdateDiary((state.diary?? Diary()).action??"", event.id);
       emit(state.copyWith(updateHarvesting: true));
     }
-    emit(state.copyWith(isShowProgress: false, listCallback: listCallback, listCallbackTransaction: listCallbackTransaction));
-    //DiaryDB.instance.getListDiary();
   }
 
   FutureOr<void> _removeActivity(
@@ -110,7 +118,8 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
       add(GetListActivityEvent(
-          state.seasonFarmId ?? 0, event.action, false, [], []));
+          state.seasonFarmId ?? 0, event.action, false, [], [], (listCallback){
+        event.callBack(listCallback);}));
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: "Xóa hoạt động thành công.")));
@@ -133,22 +142,24 @@ class GetListActivityEvent extends ActivityEvent {
   final bool harvesting;
   final List<ActivityDiary> list;
   final List<ActivityTransaction> listTransaction;
+  Function(List<ActivityDiary>) callBack;
 
   GetListActivityEvent(
-      this.id, this.action, this.harvesting, this.list, this.listTransaction);
+      this.id, this.action, this.harvesting, this.list, this.listTransaction, this.callBack);
 
   @override
-  List<Object?> get props => [id, action, harvesting, list, listTransaction];
+  List<Object?> get props => [id, action, harvesting, list, listTransaction, callBack];
 }
 
 class RemoveActivityEvent extends ActivityEvent {
   final int id;
   final String action;
+  Function(List<ActivityDiary>) callBack;
 
-  RemoveActivityEvent(this.id, this.action);
+  RemoveActivityEvent(this.id, this.action, this.callBack);
 
   @override
-  List<Object?> get props => [id, action];
+  List<Object?> get props => [id, action, callBack];
 }
 
 class RemoveMonitorEvent extends ActivityEvent {

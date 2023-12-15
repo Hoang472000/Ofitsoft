@@ -70,26 +70,39 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     List<ActivityFarm> list = [];
     List<bool> check = await SharedPreDiary.getRole();
-    if(check[3] || check[4]) {
+    if(check[3]) {
       list.add(ActivityFarm(
           id: 1,
-          nameActivity: "Quản lý",
+          nameActivity: "Mua hàng",
+          iconActivity: ImageAsset.imageSelling));
+    } if(check[4]){
+      list.add(ActivityFarm(
+          id: 2,
+          nameActivity: "Đánh giá Khảo sát",
           iconActivity: ImageAsset.imageManager));
     }
     if(check[3] || check[4] || check[2]) {
       list.add(ActivityFarm(
-          id: 2,
+          id: 3,
           nameActivity: "Truy xuất",
           iconActivity: ImageAsset.imageQrCode));
     }
     list.add(ActivityFarm(
-        id: 3,
-        nameActivity: "Phản hồi",
-        iconActivity: ImageAsset.imageReply));
+        id: 7,
+        nameActivity: "Ghi nhật ký",
+        iconActivity: ImageAsset.imageDiary));
     list.add(ActivityFarm(
         id: 4,
+        nameActivity: "Trao đổi",
+        iconActivity: ImageAsset.imageReply));
+    list.add(ActivityFarm(
+        id: 5,
         nameActivity: "Hướng dẫn",
         iconActivity: ImageAsset.imageManual));
+    list.add(ActivityFarm(
+        id: 6,
+        nameActivity: "Liên hệ",
+        iconActivity: ImageAsset.imagePhone));
     emit(state.copyWith(listActivityFarm: list));
   }
 }

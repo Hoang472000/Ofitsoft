@@ -210,13 +210,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(IconAsset.icHome),
+                          SvgPicture.asset(IconAsset.icHome2, color: AppColor.black22,),
                           const SizedBox(
                             height: 3,
                           ),
                           Text(
                             S.of(context).home_label,
-                            style: StyleOfit.textStyleFW500(Colors.grey, 10,
+                            style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           const SizedBox(
@@ -243,13 +243,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SvgPicture.asset(IconAsset.icNotebook),
+                          SvgPicture.asset(IconAsset.icNotebook, color: AppColor.black22,),
                           const SizedBox(
                             height: 3,
                           ),
                           Text(
                             "Nhật ký",
-                            style: StyleOfit.textStyleFW500(Colors.grey, 10,
+                            style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                                 overflow: TextOverflow.ellipsis),
                           ),
                           const SizedBox(
@@ -272,8 +272,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                           height: 27,
                         ),
                         Text(
-                          "Truy xuất",
-                          style: StyleOfit.textStyleFW500(Colors.grey, 10,
+                          "",
+                          style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                               overflow: TextOverflow.ellipsis),
                         ),
                         const SizedBox(
@@ -298,13 +298,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(IconAsset.icNotifi),
+                            SvgPicture.asset(IconAsset.icBell, color: AppColor.black22,),
                             const SizedBox(
                               height: 3,
                             ),
                             Text(
                               S.of(context).notify_label,
-                              style: StyleOfit.textStyleFW500(Colors.grey, 10,
+                              style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             const SizedBox(
@@ -329,13 +329,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(IconAsset.icSetTing, color: Colors.grey,),
+                            SvgPicture.asset(IconAsset.icSetTing, color: AppColor.black22,),
                             const SizedBox(
                               height: 3,
                             ),
                             Text(
                               S.of(context).setting,
-                              style: StyleOfit.textStyleFW500(Colors.grey, 10,
+                              style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                                   overflow: TextOverflow.ellipsis),
                             ),
                             const SizedBox(
