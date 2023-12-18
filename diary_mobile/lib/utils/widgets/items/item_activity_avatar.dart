@@ -253,7 +253,7 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                         ],
                       ),
                           ),
-                      SizedBox(
+                      widget.action.compareTo('harvesting') == 0 ? Container(): SizedBox(
                         height: 50,
                         width: 50,
                         child: /*(state.listDiaryActivity[index].harvesting ?? false) || */

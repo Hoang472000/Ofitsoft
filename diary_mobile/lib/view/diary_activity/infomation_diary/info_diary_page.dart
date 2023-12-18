@@ -14,6 +14,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
+import '../../home/home_page.dart';
 import '../../report/list_report_result_view.dart';
 import '../activity/activity_page.dart';
 import '../activity/activity_transaction_page.dart';
@@ -45,6 +46,15 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
             title: Text(
               "Thông tin chi tiết",
               style: StyleOfit.textStyleFW700(Colors.white, 20),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.home_outlined),
+              onPressed: () async {
+                Navigator.of(context).pushAndRemoveUntil(
+                    await HomePage.route(), (route) => false);
+              },
+              color: Colors.white,
+              //padding: EdgeInsets.zero,
             )),
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,

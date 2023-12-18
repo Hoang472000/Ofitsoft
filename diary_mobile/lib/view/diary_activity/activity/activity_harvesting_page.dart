@@ -8,6 +8,7 @@ import 'package:diary_mobile/utils/widgets/empty_widget.dart';
 import 'package:diary_mobile/view/diary_activity/activity/detail_activity.dart';
 import 'package:diary_mobile/view/diary_activity/activity_sell/activity_select_page.dart';
 import 'package:diary_mobile/view/diary_activity/monitor/add_monitor.dart';
+import 'package:diary_mobile/view/home/home_page.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/activity_bloc.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/info_diary_bloc.dart';
 import 'package:flutter/cupertino.dart';
@@ -109,7 +110,16 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
               title: Text(
                 widget.activityFarm.nameActivity,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
-              )),
+              ),
+              leading: IconButton(
+                icon: const Icon(Icons.home_outlined),
+                onPressed: () async {
+                  Navigator.of(context).pushAndRemoveUntil(
+                      await HomePage.route(), (route) => false);
+                },
+                color: Colors.white,
+                //padding: EdgeInsets.zero,
+              ),),
           //resizeToAvoidBottomInset: true,
           backgroundColor: AppColor.background,
           floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(

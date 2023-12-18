@@ -11,6 +11,7 @@ import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/empty_widget.dart';
 import '../../../view_model/diary_activity/activity/workflow_bloc.dart';
+import '../../home/home_page.dart';
 
 class WorkflowPage extends StatefulWidget {
   const WorkflowPage({super.key, required this.id});
@@ -46,6 +47,15 @@ class _WorkflowPageState extends State<WorkflowPage> {
           title: Text(
             "Quy trình làm việc",
             style: StyleOfit.textStyleFW700(Colors.white, 20),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.home_outlined),
+            onPressed: () async {
+              Navigator.of(context).pushAndRemoveUntil(
+                  await HomePage.route(), (route) => false);
+            },
+            color: Colors.white,
+            //padding: EdgeInsets.zero,
           ),
           backgroundColor: AppColor.background,
           actions: [],
