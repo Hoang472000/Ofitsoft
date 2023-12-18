@@ -262,7 +262,7 @@ class _AddFeedbackPageState extends State<AddFeedbackPage> {
                       onPressed: () {
                         Get.bottomSheet(
                           SizedBox(
-                              height: 140,
+                              //height: 140,
                               //padding: EdgeInsets.symmetric(horizontal: 15),
                               child: Container(
                                 decoration: const BoxDecoration(
@@ -270,6 +270,9 @@ class _AddFeedbackPageState extends State<AddFeedbackPage> {
                                       topRight: Radius.circular(12),
                                       topLeft: Radius.circular(12)),
                                   color: Colors.white,
+                                ),
+                                constraints: BoxConstraints(
+                                  maxHeight: MediaQuery.of(context).size.height * 0.2, // Hoặc giá trị phù hợp với nhu cầu của bạn
                                 ),
                                 child: Center(
                                   child: Column(

@@ -340,7 +340,7 @@ class _AddRecordDiaryPageState extends State<AddRecordDiaryPage> {
                         onPressed: () {
                           Get.bottomSheet(
                             SizedBox(
-                                height: 140,
+                                //height: 140,
                                 //padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
                                   decoration: const BoxDecoration(
@@ -349,12 +349,15 @@ class _AddRecordDiaryPageState extends State<AddRecordDiaryPage> {
                                         topLeft: Radius.circular(12)),
                                     color: Colors.white,
                                   ),
+                                  constraints: BoxConstraints(
+                                    maxHeight: MediaQuery.of(context).size.height * 0.2, // Hoặc giá trị phù hợp với nhu cầu của bạn
+                                  ),
                                   child: Center(
                                     child: Column(
                                       // mainAxisAlignment: MainAxisAlignment.spaceAround,
                                       children: [
                                         Container(
-                                          height: 44,
+                                          height: MediaQuery.of(context).size.height * 0.05,
                                           decoration: BoxDecoration(
                                               borderRadius:
                                               const BorderRadius.only(
@@ -394,7 +397,7 @@ class _AddRecordDiaryPageState extends State<AddRecordDiaryPage> {
                                           ),
                                         ),
                                         Container(
-                                          padding: const EdgeInsets.only(top: 18),
+                                          padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.015,),
                                           child: Row(
                                             mainAxisAlignment:
                                             MainAxisAlignment.spaceEvenly,

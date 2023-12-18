@@ -347,7 +347,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
                         onPressed: () {
                           Get.bottomSheet(
                             SizedBox(
-                                height: 140,
+                                //height: 140,
                                 //padding: EdgeInsets.symmetric(horizontal: 15),
                                 child: Container(
                                   decoration: const BoxDecoration(
@@ -356,6 +356,10 @@ class _AddActivityPageState extends State<AddActivityPage> {
                                         topLeft: Radius.circular(12)),
                                     color: Colors.white,
                                   ),
+                                  constraints: BoxConstraints(
+                                    maxHeight: MediaQuery.of(context).size.height * 0.2, // Hoặc giá trị phù hợp với nhu cầu của bạn
+                                  ),
+                                  //padding: EdgeInsets.only(bottom: MediaQuery.of(_scaffoldKey.currentState!.context).viewPadding.bottom),
                                   child: Center(
                                     child: Column(
                                       // mainAxisAlignment: MainAxisAlignment.spaceAround,

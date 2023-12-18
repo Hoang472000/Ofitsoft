@@ -13,11 +13,13 @@ import '../../../resource/style.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../resource/assets.dart';
 import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
+import '../../utils/widgets/dashed_circle.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/add_report_bloc.dart';
@@ -100,63 +102,68 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   DiaLogManager.showDialogLoading(context);
                 }
               }, builder: (blocContext, state) {
-            return WillPopScope(
-              onWillPop: () async{
-                Navigator.pop(context);
-                return false;
-              },
-              child: state.listReport.isEmpty
-                  ? Container()
-                  : ListView.builder(
-                    controller: state.scrollController,
-                    scrollDirection: Axis.vertical,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    //physics: NeverScrollableScrollPhysics(),
-                    itemCount: state.listReport[0].questionAndPageIds.length + 2,
-                    itemBuilder: (context, index) {
-                      return AutoScrollTag(
-                        controller: state.scrollController!,
-                        index: index,
-                        key: ValueKey(index),
-                        child: index == 0 ? detailHeader("${state.listReport[0].title}",
-                            state.listSelectedInspector, state.listWidget, state.nameInspector ?? '', blocContext) :
-                            index == state.listReport[0].questionAndPageIds.length + 1 ? detailEnd(blocContext) :
-                            state.listReport[0].questionAndPageIds[index -1].isPage == true ?
-                            ExpansionTile(
-                          title: widgetMuc("${state.listReport[0].questionAndPageIds[index -1].title}"),
-                          children: [
-                            tableDetailResult(
-                              state.listReport[0].questionAndPageIds[index -1].questionAndPageIds,
-                              state.listReport[0].questionAndPageIds[index -1].questionParentTitleId,
-                              state.listSelected[index-1],
-                              state.listController[index-1],
-                              state.listControllerTable,
-                              state.listControllerTableField,
-                              blocContext,
-                              state.listTable,
-                              state.listTableField,
-                              state.farmerInspector ?? FarmerInspectorUpload(),
-                              state.listInputModel[index -1]
-                            ),
-                          ],
-                        ) :
-                            tableDetailResult(
-                              [state.listReport[0].questionAndPageIds[index-1]],
-                              [state.listReport[0].questionAndPageIds[index-1]],
-                              state.listSelected[index-1],
-                              state.listController[index-1],
-                              state.listControllerTable,
-                              state.listControllerTableField,
-                              blocContext,
-                              state.listTable,
-                              state.listTableField,
-                              state.farmerInspector ?? FarmerInspectorUpload(),
-                              state.listInputModel[index -1]
-                            ),
-                      );
-                    },
-                  )
+            return SafeArea(
+              child: WillPopScope(
+                onWillPop: () async{
+                  Navigator.pop(context);
+                  return false;
+                },
+                child: state.isShowProgress ?
+                const Center(
+                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),):
+                state.listReport.isEmpty
+                    ? Container()
+                    : ListView.builder(
+                      controller: state.scrollController,
+                      scrollDirection: Axis.vertical,
+                      padding: EdgeInsets.zero,
+                      shrinkWrap: true,
+                      //physics: NeverScrollableScrollPhysics(),
+                      itemCount: state.listReport[0].questionAndPageIds.length + 2,
+                      itemBuilder: (context, index) {
+                        return AutoScrollTag(
+                          controller: state.scrollController!,
+                          index: index,
+                          key: ValueKey(index),
+                          child: index == 0 ? detailHeader("${state.listReport[0].title}",
+                              state.listSelectedInspector, state.listWidget, state.nameInspector ?? '', blocContext) :
+                              index == state.listReport[0].questionAndPageIds.length + 1 ? detailEnd(blocContext) :
+                              state.listReport[0].questionAndPageIds[index -1].isPage == true ?
+                              ExpansionTile(
+                            title: widgetMuc("${state.listReport[0].questionAndPageIds[index -1].title}"),
+                            children: [
+                              tableDetailResult(
+                                state.listReport[0].questionAndPageIds[index -1].questionAndPageIds,
+                                state.listReport[0].questionAndPageIds[index -1].questionParentTitleId,
+                                state.listSelected[index-1],
+                                state.listController[index-1],
+                                state.listControllerTable,
+                                state.listControllerTableField,
+                                blocContext,
+                                state.listTable,
+                                state.listTableField,
+                                state.farmerInspector ?? FarmerInspectorUpload(),
+                                state.listInputModel[index -1]
+                              ),
+                            ],
+                          ) :
+                              tableDetailResult(
+                                [state.listReport[0].questionAndPageIds[index-1]],
+                                [state.listReport[0].questionAndPageIds[index-1]],
+                                state.listSelected[index-1],
+                                state.listController[index-1],
+                                state.listControllerTable,
+                                state.listControllerTableField,
+                                blocContext,
+                                state.listTable,
+                                state.listTableField,
+                                state.farmerInspector ?? FarmerInspectorUpload(),
+                                state.listInputModel[index -1]
+                              ),
+                        );
+                      },
+                    )
+              ),
             );
           }),
         ),

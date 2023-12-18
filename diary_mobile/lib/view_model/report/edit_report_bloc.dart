@@ -41,34 +41,20 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
   void _initViewEdit(Emitter<EditReportState> emitter) {
     List<InputRegisterModel> list = [];
     print("HoangCV: state.listFarmer : ${state.listFarmer.length}");
-    if (state.indexFarmer != -1) {
-      list.add(InputRegisterModel<People, People>(
+
+    list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: state.indexFarmer ?? -1,
-          valueSelected: state.listFarmer[state.indexFarmer ?? 0],
-          listValue: state.listFarmer,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          noBorder: true,
-          hasSearch: true,
-          textAlign: TextAlign.left
-      ));
-    } else {
-      list.add(InputRegisterModel<People, People>(
-          title: "",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
+          type: TypeInputRegister.Non,
           icon: Icons.arrow_drop_down,
           positionSelected: -1,
+          controller: state.farmerController,
           listValue: state.listFarmer,
           typeInputEnum: TypeInputEnum.dmucItem,
           noBorder: true,
           hasSearch: true,
           textAlign: TextAlign.left
       ));
-    }
 
     list.add(InputRegisterModel(
         title: "",
@@ -79,34 +65,19 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         textAlign: TextAlign.center
     ));
 
-    if (state.indexInspector != -1) {
-      list.add(InputRegisterModel<People, People>(
+    list.add(InputRegisterModel<People, People>(
           title: "",
           isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: state.indexInspector ?? -1,
-          valueSelected: state.listInspector[state.indexInspector ?? 0],
-          listValue: state.listInspector,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          hasSearch: true,
-          noBorder: true,
-          textAlign: TextAlign.left
-      ));
-    } else {
-      list.add(InputRegisterModel<People, People>(
-          title: "",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
+          type: TypeInputRegister.Non,
           icon: Icons.arrow_drop_down,
           positionSelected: -1,
+          controller: state.inspectorController,
           listValue: state.listInspector,
           typeInputEnum: TypeInputEnum.dmucItem,
           hasSearch: true,
           noBorder: true,
           textAlign: TextAlign.left
       ));
-    }
 
     list.add(InputRegisterModel<String, DateTime>(
         title: "",
@@ -119,35 +90,6 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
         textAlign: TextAlign.left
       //icon: Icons.calendar_today
     ));
-
-    if (state.indexFarm != -1) {
-      list.add(InputRegisterModel<People, People>(
-          title: "",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: state.indexFarm ?? -1,
-          valueSelected: state.listFarm[state.indexFarm ?? 0],
-          listValue: state.listFarm,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          noBorder: true,
-          hasSearch: true,
-          textAlign: TextAlign.left
-      ));
-    } else {
-      list.add(InputRegisterModel<People, People>(
-          title: "",
-          isCompulsory: false,
-          type: TypeInputRegister.Select,
-          icon: Icons.arrow_drop_down,
-          positionSelected: -1,
-          listValue: state.listFarm,
-          typeInputEnum: TypeInputEnum.dmucItem,
-          noBorder: true,
-          hasSearch: true,
-          textAlign: TextAlign.left
-      ));
-    }
 
     emitter(state.copyWith(
         listWidget: list,
@@ -379,6 +321,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       OnSelectionFieldValueEvent event, Emitter<EditReportState> emit) async {
     int result;
     bool checkPass = true;
+    if(state.listFarm.isEmpty){
+      checkPass == false;
+      Toast.showLongTop("Lô trồng không thuộc quyền quản lý!\n Vui lòng kiểm tra lại.");
+      return false;
+    }
     if(checkPass) {
       result = await Extension().showBottomSheetSelection(
           event.context,
@@ -468,8 +415,8 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       listControllerTable.addAll(listCtrlTable);
 
       addTableFieldRow(report[1].surveyId[0].questionAndPageIds, listTableField, i1,
-          report[0].listFarmers[report[0].listFarmers.indexWhere((element) =>
-          element.id == report[0].farmerId)].farmIds);
+          []/*report[0].listFarmers[report[0].listFarmers.indexWhere((element) =>
+          element.id == report[0].farmerId)].farmIds*/);
       List<List<Controller>> listCtrlTableField = createTECTBListsField(listTableField,);
       listControllerTableField.addAll(listCtrlTableField);
 
@@ -513,6 +460,10 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
             text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(report[0].visitDate ?? "")),
+        farmerController: TextEditingController(
+            text: "${report[0].farmerName}"),
+        inspectorController: TextEditingController(
+            text: "${report[0].internalInspector}"),
       ));
       _initViewEdit(emitter);
 
@@ -657,11 +608,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                   clonedAnswer.tableRowId = row.rowId;
                   clonedAnswer.rowId = row.rowId;
                 }
-                int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
+                /*int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
                 element.id == clonedAnswer.linkingField);
                 if(index != -1){
                   clonedAnswer.valueRowTable = listFarm[(row.rowId ?? -1)-1].linkkinkField[index].name;
-                }
+                }*/
                 List<Answer> las = [];
                 for (Answer as in clonedAnswer.suggestedAnswerIds) {
                   Answer clonedAs = Answer.copy(as);
@@ -670,11 +621,11 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                     clonedAs.tableRowId = row.rowId;
                     clonedAs.rowId = row.rowId;
                   }
-                  int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
+                  /*int index = listFarm[(row.rowId ?? -1)-1].linkkinkField.indexWhere((element) =>
                   element.id == clonedAs.linkingField);
                   if(index != -1){
                     clonedAs.valueRowTable = listFarm[(row.rowId ?? -1)-1].linkkinkField[index].name;
-                  }
+                  }*/
                   las.add(clonedAs);
                 }
                 if (clonedAnswer.suggestedAnswerIds.isNotEmpty) {
@@ -1492,28 +1443,38 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
     }
 
     if(event.value.isNotEmpty) {
-      QuestionUpload questionUpload = QuestionUpload(
-          userInputId: state.reportId,
-          surveyId: state.listReport[0].id,
-          questionId: event.questionId,
-          suggestedAnswerId: event.answerId,
-          answerType: 'table',
-          valueText: event.value,
-          isAnswerExist: true,
-          tableRowId: event.rowId,
-          rowLinkId: state.listFarm[event.rowId -1].id,
-          listIdSuggested: []
-      );
-      ObjectResult result = await repository.uploadQuestion(questionUpload);
-      if (result.responseCode == StatusConst.code00) {
-        emit(state.copyWith(
+      if(state.listFarm.isEmpty){
+        Toast.showLongTop("Lô trồng không thuộc quyền quản lý!\n Vui lòng kiểm tra lại.");
+        return false;
+/*        emit(state.copyWith(
             isShowProgress: false,
-            reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(/*success: result.message*/)));
-      } else if (result.responseCode == StatusConst.code01){
-        emit(state.copyWith(
-            isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+            formStatus: SubmissionFailed(
+                "Lô trồng không thuộc quyền quản lý!\n Vui lòng kiểm tra lại.")));*/
+      } else {
+        QuestionUpload questionUpload = QuestionUpload(
+            userInputId: state.reportId,
+            surveyId: state.listReport[0].id,
+            questionId: event.questionId,
+            suggestedAnswerId: event.answerId,
+            answerType: 'table',
+            valueText: event.value,
+            isAnswerExist: true,
+            tableRowId: event.rowId,
+            rowLinkId: state.listFarm[event.rowId - 1].id,
+            listIdSuggested: []
+        );
+        ObjectResult result = await repository.uploadQuestion(questionUpload);
+        if (result.responseCode == StatusConst.code00) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              reportId: result.response is int ? result.response : null,
+              formStatus: SubmissionSuccess(/*success: result.message*/)));
+        } else if (result.responseCode == StatusConst.code01) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              formStatus: SubmissionFailed(
+                  "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
+        }
       }
     }
   }

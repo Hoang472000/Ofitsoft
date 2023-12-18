@@ -10,10 +10,12 @@ import '../../../resource/style.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../resource/assets.dart';
 import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/dashed_circle.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/detail_report_bloc.dart';
@@ -70,7 +72,10 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       Navigator.pop(context);
                       return false;
                     },
-                    child: state.listReport.isEmpty
+                    child: state.isShowProgress ?
+                    const Center(
+                      child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),):
+                    state.listReport.isEmpty
                         ? Container()
                         : ListView.builder(
                       scrollDirection: Axis.vertical,
@@ -369,7 +374,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
       index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
 
       if (index != -1) {
-        print("HoangCV: tableNonSelection index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        //print("HoangCV: tableNonSelection index: $index : ${element[index].toJson()} : $idRow : $idSelected");
         input = element[index].input!;
         type = element[index].type;
         return Padding(

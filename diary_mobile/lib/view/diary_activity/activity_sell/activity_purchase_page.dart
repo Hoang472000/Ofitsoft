@@ -86,7 +86,7 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
               showDefaultBackButton: true,
               callback: [updateHarvesting, listCallback],
               title: Text(
-                "HOẠT ĐỘNG MUA HÀNG",
+                "Hoạt động mua hàng",
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               ), actions: [
               BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
@@ -129,7 +129,7 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                   Visibility(
                     visible: visible,
                     child: floatingActionButton(
-                        "Ghi thu mua",
+                        "",
                         Icons.add,
                             () async {
                             var result = await Navigator.of(context).push(AddActivityPurchasePage.route());
@@ -254,38 +254,6 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        GestureDetector(
-          onTap: onTap,
-          child: Container(
-              decoration: BoxDecoration(
-                  boxShadow: const [
-                    BoxShadow(
-                      color: AppColor.gray57,
-                      blurRadius: 1,
-                      offset: Offset(0, 0),
-                    ),
-                  ],
-                  gradient: const LinearGradient(
-                    colors: [AppColor.main, AppColor.green99],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  color: Colors.white),
-              margin: const EdgeInsets.all(8.0),
-              padding: const EdgeInsets.all(8.0),
-              child: RichText(
-                text: TextSpan(
-                  text: name,
-                  style: StyleOfit.textStyleFW500(AppColor.whiteF2, 14),
-                  children: <TextSpan>[
-                    TextSpan(
-                      text: "", // Chữ bị gạch chân sẽ được thay bằng chuỗi rỗng
-                    ),
-                  ],
-                ),
-              )),
-        ),
         Container(
           decoration: BoxDecoration(
             gradient: const LinearGradient(

@@ -22,7 +22,6 @@ import '../diary_activity/activity/activity_transaction_page.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../diary_activity/record_diary/add_record_diary.dart';
 import '../manager/manager_page.dart';
-import '../report/add_report_view.dart';
 import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
@@ -240,7 +239,7 @@ class _HomeViewState extends State<HomeView> {
                                           } else if (activity.id == 6) {
                                             Navigator.push(context, ContactPage.route());
                                           } else if (activity.id == 7) {
-                                            Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                            Navigator.push(context, AddRecordDiaryPage.route("farmer"));
                                           }
                                         },
                                         child: item(activity),

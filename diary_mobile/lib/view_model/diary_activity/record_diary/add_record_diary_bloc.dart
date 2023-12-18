@@ -53,7 +53,7 @@ class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> 
           .indexWhere((element) => element.harvesting == true);
     }*/
     list.add(InputRegisterModel<Diary, Diary>(
-        title: "Tên nhật ký",
+        title: "Mùa vụ lô trồng",
         isCompulsory: true,
         type: TypeInputRegister.Select,
         icon: Icons.arrow_drop_down,

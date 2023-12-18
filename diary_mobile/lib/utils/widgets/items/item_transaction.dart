@@ -126,10 +126,8 @@ class _ItemTransactionState extends State<ItemTransaction> {
                         Container(
                           margin: const EdgeInsets.only(bottom: 5),
                           child: Text(
-                            (widget.activityDiary.isPurchase ?? false)
-                                ? "Hoạt động mua "
-                                : "Hoạt động bán",
-                            style: StyleOfit.textStyleFW700(AppColor.gray500, 16),
+                            "${widget.activityDiary.seasonFarmName}",
+                            style: StyleOfit.textStyleFW500(AppColor.black22, 15),
                           ),
                         ),
                         Container(
@@ -137,7 +135,7 @@ class _ItemTransactionState extends State<ItemTransaction> {
                             margin: const EdgeInsets.only(bottom: 5, top: 5),
                             child: RichText(
                               text: Utils.convertText(
-                                  "Thời gian GD: ",
+                                  "Ngày giao dịch: ",
                                   "${widget.activityDiary.transactionDate}",
                                   AppColor.blue15,
                                   14),
@@ -166,54 +164,51 @@ class _ItemTransactionState extends State<ItemTransaction> {
                                   "Tổng tiền: ",
                                   "${Utils.convertNumber((widget.activityDiary.unitPrice ?? 0) * (widget.activityDiary.quantity ?? 0))}",
                                   AppColor.blue15,
-                                  14, isMoney: true, buildContext: context),
+                                  14),
                               maxLines: 3,
                               overflow: TextOverflow.ellipsis,
                             )),
                       ],
                     ),
                   ),
-                  Flexible(
-                    flex: 1,
-                    child: SizedBox(
-                      height: 50,
-                      width: 50,
-                      child: widget.action == "sell" &&
-                          ((widget.diary.status ?? '').compareTo("done") == 0 ||
-                                  (widget.diary.status ?? '')
-                                          .compareTo("cancelled") ==
-                                      0)
-                              ? Container()
-                              : IconButton(
-                                  padding: EdgeInsets.only(left: 16, right: 4),
-                                  icon: const Image(
-                                    image: AssetImage(ImageAsset.imageBin),
-                                    //width: 40,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  onPressed: () {
-                                    DiaLogManager.displayDialog(context, "",
-                                        "Bạn có muốn xóa hoạt động này không.", () {
-                                      Get.back();
-                                      widget.callbackDelete();
-                                    }, () {
-                                      Get.back();
-                                    }, S.of(context).no, S.of(context).yes);
-                                  },
-                                ),
-                    ),
-                  ),
-              IconButton(
-                    padding: EdgeInsets.only(left: 16, right: 4),
-                    icon: const Image(
+                  IconButton(
+                    //padding: EdgeInsets.only(left: 16, right: 4),
+                    icon: const Icon(Icons.file_download_outlined, color: AppColor.back09,size: 30,)/*Image(
                       image: AssetImage(ImageAsset.imageInfo),
                       //width: 40,
                       fit: BoxFit.contain,
-                    ),
+                    )*/,
                     onPressed: () {
-             widget.callbackExport();
+                      widget.callbackExport();
                     },
-                  )
+                  ),
+                  SizedBox(
+                    height: 44,
+                    width: 44,
+                    child: widget.action == "sell" &&
+                        ((widget.diary.status ?? '').compareTo("done") == 0 ||
+                                (widget.diary.status ?? '')
+                                        .compareTo("cancelled") ==
+                                    0)
+                            ? Container()
+                            : IconButton(
+                                padding: EdgeInsets.only(left: 16, right: 4),
+                                icon: const Image(
+                                  image: AssetImage(ImageAsset.imageBin),
+                                  //width: 40,
+                                  fit: BoxFit.contain,
+                                ),
+                                onPressed: () {
+                                  DiaLogManager.displayDialog(context, "",
+                                      "Bạn có muốn xóa hoạt động này không.", () {
+                                    Get.back();
+                                    widget.callbackDelete();
+                                  }, () {
+                                    Get.back();
+                                  }, S.of(context).no, S.of(context).yes);
+                                },
+                              ),
+                  ),
                 ],
               ),
             ),
