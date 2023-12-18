@@ -1441,175 +1441,645 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
     emit(state.copyWith(
         isShowProgress: true, formStatus: const InitialFormStatus()));
 
-    bool submit = true;
-    List<Question> listQs = state.listReport[0].questionAndPageIds;
-    for (int i = 0; i < listQs.length; i++) {
-      bool checkBreak = false;
-      print("HoangCV: title: ${listQs[i].title}");
-      for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-        print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i].questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h].constrMandatory}");
-        if (listQs[i].questionAndPageIds[h].constrMandatory == true) {
-          print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].title}");
-          String qsType = listQs[i].questionAndPageIds[h].questionType ?? "";
-          Question qs = listQs[i].questionAndPageIds[h];
-          if(qsType == "check_box"){
-            int indexQs = -1;
-            state.listSelected.forEach((element) {
-              indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-              if(indexQs != -1){
-                //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                if(qs.commentAnswer == true){
-                  if(!element[indexQs].value){
-
-                    checkBreak = true;
-                    listQs[i].questionAndPageIds[h].isError = true;
-                    Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
-                    submit = false;
-                  } else{
-                    int indexCtrl = -1;
-                    state.listController.forEach((element) {
-                      indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                      if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
-                        checkBreak = true;
-                        listQs[i].questionAndPageIds[h].isError = true;
-                        Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
-                        submit = false;
-                      }
-                    });
-                  }
-                }
-              }
-            });
-          }
-          else if(qsType == "simple_choice" || qsType == "multi_choice" ){
-            int indexAs = -1;
-            bool checkPass = false;
-            state.listSelected.forEach((element) {
-              for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
-                indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                if(indexAs != -1) {
-                  if(element[indexAs].value){
-                    print("HoangCVqs.suggestedAnswerIds[a]: ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
-                    checkPass = true;
-                    if(qs.suggestedAnswerIds[a].commentAnswer == true){
+    if(state.reportId != null) {
+      bool submit = true;
+      List<Question> listQs = state.listReport[0].questionAndPageIds;
+      for (int i = 0; i < listQs.length; i++) {
+        bool checkBreak = false;
+        print("HoangCV: title: ${listQs[i].title}");
+        for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+          print("HoangCV: listQs[i].questionAndPageIds: ${listQs[i]
+              .questionAndPageIds[h].title} : ${listQs[i].questionAndPageIds[h]
+              .constrMandatory}");
+          if (listQs[i].questionAndPageIds[h].constrMandatory == true) {
+            print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].title}");
+            String qsType = listQs[i].questionAndPageIds[h].questionType ?? "";
+            Question qs = listQs[i].questionAndPageIds[h];
+            if (qsType == "check_box") {
+              int indexQs = -1;
+              state.listSelected.forEach((element) {
+                indexQs = element.indexWhere((el) => el.id == qs.idSelected);
+                if (indexQs != -1) {
+                  //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                  if (qs.commentAnswer == true) {
+                    if (!element[indexQs].value) {
+                      checkBreak = true;
+                      listQs[i].questionAndPageIds[h].isError = true;
+                      Toast.showLongTop(
+                          "Vui lòng chọn đáp án cho câu ${listQs[i]
+                              .questionAndPageIds[h].title}");
+                      submit = false;
+                    } else {
                       int indexCtrl = -1;
                       state.listController.forEach((element) {
-                        indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
+                        indexCtrl = element.indexWhere((el) =>
+                        el.id == qs.idSelected);
+                        if (indexCtrl != -1 &&
+                            element[indexCtrl].controller.text.isEmpty) {
                           checkBreak = true;
-                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].isError = true;
+                          listQs[i].questionAndPageIds[h].isError = true;
                           Toast.showLongTop(
-                              "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
+                              "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                  .questionAndPageIds[h].title}");
                           submit = false;
                         }
                       });
                     }
-                    for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
-                      int indexQS;
-                      state.listSelected.forEach((element) {
-                        for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
-                          indexQS = element.indexWhere((el) => el.id ==
-                              qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                          if (indexQS != -1) {
-                            print("HoangCASCSDV:");
-                            if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
-                              if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
-                                  .commentAnswer == true) {
-                                if (element[indexAs].value) {
-                                  int indexCtrl = -1;
-                                  state.listController.forEach((element) {
-                                    indexCtrl = element.indexWhere((el) =>
-                                    el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                                    if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
-                                      checkBreak = true;
-                                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
-                                      print("HoangCVqs.questionAndPageIds[b]: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[a].questionAndPageIds[b].title}");
-                                      Toast.showLongTop(
-                                          "Vui lòng nhập đáp án cho câu "
-                                              "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
-                                      submit = false;
-                                    }
-                                  });
-                                }
-                                if (!submit) {
-                                  break;
-                                }
-                              }
-                            }
-                            else {
-                              if (!element[indexQS].value) {
-                                checkBreak = true;
-                                listQs[i].questionAndPageIds[h].isError = true;
-                                print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title}");
-                                Toast.showLongTop(
-                                    "Vui lòng chọn đáp án cho câu ${listQs[i]
-                                        .questionAndPageIds[h].title}");
-                                submit = false;
-                                break;
-                              }
-                            }
-                          }
-                        }
-                      });
-                    }
                   }
                 }
-              }
-            });
-            if(!checkPass) {
-              print("HjoangCV : ${qs.title}");
+              });
+            }
+            else if (qsType == "simple_choice" || qsType == "multi_choice") {
+              int indexAs = -1;
+              bool checkPass = false;
               state.listSelected.forEach((element) {
                 for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
                   indexAs = element.indexWhere((el) => el.id ==
                       qs.suggestedAnswerIds[a].idSelected);
                   if (indexAs != -1) {
-                    //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                    if (qs.suggestedAnswerIds[a].commentAnswer == true) {
-                      if (!element[indexAs].value) {
-                        checkBreak = true;
-                        listQs[i].questionAndPageIds[h].isError = true;
-                        Toast.showLongTop(
-                            "Vui lòng chọn đáp án cho câu ${listQs[i]
-                                .questionAndPageIds[h].title}");
-                        submit = false;
-                      } else {
+                    if (element[indexAs].value) {
+                      print("HoangCVqs.suggestedAnswerIds[a]: ${qs
+                          .suggestedAnswerIds[a].value} : ${qs
+                          .suggestedAnswerIds[a].commentAnswer}");
+                      checkPass = true;
+                      if (qs.suggestedAnswerIds[a].commentAnswer == true) {
                         int indexCtrl = -1;
                         state.listController.forEach((element) {
                           indexCtrl = element.indexWhere((el) =>
-                          el.id == qs.idSelected);
+                          el.id == qs.suggestedAnswerIds[a].idSelected);
                           if (indexCtrl != -1 &&
                               element[indexCtrl].controller.text.isEmpty) {
                             checkBreak = true;
-                            listQs[i].questionAndPageIds[h].isError = true;
+                            listQs[i].questionAndPageIds[h]
+                                .suggestedAnswerIds[a].isError = true;
                             Toast.showLongTop(
-                                "Vui lòng nhập đáp án cho câu ${listQs[i]
-                                    .questionAndPageIds[h].title}");
+                                "Vui lòng nhập đáp án cho câu ${qs
+                                    .suggestedAnswerIds[a].value}");
                             submit = false;
                           }
                         });
                       }
-                      if (!submit) {
-                        break;
+                      for (int b = 0; b <
+                          qs.suggestedAnswerIds[a].questionAndPageIds
+                              .length; b++) {
+                        int indexQS;
+                        state.listSelected.forEach((element) {
+                          for (int a = 0; a <
+                              qs.suggestedAnswerIds[a].questionAndPageIds
+                                  .length; a++) {
+                            indexQS = element.indexWhere((el) =>
+                            el.id ==
+                                qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                    .idSelected);
+                            if (indexQS != -1) {
+                              print("HoangCASCSDV:");
+                              if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
+                                  .questionType == "check_box") {
+                                if (qs.suggestedAnswerIds[a]
+                                    .questionAndPageIds[b]
+                                    .commentAnswer == true) {
+                                  if (element[indexAs].value) {
+                                    int indexCtrl = -1;
+                                    state.listController.forEach((element) {
+                                      indexCtrl = element.indexWhere((el) =>
+                                      el.id == qs.suggestedAnswerIds[a]
+                                          .questionAndPageIds[b].idSelected);
+                                      if (indexCtrl != -1 &&
+                                          element[indexCtrl].controller.text
+                                              .isEmpty) {
+                                        checkBreak = true;
+                                        listQs[i].questionAndPageIds[h]
+                                            .suggestedAnswerIds[a]
+                                            .questionAndPageIds[b].isError =
+                                        true;
+                                        print(
+                                            "HoangCVqs.questionAndPageIds[b]: ${listQs[i]
+                                                .questionAndPageIds[h]
+                                                .suggestedAnswerIds[a]
+                                                .questionAndPageIds[b].title}");
+                                        Toast.showLongTop(
+                                            "Vui lòng nhập đáp án cho câu "
+                                                "${qs.suggestedAnswerIds[a]
+                                                .questionAndPageIds[b].title}");
+                                        submit = false;
+                                      }
+                                    });
+                                  }
+                                  if (!submit) {
+                                    break;
+                                  }
+                                }
+                              }
+                              else {
+                                if (!element[indexQS].value) {
+                                  checkBreak = true;
+                                  listQs[i].questionAndPageIds[h].isError =
+                                  true;
+                                  print("HoangCV:buubu ${listQs[i]
+                                      .questionAndPageIds[h].title}");
+                                  Toast.showLongTop(
+                                      "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                          .questionAndPageIds[h].title}");
+                                  submit = false;
+                                  break;
+                                }
+                              }
+                            }
+                          }
+                        });
                       }
                     }
-                    else {
-                      if (!element[indexAs].value) {
-                        (state.scrollController?? AutoScrollController()).scrollToIndex(
-                          i,
-                          preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
-                          //duration: Duration(seconds: 1), // Duration of the scroll animation
-                        );
+                  }
+                }
+              });
+              if (!checkPass) {
+                print("HjoangCV : ${qs.title}");
+                state.listSelected.forEach((element) {
+                  for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                    indexAs = element.indexWhere((el) =>
+                    el.id ==
+                        qs.suggestedAnswerIds[a].idSelected);
+                    if (indexAs != -1) {
+                      //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                      if (qs.suggestedAnswerIds[a].commentAnswer == true) {
+                        if (!element[indexAs].value) {
+                          checkBreak = true;
+                          listQs[i].questionAndPageIds[h].isError = true;
+                          Toast.showLongTop(
+                              "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                  .questionAndPageIds[h].title}");
+                          submit = false;
+                        } else {
+                          int indexCtrl = -1;
+                          state.listController.forEach((element) {
+                            indexCtrl = element.indexWhere((el) =>
+                            el.id == qs.idSelected);
+                            if (indexCtrl != -1 &&
+                                element[indexCtrl].controller.text.isEmpty) {
+                              checkBreak = true;
+                              listQs[i].questionAndPageIds[h].isError = true;
+                              Toast.showLongTop(
+                                  "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                      .questionAndPageIds[h].title}");
+                              submit = false;
+                            }
+                          });
+                        }
+                        if (!submit) {
+                          break;
+                        }
+                      }
+                      else {
+                        if (!element[indexAs].value) {
+                          (state.scrollController ?? AutoScrollController())
+                              .scrollToIndex(
+                            i,
+                            preferPosition: AutoScrollPosition
+                                .begin, // Scroll position (begin, middle, end)
+                            //duration: Duration(seconds: 1), // Duration of the scroll animation
+                          );
+                          checkBreak = true;
+                          listQs[i].questionAndPageIds[h].isError = true;
+
+                          print("HoangCV:buubu ${listQs[i].questionAndPageIds[h]
+                              .title} : "
+                              "$i : ${state.scrollController}");
+
+                          Toast.showLongTop(
+                              "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                  .questionAndPageIds[h].title}");
+                          submit = false;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                });
+              }
+            }
+            else {
+              int indexCtrl = -1;
+              state.listController.forEach((element) {
+                indexCtrl = element.indexWhere((el) =>
+                el.id == qs.idSelected);
+                if (indexCtrl != -1 &&
+                    element[indexCtrl].controller.text.isEmpty) {
+                  checkBreak = true;
+                  listQs[i].questionAndPageIds[h].isError = true;
+                  Toast.showLongTop(
+                      "Vui lòng nhập đáp án cho câu ${listQs[i]
+                          .questionAndPageIds[h].title}");
+                  submit = false;
+                }
+              });
+            }
+            if (!submit) {
+              break;
+            }
+          } else {
+            for (int l = 0;
+            l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
+            l++) {
+              print(
+                  "HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i]
+                      .questionAndPageIds[h].questionAndPageIds[l].title} :"
+                      " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                      .constrMandatory} ");
+              if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                  .constrMandatory == true) {
+                String qsType = listQs[i].questionAndPageIds[h]
+                    .questionAndPageIds[l].questionType ?? "";
+                Question qs = listQs[i].questionAndPageIds[h]
+                    .questionAndPageIds[l];
+                print("HoanmgCV:l: ${qs.title} : ${qsType}");
+                if (qsType == "check_box") {
+                  int indexQs = -1;
+                  state.listSelected.forEach((element) {
+                    indexQs =
+                        element.indexWhere((el) => el.id == qs.idSelected);
+                    if (indexQs != -1) {
+                      //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                      if (qs.commentAnswer == true) {
+                        if (!element[indexQs].value) {
+                          checkBreak = true;
+                          listQs[i].questionAndPageIds[h].isError = true;
+                          Toast.showLongTop(
+                              "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                  .questionAndPageIds[h].title}");
+                          submit = false;
+                        } else {
+                          int indexCtrl = -1;
+                          state.listController.forEach((element) {
+                            indexCtrl = element.indexWhere((el) => el.id ==
+                                qs.idSelected);
+                            if (indexCtrl != -1 &&
+                                element[indexCtrl].controller.text.isEmpty) {
+                              checkBreak = true;
+                              listQs[i].questionAndPageIds[h].isError = true;
+                              Toast.showLongTop(
+                                  "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                      .questionAndPageIds[h].title}");
+                              submit = false;
+                            }
+                          });
+                        }
+                      }
+                    }
+                  });
+                } else
+                if (qsType == "simple_choice" || qsType == "multi_choice") {
+                  int indexAs = -1;
+                  bool checkPass = false;
+                  state.listSelected.forEach((element) {
+                    for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                      indexAs = element.indexWhere((el) => el.id ==
+                          qs.suggestedAnswerIds[a].idSelected);
+                      if (indexAs != -1) {
+                        if (element[indexAs].value) {
+                          print("HoangCVqs.suggestedAnswerIds[a] sub : ${qs
+                              .suggestedAnswerIds[a].value} : ${qs
+                              .suggestedAnswerIds[a].commentAnswer}");
+                          checkPass = true;
+                          if (qs.suggestedAnswerIds[a].commentAnswer == true) {
+                            int indexCtrl = -1;
+                            state.listController.forEach((element) {
+                              indexCtrl = element.indexWhere((el) => el.id ==
+                                  qs.suggestedAnswerIds[a].idSelected);
+                              if (indexCtrl != -1 &&
+                                  element[indexCtrl].controller.text.isEmpty) {
+                                checkBreak = true;
+                                qs.suggestedAnswerIds[a].isError = true;
+                                Toast.showLongTop(
+                                    "Vui lòng nhập đáp án cho câu ${qs
+                                        .suggestedAnswerIds[a].value}");
+                                submit = false;
+                              }
+                            });
+                          }
+                          for (int b = 0; b < qs.suggestedAnswerIds[a]
+                              .questionAndPageIds.length; b++) {
+                            int indexQS;
+                            state.listSelected.forEach((element) {
+                              for (int a = 0; a <
+                                  qs.suggestedAnswerIds[a].questionAndPageIds
+                                      .length; a++) {
+                                indexQS = element.indexWhere((el) =>
+                                el.id ==
+                                    qs.suggestedAnswerIds[a]
+                                        .questionAndPageIds[b].idSelected);
+                                if (indexQS != -1) {
+                                  print("HoangCASCSDV sub:");
+                                  if (qs.suggestedAnswerIds[a]
+                                      .questionAndPageIds[b].questionType ==
+                                      "check_box") {
+                                    if (qs.suggestedAnswerIds[a]
+                                        .questionAndPageIds[b]
+                                        .commentAnswer == true) {
+                                      if (element[indexAs].value) {
+                                        int indexCtrl = -1;
+                                        state.listController.forEach((element) {
+                                          indexCtrl = element.indexWhere((el) =>
+                                          el.id == qs.suggestedAnswerIds[a]
+                                              .questionAndPageIds[b]
+                                              .idSelected);
+                                          if (indexCtrl != -1 &&
+                                              element[indexCtrl].controller.text
+                                                  .isEmpty) {
+                                            checkBreak = true;
+                                            qs.suggestedAnswerIds[a]
+                                                .questionAndPageIds[b].isError =
+                                            true;
+                                            print(
+                                                "HoangCVqs.questionAndPageIds[b] sub : ${qs
+                                                    .suggestedAnswerIds[a]
+                                                    .questionAndPageIds[b]
+                                                    .title}");
+                                            Toast.showLongTop(
+                                                "Vui lòng nhập đáp án cho câu "
+                                                    "${qs.suggestedAnswerIds[a]
+                                                    .questionAndPageIds[b]
+                                                    .title}");
+                                            submit = false;
+                                          }
+                                        });
+                                      }
+                                      if (!submit) {
+                                        break;
+                                      }
+                                    }
+                                  }
+                                  else {
+                                    if (!element[indexQS].value) {
+                                      checkBreak = true;
+                                      qs.isError = true;
+                                      print("HoangCV:buubu sub: ${qs.title}");
+                                      Toast.showLongTop(
+                                          "Vui lòng chọn đáp án cho câu ${qs
+                                              .title}");
+                                      submit = false;
+                                      break;
+                                    }
+                                  }
+                                }
+                              }
+                            });
+                          }
+                        }
+                      }
+                    }
+                  });
+                  if (!checkPass) {
+                    print("HjoangCV sub : ${qs.title}");
+                    state.listSelected.forEach((element) {
+                      for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
+                        indexAs = element.indexWhere((el) =>
+                        el.id ==
+                            qs.suggestedAnswerIds[a].idSelected);
+                        if (indexAs != -1) {
+                          //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                          if (qs.suggestedAnswerIds[a].commentAnswer == true) {
+                            if (!element[indexAs].value) {
+                              checkBreak = true;
+                              qs.isError = true;
+                              Toast.showLongTop(
+                                  "Vui lòng chọn đáp án cho câu ${listQs[i]
+                                      .questionAndPageIds[h].title}");
+                              submit = false;
+                            } else {
+                              int indexCtrl = -1;
+                              state.listController.forEach((element) {
+                                indexCtrl = element.indexWhere((el) =>
+                                el.id == qs.idSelected);
+                                if (indexCtrl != -1 &&
+                                    element[indexCtrl].controller.text
+                                        .isEmpty) {
+                                  checkBreak = true;
+                                  qs.isError = true;
+                                  Toast.showLongTop(
+                                      "Vui lòng nhập đáp án cho câu ${listQs[i]
+                                          .questionAndPageIds[h].title}");
+                                  submit = false;
+                                }
+                              });
+                            }
+                            if (!submit) {
+                              break;
+                            }
+                          }
+                          else {
+                            if (!element[indexAs].value) {
+                              (state.scrollController ?? AutoScrollController())
+                                  .scrollToIndex(
+                                i,
+                                preferPosition: AutoScrollPosition
+                                    .begin, // Scroll position (begin, middle, end)
+                                //duration: Duration(seconds: 1), // Duration of the scroll animation
+                              );
+                              checkBreak = true;
+                              qs.isError = true;
+
+                              print("HoangCV:buubu sub 1: ${qs.title} : "
+                                  "$i : ${state.scrollController}");
+
+                              Toast.showLongTop(
+                                  "Vui lòng chọn đáp án cho câu ${qs.title}");
+                              submit = false;
+                              break;
+                            }
+                          }
+                        }
+                      }
+                    });
+                  }
+                }
+                else {
+                  checkBreak = true;
+                  qs.isError = true;
+                  Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i]
+                      .questionAndPageIds[h].title}");
+                  submit = false;
+                }
+              } else {
+                for (int m = 0;
+                m < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                    .suggestedAnswerIds.length;
+                m++) {
+                  for (int n = 0;
+                  n < listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                      .suggestedAnswerIds[m].questionAndPageIds.length;
+                  n++) {
+                    if (listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                        .suggestedAnswerIds[m].
+                    questionAndPageIds[n].constrMandatory == true) {
+                      print("HoanmgCV:n: ${listQs[i].questionAndPageIds[h]
+                          .questionAndPageIds[l].suggestedAnswerIds[m]
+                          .questionAndPageIds[n].title}");
+                      String qsType = listQs[i].questionAndPageIds[h]
+                          .questionAndPageIds[l].suggestedAnswerIds[m]
+                          .questionAndPageIds[n].questionType ?? "";
+                      Question qs = listQs[i].questionAndPageIds[h]
+                          .questionAndPageIds[l].suggestedAnswerIds[m]
+                          .questionAndPageIds[n];
+                      if (qsType == "simple_choice" ||
+                          qsType == "multi_choice" || qsType == "check_box") {
+                        int indexQs = -1;
+                        state.listSelected.forEach((element) {
+                          indexQs = element.indexWhere((el) =>
+                          el.id == qs.idSelected);
+                          if (indexQs != -1) {
+                            //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                            if (qs.commentAnswer == true) {
+                              if (!element[indexQs].value) {
+                                checkBreak = true;
+                                listQs[i].questionAndPageIds[h]
+                                    .questionAndPageIds[l].suggestedAnswerIds[m]
+                                    .questionAndPageIds[n].isError = true;
+                                Toast.showLongTop(
+                                    "Vui lòng chọn đáp án cho câu "
+                                        "${listQs[i].questionAndPageIds[h]
+                                        .questionAndPageIds[l]
+                                        .suggestedAnswerIds[m]
+                                        .questionAndPageIds[n].title}");
+                                submit = false;
+                              } else {
+                                int indexCtrl = -1;
+                                state.listController.forEach((element) {
+                                  indexCtrl =
+                                      element.indexWhere((el) => el.id ==
+                                          qs.idSelected);
+                                  if (indexCtrl != -1 &&
+                                      element[indexCtrl].controller.text
+                                          .isEmpty) {
+                                    checkBreak = true;
+                                    listQs[i].questionAndPageIds[h]
+                                        .questionAndPageIds[l]
+                                        .suggestedAnswerIds[m]
+                                        .questionAndPageIds[n].isError = true;
+                                    Toast.showLongTop(
+                                        "Vui lòng nhập đáp án cho câu "
+                                            "${listQs[i].questionAndPageIds[h]
+                                            .questionAndPageIds[l]
+                                            .suggestedAnswerIds[m]
+                                            .questionAndPageIds[n].title}");
+                                    submit = false;
+                                  }
+                                });
+                              }
+                            }
+                          }
+                        });
+                      } else {
                         checkBreak = true;
-                        listQs[i].questionAndPageIds[h].isError = true;
-
-                        print("HoangCV:buubu ${listQs[i].questionAndPageIds[h].title} : "
-                            "$i : ${state.scrollController}");
-
-                        Toast.showLongTop(
-                            "Vui lòng chọn đáp án cho câu ${listQs[i]
-                                .questionAndPageIds[h].title}");
+                        listQs[i].questionAndPageIds[h].questionAndPageIds[l]
+                            .suggestedAnswerIds[m].questionAndPageIds[n]
+                            .isError = true;
+                        Toast.showLongTop("Vui lòng nhập đáp án cho câu "
+                            "${listQs[i].questionAndPageIds[h]
+                            .questionAndPageIds[l].suggestedAnswerIds[m]
+                            .questionAndPageIds[n].title}");
                         submit = false;
-                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            for (int l = 0;
+            l < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
+            l++) {
+              print("HoangCV: listQs[i].suggestedAnswerIds: ${listQs[i]
+                  .questionAndPageIds[h].suggestedAnswerIds[l].value}");
+              int indexAsSub = -1;
+              state.listSelected.forEach((element) {
+                indexAsSub = element.indexWhere((el) => el.id ==
+                    listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                        .idSelected);
+                if (indexAsSub != -1) {
+                  if (element[indexAsSub].value) {
+                    for (int u = 0; u <
+                        listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                            .questionAndPageIds.length; u++) {
+                      print("HoangCV: listQs[i].questionAndPageIds u:: "
+                          "${listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[l].questionAndPageIds[u]
+                          .title} : "
+                          "${listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[l].questionAndPageIds[u]
+                          .constrMandatory}");
+                      if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[l]
+                          .questionAndPageIds[u].constrMandatory == true) {
+                        print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[l].questionAndPageIds[u]
+                            .title}");
+                        String qsType = listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[l].questionAndPageIds[u]
+                            .questionType ?? "";
+                        Question qs = listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[l].questionAndPageIds[u];
+                        if (qsType == "check_box") {
+                          int indexQs = -1;
+                          //check box: ko tích thì vẫn là ko , còn nếu tích thì phải check comment answer
+                          state.listSelected.forEach((element) {
+                            indexQs = element.indexWhere((el) => el.id ==
+                                qs.idSelected);
+                            if (indexQs != -1) {
+                              //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
+                              if (qs.commentAnswer == true) {
+                                if (!element[indexQs].value) {
+                                  checkBreak = true;
+                                  listQs[i].questionAndPageIds[h]
+                                      .suggestedAnswerIds[l]
+                                      .questionAndPageIds[u].isError = true;
+                                  Toast.showLongTop(
+                                      "Vui lòng chọn đáp án cho câu ${qs
+                                          .title}");
+                                  submit = false;
+                                } else {
+                                  int indexCtrl = -1;
+                                  state.listController.forEach((element) {
+                                    indexCtrl =
+                                        element.indexWhere((el) => el.id ==
+                                            qs.idSelected);
+                                    if (indexCtrl != -1 &&
+                                        element[indexCtrl].controller.text
+                                            .isEmpty) {
+                                      checkBreak = true;
+                                      listQs[i].questionAndPageIds[h]
+                                          .suggestedAnswerIds[l]
+                                          .questionAndPageIds[u].isError = true;
+                                      Toast.showLongTop(
+                                          "Vui lòng nhập đáp án cho câu ${qs
+                                              .title}");
+                                      submit = false;
+                                    }
+                                  });
+                                }
+                              }
+                            }
+                          });
+                        } else if (qsType == "simple_choice" ||
+                            qsType == "multi_choice") {
+
+                        } else {
+                          int indexCtrl = -1;
+                          state.listController.forEach((element) {
+                            indexCtrl = element.indexWhere((el) => el.id ==
+                                qs.idSelected);
+                            if (indexCtrl != -1 &&
+                                element[indexCtrl].controller.text.isEmpty) {
+                              checkBreak = true;
+                              listQs[i].questionAndPageIds[h]
+                                  .suggestedAnswerIds[l].questionAndPageIds[u]
+                                  .isError = true;
+                              Toast.showLongTop(
+                                  "Vui lòng nhập đáp án cho câu ${qs.title}");
+                              submit = false;
+                            }
+                          });
+                        }
+                        if (!submit) {
+                          break;
+                        }
                       }
                     }
                   }
@@ -1617,415 +2087,126 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               });
             }
           }
-          else{
-            int indexCtrl = -1;
-            state.listController.forEach((element) {
-              indexCtrl = element.indexWhere((el) =>
-              el.id == qs.idSelected);
-              if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
-                checkBreak = true;
-                listQs[i].questionAndPageIds[h].isError = true;
-                Toast.showLongTop(
-                    "Vui lòng nhập đáp án cho câu ${listQs[i]
-                        .questionAndPageIds[h].title}");
-                submit = false;
-              }
-            });
-          }
-          if(!submit){
-            break;
-          }
-        } else {
-          for (int l = 0;
-          l < listQs[i].questionAndPageIds[h].questionAndPageIds.length;
-          l++) {
-            print("HoangCV: listQs[i].questionAndPageIds,questionAndPageIds: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].title} :"
-                " ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory} ");
-            if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].constrMandatory == true) {
-              String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].questionType ?? "";
-              Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l];
-              print("HoanmgCV:l: ${qs.title} : ${qsType}");
-              if(qsType == "check_box"){
-                int indexQs = -1;
-                state.listSelected.forEach((element) {
-                  indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                  if(indexQs != -1){
-                    //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                    if(qs.commentAnswer == true){
-                      if(!element[indexQs].value){
-                        checkBreak = true;
-                        listQs[i].questionAndPageIds[h].isError = true;
-                        Toast.showLongTop("Vui lòng chọn đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
+        }
+        if (checkBreak) {
+          print("HoangCV: index: $i");
+          state.scrollController!.scrollToIndex(
+              i + 1, preferPosition: AutoScrollPosition.begin);
+          break;
+        }
+      }
+      if (submit) {
+        bool checkBreak = false;
+        for (var element in state.listControllerTable) {
+          for (var e in element) {
+            print("HoangCV: table controller: ${e.title} : ${e.value} : ${e
+                .controller.text.isEmpty} : ${e.constrMandatory}");
+            if (e.constrMandatory == true && e.controller.text.isEmpty) {
+              for (int i = 0; i < listQs.length; i++) {
+                for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
+                  if (listQs[i].questionAndPageIds[h].questionType == "table") {
+                    for (int k = 0; k <
+                        listQs[i].questionAndPageIds[h].suggestedAnswerIds
+                            .length; k++) {
+                      print("HoangCV: table controller: ${e.value} : ${e
+                          .idRow} : ${e.id} :"
+                          " ${listQs[i].questionAndPageIds[h]
+                          .suggestedAnswerIds[k].idSelected} : $checkBreak");
+                      if (e.id ==
+                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                              .idSelected) {
+                        listQs[i].questionAndPageIds[h].suggestedAnswerIds[k]
+                            .isError = true;
+                        if (!checkBreak) {
+                          Toast.showLongTop(
+                              "Vui lòng nhập đáp án cho cột ${e.value}");
+                        }
                         submit = false;
-                      } else{
-                        int indexCtrl = -1;
-                        state.listController.forEach((element) {
-                          indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                          if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
-                            checkBreak = true;
-                            listQs[i].questionAndPageIds[h].isError = true;
-                            Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
-                            submit = false;
-                          }
-                        });
+                        checkBreak = true;
                       }
-                    }
-                  }
-                });
-              } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
-                int indexAs = -1;
-                bool checkPass = false;
-                state.listSelected.forEach((element) {
-                  for(int a = 0 ; a< qs.suggestedAnswerIds.length; a++) {
-                    indexAs = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                    if(indexAs != -1) {
-                      if(element[indexAs].value){
-                        print("HoangCVqs.suggestedAnswerIds[a] sub : ${qs.suggestedAnswerIds[a].value} : ${qs.suggestedAnswerIds[a].commentAnswer}");
-                        checkPass = true;
-                        if(qs.suggestedAnswerIds[a].commentAnswer == true){
-                          int indexCtrl = -1;
-                          state.listController.forEach((element) {
-                            indexCtrl = element.indexWhere((el) => el.id == qs.suggestedAnswerIds[a].idSelected);
-                            if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
-                              checkBreak = true;
-                              qs.suggestedAnswerIds[a].isError = true;
+                      else {
+                        for (int l = 0; l < listQs[i].questionAndPageIds[h]
+                            .suggestedAnswerIds[k].suggestedAnswerIds
+                            .length; l++) {
+                          print("HoangCV: table controller:sub ${e.value} : ${e
+                              .idRow} : ${e.id} : "
+                              "${listQs[i].questionAndPageIds[h]
+                              .suggestedAnswerIds[k].suggestedAnswerIds[l]
+                              .idSelected} : $checkBreak");
+                          if (e.id == listQs[i].questionAndPageIds[h]
+                              .suggestedAnswerIds[k].suggestedAnswerIds[l]
+                              .idSelected) {
+                            listQs[i].questionAndPageIds[h]
+                                .suggestedAnswerIds[k].suggestedAnswerIds[l]
+                                .isError = true;
+                            if (!checkBreak) {
                               Toast.showLongTop(
-                                  "Vui lòng nhập đáp án cho câu ${qs.suggestedAnswerIds[a].value}");
-                              submit = false;
+                                  "Vui lòng nhập đáp án cho cột ${e.value}");
                             }
-                          });
-                        }
-                        for(int b = 0 ; b< qs.suggestedAnswerIds[a].questionAndPageIds.length; b++) {
-                          int indexQS;
-                          state.listSelected.forEach((element) {
-                            for (int a = 0; a < qs.suggestedAnswerIds[a].questionAndPageIds.length; a++) {
-                              indexQS = element.indexWhere((el) => el.id ==
-                                  qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                              if (indexQS != -1) {
-                                print("HoangCASCSDV sub:");
-                                if(qs.suggestedAnswerIds[a].questionAndPageIds[b].questionType == "check_box") {
-                                  if (qs.suggestedAnswerIds[a].questionAndPageIds[b]
-                                      .commentAnswer == true) {
-                                    if (element[indexAs].value) {
-                                      int indexCtrl = -1;
-                                      state.listController.forEach((element) {
-                                        indexCtrl = element.indexWhere((el) =>
-                                        el.id == qs.suggestedAnswerIds[a].questionAndPageIds[b].idSelected);
-                                        if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
-                                          checkBreak = true;
-                                          qs.suggestedAnswerIds[a].questionAndPageIds[b].isError = true;
-                                          print("HoangCVqs.questionAndPageIds[b] sub : ${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
-                                          Toast.showLongTop(
-                                              "Vui lòng nhập đáp án cho câu "
-                                                  "${qs.suggestedAnswerIds[a].questionAndPageIds[b].title}");
-                                          submit = false;
-                                        }
-                                      });
-                                    }
-                                    if (!submit) {
-                                      break;
-                                    }
-                                  }
-                                }
-                                else {
-                                  if (!element[indexQS].value) {
-                                    checkBreak = true;
-                                    qs.isError = true;
-                                    print("HoangCV:buubu sub: ${qs.title}");
-                                    Toast.showLongTop(
-                                        "Vui lòng chọn đáp án cho câu ${qs.title}");
-                                    submit = false;
-                                    break;
-                                  }
-                                }
-                              }
-                            }
-                          });
+                            submit = false;
+                            checkBreak = true;
+                          }
                         }
                       }
+                    }
+                    if (checkBreak) {
+                      break;
                     }
                   }
-                });
-                if(!checkPass) {
-                  print("HjoangCV sub : ${qs.title}");
-                  state.listSelected.forEach((element) {
-                    for (int a = 0; a < qs.suggestedAnswerIds.length; a++) {
-                      indexAs = element.indexWhere((el) => el.id ==
-                          qs.suggestedAnswerIds[a].idSelected);
-                      if (indexAs != -1) {
-                        //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                        if (qs.suggestedAnswerIds[a].commentAnswer == true) {
-                          if (!element[indexAs].value) {
-                            checkBreak = true;
-                            qs.isError = true;
-                            Toast.showLongTop(
-                                "Vui lòng chọn đáp án cho câu ${listQs[i]
-                                    .questionAndPageIds[h].title}");
-                            submit = false;
-                          } else {
-                            int indexCtrl = -1;
-                            state.listController.forEach((element) {
-                              indexCtrl = element.indexWhere((el) =>
-                              el.id == qs.idSelected);
-                              if (indexCtrl != -1 &&
-                                  element[indexCtrl].controller.text.isEmpty) {
-                                checkBreak = true;
-                                qs.isError = true;
-                                Toast.showLongTop(
-                                    "Vui lòng nhập đáp án cho câu ${listQs[i]
-                                        .questionAndPageIds[h].title}");
-                                submit = false;
-                              }
-                            });
-                          }
-                          if (!submit) {
-                            break;
-                          }
-                        }
-                        else {
-                          if (!element[indexAs].value) {
-                            (state.scrollController?? AutoScrollController()).scrollToIndex(
-                              i,
-                              preferPosition: AutoScrollPosition.begin, // Scroll position (begin, middle, end)
-                              //duration: Duration(seconds: 1), // Duration of the scroll animation
-                            );
-                            checkBreak = true;
-                            qs.isError = true;
-
-                            print("HoangCV:buubu sub 1: ${qs.title} : "
-                                "$i : ${state.scrollController}");
-
-                            Toast.showLongTop(
-                                "Vui lòng chọn đáp án cho câu ${qs.title}");
-                            submit = false;
-                            break;
-                          }
-                        }
-                      }
-                    }
-                  });
                 }
-              }
-              else{
-                checkBreak = true;
-                qs.isError = true;
-                Toast.showLongTop("Vui lòng nhập đáp án cho câu ${listQs[i].questionAndPageIds[h].title}");
-                submit = false;
-              }
-            } else{
-              for (int m = 0;
-              m < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds.length;
-              m++) {
-                for (int n = 0;
-                n < listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds.length;
-                n++) {
-                  if (listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].
-                  questionAndPageIds[n].constrMandatory == true) {
-                    print("HoanmgCV:n: ${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
-                    String qsType = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].questionType ?? "";
-                    Question qs = listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n];
-                    if(qsType == "simple_choice" || qsType == "multi_choice" || qsType == "check_box"){
-                      int indexQs = -1;
-                      state.listSelected.forEach((element) {
-                        indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                        if(indexQs != -1){
-                          //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                          if(qs.commentAnswer == true){
-                            if(!element[indexQs].value){
-                              checkBreak = true;
-                              listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
-                              Toast.showLongTop("Vui lòng chọn đáp án cho câu "
-                                  "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
-                              submit = false;
-                            } else{
-                              int indexCtrl = -1;
-                              state.listController.forEach((element) {
-                                indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                                if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
-                                  checkBreak = true;
-                                  listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
-                                  Toast.showLongTop("Vui lòng nhập đáp án cho câu "
-                                      "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
-                                  submit = false;
-                                }
-                              });
-                            }
-                          }
-                        }
-                      });
-                    } else{
-                      checkBreak = true;
-                      listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].isError = true;
-                      Toast.showLongTop("Vui lòng nhập đáp án cho câu "
-                          "${listQs[i].questionAndPageIds[h].questionAndPageIds[l].suggestedAnswerIds[m].questionAndPageIds[n].title}");
-                      submit = false;
-                    }
-                  }
+                if (checkBreak) {
+                  print("HoangCV: run wat: $i ${listQs[i].title}");
+                  state.scrollController!.scrollToIndex(
+                      i + 1, preferPosition: AutoScrollPosition.begin);
+                  break;
                 }
               }
             }
-          }
-          for (int l = 0;
-          l < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length;
-          l++) {
-            print("HoangCV: listQs[i].suggestedAnswerIds: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].value}");
-            int indexAsSub = -1;
-            state.listSelected.forEach((element) {
-              indexAsSub = element.indexWhere((el) => el.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].idSelected);
-              if(indexAsSub != -1){
-                if(element[indexAsSub].value){
-                  for (int u = 0; u < listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds.length; u++) {
-                      print("HoangCV: listQs[i].questionAndPageIds u:: "
-                          "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title} : "
-                          "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory}");
-                      if (listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].constrMandatory == true) {
-                        print("HoanmgCV:h: ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].title}");
-                        String qsType = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].questionType ?? "";
-                        Question qs = listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u];
-                        if(qsType == "check_box"){
-                          int indexQs = -1;
-                          //check box: ko tích thì vẫn là ko , còn nếu tích thì phải check comment answer
-                          state.listSelected.forEach((element) {
-                            indexQs = element.indexWhere((el) => el.id == qs.idSelected);
-                            if(indexQs != -1){
-                              //đoạn này phải check th: nếu là câu check box thuộc câu con, mà câu trl cha có tich thì mới check .
-                              if(qs.commentAnswer == true){
-                                if(!element[indexQs].value){
-                                  checkBreak = true;
-                                  listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                                  Toast.showLongTop("Vui lòng chọn đáp án cho câu ${qs.title}");
-                                  submit = false;
-                                } else{
-                                  int indexCtrl = -1;
-                                  state.listController.forEach((element) {
-                                    indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                                    if(indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty){
-                                      checkBreak = true;
-                                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                                      Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
-                                      submit = false;
-                                    }
-                                  });
-                                }
-                              }
-                            }
-                          });
-                        } else if(qsType == "simple_choice" || qsType == "multi_choice" ){
-
-                        } else{
-                          int indexCtrl = -1;
-                          state.listController.forEach((element) {
-                            indexCtrl = element.indexWhere((el) => el.id == qs.idSelected);
-                            if (indexCtrl != -1 && element[indexCtrl].controller.text.isEmpty) {
-                              checkBreak = true;
-                              listQs[i].questionAndPageIds[h].suggestedAnswerIds[l].questionAndPageIds[u].isError = true;
-                              Toast.showLongTop("Vui lòng nhập đáp án cho câu ${qs.title}");
-                              submit = false;
-                            }
-                          });
-                        }
-                        if(!submit){
-                          break;
-                        }
-                      }
-                    }
-                }
-              }
-            });
-          }
-        }
-      }
-      if(checkBreak){
-        print("HoangCV: index: $i");
-        state.scrollController!.scrollToIndex(i+1, preferPosition: AutoScrollPosition.begin);
-        break;
-      }
-    }
-    if(submit){
-      bool checkBreak = false;
-      for (var element in state.listControllerTable) {
-        for (var e in element) {
-          print("HoangCV: table controller: ${e.title} : ${e.value} : ${e.controller.text.isEmpty} : ${e.constrMandatory}");
-          if (e.constrMandatory == true && e.controller.text.isEmpty) {
-            for (int i = 0; i < listQs.length; i++) {
-              for (int h = 0; h < listQs[i].questionAndPageIds.length; h++) {
-                if (listQs[i].questionAndPageIds[h].questionType == "table") {
-                  for (int k = 0; k < listQs[i].questionAndPageIds[h].suggestedAnswerIds.length; k++) {
-                    print("HoangCV: table controller: ${e.value} : ${e.idRow} : ${e.id} :"
-                        " ${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].idSelected} : $checkBreak");
-                    if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].idSelected) {
-                      listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].isError = true;
-                      if (!checkBreak) {
-                        Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
-                      }
-                      submit = false;
-                      checkBreak = true;
-                    }
-                    else {
-                      for (int l = 0; l < listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds.length; l++) {
-                        print("HoangCV: table controller:sub ${e.value} : ${e.idRow} : ${e.id} : "
-                            "${listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected} : $checkBreak");
-                        if (e.id == listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].idSelected) {
-                          listQs[i].questionAndPageIds[h].suggestedAnswerIds[k].suggestedAnswerIds[l].isError = true;
-                          if (!checkBreak) {
-                            Toast.showLongTop("Vui lòng nhập đáp án cho cột ${e.value}");
-                          }
-                          submit = false;
-                          checkBreak = true;
-                        }
-                      }
-                    }
-                  }
-                  if (checkBreak) {
-                    break;
-                  }
-                }
-              }
-              if (checkBreak) {
-                print("HoangCV: run wat: $i ${listQs[i].title}");
-                state.scrollController!.scrollToIndex(i + 1, preferPosition: AutoScrollPosition.begin);
-                break;
-              }
+            if (checkBreak) {
+              break;
             }
           }
           if (checkBreak) {
             break;
           }
         }
-        if (checkBreak) {
-          break;
+      }
+      emit(state.copyWith(
+          scrollController: state.scrollController));
+      print("HoangCV: submit: ${submit} : ${state.scrollController}");
+      if (submit) {
+        FarmerInspectorUpload questionUpload = FarmerInspectorUpload(
+            idOffline: state.idOffline,
+            id: state.reportId,
+            farmerId: state.farmerInspector!.farmerId,
+            farmId: state.farmerInspector!.farmId,
+            farmCode: state.farmerInspector!.farmCode,
+            farmerCode: state.farmerInspector!.farmerCode,
+            internalInspectorId: state.farmerInspector!
+                .internalInspectorId,
+            monitoringVisitType: state.farmerInspector!
+                .monitoringVisitType,
+            visitDate: state.farmerInspector!.visitDate,
+            state: 'done'
+        );
+        ObjectResult result = await repository.editFarmerInspector(
+            questionUpload);
+        if (result.responseCode == StatusConst.code00) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              reportId: result.response is int ? result.response : null,
+              formStatus: SubmissionSuccess(
+                  success: "Hoàn thành báo cáo đánh giá.")));
+        } else if (result.responseCode == StatusConst.code01) {
+          emit(state.copyWith(
+              isShowProgress: false,
+              formStatus: SubmissionFailed(
+                  "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
         }
       }
-    }
-    emit(state.copyWith(
-        scrollController: state.scrollController));
-    print("HoangCV: submit: ${submit} : ${state.scrollController}");
-    if(submit){
-      FarmerInspectorUpload  questionUpload = FarmerInspectorUpload(
-          idOffline: state.idOffline,
-          id: state.reportId,
-          farmerId: state.farmerInspector!.farmerId,
-          farmId: state.farmerInspector!.farmId,
-          farmCode: state.farmerInspector!.farmCode,
-          farmerCode: state.farmerInspector!.farmerCode,
-          internalInspectorId: state.farmerInspector!
-              .internalInspectorId,
-          monitoringVisitType: state.farmerInspector!
-              .monitoringVisitType,
-          visitDate: state.farmerInspector!.visitDate,
-        state: 'done'
-      );
-      ObjectResult result = await repository.editFarmerInspector(questionUpload);
-      if (result.responseCode == StatusConst.code00) {
-        emit(state.copyWith(
-            isShowProgress: false,
-            reportId: result.response is int ? result.response : null,
-            formStatus: SubmissionSuccess(success: "Hoàn thành báo cáo đánh giá.")));
-      } else if (result.responseCode == StatusConst.code01){
-        emit(state.copyWith(
-            isShowProgress: false,
-            formStatus: SubmissionFailed("Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.")));
-      }
+    } else{
+      Toast.showLong("Vui lòng thực hiện khảo sát!");
+      emit(state.copyWith(isShowProgress: false));
     }
   }
 

@@ -72,7 +72,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       Navigator.pop(context);
                       return false;
                     },
-                    child: state.isShowProgress ?
+                    child: state.isShowProgress && state.listReport.isEmpty?
                     const Center(
                       child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),):
                     state.listReport.isEmpty
