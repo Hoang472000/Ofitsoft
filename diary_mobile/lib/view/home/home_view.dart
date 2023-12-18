@@ -207,7 +207,7 @@ class _HomeViewState extends State<HomeView> {
                                   padding: EdgeInsets.only(left: 18, top: 18),
                                   child: Text(
                                     "Tính năng",
-                                    style: StyleOfit.textStyleFW600(Colors.black, 16),
+                                    style: StyleOfit.textStyleFW600(Colors.black, 18),
                                   ),
                                 ),
                                 Container(

@@ -241,7 +241,7 @@ class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> 
     int result;
     bool checkPass = true;
     if(event.index == 0 && state.listDiary.isEmpty) {
-      Toast.showLongTop("Không có danh sách công việc");
+      Toast.showLongTop("Không có danh sách mùa vụ lô trồng");
       checkPass = false;
     }
     else if(event.index == 1 && state.listActivity.isEmpty && event.list[event.index].title == "Tên công việc") {
@@ -306,7 +306,7 @@ class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> 
           event.list[event.index].listValue[result];
           event.list[event.index].error = null;
           // });
-          if (event.list[event.index].title.compareTo("Tên nhật ký") == 0) {
+          if (event.list[event.index].title.compareTo("Mùa vụ lô trồng") == 0) {
             emit(state.copyWith(
                 diaryController: TextEditingController(
                     text: event.list[event.index].valueSelected.name),
@@ -478,7 +478,7 @@ class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> 
     bool validate = true;
     if (state.indexDiary == -1) {
       validate = false;
-      state.listWidget[0].error = "Vui lòng chọn tên nhật ký";
+      state.listWidget[0].error = "Vui lòng chọn mùa vụ lô trồng";
     }
     if (state.indexActivity == -1) {
       validate = false;

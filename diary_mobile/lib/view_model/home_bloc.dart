@@ -73,7 +73,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(check[3]) {
       list.add(ActivityFarm(
           id: 1,
-          nameActivity: "Mua hàng",
+          nameActivity: "Giao dịch mua hàng",
           iconActivity: ImageAsset.imageSelling));
     } if(check[4]){
       list.add(ActivityFarm(
