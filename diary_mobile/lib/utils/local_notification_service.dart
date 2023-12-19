@@ -38,7 +38,7 @@ class LocalNotificationService {
             channelDescription: "description",
             importance: Importance.max,
             priority: Priority.max,
-            playSound: true);
+            playSound: true, icon: '@mipmap/ic_launcher');
     DarwinNotificationDetails iosInitializationDetail =
         DarwinNotificationDetails();
 

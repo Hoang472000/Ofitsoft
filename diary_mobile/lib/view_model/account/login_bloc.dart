@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
@@ -12,14 +11,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../data/repository.dart';
-import '../../generated/l10n.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
 import '../../utils/utils.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
-import 'package:crypto/crypto.dart' as crypto;
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final Repository repository;
@@ -133,15 +130,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
     String username= sharedPreferences.getString(SharedPreferencesKey.userName) ?? "";
     String password= sharedPreferences.getString(SharedPreferencesKey.passwordEncode) ?? "";
-    emit(state.copyWith(username: username, password: password, formStatus: InitialFormStatus()));
+    emit(state.copyWith(username: username, password: password, formStatus: const InitialFormStatus()));
     ObjectResult objectResult = await repository.getVersionApp();
     if(objectResult.responseCode == StatusConst.code00) {
       Map<String, dynamic> firstResponse = objectResult.response[0];
-      print("HoangCV: getVersionApp");
       if (Platform.isIOS) {
         String iosVersion = sharedPreferences.getString(
             SharedPreferencesKey.iosVersion) ?? "";
-
         if (iosVersion.compareTo("${firstResponse["version_ios"]}") != 0) {
           DiaLogManager.displayDialog(
               context,
@@ -151,9 +146,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
                 Navigator.pop(context);
                 Utils.openAppInStore(
                     "https://apps.apple.com/us/app/id${ApiConst.appIdIOS}");
-                /*if (Get.isLogEnable) {
-                  Get.back();
-                }*/
               },
                   () {},
               "",
@@ -163,8 +155,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         String androidVersion = sharedPreferences.getString(
             SharedPreferencesKey.androidVersion) ?? "";
-        print("HoangCV: getVersionApp: iosAndroid: ${androidVersion}");
-
         if (androidVersion.compareTo("${firstResponse["version_android"]}") !=
             0) {
           DiaLogManager.displayDialog(

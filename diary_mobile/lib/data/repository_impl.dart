@@ -1,7 +1,7 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:diary_mobile/data/entity/access/detail_product_batch.dart';
 import 'package:diary_mobile/data/entity/access/product_batch.dart';
@@ -108,6 +108,7 @@ class RepositoryImpl extends Repository {
       if (Platform.isIOS) {
         String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
         if (apnsToken != null) {
+          await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
           await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
         } else {
           await Future<void>.delayed(
@@ -117,10 +118,12 @@ class RepositoryImpl extends Repository {
           );
           apnsToken = await FirebaseMessaging.instance.getAPNSToken();
           if (apnsToken != null) {
+            await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
             await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
           }
         }
       } else {
+        await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
         await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
       }
       //await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");

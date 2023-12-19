@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:diary_mobile/data/fake_data/fake_repository_impl.dart';
 import 'package:diary_mobile/utils/constants/config_build.dart';
@@ -82,6 +82,7 @@ Future<void> initOfit() async{
   if (Platform.isIOS) {
     String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
     if (apnsToken != null) {
+      await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
       await FirebaseMessaging.instance.subscribeToTopic("${userId}");
     } else {
       await Future<void>.delayed(
@@ -91,10 +92,12 @@ Future<void> initOfit() async{
       );
       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
       if (apnsToken != null) {
+        await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
         await FirebaseMessaging.instance.subscribeToTopic("${userId}");
       }
     }
   } else {
+    await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
     await FirebaseMessaging.instance.subscribeToTopic("${userId}");
   }
   FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -108,13 +111,13 @@ Future<void> initOfit() async{
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     Logger.loggerDebug("HoangCV onMessageOpenedApp.listen $message");
-    //Utils.handle(message, false);
+    Utils.handle(message, false);
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
         "Bkav onMessage.listen ${message.toMap().toString()}");
-    //Utils.handle(message, false);
+    Utils.handle(message, false);
   });
   messaging.requestPermission(
     alert: true,

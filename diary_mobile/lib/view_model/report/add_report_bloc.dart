@@ -2205,7 +2205,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         }
       }
     } else{
-      Toast.showLong("Vui lòng thực hiện khảo sát!");
+      Toast.showLongTop("Vui lòng thực hiện khảo sát!");
       emit(state.copyWith(isShowProgress: false));
     }
   }
