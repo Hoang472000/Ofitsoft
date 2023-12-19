@@ -47,98 +47,105 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
           ),
           backgroundColor: AppColor.background,
         ),
-        body: BlocBuilder<DetailAccessOriginBloc, DetailAccessOriginState>(
-            builder: (blocContext, state) {
-              return state.isShowProgress ?
-              const Center(
-                child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-                  : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                  child: SingleChildScrollView(
-                    //physics: const NeverScrollableScrollPhysics(),
-                    child: state.detailAccessOrigin !=null ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        QrImageView(
-                          data: '${ApiConst.qrCode}${state.detailAccessOrigin!.guid}',
-                          version: QrVersions.auto,
-                          size: 200.0,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
+        body: SafeArea(
+          child: BlocBuilder<DetailAccessOriginBloc, DetailAccessOriginState>(
+              builder: (blocContext, state) {
+                return state.isShowProgress ?
+                const Center(
+                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                    : Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
+                    child: SingleChildScrollView(
+                      //physics: const NeverScrollableScrollPhysics(),
+                      child: state.detailAccessOrigin !=null ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              Utils.launchBrowserUrl('${ApiConst.qrCode}${state.detailAccessOrigin!.guid}');
+                            },
+                            child: QrImageView(
+                              data: '${ApiConst.qrCode}${state.detailAccessOrigin!.guid}',
+                              version: QrVersions.auto,
+                              size: 200.0,
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
 
-                            CardTile(
-                                label: "Tên lô sản phẩm",
-                                value: "${state.detailAccessOrigin!.name} - ${state.detailAccessOrigin!.batchCode}",
-                                image: ImageAsset.imageDiary),
-                            CardTile(
-                                label: "Tên công ty",
-                                value: "${state.detailAccessOrigin!.companyName}",
-                                image: ImageAsset.imageCompany),
-                            CardTile(
-                                label: "Tên sản phẩm",
-                                value: "${state.detailAccessOrigin!.productName}",
-                                image: ImageAsset.imageTree),
-                            CardTile(
-                                label: "Trọng lượng",
-                                value: "${state.detailAccessOrigin!.weightTree}",
-                                image: ImageAsset.imageFarmerProfile),
-                            CardTile(
-                                label: "Số lượng",
-                                value: "${state.detailAccessOrigin!.quantity} ${state.detailAccessOrigin!.quantityUnitId}",
-                                image: ImageAsset.imageBudget),
-                            CardTile(
-                                label: "Ngày sản xuất",
-                                value: "${state.detailAccessOrigin!.manufactureDate}",
-                                image: ImageAsset.imageCalendarBegin),
-                            CardTile(
-                                label: "Ngày hết hạn",
-                                value: "${state.detailAccessOrigin!.expireDate}",
-                                image: ImageAsset.imageCalendarEnd),
-                            (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
-                            Container(
-                              padding: const EdgeInsets.only(top: 8, bottom: 0, left: 4),
-                              child: Text("Hình ảnh liên quan", style:
-                              StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),),
-                            ) : const SizedBox(),
-                            Container(
-                              padding: const EdgeInsets.all(24),
-                              child: Center(
-                                child: Image.memory(
-                                  gaplessPlayback: true,
-                                  base64Decode(state.detailAccessOrigin!.image ??
-                                      ""),
-                                  //height: MediaQuery.of(context).size.height/2,
-                                  //width: MediaQuery.of(context).size.width/1.5,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error,
-                                      stackTrace) {
-                                    return Container(
-                                      /*height: MediaQuery.of(context).size.width/2,
-                                      width: MediaQuery.of(context).size.width/2,
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(12),
-                                          color:  AppColor.grayC7),
-                                      child: Center(
-                                        child: Text(
-                                          (state.detailAccessOrigin!.productName ?? "")*//*.substring(0,1)*//*,
-                                          style:
-                                          StyleOfit.textStyleFW700(AppColor.green53, 16),
-                                        ),
-                                      ),*/
-                                    );
-                                  },
+                              CardTile(
+                                  label: "Tên lô sản phẩm",
+                                  value: "${state.detailAccessOrigin!.name} - ${state.detailAccessOrigin!.batchCode}",
+                                  image: ImageAsset.imageDiary),
+                              CardTile(
+                                  label: "Tên công ty",
+                                  value: "${state.detailAccessOrigin!.companyName}",
+                                  image: ImageAsset.imageCompany),
+                              CardTile(
+                                  label: "Tên sản phẩm",
+                                  value: "${state.detailAccessOrigin!.productName}",
+                                  image: ImageAsset.imageTree),
+                              CardTile(
+                                  label: "Trọng lượng",
+                                  value: "${state.detailAccessOrigin!.weightTree}",
+                                  image: ImageAsset.imageFarmerProfile),
+                              CardTile(
+                                  label: "Số lượng",
+                                  value: "${state.detailAccessOrigin!.quantity} ${state.detailAccessOrigin!.quantityUnitId}",
+                                  image: ImageAsset.imageBudget),
+                              CardTile(
+                                  label: "Ngày sản xuất",
+                                  value: "${state.detailAccessOrigin!.manufactureDate}",
+                                  image: ImageAsset.imageCalendarBegin),
+                              CardTile(
+                                  label: "Ngày hết hạn",
+                                  value: "${state.detailAccessOrigin!.expireDate}",
+                                  image: ImageAsset.imageCalendarEnd),
+                              (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
+                              Container(
+                                padding: const EdgeInsets.only(top: 8, bottom: 0, left: 4),
+                                child: Text("Hình ảnh liên quan", style:
+                                StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),),
+                              ) : const SizedBox(),
+                              Container(
+                                padding: const EdgeInsets.all(24),
+                                child: Center(
+                                  child: Image.memory(
+                                    gaplessPlayback: true,
+                                    base64Decode(state.detailAccessOrigin!.image ??
+                                        ""),
+                                    //height: MediaQuery.of(context).size.height/2,
+                                    //width: MediaQuery.of(context).size.width/1.5,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error,
+                                        stackTrace) {
+                                      return Container(
+                                        /*height: MediaQuery.of(context).size.width/2,
+                                        width: MediaQuery.of(context).size.width/2,
+                                        decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(12),
+                                            color:  AppColor.grayC7),
+                                        child: Center(
+                                          child: Text(
+                                            (state.detailAccessOrigin!.productName ?? "")*//*.substring(0,1)*//*,
+                                            style:
+                                            StyleOfit.textStyleFW700(AppColor.green53, 16),
+                                          ),
+                                        ),*/
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ) : Container(),
-                  ));
-            }),
+                            ],
+                          ),
+                        ],
+                      ) : Container(),
+                    ));
+              }),
+        ),
       ),
     );
   }

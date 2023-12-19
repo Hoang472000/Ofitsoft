@@ -253,7 +253,7 @@ class _InfoDiaryViewState extends State<InfoDiaryView> with TickerProviderStateM
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(IconAsset.icSetTing, color: AppColor.black22,),
+                            SvgPicture.asset(IconAsset.icWorkFlow, color: AppColor.black22,),
                             const SizedBox(
                               height: 3,
                             ),

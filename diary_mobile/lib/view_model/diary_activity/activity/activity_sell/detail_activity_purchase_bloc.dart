@@ -147,7 +147,8 @@ class DetailActivityPurchaseBloc
     List<InputRegisterModel> listVT = [];
     List<InputRegisterModel> listArea = [];
 
-    list.add(InputRegisterModel(
+    if(state.indexSeasonFarm != -1) {
+      list.add(InputRegisterModel(
         title: "Mùa vụ lô trồng",
         isCompulsory: false,
         type: TypeInputRegister.Select,
@@ -156,8 +157,22 @@ class DetailActivityPurchaseBloc
         listValue: state.listSeasonFarm,
         typeInputEnum: TypeInputEnum.dmucItem,
         image: ImageAsset.imageManagement,
-      hasSearch: true,
-    ));
+        hasSearch: true,
+      ));
+    } else{
+      list.add(InputRegisterModel(
+        title: "Mùa vụ lô trồng",
+        isCompulsory: false,
+        type: TypeInputRegister.Non,
+        icon: Icons.arrow_drop_down,
+        //valueSelected: state.listSeasonFarm[state.indexSeasonFarm],
+        controller: state.seasonFarmController,
+        listValue: state.listSeasonFarm,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        image: ImageAsset.imageManagement,
+        hasSearch: true,
+      ));
+    }
 
     list.add(InputRegisterModel(
         title: "Sản phẩm",
@@ -318,8 +333,11 @@ class DetailActivityPurchaseBloc
         //state.listWidget[i].valueSelected = state.listActivity[index];
       }
       if (state.listWidget[i].title.compareTo("Mùa vụ lô trồng") == 0) {
-        state.listWidget[i].valueSelected = listSeasonFarm[indexSeasonFarm];
-        state.listWidget[i].controller = state.seasonFarmController;
+        if(indexSeasonFarm != -1) {
+          state.listWidget[i].valueSelected = listSeasonFarm[indexSeasonFarm];
+        }
+          state.listWidget[i].controller = state.seasonFarmController;
+
         //state.listWidget[i].valueSelected = state.listActivity[index];
       }
       if (state.listWidget[i].title.compareTo("Người mua") == 0) {
@@ -348,6 +366,7 @@ class DetailActivityPurchaseBloc
 
     emitter(state.copyWith(
         listWidget: state.listWidget,
+        listWidgetYield: state.listWidgetYield,
         listWidgetArea: state.listWidgetArea,
         listWidgetCC: state.listWidgetCC,
         listWidgetVT: state.listWidgetVT));
@@ -459,7 +478,7 @@ class DetailActivityPurchaseBloc
               soLuongController:
               TextEditingController(text: "$formattedResult"),
               total: total));
-          state.listWidgetArea[0].controller = state.soLuongController;
+          state.listWidgetYield[0].controller = state.soLuongController;
         }
         if (event.list[event.index].title.compareTo("Người mua") == 0) {
           emit(state.copyWith(

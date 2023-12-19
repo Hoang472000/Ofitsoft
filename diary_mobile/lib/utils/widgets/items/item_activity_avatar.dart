@@ -253,7 +253,7 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                         ],
                       ),
                           ),
-                      widget.action.compareTo('harvesting') == 0 ? Container(): SizedBox(
+                      /*widget.action.compareTo('harvesting') == 0 ? Container(): */SizedBox(
                         height: 50,
                         width: 50,
                         child: /*(state.listDiaryActivity[index].harvesting ?? false) || */
@@ -273,7 +273,8 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                             DiaLogManager.displayDialog(context, "",
                                 "Bạn có muốn xóa hoạt động này không.", () {
                                   Get.back();
-                                  if (widget.action.compareTo('activity') == 0) {
+                                  if (widget.action.compareTo('activity') == 0 ||
+                                      widget.action.compareTo('harvesting') == 0) {
                                     widget.callbackDelete();
                                   } else {
                                     DiaLogManager.showDialogSuccess(context,

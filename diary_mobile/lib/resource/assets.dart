@@ -104,6 +104,7 @@ class IconAsset {
   static const String icArrowRight = "${iCons}ic_arrow_right.svg";
   static const String icHistoryActivity = "${iCons}ic_history_activity.svg";
   static const String icPersonSetting = "${iCons}ic_person_setting.svg";
+  static const String icWorkFlow = "${iCons}ic_work_flow.svg";
   //icon diary
   static const String icAlmond = "${iConsDiary}almond.svg";
   static const String icCash = "${iConsDiary}cash.svg";

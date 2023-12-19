@@ -118,7 +118,7 @@ class ActivityBloc extends Bloc<ActivityEvent, ActivityState> {
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
       add(GetListActivityEvent(
-          state.seasonFarmId ?? 0, event.action, false, [], [], (listCallback){
+          state.seasonFarmId ?? 0, event.action,event.action.compareTo('harvesting') == 0 ? true : false, [], [], (listCallback){
         event.callBack(listCallback);}));
       emit(state.copyWith(
           isShowProgress: false,
