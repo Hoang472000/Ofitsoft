@@ -879,9 +879,9 @@ class RepositoryImpl extends Repository {
     List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 10, (index) => index + 1);
     assignIdSelected(list[1].questionAndPageIds, idSelectedList);
     final hierarchyList = buildReportHierarchy(list);
-    hierarchyList.forEach((element) {
+    /*hierarchyList.forEach((element) {
       print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
-    });
+    });*/
     return [list[1]];
   }
 
@@ -1139,9 +1139,9 @@ class RepositoryImpl extends Repository {
       List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 10, (index) => index + 1);
       assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportResult(list[1].surveyId);
-      hierarchyList.forEach((element) {
+      /*hierarchyList.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
-      });
+      });*/
       List<SurveyRpRlt> listResult= [];
       listResult.add(list[0]);
       listResult.add(SurveyRpRlt(surveyId:hierarchyList));
@@ -1545,7 +1545,7 @@ class RepositoryImpl extends Repository {
     int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
     ObjectResult objectResult = await networkExecutor.request(
         route: ApiBaseGenerator(
-            path: ApiConst.getListFarmerFeedback+"/"+"$userId",
+            path: "${ApiConst.getListFarmerFeedback}$userId",
             method: HttpMethod.GET,
             body: ObjectData(token: token, params: {})));
     //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);

@@ -155,7 +155,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
       state.farmerInspector!.internalInspectorId = report[0].internalInspectorId;
       state.farmerInspector!.monitoringVisitType = report[0].monitoringVisitType;
       state.farmerInspector!.visitDate = report[0].visitDate;
-      print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].visitDate}");
+      //print("HoangCV:state.farmerInspector!.visit_date: ${state.farmerInspector!.toJson()} : ${report[0].visitDate}");
       emitter(state.copyWith(
         listFarmer: report[0].listFarmers,
         listInspector: report[0].listInternalInspector,
@@ -653,7 +653,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
 
         if(childAnswer.isSelectionAnswer == true) {
-          print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+          //print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
           int index = childAnswer.selectionAnswerIds.indexWhere((element) => element.id == childAnswer.tableAnswerId);
               textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
@@ -702,7 +702,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
 
         if(childAnswer.isSelectionAnswer == true) {
-          print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          //print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
           int index = childAnswer.selectionAnswerIds.indexWhere((element) => element.id == childAnswer.tableAnswerId);
           textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ''),
@@ -725,7 +725,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
                       textAlign: TextAlign.left
                   )));
         } else{
-          print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          //print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
 
           textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable ?? ""),

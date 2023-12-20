@@ -131,6 +131,10 @@ class IconAsset {
   static const String icLoadOtp = "${iConsDiary}load_otp.svg";
   static const String icSuccess = "${iConsDiary}ic_success.svg";
   static const String icLoading = "${iConsDiary}ic_loading.svg";
+  static const String icPhone = "${iConsDiary}phone.svg";
+  static const String icWebsite = "${iConsDiary}website.svg";
+  static const String icFacebook = "${iConsDiary}facebook.svg";
+  static const String icMail = "${iConsDiary}mail.svg";
 }
 
 class ImageAsset {
@@ -233,4 +237,6 @@ class ImageAsset {
   static const String imageOfitSoftBackground = "${iMages}image_ofitsoft_background.jpg";
 
   static const String imageEmptyData = "${iMages}empty_data.png";
+
+  static const String imageBackgroundDigital = "${iMages}background_digital.png";
 }

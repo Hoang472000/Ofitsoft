@@ -200,7 +200,7 @@ class DetailFeedbackBloc extends Bloc<DetailFeedbackEvent, DetailFeedbackState> 
       state.listWidget[0].error = "Vui lòng nhập tiêu đề phản hồi";
     } else if (state.moTaController!.text.isEmpty) {
       validate = false;
-      state.listWidget[1].error = "Vui lòng nhập ý kiến phản hồi";
+      state.listWidget[1].error = "Vui lòng nhập nội dung";
     }
 
     if (!validate) {
@@ -297,7 +297,7 @@ class DetailFeedbackBloc extends Bloc<DetailFeedbackEvent, DetailFeedbackState> 
 
   Future<FutureOr<void>> _getDetailFeedback(GetDetailFeedbackEvent event, Emitter<DetailFeedbackState> emit) async {
     emit(state.copyWith(
-        isShowProgress: true));
+        isShowProgress: false));
 
     FeedbackInfo feedbackInfo = await repository.getDetailFeedbackFarmer(event.id);
     emit(state.copyWith(

@@ -139,48 +139,76 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                   children: [
                     Flexible(
                       child: Row(
-                      children: <Widget>[
-                        Flexible(
-                        child: GestureDetector(
-                          onTap: (){
-                            blocContext.read<ListReportResultBloc>().add(
-                                UpdateRadioButtonEvent(ReportEnum.report));
-                          },
-                          child: ListTile(
-                              title: const Text('Đánh giá nội bộ'),
-                          leading: Radio<ReportEnum>(
-                            value: ReportEnum.report,
-                            groupValue: state.reportEnum,
-                            onChanged: (ReportEnum? value) {
-                              blocContext.read<ListReportResultBloc>().add(
-                                  UpdateRadioButtonEvent(value as ReportEnum));
-                            },
+                        children: <Widget>[
+                          Flexible(
+                            child: GestureDetector(
+                              onTap: () {
+                                blocContext
+                                    .read<ListReportResultBloc>()
+                                    .add(
+                                      UpdateRadioButtonEvent(
+                                          ReportEnum.report),
+                                    );
+                              },
+                              child: Row(
+                                children: [
+                                  Radio<ReportEnum>(
+                                    value: ReportEnum.report,
+                                    groupValue: state.reportEnum,
+                                    onChanged: (ReportEnum? value) {
+                                      blocContext
+                                          .read<ListReportResultBloc>()
+                                          .add(
+                                            UpdateRadioButtonEvent(
+                                                value as ReportEnum),
+                                          );
+                                    },
+                                  ),
+                                  Expanded(
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: const Text(
+                                          'Đánh giá nội bộ'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                  ),
-                        ),
-                      ),
-                        Flexible(
-                    child: GestureDetector(
-                      onTap: (){
-                        blocContext.read<ListReportResultBloc>().add(
-                            UpdateRadioButtonEvent(ReportEnum.survey));
-                      },
-                      child: ListTile(
-                          title: const Text('Khảo sát ban đầu'),
-                          leading: Radio<ReportEnum>(
-                            value: ReportEnum.survey,
-                            groupValue: state.reportEnum,
-                            onChanged: (ReportEnum? value) {
-                              blocContext.read<ListReportResultBloc>().add(
-                                  UpdateRadioButtonEvent(value as ReportEnum));
-                            },
+                          Flexible(
+                            child: GestureDetector(
+                              onTap: () {
+                                blocContext
+                                    .read<ListReportResultBloc>()
+                                    .add(UpdateRadioButtonEvent(
+                                        ReportEnum.survey));
+                              },
+                              child: Row(
+                                children: [
+                                  Radio<ReportEnum>(
+                                    value: ReportEnum.survey,
+                                    groupValue: state.reportEnum,
+                                    onChanged: (ReportEnum? value) {
+                                      blocContext
+                                          .read<ListReportResultBloc>()
+                                          .add(UpdateRadioButtonEvent(
+                                              value as ReportEnum));
+                                    },
+                                  ),
+                                  Expanded(
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      title: const Text(
+                                          'Khảo sát ban đầu'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
+                        ],
                       ),
-                    ),
-                  ),
-                  ],
-                ),
-                    ),
+                          ),
                     (state.listReport.isEmpty)
                         ? const EmptyWidget()
                         : Flexible(

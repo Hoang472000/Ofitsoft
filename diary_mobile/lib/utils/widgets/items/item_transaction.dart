@@ -127,47 +127,39 @@ class _ItemTransactionState extends State<ItemTransaction> {
                           margin: const EdgeInsets.only(bottom: 5),
                           child: Text(
                             "${widget.activityDiary.seasonFarmName}",
-                            style: StyleOfit.textStyleFW500(AppColor.black22, 15),
+                            style: StyleOfit.textStyleFW500(AppColor.black22, 15,
+                            overflow: TextOverflow.visible),
                           ),
                         ),
                         Container(
                             alignment: Alignment.centerLeft,
                             margin: const EdgeInsets.only(bottom: 5, top: 5),
-                            child: RichText(
-                              text: Utils.convertText(
+                            child: Utils.convertTextWidget(
                                   "Ngày giao dịch: ",
-                                  "${widget.activityDiary.transactionDate}",
+                                  Utils.formatTime("${widget.activityDiary.transactionDate}"),
                                   AppColor.blue15,
                                   14),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            )),
+                            ),
                         SizedBox(
                           child: Container(
                               alignment: Alignment.centerLeft,
                               margin: const EdgeInsets.only(bottom: 5, top: 5),
-                              child: RichText(
-                                text: Utils.convertText(
+                              child: Utils.convertTextWidget(
                                     "Sản lượng: ",
                                     "${Utils.convertNumber(widget.activityDiary.quantity ?? 0)} ${widget.activityDiary.quantityUnitName}",
                                     AppColor.blue15,
                                     14),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                              )),
+                                ),
                         ),
                         Container(
                             alignment: Alignment.centerLeft,
                             margin: const EdgeInsets.only(top: 5),
-                            child: RichText(
-                              text: Utils.convertText(
+                            child: Utils.convertTextWidget(
                                   "Tổng tiền: ",
                                   "${Utils.convertNumber((widget.activityDiary.unitPrice ?? 0) * (widget.activityDiary.quantity ?? 0))}",
                                   AppColor.blue15,
                                   14),
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            )),
+                              ),
                       ],
                     ),
                   ),

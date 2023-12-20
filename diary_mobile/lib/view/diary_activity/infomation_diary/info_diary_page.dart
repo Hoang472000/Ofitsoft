@@ -193,11 +193,11 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                             image: ImageAsset.imageBudget),
                         CardTile(
                             label: "Ngày bắt đầu",
-                            value: "${state.detailDiary!.startDate}",
+                            value: Utils.formatTime("${state.detailDiary!.startDate}"),
                             image: ImageAsset.imageCalendarBegin),
                         ((state.detailDiary!.status??'').compareTo("done") == 0)?CardTile(
                             label: "Ngày kết thúc",
-                            value: "${state.detailDiary!.endDate}",
+                            value: Utils.formatTime("${state.detailDiary!.endDate}"),
                             image: ImageAsset.imageCalendarEnd): Container(),
                         //draft//processing//done//cancelled//
                         CardTile(
@@ -339,18 +339,10 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                   ),
                 ),
-                RichText(
-                    overflow: TextOverflow.clip,
-                    text: TextSpan(
-                      text: "$value1 ",
-                      style: StyleOfit.textStyleFW400(AppColor.black22, 16),
-                      children:  <TextSpan>[
-                        TextSpan(
-                          text: value2,
-                          style: StyleOfit.textStyleFW400(AppColor.black22, 16),
-                        )
-                      ],
-                    )),
+                Text(
+                  "$value1 $value2",
+                  style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                ),
               ],
             ),
           ),

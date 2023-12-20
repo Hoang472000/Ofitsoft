@@ -301,34 +301,6 @@ class _HomeRecordViewState extends State<HomeRecordView> {
     });
   }
 
-  Widget atomBackground(){
-    return Center(
-      child: Container(
-        alignment: Alignment.center,
-        width: MediaQuery.sizeOf(context).width/2.5,
-        height: MediaQuery.sizeOf(context).width/2.5,
-        color: Colors.transparent,
-        child: Atom(
-          size: MediaQuery.sizeOf(context).width/2.5,
-          nucleusRadiusFactor: 3.5,
-          orbitsWidthFactor: 2.0,
-
-          orbit1Angle: math.pi / 2,
-          orbit2Angle: math.pi / 6,
-          orbit3Angle: - math.pi / 6,
-
-          orbitsColor: AppColor.green2.withOpacity(0.3),
-          electronsColor: AppColor.main.withOpacity(0.3),
-          nucleusColor: AppColor.green2.withOpacity(0.3),
-
-          animDuration1: Duration(seconds: 3),
-          animDuration2: Duration(seconds: 4),
-          animDuration3: Duration(seconds: 6),
-          centerWidget: Container(),
-        ),
-      ),
-    );
-  }
   Widget item(ActivityFarm activity){
     return AnimatedContainer(
       duration: const Duration(milliseconds: 120),
@@ -341,10 +313,10 @@ class _HomeRecordViewState extends State<HomeRecordView> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        shadows: [
+        shadows: const [
           BoxShadow(
             color: AppColor.background,
-            offset: const Offset(0, 1),
+            offset: Offset(0, 1),
           ),
         ],
       ),
@@ -354,7 +326,7 @@ class _HomeRecordViewState extends State<HomeRecordView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              flex: 3,
+              flex: 4,
               child: Image(
                 image: AssetImage(activity.iconActivity),
                 height: 40,
@@ -362,10 +334,16 @@ class _HomeRecordViewState extends State<HomeRecordView> {
               ),
             ),
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
-                child: Text(
+                child: RichText(
+                    text: TextSpan(
+                        text: activity.nameActivity,
+                        style: StyleOfit.textStyleFW500(AppColor.black22, 16)),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  ) /*Text(
                   activity.nameActivity,
                   style: StyleOfit.textStyleFW500(
                     AppColor.black22,
@@ -373,8 +351,9 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                     overflow: TextOverflow.visible,
                     height: 1.2,
                   ),
+                  maxLines: 2,
                   textAlign: TextAlign.center,
-                ),
+                ),*/
               ),
             ),
           ],

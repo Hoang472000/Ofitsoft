@@ -163,7 +163,7 @@ class AddFeedbackBloc extends Bloc<AddFeedbackEvent, AddFeedbackState> {
       state.listWidget[0].error = "Vui lòng nhập tiêu đề phản hồi";
     } else if (state.moTaController!.text.isEmpty) {
       validate = false;
-      state.listWidget[1].error = "Vui lòng nhập ý kiến phản hồi";
+      state.listWidget[1].error = "Vui lòng nhập nội dung";
     }
 
     if (!validate) {

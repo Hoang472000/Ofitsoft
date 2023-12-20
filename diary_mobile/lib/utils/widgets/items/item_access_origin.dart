@@ -47,7 +47,7 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
               Colors.white),
           child: Container(
             padding:
-            const EdgeInsets.only(top: 5, bottom: 12, left: 24, right: 0),
+            const EdgeInsets.only(top: 5, bottom: 12, left: 16, right: 0),
             child: Row(
               children: [
                 Expanded(
@@ -65,6 +65,7 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
                                 15),
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
+                            textScaleFactor: MediaQuery.of(context).textScaleFactor,
                           )),
                       SizedBox(
                         child: Container(
@@ -76,8 +77,9 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
                                   "${widget.productBatch.batchCode}",
                                   AppColor.blue15,
                                   14),
-                              maxLines: 1,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
+                              textScaleFactor: MediaQuery.of(context).textScaleFactor,
                             )),
                       ),
                       SizedBox(
@@ -90,8 +92,9 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
                                   "${widget.productBatch.productName}",
                                   AppColor.blue15,
                                   14),
-                              maxLines: 1,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
+                              textScaleFactor: MediaQuery.of(context).textScaleFactor,
                             )),
                       ),
                       SizedBox(
@@ -104,8 +107,9 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
                                   "${widget.productBatch.weightTree}",
                                   AppColor.blue15,
                                   14),
-                              maxLines: 1,
+                              maxLines: 3,
                               overflow: TextOverflow.ellipsis,
+                              textScaleFactor: MediaQuery.of(context).textScaleFactor,
                             )),
                       ),
                     ],

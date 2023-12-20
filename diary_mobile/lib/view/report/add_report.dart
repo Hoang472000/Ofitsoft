@@ -2346,7 +2346,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Cao",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
           Padding(
@@ -2355,7 +2355,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Nương sản phẩm trồng gần và bên dưới ruộng lúa, ruộng ngô có sử dụng phân bón thuốc sâu thường xuyên",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
           Padding(
@@ -2364,7 +2364,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Organic field near/under  rice/corn which use chemical frequently",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
         ]),
@@ -2386,7 +2386,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Trung bình",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
           Padding(
@@ -2395,7 +2395,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Nương sản phẩm gần hoặc bên cạnh, bên trên ruộng lúa, ngô có sử dụng phân bón, thuốc sâu không thường xuyên hoặc rất ít sử dụng",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
           Padding(
@@ -2404,7 +2404,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
               "Medium: organic field near/beside rice/corn which use chemical unfrequently or rarelly",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-              maxLines: 5,
+              maxLines: 8,
             ),
           ),
         ]),

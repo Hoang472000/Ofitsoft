@@ -41,7 +41,7 @@ class _ItemFeedbackState extends State<ItemFeedback> {
         padding: const EdgeInsets.only(top: 8),
         child: Container(
           padding:
-          const EdgeInsets.only(top: 12, bottom: 12, left: 24, right: 16),
+          const EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
           margin: const EdgeInsets.only(left: 20, right: 16, top: 4, bottom: 4),
           decoration: BoxDecoration(
               boxShadow: const [
@@ -68,18 +68,20 @@ class _ItemFeedbackState extends State<ItemFeedback> {
                          16),
                         maxLines: 3,
                      overflow: TextOverflow.ellipsis,
+                     textScaleFactor: MediaQuery.of(context).textScaleFactor,
                    )),
                Container(
                    alignment: Alignment.centerLeft,
                    margin: const EdgeInsets.only(bottom: 5, top: 5),
                    child: RichText(
                      text: Utils.convertTextFeedback(
-                         "Ý kiến phản hồi: ",
+                         "Nội dung: ",
                          "${widget.feedbackInfo.description}",
                          AppColor.black22,
                          16),
-                     maxLines: 5,
+                     maxLines: 3,
                      overflow: TextOverflow.ellipsis,
+                     textScaleFactor: MediaQuery.of(context).textScaleFactor,
                    )),
              ],
            ),

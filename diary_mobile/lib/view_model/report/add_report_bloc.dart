@@ -891,7 +891,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
 
         if(childAnswer.isSelectionAnswer == true) {
-          print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
+          //print("HoangCV: childAnswer selectionAnswerIds: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
           textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(),
                   checkQuestionType(
@@ -937,7 +937,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         //print("HoangCV: childAnswer selectionAnswerIds111: ${childAnswer.isSelectionAnswer} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value}");
 
         if(childAnswer.isSelectionAnswer == true) {
-          print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          //print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
           textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(),
                   checkQuestionType(
@@ -957,7 +957,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                       textAlign: TextAlign.left
                   )));
         } else{
-          print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          //print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
 
           textEditingControllerList.add(
               Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueResult),

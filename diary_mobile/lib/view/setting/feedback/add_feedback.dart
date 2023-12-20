@@ -119,12 +119,12 @@ class _AddFeedbackPageState extends State<AddFeedbackPage> {
                         child: TextFormFieldInputText(
                           noBorder: false,
                           underLine: false,
-                          "Ý kiến phản hồi:",
+                          "Nội dung:",
                           state.moTaController ?? TextEditingController(),
                           false,
                           false,
                           focusNode,
-                          (state.formStatus is ValidatePassFail) ? "ý kiến phản hồi không được để trống" : "",
+                          (state.formStatus is ValidatePassFail) ? "Nội dung không được để trống" : "",
                               (lostFocus) {
                           },
                           true,

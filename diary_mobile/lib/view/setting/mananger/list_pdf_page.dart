@@ -65,7 +65,7 @@ class _ListPDFPageState extends State<ListPDFPage> {
             //backgroundColor: Colors.white,
             showDefaultBackButton: true,
             title: Text(
-              "Danh sách hướng dẫn sử dụng",
+              "Hướng dẫn sử dụng",
               style: StyleOfit.textStyleFW700(Colors.white, 20),
             ),
             // hasBottom: true,

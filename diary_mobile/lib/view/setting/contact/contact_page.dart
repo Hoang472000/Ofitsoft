@@ -112,7 +112,7 @@ class _ContactPageState extends State<ContactPage> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.only(top: 10.0),
-                                  child: SvgPicture.asset(IconAsset.icContact),
+                                  child: SvgPicture.asset(IconAsset.icPhone, color: AppColor.main, width: 25,),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -178,7 +178,8 @@ class _ContactPageState extends State<ContactPage> {
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      SvgPicture.asset(IconAsset.icContactMessage),
+                                      //SvgPicture.asset(IconAsset.icEmail, color: AppColor.red11,),
+                                      Icon(Icons.mail_outline, color: AppColor.red11, size: 25,),
                                       Expanded(
                                         child: Padding(
                                           padding: const EdgeInsets.only(
@@ -197,6 +198,64 @@ class _ContactPageState extends State<ContactPage> {
                             ),
                             // const Divider(color: AppColor.grayE8,thickness: 1,),
                             const SizedBox(height: 8,),
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  Utils.launchMailUrl("https://ofitsoft.vn/");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(IconAsset.icWebsite, color: AppColor.blue15, width: 25,),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16),
+                                          child: Text(
+                                              "ofitsoft.vn",
+                                              style: StyleOfit.textStyleFW400(
+                                                  AppColor.black22, 15, overflow: TextOverflow.visible)
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8,),
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
+                                onTap: () {
+                                  Utils.launchMailUrl("https://www.facebook.com/profile.php?id=61550762402696");
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      SvgPicture.asset(IconAsset.icFacebook, color: AppColor.blue15, width: 25,),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 16),
+                                          child: Text(
+                                              "https://www.facebook.com/ofitsoft",
+                                              style: StyleOfit.textStyleFW400(
+                                                  AppColor.black22, 15, overflow: TextOverflow.visible)
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8,),
                             const Padding(
                               padding: EdgeInsets.only(right: 30),
                               child: DottedLine(dashColor: AppColor.gray9B,),
@@ -211,7 +270,7 @@ class _ContactPageState extends State<ContactPage> {
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    SvgPicture.asset(IconAsset.icKho,),
+                                    SvgPicture.asset(IconAsset.icHome2, color: AppColor.red11, width: 25,),
                                     Expanded(
                                       child: Container(
                                         padding: const EdgeInsets.only(

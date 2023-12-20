@@ -746,6 +746,26 @@ class Utils {
             style: StyleOfit.textStyleFW400(AppColor.gray57, 14))
     ]);
   }
+  static Widget convertTextWidget(String title, String value, Color color, double size,
+      {bool isMoney = false, BuildContext? buildContext}) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: StyleOfit.textStyleFW400(AppColor.gray57, size),
+          overflow: TextOverflow.visible,
+        ),
+        SizedBox(width: 8), // Khoảng cách giữa các phần tử trong Row
+        Flexible(
+          child: Text(
+            value,
+            style: StyleOfit.textStyleFW400(color, size),
+            overflow: TextOverflow.visible,
+          ),
+        ),
+      ],
+    );
+  }
 
   static TextSpan convertTextFeedback(String title, String value, Color color, double size,
       {bool isMoney = false, BuildContext? buildContext}) {

@@ -97,11 +97,11 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                                   image: ImageAsset.imageBudget),
                               CardTile(
                                   label: "Ngày sản xuất",
-                                  value: "${state.detailAccessOrigin!.manufactureDate}",
+                                  value: Utils.formatTime("${state.detailAccessOrigin!.manufactureDate}"),
                                   image: ImageAsset.imageCalendarBegin),
                               CardTile(
                                   label: "Ngày hết hạn",
-                                  value: "${state.detailAccessOrigin!.expireDate}",
+                                  value: Utils.formatTime("${state.detailAccessOrigin!.expireDate}"),
                                   image: ImageAsset.imageCalendarEnd),
                               (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
                               Container(

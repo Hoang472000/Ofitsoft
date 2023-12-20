@@ -171,7 +171,8 @@ class _ItemDiaryState extends State<ItemDiary> {
                           AppColor.blue15,
                           14),
                       maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.visible,
+                      textScaleFactor: MediaQuery.of(context).textScaleFactor,
                     ),
                   ),
                   Padding(
@@ -183,7 +184,8 @@ class _ItemDiaryState extends State<ItemDiary> {
                           AppColor.blue15,
                           12),
                       maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
+                      overflow: TextOverflow.visible,
+                      textScaleFactor: MediaQuery.of(context).textScaleFactor,
                     ),
                   )
                 ],

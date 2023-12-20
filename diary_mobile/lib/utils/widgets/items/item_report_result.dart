@@ -36,52 +36,6 @@ class _ItemReportResultState extends State<ItemReportResult> {
   bool isExpansion = false;
   bool isCheckBox = false;
 
-
-  OverlayEntry createOverlayEntry() {
-    final RenderBox renderBox = context.findRenderObject() as RenderBox;
-    final position = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) {
-        return Positioned(
-          top: position.dy,
-          left: position.dx,
-          width: renderBox.size.width,
-          height: renderBox.size.height,
-          child: GestureDetector(
-            onTap: () {
-              if (widget.overlayEntry?.mounted == true) {
-                widget.overlayEntry?.remove();
-              }
-            },
-            child: Container(
-              margin: const EdgeInsets.only(left: 20, right: 16, top: 12, bottom: 4),
-              color: Colors.black12.withOpacity(0.3),
-              child: Material( // Wrap IconButton with Material widget
-                color: Colors.transparent, // Make Material widget transparent
-                child: IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  onPressed: () {
-                    DiaLogManager.displayDialog(context, "",
-                        "Bạn có muốn xóa báo cáo này không.", () {
-                          Get.back();
-                          widget.callbackDelete();
-                          if (widget.overlayEntry?.mounted == true) {
-                            widget.overlayEntry?.remove();
-                          }
-                        }, () {
-                          Get.back();
-                        }, S.of(context).no, S.of(context).yes);
-                  },
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -92,21 +46,12 @@ class _ItemReportResultState extends State<ItemReportResult> {
         }
         widget.callbackChooseItem();
       },
-      onLongPress: () {
-        widget.overlayEntry = createOverlayEntry();
-        Overlay.of(context).insert(widget.overlayEntry!);
-        Future.delayed(const Duration(seconds: 2), () {
-          if (widget.overlayEntry?.mounted == true) {
-            widget.overlayEntry?.remove();
-          }
-        });
-      },
       child: Container(
         padding: const EdgeInsets.only(top: 8),
         child: Container(
           padding:
           const EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 0),
-          margin: const EdgeInsets.only(left: 20, right: 16, top: 4, bottom: 4),
+          margin: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
           decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -118,24 +63,12 @@ class _ItemReportResultState extends State<ItemReportResult> {
                 ),
               ],
               borderRadius: BorderRadius.circular(8),
-              color: /*widget.isChoose ? Colors.red[100] :*/
-              Colors.white),
+              color: Colors.white),
           child: Stack(
             children: [
               Container(
-                alignment: Alignment.topLeft,
-                child: SvgPicture.asset(
-                  widget.reportResult.state == 'done' ? IconAsset.icSuccess : IconAsset.icLoading,
-                  width: 25,
-                  height: 25,
-                  color: widget.reportResult.state == 'done'
-                      ? AppColor.green53
-                      : AppColor.yellowFF,
-                ),
-              ),
-              Container(
                 padding:
-                const EdgeInsets.only(top: 5, bottom: 12, left: 24, right: 0),
+                const EdgeInsets.only(top: 0, bottom: 0, left: 16, right: 0),
                 child: Row(
                   children: [
                     Expanded(
@@ -144,72 +77,85 @@ class _ItemReportResultState extends State<ItemReportResult> {
                         children: [
                           Container(
                               alignment: Alignment.centerLeft,
-                              margin: const EdgeInsets.only(bottom: 0, top: 20),
-                              child: RichText(
-                                text: Utils.convertText(
-                                    "",
-                                    "${widget.reportResult.surveyId}",
-                                    AppColor.blue15,
+                              margin: const EdgeInsets.only(bottom: 0, top: 16),
+                              child: Text(
+                                "${widget.reportResult.surveyId}",
+                                style: StyleOfit.textStyleFW400(AppColor.blue15,
                                     15),
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
+                                overflow: TextOverflow.visible,
                               )),
-                          SizedBox(
-                            child: Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(top: 5),
-                                child: RichText(
-                                  text: Utils.convertText(
-                                      "Thanh tra: ",
-                                      "${widget.reportResult.internalInspector}",
-                                      AppColor.blue15,
-                                      14),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                )),
-                          ),
-                          SizedBox(
-                            child: Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(top: 5),
-                                child: RichText(
-                                  text: Utils.convertText(
-                                      "Nông hộ: ",
-                                      "${widget.reportResult.farmerName}",
-                                      AppColor.blue15,
-                                      14),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                )),
-                          ),
-                          SizedBox(
-                            child: Container(
-                                alignment: Alignment.centerLeft,
-                                margin: const EdgeInsets.only(top: 5),
-                                child: RichText(
-                                  text: Utils.convertText(
-                                      "Ngày thực hiện: ",
-                                      Utils.formatTime(widget.reportResult.createDate?? ""),
-                                      AppColor.black22,
-                                      12),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                )),
-                          )
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Utils.convertTextWidget(
+                                    "Thanh tra: ",
+                                    "${widget.reportResult.internalInspector}",
+                                    AppColor.blue15,
+                                    14),
+                                ),
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Utils.convertTextWidget(
+                                    "Nông hộ: ",
+                                    "${widget.reportResult.farmerName}",
+                                    AppColor.blue15,
+                                    14),
+                                ),
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(top: 5, bottom: 0),
+                              child: Utils.convertTextWidget(
+                                    "Ngày thực hiện: ",
+                                    Utils.formatTime(widget.reportResult.createDate?? ""),
+                                    AppColor.black22,
+                                    14)),
+                          Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(top: 5, bottom: 16),
+                              child: Utils.convertTextWidget(
+                                  "Trạng thái: ",
+                                  widget.reportResult.state == 'done'
+                                      ? "Hoàn thành"
+                                      : "Chưa hoàn thành",
+                                  widget.reportResult.state == 'done'
+                                      ? AppColor.main
+                                      : AppColor.orange,
+                                  14))
                         ],
                       ),
                     ),
-                   Container(
-                     padding:
-                     const EdgeInsets.only(top: 10, bottom: 0, left: 0, right: 0),
-                     child: /*checkDelete ? IconButton(icon: Icon(Icons.delete),
-                       onPressed: (){
-                         widget.callbackDelete();
-                       },) : */IconButton(icon: Icon(Icons.edit),
-                       onPressed: (){
-                         widget.callbackEdit();
-                       },),
-                   )
+                    Column(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      //crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.zero,
+                          child: IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              widget.callbackEdit();
+                            },
+                            constraints: BoxConstraints(),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            widget.callbackDelete();
+                          },
+                          icon: const Padding(
+                            padding: EdgeInsets.only(right: 4),
+                            child: Image(
+                              image: AssetImage(ImageAsset.imageBin),
+                              //width: 40,
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                          //padding: EdgeInsets.all(9),
+                          constraints: BoxConstraints(),
+                        )
+                      ],
+                    ),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
+import 'package:diary_mobile/view/setting/about_me/about_me.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -175,7 +176,13 @@ class _SettingViewState extends State<SettingView> {
                            Navigator.push(context, ChangePassWordPage.route());
                   }, icon: IconAsset.icChangePassword),
                 ),
-
+                Container(
+                  padding: const EdgeInsets.only(top: 0),
+                  child: itemAccount(context,
+                      text: "Thông tin ứng dụng", voidCallback: () {
+                        Navigator.push(context, AboutMePage.route());
+                      }, icon: IconAsset.icUserManual),
+                ),
                 /*itemAccount(context, text: "Hướng dẫn sử dụng",
                     voidCallback: () {
                       Navigator.push(context, ListPDFPage.route());

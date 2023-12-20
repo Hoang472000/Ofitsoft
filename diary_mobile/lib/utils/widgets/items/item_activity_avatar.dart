@@ -162,7 +162,8 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                               child: Text(
                                 widget.activityDiary.activityName ?? "",
                                 style:
-                                StyleOfit.textStyleFW700(AppColor.gray500, 16),
+                                StyleOfit.textStyleFW700(AppColor.gray500, 16,
+                                overflow: TextOverflow.visible),
                               ),
                             ),
                             SizedBox(
@@ -175,8 +176,9 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                                         "${widget.activityDiary.actionArea ?? ''} ${widget.activityDiary.actionAreaUnitName}",
                                         AppColor.blue15,
                                         14),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.visible,
+                                    textScaleFactor: MediaQuery.of(context).textScaleFactor,
                                   )),
                             ),
                             (widget.activityDiary.harvesting ?? false)
@@ -190,8 +192,9 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                                         "${widget.activityDiary.amount ?? ''} ${widget.activityDiary.amountUnitName}",
                                         AppColor.blue15,
                                         14),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.visible,
+                                    textScaleFactor: MediaQuery.of(context).textScaleFactor,
                                   )),
                             )
                                 : SizedBox(),
