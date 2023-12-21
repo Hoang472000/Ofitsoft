@@ -82,7 +82,7 @@ Future<void> initOfit() async{
   if (Platform.isIOS) {
     String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
     if (apnsToken != null) {
-      await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
+      //await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
       await FirebaseMessaging.instance.subscribeToTopic("${userId}");
     } else {
       await Future<void>.delayed(
@@ -92,12 +92,12 @@ Future<void> initOfit() async{
       );
       apnsToken = await FirebaseMessaging.instance.getAPNSToken();
       if (apnsToken != null) {
-        await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
+        //await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
         await FirebaseMessaging.instance.subscribeToTopic("${userId}");
       }
     }
   } else {
-    await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
+    //await FirebaseMessaging.instance.unsubscribeFromTopic("${userId}");
     await FirebaseMessaging.instance.subscribeToTopic("${userId}");
   }
   FirebaseMessaging messaging = FirebaseMessaging.instance;

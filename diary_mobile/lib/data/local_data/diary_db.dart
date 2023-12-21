@@ -71,10 +71,29 @@ class DiaryDB extends _$DiaryDB {
     return transaction(() async {
       // you only need this if you've manually enabled foreign keys
       // await customStatement('PRAGMA foreign_keys = OFF');
+      //DateTime startTime = DateTime.now();
       try {
+        await delete(diaryTable).go();//1
+        await delete(activityTable).go();//2
+        await delete(toolTable).go();//3
+        await delete(materialTable).go();//4
+        await delete(unitTable).go();//5
+        await delete(activityDiaryTable).go();//6
+        await delete(userInfoTable).go();//7
+        await delete(activityMonitorTable).go();//8
+        await delete(monitorDiaryTable).go();//9
+        await delete(reportTable).go();//10
+        await delete(reportSelectTable).go();//11
+        await delete(activityPurchaseTable).go();//12
+        await delete(activityTransactionTable).go();//13
+        await delete(seasonFarmTable).go();//14
+        await delete(workflowTable).go();//15
+        await delete(areaEntityTable).go();//16
         for (final table in allTables) {
           await delete(table).go();
         }
+       /* DateTime endTime = DateTime.now();
+        Duration elapsedTime = endTime.difference(startTime);*/
         print('Dữ liệu trong bảng đã được xóa.');
       } catch (e) {
         print('Lỗi xóa dữ liệu: $e');

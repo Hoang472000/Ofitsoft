@@ -104,29 +104,8 @@ class RepositoryImpl extends Repository {
     //ObjectResult objectResult =  ObjectResult(1, "", "1", "00", true, false);
     print("HoangCV: login response: ${objectResult.response}");
     DiaryDB.instance.deleteEverything();
+
     if (objectResult.responseCode == StatusConst.code00) {
-      if (Platform.isIOS) {
-        String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-        if (apnsToken != null) {
-          await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
-          await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
-        } else {
-          await Future<void>.delayed(
-            const Duration(
-              seconds: 3,
-            ),
-          );
-          apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-          if (apnsToken != null) {
-            await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
-            await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
-          }
-        }
-      } else {
-        await FirebaseMessaging.instance.unsubscribeFromTopic("${objectResult.response["user_id"]}");
-        await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
-      }
-      //await FirebaseMessaging.instance.subscribeToTopic("${objectResult.response["user_id"]}");
       sharedPreferences.setString(SharedPreferencesKey.userName, userName);
       sharedPreferences.setString(SharedPreferencesKey.password, pass);
       String md5Password = crypto.md5.convert(utf8.encode(pass)).toString();

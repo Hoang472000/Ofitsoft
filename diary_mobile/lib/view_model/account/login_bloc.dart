@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -71,6 +72,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       } else {
         emitter(state.copyWith(formStatus: SubmissionFailed(reponse.message)));
       }
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      int userId = sharedPreferences.getInt(SharedPreferencesKey.userId) ?? -1;
+    if (Platform.isIOS) {
+      String? apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      if (apnsToken != null) {
+        //await FirebaseMessaging.instance.unsubscribeFromTopic("$userId");
+        await FirebaseMessaging.instance.subscribeToTopic("$userId");
+      } else {
+        await Future<void>.delayed(
+          const Duration(
+            seconds: 3,
+          ),
+        );
+        print("HoangCV: delay 3s");
+        apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken != null) {
+          //await FirebaseMessaging.instance.unsubscribeFromTopic("$userId");
+          await FirebaseMessaging.instance.subscribeToTopic("$userId");
+        }
+      }
+    } else {
+      DateTime startTime = DateTime.now();
+      //await FirebaseMessaging.instance.unsubscribeFromTopic("$userId");
+      await FirebaseMessaging.instance.subscribeToTopic("$userId");
+      DateTime endTime = DateTime.now();
+      Duration elapsedTime = endTime.difference(startTime);
+      print("HoangCV: subscribeToTopic: ${elapsedTime} ");
+    }
   }
   void _loginGoogle(LoginWithGoogle event,Emitter<LoginState> emitter)async{
     emitter(state.copyWith(formStatus: FormSubmitting()));
