@@ -70,7 +70,8 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: "Xóa báo cáo khảo sát thành công."),
-          listReport: listReportResult));
+          listReport: listReportResult,
+          listReportFilter: listReportResult));
     } else {
       emit(state.copyWith(
           isShowProgress: false, formStatus: SubmissionFailed(result.message)));

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart' as prefix0;
 
+import '../../../resource/color.dart';
+
 enum Position { TOP, BOTTOM, CENTER }
 
 class Toast {
@@ -35,7 +37,7 @@ class Toast {
   ///[position] Vị trí sẽ hiển thị [Position]
   static void showLong(String msg,
       {int msgColor = 0xFFffffff,
-        int bgColor = 0xFF35A854,
+        int bgColor = 0xFFFF4949,
         double fontSize = 16.0,
         Position position = Position.BOTTOM}) {
     if (msg == null || msg.trim().toString() == "") {
@@ -70,7 +72,7 @@ class Toast {
   ///[position] Vị trí sẽ hiển thị [Position]
   static void showLongTop(String msg,
       {int msgColor = 0xFFffffff,
-        int bgColor = 0xFF35A854,
+        int bgColor = 0xFFFF4949,
         double fontSize = 16.0,
         Position position = Position.TOP}) {
     if (msg == null || msg.trim().toString() == '') {
