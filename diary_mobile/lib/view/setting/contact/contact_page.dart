@@ -263,7 +263,7 @@ class _ContactPageState extends State<ContactPage> {
                             const SizedBox(height: 8,),
                             InkWell(
                               onTap: () {
-                                Utils.launchMapUrl("số 4 ngõ 12 phố Lương Khánh Thiện, phường Tân Mai, quận Hoàng Mai, Hà Nội");
+                                Utils.launchMapUrl("số 4 ngõ 12 phố Lương Khánh Thiện, phường Tương Mai, quận Hoàng Mai, Hà Nội");
                               },
                               child: Container(
                                 padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -276,7 +276,7 @@ class _ContactPageState extends State<ContactPage> {
                                         padding: const EdgeInsets.only(
                                             left: 16),
                                         child: Text(
-                                          "số 4/12 phố Lương Khánh Thiện, phường Tân Mai, quận Hoàng Mai, Hà Nội",
+                                          "số 4/12 phố Lương Khánh Thiện, phường Tương Mai, quận Hoàng Mai, Hà Nội",
                                           style: const TextStyle(
                                               color: AppColor.black22,
                                               fontSize: 15,
