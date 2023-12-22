@@ -255,7 +255,6 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-
           child: FloatingActionButton(
               //backgroundColor: Colors.transparent,
               onPressed: onTap,

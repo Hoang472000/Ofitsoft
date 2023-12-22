@@ -189,6 +189,9 @@ class NetworkExecutor{
           Map<String, dynamic> result = jsonMap['result'];*/
           try {
             objectResult = ObjectResult.fromJson(response.data['result']);
+            if(objectResult.responseCode == StatusConst.code03){
+              objectResult =  ObjectResult(1, "Error System" , "Quá hạn đăng nhập!\nVui lòng đăng nhập lại.", "03",false , true);
+            }
           } catch(_){
             objectResult= ObjectResult(1, "Error System" , "Lỗi hệ thống!\n Vui lòng thử lại sau.", "01",false , true);
           }

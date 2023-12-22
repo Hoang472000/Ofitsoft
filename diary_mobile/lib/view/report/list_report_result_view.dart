@@ -256,16 +256,8 @@ class _ListReportResultViewState extends State<ListReportResultView> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [AppColor.main, AppColor.green99],
-              begin: Alignment.centerRight,
-              end: Alignment.centerLeft,
-            ),
-            borderRadius: BorderRadius.circular(36.0), // Adjust the border radius as needed
-          ),
           child: FloatingActionButton(
-              backgroundColor: Colors.transparent,
+              //backgroundColor: Colors.transparent,
               onPressed: onTap,
               child: Icon(icon)
           ),

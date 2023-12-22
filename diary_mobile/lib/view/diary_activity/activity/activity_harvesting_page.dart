@@ -289,16 +289,6 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         Container(
-          decoration: BoxDecoration(
-              boxShadow: const [
-                BoxShadow(
-                  color: AppColor.green2,
-                  blurRadius: 0,
-                  offset: Offset(0, 1),
-                ),
-              ],
-              borderRadius: BorderRadius.circular(36),
-          ),
           child: FloatingActionButton(
               //backgroundColor: Colors.transparent,
               onPressed: onTap,
