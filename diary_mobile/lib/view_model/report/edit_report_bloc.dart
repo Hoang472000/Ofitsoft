@@ -1082,6 +1082,14 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
                       typeInputEnum: TypeInputEnum.dmucItem,
                       textAlign: TextAlign.left
                   )));
+        } else if(childAnswer.linkingField != -1) {
+          //print("HoangCV: childAnswer selectionAnswerIds real: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
+          textEditingControllerList.add(
+              Controller(childAnswer.idSelected!, TextEditingController(text: childAnswer.valueRowTable),
+                  "none",
+                  childAnswer.value!,
+                  idRow: childAnswer.tableRowId, title: childAnswer.value,
+                  constrMandatory: childAnswer.constrMandatory));
         } else{
           //print("HoangCV: childAnswer selectionAnswerIds fake: ${childAnswer.rowId} : ${childAnswer.selectionAnswerIds} : ${childAnswer.value} : ${childAnswer.idSelected!}");
 

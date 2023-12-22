@@ -451,7 +451,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
             },
             child: TextField(
               controller: controller,
-              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              keyboardType: type == 'text' ? TextInputType.text : type == 'none'
+                  ? TextInputType.none : TextInputType.number,
               onSubmitted: (str) {
                 context.read<EditReportBloc>().add(UpdateEditTableEvent(questionId, answerId, idRow, str));
               },
@@ -558,7 +559,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
             },
             child: TextField(
               controller: controller,
-              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              keyboardType: type == 'text' ? TextInputType.text : type == 'none'
+                  ? TextInputType.none : TextInputType.number,
               onSubmitted: (str) {
                 context.read<EditReportBloc>().add(UpdateAddTableFieldEvent(questionId, answerId, idRow, str));
               },
@@ -669,7 +671,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                     },
                     child: TextField(
                       controller: controller[index].controller,
-                      keyboardType: controller[index].type == 'text' ? TextInputType.text : controller[index].type == 'none' ? TextInputType.none : TextInputType.number,
+                      keyboardType: controller[index].type == 'text' ? TextInputType.text :
+                      controller[index].type == 'none' ? TextInputType.none : TextInputType.number,
                       onSubmitted: (str){
                         context.read<EditReportBloc>().add(
                             UpdateEditReportEvent(id, str, listSelected));
@@ -734,7 +737,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                       controller: controller[index].controller,
                       keyboardType: controller[index].type == 'text'
                           ? TextInputType.text
-                          : TextInputType.number,
+                          : controller[index].type == 'none'
+                          ? TextInputType.none : TextInputType.number,
                       onSubmitted: (str) {
                         context.read<EditReportBloc>().add(
                             UpdateEditReportEvent(id, str, []));
@@ -823,7 +827,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                       controller: controller[index].controller,
                       keyboardType: controller[index].type == 'text'
                           ? TextInputType.text
-                          : TextInputType.number,
+                          : controller[index].type == 'none'
+                          ? TextInputType.none : TextInputType.number,
                       onSubmitted: (str) {
                         context.read<EditReportBloc>().add(
                             UpdateEditReportEvent(id, str, []));
@@ -1771,17 +1776,47 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
         }
       }
       if(form == 0){
-        if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+        if (list[i].questionType == "simple_choice" ||
+            list[i].questionType == "multiple_choice") {
+          for (int j = 0; j <
+              list[i].suggestedAnswerIds.length; j ++) {
+            if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
+              //print("HoangCV:commentAnswer1 $i : $j : ${listParent[i].title} :  ${listController.last.id}");
+              tableRow.add(tableRowCheckBoxTextField(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect,
+                  listController,
+                  context,
+                  farmerInspector,
+                  isFirst: i == 0 ? true : false));
+            } else {
+              //print("HoangCV: $i : $j : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds[j].value} : ${listParent.length}");
+              tableRow.add(tableRowCheckBox(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect,
+                  context,
+                  farmerInspector,
+                  isFirst: i == 0 ? true : false));
+            }
+          }
+        }
+        else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
           tableSub.add(formCharTextField(list[i].title??'',
               list[i].isError ?? false,
               list[i].idSelected ?? -1,
               listController, context, farmerInspector));
-        }else if(list[i].questionType == "check_box"){
+        }
+        else if(list[i].questionType == "check_box"){
           tableSub.add(tableForm2TextField(list[i].title ?? '',
               list[i].isError ?? false,
               list[i].idSelected ?? -1,
               listSelect, listController, context, farmerInspector));
-        }else if(list[i].questionType == "datetime" || list[i].questionType == "date"){
+        }
+        else if(list[i].questionType == "datetime" || list[i].questionType == "date"){
           tableSub.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             border: TableBorder.all(color: AppColor.black22),
@@ -1829,21 +1864,85 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           ));
         }
         //print("HoangcVAS:DA sdas : ${tableSub.length}");
-        listTable1.add(Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          columnWidths: {
-            0: FlexColumnWidth(1),
-            1: FlexColumnWidth(3),
-          },
-          border: TableBorder.all(color: AppColor.black22),
-          children: [
-            TableRow(
-                children:
-                tableSub
+        if(tableSub.length>0) {
+          listTable1.add(Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(3),
+            },
+            border: TableBorder.all(color: AppColor.black22),
+            children: [
+              TableRow(
+                  children:
+                  tableSub
 
-            ),
-          ],
-        ),);
+              ),
+            ],
+          ),);
+        }else {
+          if (tableRow.isEmpty) {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                ]),
+              ],
+            ),);
+          } else {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                  tableRow.isNotEmpty
+                      ? Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                    columnWidths: const {
+                      0: FlexColumnWidth(0.7),
+                      1: FlexColumnWidth(2),
+                    },
+                    children: tableRow,
+                  )
+                      : Container(),
+                ]),
+              ],
+            ),);
+          }
+        }
       }
       else if(form == 1){
         listTable1.add(Table(

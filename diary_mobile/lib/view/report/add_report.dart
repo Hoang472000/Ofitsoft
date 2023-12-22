@@ -459,7 +459,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             },
             child: TextField(
               controller: controller,
-              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              keyboardType: type == 'text' ? TextInputType.text : type == 'none' ? TextInputType.none : TextInputType.number,
               onSubmitted: (str) {
                 context.read<AddReportBloc>().add(UpdateAddTableEvent(questionId, answerId, idRow, str));
               },
@@ -546,7 +546,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             },
             child: TextField(
               controller: controller,
-              keyboardType: type == 'text' ? TextInputType.text : TextInputType.number,
+              keyboardType: type == 'text' ? TextInputType.text : type == 'none' ? TextInputType.none : TextInputType.number,
               onSubmitted: (str) {
                 context.read<AddReportBloc>().add(UpdateAddTableFieldEvent(questionId, answerId, idRow, str));
               },
@@ -746,7 +746,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       controller: controller[index].controller,
                       keyboardType: controller[index].type == 'text'
                           ? TextInputType.text
-                          : TextInputType.number,
+                          : controller[index] == 'none' ? TextInputType.none :TextInputType.number,
                       onSubmitted: (str) {
                         context.read<AddReportBloc>().add(
                             UpdateAddReportEvent(id, str, []));
@@ -835,7 +835,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       controller: controller[index].controller,
                       keyboardType: controller[index].type == 'text'
                           ? TextInputType.text
-                          : TextInputType.number,
+                          : controller[index].type == 'none'
+                          ? TextInputType.none : TextInputType.number,
                       onSubmitted: (str) {
                         context.read<AddReportBloc>().add(
                             UpdateAddReportEvent(id, str, []));
@@ -1934,7 +1935,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   isFirst: i == 0 ? true : false));
             }
           }
-        } else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+        }
+        else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
               tableSub.add(formCharTextField(list[i].title??'',
                   list[i].isError ?? false,
                   list[i].idSelected ?? -1,

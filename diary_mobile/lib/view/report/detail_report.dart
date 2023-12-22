@@ -1476,7 +1476,24 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
         }
       }
       if(form == 0){
-        if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+        if (list[i].questionType == "simple_choice" ||
+            list[i].questionType == "multiple_choice") {
+          for (int j = 0; j <
+              list[i].suggestedAnswerIds.length; j ++) {
+            if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
+              tableRow.add(tableRowCheckBoxTextField(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect, listController, context,
+                  isFirst: i == 0 ? true : false));
+            } else {
+              tableRow.add(tableRowCheckBox("${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect,
+                  context, isFirst: i == 0 ? true : false));
+            }
+          }
+        }
+        else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
           tableSub.add(formCharTextField(list[i].title??'',
               list[i].idSelected ?? -1,
               listController, context));
@@ -1524,21 +1541,85 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           ));
         }
         //print("HoangcVAS:DA sdas : ${tableSub.length}");
-        listTable1.add(Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          columnWidths: {
-            0: FlexColumnWidth(1),
-            1: FlexColumnWidth(3),
-          },
-          border: TableBorder.all(color: AppColor.black22),
-          children: [
-            TableRow(
-                children:
-                tableSub
+        if(tableSub.length>0) {
+          listTable1.add(Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.top,
+            columnWidths: {
+              0: FlexColumnWidth(1),
+              1: FlexColumnWidth(3),
+            },
+            border: TableBorder.all(color: AppColor.black22),
+            children: [
+              TableRow(
+                  children:
+                  tableSub
 
-            ),
-          ],
-        ),);
+              ),
+            ],
+          ),);
+        }else {
+          if (tableRow.isEmpty) {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                ]),
+              ],
+            ),);
+          } else {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                  tableRow.isNotEmpty
+                      ? Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                    columnWidths: const {
+                      0: FlexColumnWidth(0.7),
+                      1: FlexColumnWidth(2),
+                    },
+                    children: tableRow,
+                  )
+                      : Container(),
+                ]),
+              ],
+            ),);
+          }
+        }
       }
       else if(form == 1){
         listTable1.add(Table(

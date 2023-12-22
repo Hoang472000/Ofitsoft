@@ -426,7 +426,7 @@ class RepositoryImpl extends Repository {
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
-        resultObject: "Dữ liệu không hợp lệ! \n Vui lòng kiểm tra lại.",
+        resultObject: "Lỗi hệ thống!\nVui lòng thử lại sau.",
       );
     }
    /* else {
@@ -844,6 +844,12 @@ class RepositoryImpl extends Repository {
       return [hierarchyList[1]];
     } else if(objectResult.responseCode == StatusConst.code02) {
 
+    } else if (objectResult.responseCode == StatusConst.code01){
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: "Lỗi hệ thống!\nVui lòng thử lại sau.",
+      );
     }
     else {
       DiaLogManager.showDialogHTTPError(
@@ -1128,12 +1134,19 @@ class RepositoryImpl extends Repository {
       //DiaryDB.instance.insertListActivityDiary(list);
       return listResult;
     }
-    else {
+    else if (objectResult.responseCode == StatusConst.code01){
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,
-        resultObject: objectResult.message,
+        resultObject: "Lỗi hệ thống!\nVui lòng thử lại sau.",
       );
+    }
+    else {
+    DiaLogManager.showDialogHTTPError(
+    status: objectResult.status,
+    resultStatus: objectResult.status,
+    resultObject: objectResult.message,
+    );
     }
 
     return []/*DiaryDB.instance.getListActivityDiary(id)*/;
