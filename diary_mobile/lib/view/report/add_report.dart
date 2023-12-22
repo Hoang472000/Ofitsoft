@@ -1172,7 +1172,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       List<List<Widget>> listRow= [];
       List<List<Widget>> listRowField= [];
       form = checkForm(list[i]);
-      //print("HoangCV: list title : ${list[i].title} ${list[i].questionType} : ${form} : ${list[i].questionAndPageIds.length}");
+      print("HoangCV: list title : ${list[i].title} ${list[i].questionType} : ${form} : ${list[i].questionAndPageIds.length}");
       if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"
           || list[i].questionType == "title"){
         if(list[i].questionAndPageIds.length>0){
@@ -1907,7 +1907,34 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         }
       }
       if(form == 0){
-            if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+        if (list[i].questionType == "simple_choice" ||
+            list[i].questionType == "multiple_choice") {
+          for (int j = 0; j <
+              list[i].suggestedAnswerIds.length; j ++) {
+            if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
+              //print("HoangCV:commentAnswer1 $i : $j : ${listParent[i].title} :  ${listController.last.id}");
+              tableRow.add(tableRowCheckBoxTextField(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect,
+                  listController,
+                  context,
+                  farmerInspector,
+                  isFirst: i == 0 ? true : false));
+            } else {
+              //print("HoangCV: $i : $j : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds[j].value} : ${listParent.length}");
+              tableRow.add(tableRowCheckBox(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect,
+                  context,
+                  farmerInspector,
+                  isFirst: i == 0 ? true : false));
+            }
+          }
+        } else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
               tableSub.add(formCharTextField(list[i].title??'',
                   list[i].isError ?? false,
                   list[i].idSelected ?? -1,
@@ -1964,7 +1991,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                 ],
               ));
             }
-          //print("HoangcVAS:DA sdas : ${tableSub.length}");
+          print("HoangcVAS:DA sdas : ${tableSub.length} : ${tableRow.isNotEmpty}");
+        if(tableSub.length>0) {
           listTable1.add(Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.top,
             columnWidths: {
@@ -1975,11 +2003,74 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             children: [
               TableRow(
                   children:
-                    tableSub
+                  tableSub
 
               ),
             ],
           ),);
+        }else {
+          if (tableRow.isEmpty) {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                ]),
+              ],
+            ),);
+          } else {
+            listTable1.add(Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: {
+                0: FlexColumnWidth(0.8),
+                1: FlexColumnWidth(0.8),
+                2: FlexColumnWidth(2),
+              },
+              border: TableBorder.all(color: AppColor.black22),
+              children: [
+                TableRow(children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 16, top: 16),
+                    child: Text(
+                      "${list[i].title}",
+                      textAlign: TextAlign.center,
+                      style: StyleOfit.textStyleFW400(
+                          list[i].isError == true ? AppColor.red11 : AppColor
+                              .black22, 14),
+                      maxLines: 7,
+                    ),
+                  ),
+                  tableRow.isNotEmpty
+                      ? Table(
+                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                    columnWidths: const {
+                      0: FlexColumnWidth(0.7),
+                      1: FlexColumnWidth(2),
+                    },
+                    children: tableRow,
+                  )
+                      : Container(),
+                ]),
+              ],
+            ),);
+          }
+        }
         }
       else if(form == 1){
         listTable1.add(Table(
