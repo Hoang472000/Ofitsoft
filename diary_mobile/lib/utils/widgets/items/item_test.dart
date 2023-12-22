@@ -7,7 +7,7 @@ import '../../../resource/style.dart';
 import '../../utils.dart';
 import '../../../view/diary/detail_diary/detail_diary_page.dart';
 
-///Bkav Nhungltk: item diary
+///HoangCV: item diary
 class ItemTest extends StatefulWidget {
   final int index;
   final int amountSelected; // xac dinh xem item co dang duoc chon khong
@@ -92,7 +92,7 @@ class _ItemTestState extends State<ItemTest> {
                 decoration: BoxDecoration(
                     boxShadow: const [
                       BoxShadow(
-                        color: AppColor.green53,
+                        color: AppColor.main,
                         blurRadius: 0,
                         offset: Offset(-5.0, 0),
                       ),

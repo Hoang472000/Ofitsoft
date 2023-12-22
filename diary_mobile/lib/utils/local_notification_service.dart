@@ -55,7 +55,7 @@ class LocalNotificationService {
       int id, String? title, String? body, String? payload) {}
 
   void onSelectNotification(String? payload, bool openApp) {
-    // HanhNTHe: logic khi thuc hien click vao 1 thong bao o foreground
+    //HoangCV: logic khi thuc hien click vao 1 thong bao o foreground
     Logger.loggerDebug(" onDidReceiveNotificationResponse = $payload");
     if(openApp){
       LaunchApp.openApp(androidPackageName: "com.ofitsoft.diary.diary_mobile");

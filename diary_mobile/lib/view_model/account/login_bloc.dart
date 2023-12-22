@@ -260,7 +260,7 @@ class RememberLoginChanged extends LoginEvent {
 }
 
 class LoginSubmitted extends LoginEvent {
-  //Bkav Nhungltk: lay thong tin dang nhap tu event
+  //HoangCV: lay thong tin dang nhap tu event
   final String username;
   final String password;
   final bool biometric;

@@ -90,7 +90,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
     //     ));
   }
 
-  //DatNVh lay email tu db
+  //HoangCV lay email tu db
   void getListUser() async {
 /*    List<UserInfo> list = await _db.getlistUser();
     for (int i = 0; i < list.length; i++) {
@@ -243,7 +243,7 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
           // await LoginPage.route(), (route) => false);});
           startTime();
           setState(() {
-            //DatNVh tam thoi vut luon otp vao _inputMaxtController
+            //HoangCV tam thoi vut luon otp vao _inputMaxtController
             // _inputOtpController = TextEditingController(text: state.otp);
             isSend = true;
             isEnabled = true;

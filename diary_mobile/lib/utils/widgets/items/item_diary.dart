@@ -159,7 +159,7 @@ class _ItemDiaryState extends State<ItemDiary> {
                     ),
                   ),
                   Text(widget.diary.name.toString(),
-                      style: StyleOfit.textStyleFW500(AppColor.main, 16),
+                      style: StyleOfit.textStyleFW500(AppColor.black22, 16),
                       maxLines: 3,
                       overflow: TextOverflow.visible),
                   Padding(

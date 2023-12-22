@@ -26,7 +26,7 @@ class AuthenticationBloc
 
   void _onAuthenticationStatusChanged(AuthenticationStatusChanged event,
       Emitter<AuthenticationState> emit) async {
-    Logger.loggerDebug("nhungltk onAuthenticationStatusChanged: ${event.status}");
+    Logger.loggerDebug("HoangCV onAuthenticationStatusChanged: ${event.status}");
     switch (event.status) {
       case AuthenticationStatus.authenticated:
         //final userInfo = await _getUserinfo();

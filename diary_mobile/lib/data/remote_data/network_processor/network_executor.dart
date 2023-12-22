@@ -205,7 +205,7 @@ class NetworkExecutor{
                       ApiParameterConst.refreshToken: refreshToken
                     }, *//*commandType: ApiConst.refreshAccessToken*//*)));
             // debugPrint(
-            //     " HanhNTHe:-- is ok--------------------- ${response.toString()} , == $refreshToken");
+            //     "HoangCV:-- is ok--------------------- ${response.toString()} , == $refreshToken");
 
             if (response.response['AccessToken'] != null) {
               pref.setString(SharedPreferencesKey.accessToken,
@@ -218,7 +218,7 @@ class NetworkExecutor{
           }*/
         } while(reFetchApi);
 
-        // debugPrint(" HanhNTHe: isOK = =================== ${objectResult.toString()}");
+        // debugPrint("HoangCV: isOK = =================== ${objectResult.toString()}");
         return objectResult;
       } else {
         ///khong co mang

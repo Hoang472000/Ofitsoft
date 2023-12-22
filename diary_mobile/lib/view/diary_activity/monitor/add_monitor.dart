@@ -392,7 +392,7 @@ class _AddMonitorPageState extends State<AddMonitorPage> {
                                             ],
                                           ),
                                           onTap: () async {
-                                            //Bkav DucLQ TODO: Tam tat tinh nang nay
+                                            ///HoangCV TODO: Tam tat tinh nang nay
                                             Get.back();
 
                                             //HoangCV: chup anh

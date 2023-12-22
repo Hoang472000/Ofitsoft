@@ -46,7 +46,7 @@ class _ItemReportSelectState extends State<ItemReportSelect> {
           decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
-                  color: AppColor.green53,
+                  color: AppColor.main,
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),

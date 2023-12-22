@@ -202,7 +202,7 @@ class _ContactPageState extends State<ContactPage> {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  Utils.launchMailUrl("https://ofitsoft.vn/");
+                                  Utils.launchInBrowser("https://ofitsoft.vn/");
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -231,7 +231,7 @@ class _ContactPageState extends State<ContactPage> {
                               color: Colors.transparent,
                               child: InkWell(
                                 onTap: () {
-                                  Utils.launchMailUrl("https://www.facebook.com/profile.php?id=61550762402696");
+                                  Utils.launchInBrowser("https://www.facebook.com/profile.php?id=61550762402696");
                                 },
                                 child: Container(
                                   padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -259,6 +259,42 @@ class _ContactPageState extends State<ContactPage> {
                             const Padding(
                               padding: EdgeInsets.only(right: 30),
                               child: DottedLine(dashColor: AppColor.gray9B,),
+                            ),
+                            const SizedBox(height: 8,),
+                            InkWell(
+                              onTap: () {
+                                Utils.launchInBrowser("https://masothue.com/0110264534-cong-ty-co-phan-phan-mem-nong-nghiep-toi-uu");
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.only(top: 10, bottom: 10),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Image(
+                                      image: AssetImage(ImageAsset.imageOfitsoft),
+                                      width: 25,
+                                      fit: BoxFit.contain,
+                                    ),
+                                    //SvgPicture.asset(IconAsset.ic, color: AppColor.red11, width: 25,),
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.only(
+                                            left: 16),
+                                        child: Text(
+                                          "CÔNG TY CỔ PHẦN PHẦN MỀM NÔNG NGHIỆP TỐI ƯU",
+                                          style: const TextStyle(
+                                              color: AppColor.black22,
+                                              fontSize: 15,
+                                              height: 1.2,
+                                              overflow: TextOverflow.visible,
+                                              fontWeight: FontWeight.w400
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                             const SizedBox(height: 8,),
                             InkWell(

@@ -77,7 +77,7 @@ class Validator {
     return "";
   }
 
-  ///Bkav Nhungltk: validate mat khau
+  ///HoangCV: validate mat khau
   /// Mat khau co do dai toi thieu la 8
   /// Chứa 3 trong 4 kiểu ký tự (a – z, A – Z, 0 – 9, !@#$%^&*)
   ///  Khong chua khoang trang

@@ -60,10 +60,10 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
   bool hideError = false;
   bool onTap = true;
 
-  //Bkav Nhungltk
+  //HoangCV
   bool _hasFocus = false;
 
-  // HanhNTHe add
+  //HoangCV
   DateTime selectedDate = DateTime.now();
 
   _selectDate(BuildContext context) async {
@@ -112,21 +112,21 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
     super.dispose();
   }
 
-  /// Bkav DucLQ show icon * mau do
+  ///HoangCV show icon * mau do
   void showAsterrick(bool show) {
     setState(() {
       _showAsterisk = show;
     });
   }
 
-  //Bkav Nhungltk: hien thi thong bao text null
+  //HoangCV: hien thi thong bao text null
   void textIsNotEmplty(bool textIsNotEmpty) {
     setState(() {
       _validatorTextIsEmpty = !textIsNotEmpty;
     });
   }
 
-  /// Bkav DucLQ ham nay de tao lai deco
+  ///HoangCV ham nay de tao lai deco
   InputDecoration createInputDecoration() {
     return InputDecoration(
         fillColor: Colors.white,
@@ -151,7 +151,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                                 (widget.isNotValidStart != null &&
                                     !widget.isNotValidStart!))
                         ? AppColor.redDD
-                        : const Color(0xFFBDBDBD) /*Bkav Nhungltk*/,
+                        : const Color(0xFFBDBDBD) /*  //HoangCV*/,
                 width: 1.0)),
  /*       errorText: widget.isNotEdit ?? false//
             ? widget.errorValidate
@@ -168,7 +168,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                         ? widget.errorValidate
                         : null)
                 : null,*/
-        // label: (_showAsterisk /*Bkav Nhungltk && (_notEmpty*/ ||
+        // label: (_showAsterisk /*  //HoangCV && (_notEmpty*/ ||
         //         _textIsNotEmpty) /*)*/
         //     ? Row(
         //         mainAxisSize: MainAxisSize.min,
@@ -217,7 +217,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
             : widget.isTime != null && _showDeleteText && _hasFocus
                 ? IconButton(
                     color: AppColor.black22,
-                    //Bkav HanhNTHe: open lich
+          //HoangCV: open lich
                     icon: SvgPicture.asset(
                       IconAsset.icLich,
                       width: 16,
@@ -252,7 +252,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                           //             child: IconButton(
                           //               color: AppColor.black22,
                           //               icon:
-                          //                   //Bkav Nhungltk: fix loi fucus bi mau xanh
+                          //                     //HoangCV: fix loi fucus bi mau xanh
                           //                   const Icon(
                           //                 Icons.clear,
                           //                 color: AppColor.black22,
@@ -268,7 +268,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                           //     ])
                         null
                         : null
-                    : _showDeleteText && _hasFocus //Bkav Nhungltk
+                    : _showDeleteText && _hasFocus   //HoangCV
                         ? Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween, // added line
@@ -294,7 +294,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                               //         ),
                               //         onPressed: () {
                               //           widget._textEditingController.clear();
-                              //           //Bkav Nhungltk
+                              //             //HoangCV
                               //           _textIsNotEmpty = false;
                               //           showDeleteText(false);
                               //         },
@@ -302,7 +302,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                               //     )),
                               IconButton(
                                 color: AppColor.black22,
-                                //Bkav Nhungltk: fix loi fucus bi mau xanh
+                                //HoangCV: fix loi fucus bi mau xanh
                                 icon: _obscureText
                                     ? SvgPicture.asset(
                                   IconAsset.eyeOn,
@@ -324,7 +324,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                           )
                         : IconButton(
                             color: AppColor.black22,
-                            //Bkav Nhungltk: fix loi fucus bi mau xanh
+          //HoangCV: fix loi fucus bi mau xanh
                             icon: _obscureText
                                 ? SvgPicture.asset(
                               IconAsset.eyeOn,
@@ -344,7 +344,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                           )));
   }
 
-  ///Bkav DucLQ ham nay de show Icon delete
+  ///HoangCV ham nay de show Icon delete
   void showDeleteText(bool show) {
     setState(() {
       Logger.loggerDebug("show Delete $show");
@@ -380,7 +380,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
           obscuringCharacter: "*",
           onChanged: (text) => {
                 showDeleteText((text.isNotEmpty)),
-                if ((text.isNotEmpty /*Bkav Nhungltk && _isTypePassword*/) !=
+                if ((text.isNotEmpty /*  //HoangCV && _isTypePassword*/) !=
                     _showDeleteText)
                   {
                     if (!text.isNotEmpty)
@@ -431,7 +431,7 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
           }),
       onFocusChange: (hasFocus) async {
         showAsterrick(hasFocus);
-        //Bkav Nhungltk:
+        //HoangCV:
         setState(() {
           _hasFocus = hasFocus;
           if (hasFocus == false) {

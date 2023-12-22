@@ -131,7 +131,7 @@ class DiaLogManager {
     );
   }
 
-  // HanhNTHe: show dialog error khi cos loi http code
+  //HoangCV: show dialog error khi cos loi http code
   static void showDialogHTTPError(
       {required int status,
         required int resultStatus,
@@ -151,7 +151,7 @@ class DiaLogManager {
     return;
   }
 
-  /// HanhNTHe: show dialog "tinh nang dang phat trien"
+  ///HoangCV: show dialog "tinh nang dang phat trien"
   static void showDialogDevelopingFeature() {
     // Logger.loggerDebug(" showDialogError "
     //     "1 - ${NavigationService.navigatorKey.currentContext}  - ok $status resultStatus $resultStatus resultObject $resultObject ");
@@ -272,7 +272,7 @@ class DiaLogManager {
     return;
   }
 
-  ///  Bkav HanhNTHe: show dialog "Nhap thong tin thanh cong"
+  ///HoangCV: show dialog "Nhap thong tin thanh cong"
   static void showDialogSuccess(
       BuildContext context, String title, VoidCallback acceptCallback, {bool dismissible = true }) {
     Html html = Html(
@@ -289,7 +289,7 @@ class DiaLogManager {
       },
     );
 
-    // Bkav DucLQ TODO:
+    //HoangCV TODO:
     DiaLogManager.displayDialog(
       context,
       "",
@@ -302,7 +302,7 @@ class DiaLogManager {
     );
   }
 
-  ///  Bkav HanhNTHe: show dialog "Nhap thong tin thanh cong"
+  ///HoangCV: show dialog "Nhap thong tin thanh cong"
   static void showDialogSendInformationSuccess(BuildContext context,
       String title, String dataHtml, VoidCallback acceptCallback) {
     Logger.loggerDebug("Bkav HoangCV show dialog Datahtml: $dataHtml");

@@ -12,7 +12,7 @@ class AppColor {
   static const Color redE5 = Color(0xFFE50500);
   static const Color redDD = Color(0xFFDD0808);
   static const Color redE1 = Color(0xFFE12727);
-  static const Color main = Color(0xFF35A854);
+  static const Color main = Color(0xFFE8914B);
   static const Color cyan = Color(0xFF08B7DD);
   static const Color cyan100= Color(0xFFB2E9F8);
   static const Color grayB8 = Color(0xFFB8C1C9);
@@ -49,7 +49,7 @@ class AppColor {
   static const Color yellowFF = Color(0xFFFFA500);
   static const Color yellow07 = Color(0xFFFFC107);
   static const Color green53 = Color(0xFF34A853);
-  static const Color green99 = Color(0xFF0f6939);
+  static const Color green99 = Color(0xFFEA9047);
   static const Color yellow00 = Color(0xFFFFC721);
   static const Color yellow01= Color(0xFFF5EA1C);
   static const Color green29= Color(0xFF295F2D);

@@ -10,7 +10,7 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../dialog/dialog_manager.dart';
 
-///Bkav Nhungltk: item diary
+///HoangCV: item diary
 class ItemActivity extends StatefulWidget {
   final ActivityDiary activityDiary;
   final MonitorDiary monitorDiary;
@@ -55,7 +55,7 @@ class _ItemActivityState extends State<ItemActivity> {
           decoration: BoxDecoration(
               boxShadow: const [
                 BoxShadow(
-                  color: AppColor.green53,
+                  color: AppColor.main,
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),

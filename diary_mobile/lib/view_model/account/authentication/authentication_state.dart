@@ -1,7 +1,7 @@
 import '../../../data/repository.dart';
 import '../../bloc_state.dart';
 
-///Bkav DucLQ khi vao ung dung xe check cac trang thai xac thuc cua tai khoan de
+///HoangCV khi vao ung dung xe check cac trang thai xac thuc cua tai khoan de
 class AuthenticationState extends BlocState {
   @override
   List<Object?> get props => [status];

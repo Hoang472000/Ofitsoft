@@ -385,7 +385,7 @@ class Utils {
     }
   }
 
-  //DatNVh open GoogleMap
+  //HoangCV open GoogleMap
   static Future<void> launchMapUrl(String address) async {
     String encodedAddress = Uri.encodeComponent(address);
     String googleMapUrl = "https://www.google.com/maps/search/?api=1&query=$encodedAddress";
@@ -410,7 +410,7 @@ class Utils {
     }
   }
 
-  //DatNVh open phoneCall
+  //HoangCV open phoneCall
   static Future<void> launchPhoneUrl(String phone) async {
     final Uri launchUri=Uri(
         scheme: 'tel',
@@ -423,7 +423,7 @@ class Utils {
     }
   }
 
-  //DatNVh open email
+  //HoangCV open email
   static Future<void> launchMailUrl(String email) async {
     String? encodeQueryParameters(Map<String,String> params){
       return params.entries
@@ -445,7 +445,7 @@ class Utils {
     }
   }
 
-  //DatNVh open browser
+  //HoangCV open browser
   static Future<void> launchBrowserUrl(String url) async {
     if (await canLaunchUrlString(url)) {
       //https://www.google.com/maps/d/u/0/edit?mid=1aw4WzmDIeCzhr80tSGT-siVOPos5Nn-E&ll=11.60634274655824%2C107.03177262938478&z=14

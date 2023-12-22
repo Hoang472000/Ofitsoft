@@ -56,13 +56,13 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                           alignment: Alignment.centerLeft,
                           child: VerticalDivider(
                             thickness: 2,
-                            color: AppColor.green2,
+                            color: AppColor.main,
                           ))),
                   Align(
                     alignment: Alignment.topLeft,
                     child: Container(
                       padding: const EdgeInsets.only(left: 10, top: 15),
-                      child: Icon(Icons.circle, color: AppColor.green53, size: 12,),
+                      child: Icon(Icons.circle, color: AppColor.green99, size: 12,),
                     ),
                   )
                 ],
@@ -137,7 +137,7 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                       child: Text(
                         (widget.activityDiary.activityName ?? "").substring(0,1),
                         style:
-                        StyleOfit.textStyleFW700(AppColor.green53, 16),
+                        StyleOfit.textStyleFW700(AppColor.main, 16),
                       ),
                     ),
                   );

@@ -51,7 +51,7 @@ class _BkavTextFormFieldState extends State<BkavTextFormField>{
         child: IconButton(
                 color: AppColor.black22,
                 icon:
-                //Bkav Nhungltk: fix loi fucus bi mau xanh
+                //HoangCV: fix loi fucus bi mau xanh
                 const Icon(
                   Icons.clear,
                   color: AppColor.main,

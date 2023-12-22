@@ -55,6 +55,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
               ),
               elevation: 0.0,
               //hasBottom: true,
+              //backgroundColor: Colors.transparent,
             ),
             //extendBodyBehindAppBar: true,
             body: BlocConsumer<AccountInformationBloc,
@@ -81,7 +82,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
     builder: (contextBloc, state) {
     return Container(
                 //color: AppColor.whiteF5,
-                padding: const EdgeInsets.only(top: 0),
+                padding: const EdgeInsets.only(top: 16),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -89,107 +90,111 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                       Stack(
                         children: [
                           Container(
-                            width: double.infinity,
-                            //margin: const EdgeInsets.only(top: 10),
-                            padding: const EdgeInsets.only(
-                                top: 0, left: 10, right: 10),
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xFF34B956), AppColor.green99],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                              ),
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(32),
-                                  bottomRight: Radius.circular(32)),
-                            ),
-                            height: 200,
-                          ),
-                           Column(
-                                children: [
-                              Center(
-                                child: CircleAvatar(
-                                    backgroundColor: const Color(0xFF319A4B),
-                                    radius: 70,
-                                    child:ClipOval(
-                                child: state.userInfo != null ? (state.userInfo!.mediaContent == '' || state.userInfo!.mediaContent == null ?
-                                    Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
-                                    Image.memory(base64Decode(state.userInfo!.mediaContent ?? ""),gaplessPlayback: true, fit: BoxFit.cover, width: 140, height: 140,
-                                      errorBuilder: (context, error, stackTrace) {
-                                      // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
-                                        print("HoangCV: run way");
-                                    return Image.asset(
-                                        ImageAsset.imagePersonProfile,
-                                        fit: BoxFit.fitHeight,
-                                        width: 140,
-                                        height: 140,
-                                      );
-                                    },
-                                   )):
-                                    Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.cover, width: 140, height: 140, )), //CircleAvatar
-                              )),
-                              Container(
-                                padding: const EdgeInsets.only(top: 10),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Visibility(
-                                      visible: edit,
-                                      child: GestureDetector(
-                                        child: const Column(
-                                          children: [
-                                            Image(
-                                              image: AssetImage(
-                                                  ImageAsset.imageCamera),
-                                              width: 40,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () async {
-                                          List<ImageEntity> list =
-                                              await Utils.getImagePicker(
-                                                  ImageSource.camera,
-                                                  multiSelect: false);
-                                            if (list.length > 0) {
-                                              contextBloc.read<AccountInformationBloc>().add(AddOrDeleteImageEvent(list, context));
-                                            }
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 30,
-                                    ),
-                                    Visibility(
-                                      visible: edit,
-                                      child: GestureDetector(
-                                        child: const Column(
-                                          children: [
-                                            Image(
-                                              image: AssetImage(
-                                                  ImageAsset.imageGallery),
-                                              width: 40,
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ],
-                                        ),
-                                        onTap: () async {
-                                          List<ImageEntity> list =
-                                              await Utils.getImagePicker(
-                                                  ImageSource.gallery,
-                                                  multiSelect: false);
-                                            if (list.isNotEmpty) {
-                                              contextBloc.read<AccountInformationBloc>().add(AddOrDeleteImageEvent(list, context));
-                                            }
-                                        },
-                                      ),
-                                    )
-                                  ],
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(left: 16, right: 16),
+                              padding: const EdgeInsets.only(
+                                  top: 10, left: 10, right: 10),
+                              height: MediaQuery.sizeOf(context).height / 4,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                      ImageAsset.imageBackgroundDigital),
+                                  colorFilter: ColorFilter.mode(
+                                      AppColor.main.withOpacity(0.1),
+                                      BlendMode.darken
+                                  ),
+                                  fit: BoxFit.fill,
                                 ),
+                                borderRadius: BorderRadius.all(
+                                     Radius.circular(32)),
+                              )),
+                         Column(
+                           mainAxisSize: MainAxisSize.min,
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                            CircleAvatar(
+                                backgroundColor: const Color(0xFF319A4B),
+                                radius: 70,
+                                child:ClipOval(
+                            child: state.userInfo != null ? (state.userInfo!.mediaContent == '' || state.userInfo!.mediaContent == null ?
+                                Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.fitHeight,) :
+                                Image.memory(base64Decode(state.userInfo!.mediaContent ?? ""),gaplessPlayback: true, fit: BoxFit.cover, width: 140, height: 140,
+                                  errorBuilder: (context, error, stackTrace) {
+                                  // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
+                                    print("HoangCV: run way");
+                                return Image.asset(
+                                    ImageAsset.imagePersonProfile,
+                                    fit: BoxFit.fitHeight,
+                                    width: 140,
+                                    height: 140,
+                                  );
+                                },
+                               )):
+                                Image.asset(ImageAsset.imagePersonProfile, fit: BoxFit.cover, width: 140, height: 140, )), //CircleAvatar
+                            ),
+                            Container(
+                              padding: const EdgeInsets.only(top: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Visibility(
+                                    visible: edit,
+                                    child: GestureDetector(
+                                      child: const Column(
+                                        children: [
+                                          Image(
+                                            image: AssetImage(
+                                                ImageAsset.imageCamera),
+                                            width: 40,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        List<ImageEntity> list =
+                                            await Utils.getImagePicker(
+                                                ImageSource.camera,
+                                                multiSelect: false);
+                                          if (list.length > 0) {
+                                            contextBloc.read<AccountInformationBloc>().add(AddOrDeleteImageEvent(list, context));
+                                          }
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 30,
+                                  ),
+                                  Visibility(
+                                    visible: edit,
+                                    child: GestureDetector(
+                                      child: const Column(
+                                        children: [
+                                          Image(
+                                            image: AssetImage(
+                                                ImageAsset.imageGallery),
+                                            width: 40,
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        List<ImageEntity> list =
+                                            await Utils.getImagePicker(
+                                                ImageSource.gallery,
+                                                multiSelect: false);
+                                          if (list.isNotEmpty) {
+                                            contextBloc.read<AccountInformationBloc>().add(AddOrDeleteImageEvent(list, context));
+                                          }
+                                      },
+                                    ),
+                                  )
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
+                        ),
 
                         ],
                       ),

@@ -22,11 +22,11 @@ class ItemCardDiary extends StatelessWidget {
   }
 
   Color get borderColor {
-    return AppColor.green53;
+    return AppColor.main;
   }
 
   Color get shadowColor {
-    return AppColor.green53;
+    return AppColor.main;
   }
 
   Color get textColor {

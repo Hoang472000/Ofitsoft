@@ -93,7 +93,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
   //late ai_book.AiBookDb _db;
   bool isRemember = ApiConst.isRememberDefault;
 
-  // DatNVh login with Google
+  //HoangCV login with Google
 
   @override
   void initState() {
@@ -269,7 +269,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
 
   Widget _usernameField(BuildContext context) {
     return BlocBuilder<LoginBloc, LoginState>(builder: (context, state) {
-      //DatNVh autofill username neu nguoi dung da login truoc do
+      //HoangCV autofill username neu nguoi dung da login truoc do
       if (state.username.isNotEmpty) {
         _inputUsernameController = TextEditingController(
             text: _inputUsernameController.text.isNotEmpty

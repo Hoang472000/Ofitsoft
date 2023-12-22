@@ -85,7 +85,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   }
   // FutureOr<void> _editProfile(EditProfileEvent event, Emitter<ProfileState> emit) async{
-  //   Logger.loggerDebug("nhungltk:${event.isEditProfile}");
+  //   Logger.loggerDebug("HoangCV:${event.isEditProfile}");
   //   emit(state.copyWith(isLoad: false, isEditProfile: event.isEditProfile));
   // }
 
