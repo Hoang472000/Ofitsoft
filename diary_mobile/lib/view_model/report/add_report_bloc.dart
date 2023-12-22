@@ -265,15 +265,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             int i = 0;
             addTableFieldRow(state.listReport[0].questionAndPageIds, listTableField, i,
                 event.list[event.index].listValue[result].farmIds);
-            listTableField.forEach((element) {
-        //print("HoangCV:listTable:  ${listTableField.toString()}");
-        element.listQuestion.forEach((e) {
-          //print("HoangCV:listTable e:  ${element.listQuestion.toString()}");
-          e.suggestedAnswerIds.forEach((el){
-            print("HoangCV:listQuestion:  ${el.toString()} : ${el.rowId}");
-          });
-        });
-      });
+
             List<List<Controller>> listCtrlTableField = createTECTBListsField(listTableField,);
             listControllerTableField.addAll(listCtrlTableField);
             emit(state.copyWith(
@@ -345,6 +337,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         event.input.error = null;
         // });
         // can gi de update report
+        print("HoangCV: state.farmerInspector: ${state.farmerInspector}");
           QuestionUpload questionUpload = QuestionUpload(
               idOffline: state.idOffline,
               userInputId: state.reportId,
@@ -356,8 +349,15 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               tableAnswerId: event.input.listValue[result].id,
               isAnswerExist: true,
               tableRowId: event.rowId + 1,
-              listIdSuggested: []
-          );
+              listIdSuggested: [],
+              farmerId: state.farmerInspector!.farmerId,
+              farmId: state.farmerInspector!.farmId,
+              farmCode: state.farmerInspector!.farmCode,
+              farmerCode: state.farmerInspector!.farmerCode,
+              internalInspectorId: state.farmerInspector!.internalInspectorId,
+              monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+              visitDate: state.farmerInspector!.visitDate,
+        );
           ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
           if (objectResult.responseCode == StatusConst.code00) {
             emit(state.copyWith(
@@ -393,6 +393,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         event.input.error = null;
         // });
         // can gi de update report
+        print("HoangCV: state._onSelectionFieldValue: ${state.farmerInspector}");
         QuestionUpload questionUpload = QuestionUpload(
             idOffline: state.idOffline,
             userInputId: state.reportId,
@@ -405,7 +406,14 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             rowLinkId: state.listFarm[event.rowId].id,
             isAnswerExist: true,
             tableRowId: event.rowId + 1,
-            listIdSuggested: []
+            listIdSuggested: [],
+            farmerId: state.farmerInspector!.farmerId,
+            farmId: state.farmerInspector!.farmId,
+            farmCode: state.farmerInspector!.farmCode,
+            farmerCode: state.farmerInspector!.farmerCode,
+            internalInspectorId: state.farmerInspector!.internalInspectorId,
+            monitoringVisitType: state.farmerInspector!.monitoringVisitType,
+            visitDate: state.farmerInspector!.visitDate,
         );
         ObjectResult objectResult = await repository.uploadQuestion(questionUpload);
         if (objectResult.responseCode == StatusConst.code00) {
@@ -458,9 +466,6 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
       listInputModel = createInputLists(report[0].questionAndPageIds);
       listVisible = createVisibleLists(report[0].questionAndPageIds);
       listController = createTextEditingControllerLists(report[0].questionAndPageIds);
-      listInputModel.forEach((element) {
-        print("HoangCV:listInputModel:  ${element.length} : ${element.toString()}");
-      });
  /*     listController.forEach((element) {
         print("HoangCV:listController:  ${element.length} : ${element[0].id}");
       });*/

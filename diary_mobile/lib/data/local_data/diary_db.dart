@@ -50,11 +50,7 @@ import 'table/transaction/activity_purchase_no_network_table.dart';
 import 'table/transaction/activity_transaction_no_network_table.dart';
 part 'diary_db.g.dart';
 
-@DriftDatabase(tables: [DiaryTable, ActivityTable, ToolTable, MaterialTable, UnitTable,
-  ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
-  ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
-  ReportSelectTable, ActivityPurchaseTable, ActivityTransactionTable, ActivityTransactionNoNetworkTable,
-  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable, AreaEntityTable])
+@DriftDatabase(tables: [AreaEntityTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());

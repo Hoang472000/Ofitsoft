@@ -13,13 +13,8 @@ class AreaEntity implements Insertable<AreaEntity> {
   String? stringSeasons;
   String? image;
 
-  AreaEntity({
-    this.userId,
-    this.id,
-    this.name,
-    this.seasons = const [],
-    this.stringSeasons,
-    this.image,
+  AreaEntity({this.userId, this.id, this.name, this.seasons = const [],
+    this.stringSeasons, this.image,
   });
 
   factory AreaEntity.fromJson(Map<String, dynamic> json, int userId) {

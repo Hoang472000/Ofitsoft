@@ -889,7 +889,7 @@ class RepositoryImpl extends Repository {
   List<Report> buildReportHierarchy(List<Report> reports) {
     List<Question> list1 = reports[1].questionAndPageIds.map((question) => Question.copy(question)).toList();
     List<Question> list2 = [];
-    print("HoangCV: list1 length: ${list1.length}");
+    //print("HoangCV: list1 length: ${list1.length}");
     for (int i = 0; i < list1.length - 1; i++) {
       bool checkQuestion = true;
       if(i>0)
@@ -949,7 +949,7 @@ class RepositoryImpl extends Repository {
           if (list2[k].questionAndPageIds[i].suggestedAnswerIds.any((element) =>
           element.linkingField != null && element.linkingField != -1)) {
             result[k].questionAndPageIds[i].questionType = "table_field";
-            print("HoangCV: list2 length table_field: ${list2[k].questionAndPageIds[i].questionType}");
+            //print("HoangCV: list2 length table_field: ${list2[k].questionAndPageIds[i].questionType}");
           }
           for (int m = 0; m <
               list2[k].questionAndPageIds[i].suggestedAnswerIds.length; m++) {
@@ -981,7 +981,7 @@ class RepositoryImpl extends Repository {
         }
       }
     }
-    print("HoangCV: result length: ${result.length}");
+    //print("HoangCV: result length: ${result.length}");
     List<Question> list3 = result.map((question) => Question.copy(question)).toList();
     for(int k = 0 ; k < result.length ; k++) {
       for (int i = 0; i < result[k].questionAndPageIds.length - 1; i++) {
@@ -1263,7 +1263,7 @@ class RepositoryImpl extends Repository {
         }
       }
     }
-    print("HoangCV: result length: ${result.length}");
+    //print("HoangCV: result length: ${result.length}");
     List<Question> list3 = result.map((question) => Question.copy(question)).toList();
     for(int k = 0 ; k < result.length ; k++) {
       for (int i = 0; i < result[k].questionAndPageIds.length - 1; i++) {

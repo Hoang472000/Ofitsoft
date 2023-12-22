@@ -23,65 +23,22 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ///Lay danh sach phieu ban hang
   FutureOr<void> _getListSalesSlip(
       HomeStartEvent event, Emitter<HomeState> emit) async {
-    // lay danh sach org(đơn vị) cua user
-  /*  final prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString(SharedPreferencesKey.userId) ?? "";
-    List<UserORG> listUserOrg =
-        await AiBookDb.instance.getListUserOrg(userId).get();
-    if (listUserOrg.isNotEmpty) {
-      // emit them org cua ok de hien thi len giao dien trang chu
-      emit(state.copyWith(lOrg: listUserOrg, orgOk: state.userOrgChoose));
-    }
 
-    // Todo HanhNTHe: cho nay de fake sau thuc hien dung repository
-    ReportData data = await FakeDataSource().fetchReportData(RequestReportData(
-        dataTypeID: 1,
-        fromDate: '',
-        itemGUID: '',
-        reportGUID: '',
-        storeGUID: '',
-        toDate: ''));
-    // print (" reportMouthData = ---------------------------- ${data.chartForms.length}");
-    emit(state.copyWith(charts: data.chartForms));
-
-    // lay danh sach bao cao
-    ReportData reportTodayData = await repository.fetchTodayReportData(
-        RequestReportData(
-            reportGUID: "",
-            fromDate: "2022-01-01",
-            toDate: "2022-05-29",
-            dataTypeID: 0,
-            storeGUID: "",
-            itemGUID: ""));
-    List<TableFormsTodayData> list =
-        reportTodayData.tableForms.cast<TableFormsTodayData>();
-    // print(" ----------- list = ${list.toString()}");
-    for (var i in list) {
-      // test
-      if (i.xName == '25/05') {
-        emit(state.copyWith(data: i));
-      }
-    }
-  }
-
-  FutureOr<void> _changeRadioOrg(
-      ChangeRadioUserOrgEvent event, Emitter<HomeState> emit) {
-    emit(state.copyWith(userORG: event.userOrg));*/
 
     List<ActivityFarm> list = [];
     List<bool> check = await SharedPreDiary.getRole();
-    if(check[3]) {
+    if(check[4]) {
       list.add(ActivityFarm(
           id: 1,
           nameActivity: "Giao dịch mua hàng",
           iconActivity: ImageAsset.imageSelling));
-    } if(check[4]){
+    } if(check[3]){
       list.add(ActivityFarm(
           id: 2,
           nameActivity: "Đánh giá khảo sát",
           iconActivity: ImageAsset.imageManager));
     }
-    if(check[3] || check[4] || check[2]) {
+    if(check[3] || check[4]) {
       list.add(ActivityFarm(
           id: 3,
           nameActivity: "Truy xuất",
