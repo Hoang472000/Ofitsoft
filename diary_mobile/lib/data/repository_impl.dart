@@ -825,7 +825,7 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListReport([list[1]]);
       //assignIdSelected(list[0].questionAndPageIds);
       ///Bug: đoạn này đang gen sai số lượng idSelect /// Cần xem lại
-      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 10, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 100000, (index) => index + 1);
 
       print("HoangCV: idSelectedList: ${idSelectedList.length}");
       assignIdSelected(list[1].questionAndPageIds, idSelectedList);
@@ -861,7 +861,7 @@ class RepositoryImpl extends Repository {
 
     List<Report> list = await DiaryDB.instance.getListReport(id);
     list.add(list[0]);
-    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 10, (index) => index + 1);
+    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 100000, (index) => index + 1);
     assignIdSelected(list[1].questionAndPageIds, idSelectedList);
     final hierarchyList = buildReportHierarchy(list);
     /*hierarchyList.forEach((element) {
@@ -1121,7 +1121,7 @@ class RepositoryImpl extends Repository {
           .toList();
       //assignIdSelected(list[0].questionAndPageIds);
       print("HoangCV: getListActivityReport: ${list[1].surveyId[0].questionAndPageIds.length}");
-      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 10, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 100000, (index) => index + 1);
       assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportResult(list[1].surveyId);
       /*hierarchyList.forEach((element) {

@@ -89,6 +89,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                     });
                   }
                   if ((formStatus.success ?? "").isNotEmpty) {
+                    print("HoangCV: formStatus.success: ${formStatus.success}");
                     DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
                             () {
                           Get.back();

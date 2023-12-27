@@ -307,6 +307,12 @@ class Utils {
     return formattedString;
   }
 
+  static String formatDateTimeToStringReport(DateTime dateTime) {
+    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    String formattedString = formatter.format(dateTime);
+    return formattedString;
+  }
+
   static String formatDateToString(DateTime time) {
     DateFormat formatter = DateFormat('dd/MM/yyyy');
       return formatter.format(time);

@@ -132,7 +132,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             .selectValue(
             event.list[event.index], event.context, (modelInput) {});
         if (result1 == 1) {
-          state.farmerInspector!.visitDate = Utils.formatDateTimeToString(
+          state.farmerInspector!.visitDate = Utils.formatDateTimeToStringReport(
               event.list[event.index].valueSelected);
           emit(state.copyWith(
             startTimeController: TextEditingController(
@@ -158,6 +158,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     .monitoringVisitType,
                 visitDate: state.farmerInspector!.visitDate,
               );
+              print("HoangCV: editFarmerInspector 2");
               ObjectResult result = await repository.editFarmerInspector(
                   questionUpload);
               if (result.responseCode == StatusConst.code00) {
@@ -165,6 +166,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
                     isShowProgress: false,
                     reportId: result.response is int ? result.response : null,
                     formStatus: SubmissionSuccess(/*success: result.message*/)));
+                print("HoangCV: editFarmerInspector 2: state: ${(state.formStatus as SubmissionSuccess).success}");
               } else if (result.responseCode == StatusConst.code01){
                 emit(state.copyWith(
                     isShowProgress: false,
@@ -300,6 +302,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
               monitoringVisitType: state.farmerInspector!.monitoringVisitType,
               visitDate: state.farmerInspector!.visitDate,
             );
+            print("HoangCV: editFarmerInspector 3");
             ObjectResult result = await repository.editFarmerInspector(questionUpload);
             if (result.responseCode == StatusConst.code00) {
               emit(state.copyWith(
@@ -1436,6 +1439,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             .monitoringVisitType,
         visitDate: state.farmerInspector!.visitDate,
       );
+      print("HoangCV: editFarmerInspector 4");
       ObjectResult result = await repository.editFarmerInspector(questionUpload);
       if (result.responseCode == StatusConst.code00) {
         emit(state.copyWith(
@@ -2202,6 +2206,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             visitDate: state.farmerInspector!.visitDate,
             state: 'done'
         );
+        print("HoangCV: editFarmerInspector 1");
         ObjectResult result = await repository.editFarmerInspector(
             questionUpload);
         if (result.responseCode == StatusConst.code00) {

@@ -141,7 +141,13 @@ class _ItemReportResultState extends State<ItemReportResult> {
                         ),
                         IconButton(
                           onPressed: () {
-                            widget.callbackDelete();
+                            DiaLogManager.displayDialog(context, "",
+                                "Bạn có muốn xóa hoạt động này không.", () {
+                                  Get.back();
+                                  widget.callbackDelete();
+                                }, () {
+                                  Get.back();
+                                }, S.of(context).no, S.of(context).yes);
                           },
                           icon: const Padding(
                             padding: EdgeInsets.only(right: 4),

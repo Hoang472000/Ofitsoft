@@ -600,7 +600,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
       index = element.indexWhere((element) => element.id == idSelected && element.idRow == idRow);
 
       if (index != -1) {
-        //print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
+        print("HoangCV: tableNon index: $index : ${element[index].toJson()} : $idRow : $idSelected");
         input = element[index].input!;
         type = element[index].type;
         return Padding(

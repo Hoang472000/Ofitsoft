@@ -67,10 +67,15 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
 
     if (result.responseCode == StatusConst.code00) {
       final listReportResult = await repository.getListReportResult();
+      final listReportResultCopy = listReportResult
+          .map((report) => ReportResult.copy(report))
+          .toList();
+      listReportResultCopy.removeWhere((element) =>
+      element.isInitialAssessment == true);
       emit(state.copyWith(
           isShowProgress: false,
           formStatus: SubmissionSuccess(success: "Xóa báo cáo khảo sát thành công."),
-          listReport: listReportResult,
+          listReport: listReportResultCopy,
           listReportFilter: listReportResult));
     } else {
       emit(state.copyWith(

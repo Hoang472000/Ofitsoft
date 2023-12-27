@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.0+5
+version: 1.0.0+9
 
 environment:
   sdk: '>=3.0.5 <4.0.0'
@@ -37,44 +37,44 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  shared_preferences:
-  google_fonts:
+  shared_preferences: ^2.2.0
+  google_fonts: ^5.1.0
   flutter_bloc:
   equatable:
-  flutter_svg:
+  flutter_svg: ^2.0.7
   flutter_html:
   qr_code_scanner: ^1.0.1
   connectivity_plus:
   get: ^4.6.5
-  url_launcher:
+  url_launcher: ^6.1.11
   flutter_picker:
-  image_picker:
-  image_cropper:
+  image_picker: ^1.0.0
+  image_cropper: ^5.0.0
   dotted_line:
   http:
-  dio:
+  dio: ^5.2.1+1
   drift: ^2.10.0
-  sqlite3_flutter_libs: ^0.5.0
-  path_provider: ^2.0.0
+  sqlite3_flutter_libs: ^0.5.15
+  path_provider: ^2.0.15
   path: ^1.8.3
 
-  video_player:
-  chewie:
+  video_player: ^2.7.0
+  chewie: ^1.7.0
   auto_orientation:
-  flutter_animate:
-  audioplayers:
-  fluttertoast:
+  flutter_animate: ^4.2.0+1
+  audioplayers: ^5.1.0
+  fluttertoast: ^8.2.2
   scroll_to_index:
   flutter_pdfview:
-  uuid:
+  uuid: ^3.0.7
   firebase_messaging: ^14.4.1
   firebase_core: ^2.12.0
   flutter_local_notifications: ^16.1.0
-  permission_handler:
+  permission_handler: ^11.0.1
   open_file:
   external_app_launcher:
   qr_flutter:
-  package_info_plus:
+  package_info_plus: ^4.1.0
   flutter_slidable: ^3.0.1
   create_atom: ^2.1.0-nullsafety
 
