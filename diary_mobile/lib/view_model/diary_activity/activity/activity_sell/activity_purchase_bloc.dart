@@ -27,6 +27,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     on<RemoveActivityPurchaseEvent>(_removeActivityPurchase);
     on<ExportPDFEvent>(_exportPDFEvent);
     on<AddChoosePurchaseEvent>(_addChoosePurchase);
+    on<FilterEvent>(_filter);
     //add(GetListActivityEvent());
   }
 
@@ -49,6 +50,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
       isShowProgress: false,
       listActivityTransaction: listActivityTransaction,
       listCallbackTransaction: listCallbackTransaction,
+      listActivityTransactionFilter : listActivityTransaction,
       listSelected: listSelected,
       amountSelected: 0,
     ));
@@ -116,6 +118,56 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
         listSelected: listChoose,
         amountSelected: amountChoose));
   }
+
+  FutureOr<void> _filter(FilterEvent event, Emitter<ActivityPurchaseState> emit) {
+    print("HoangCV: filter: ${event.result}");
+    var startTime = event.result[0]/*.replaceAll("/","-")*/;
+    var endTime = event.result[1]/*.replaceAll("/","-")*/;
+    var minPrice = double.parse(event.result[2] != "" ? event.result[2] : "-1");
+    var maxPrice = double.parse(event.result[3] != "" ? event.result[3] : "-1");
+    var minQuantity = double.parse(event.result[4] != "" ? event.result[4] : "-1");
+    var maxQuantity = double.parse(event.result[5] != "" ? event.result[5] : "-1");
+    var filter0 = event.result[6];
+    var filter1 = event.result[7];
+    List<ActivityPurchase> list = state.listActivityTransactionFilter.map((e) => ActivityPurchase.copy(e)).toList();
+    //print("HoangCV: filter: ${minPrice} : ${maxPrice}");
+    List<ActivityPurchase> filteredList = [];
+    for (var activity in list) {
+      //String transactionDate = Utils.formatTime(activity.transactionDate ?? "");
+      DateTime transactionDate = DateTime.parse(activity.transactionDate ?? "");
+      /*print("transactionDate: ${transactionDate} : ${Utils.stringToDate(startTime)}");
+      print("DateTime.parse(startTime) : ${!transactionDate.isBefore(Utils.stringToDate(startTime))}");*/
+      bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      bool withinMinPrice = minPrice != -1 ? (activity.unitPrice ?? 0) * (activity.quantity ?? 0) >= minPrice : true;
+      bool withinMaxPrice = maxPrice != -1 ? (activity.unitPrice ?? 0) * (activity.quantity ?? 0) <= maxPrice : true;
+      bool withinMinQuantity = minQuantity != -1 ? (activity.quantity ?? 0) >= minQuantity : true;
+      bool withinMaxQuantity = maxQuantity != -1 ? (activity.quantity ?? 0) <= maxQuantity : true;
+
+      //print("HoangCV: $withinStartTime : $withinEndTime : $withinMinPrice : $withinMaxPrice: $withinMinQuantity : $withinMaxQuantity");
+      if (withinStartTime && withinEndTime && withinMinPrice && withinMaxPrice && withinMinQuantity && withinMaxQuantity) {
+        filteredList.add(activity);
+      }
+    }
+    List<ActivityPurchase> listFilter0 = [];
+    List<ActivityPurchase> listFilter1 = [];
+    if(filter0 != -1) {
+      listFilter0.addAll(filteredList.where((
+          activity) => activity.seasonFarmId == filter0).toList());
+    } else{
+      listFilter0.addAll(filteredList);
+    }
+    if(filter1 != -1) {
+      listFilter1.addAll(listFilter0.where((
+          activity) => activity.productId == filter1).toList());
+    } else{
+      listFilter1.addAll(listFilter0);
+    }
+    emit(state.copyWith(
+      isShowProgress: false,
+      listActivityTransaction: listFilter1
+    ));
+  }
 }
 
 class ActivityPurchaseEvent extends BlocEvent {
@@ -161,6 +213,15 @@ class ExportPDFEvent extends ActivityPurchaseEvent {
   List<Object?> get props => [ids];
 }
 
+class FilterEvent extends ActivityPurchaseEvent {
+  final dynamic result;
+
+  FilterEvent(this.result);
+
+  @override
+  List<Object?> get props => [result];
+}
+
 class ActivityPurchaseState extends BlocState {
   @override
   List<Object?> get props => [
@@ -177,6 +238,7 @@ class ActivityPurchaseState extends BlocState {
     updateHarvesting,
     listCallback,
     listActivityTransaction,
+    listActivityTransactionFilter,
     listCallbackTransaction,
     amountSelected,
     listSelected,
@@ -195,11 +257,13 @@ class ActivityPurchaseState extends BlocState {
   final List<ActivityDiary> listCallback;
   final List<ActivityPurchase> listCallbackTransaction;
   final List<ActivityPurchase> listActivityTransaction;
+  final List<ActivityPurchase> listActivityTransactionFilter;
   final List<bool> listSelected;
   final int amountSelected;
 
   ActivityPurchaseState({
     this.listActivityTransaction = const [],
+    this.listActivityTransactionFilter = const [],
     this.listDiaryActivity = const [],
     this.listDiaryMonitor = const [],
     this.formStatus = const InitialFormStatus(),
@@ -232,6 +296,7 @@ class ActivityPurchaseState extends BlocState {
     List<ActivityDiary>? listCallback,
     List<ActivityPurchase>? listActivityTransaction,
     List<ActivityPurchase>? listCallbackTransaction,
+    List<ActivityPurchase>? listActivityTransactionFilter,
     List<bool>? listSelected,
     int? amountSelected,
   }) {
@@ -251,6 +316,8 @@ class ActivityPurchaseState extends BlocState {
         listActivityTransaction ?? this.listActivityTransaction,
         listCallbackTransaction:
         listCallbackTransaction ?? this.listCallbackTransaction,
+      listActivityTransactionFilter:
+      listActivityTransactionFilter ?? this.listActivityTransactionFilter,
         listCallback: listCallback ?? this.listCallback,
         listSelected: listSelected ?? this.listSelected,
         amountSelected: amountSelected ?? this.amountSelected,

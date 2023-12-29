@@ -9,6 +9,7 @@ import '../../data/entity/report/report.dart';
 import '../../data/entity/report/report_select.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
+import '../../utils/utils.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 
@@ -19,6 +20,7 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     on<GetListReportResultEvent>(_getListReportResult);
     on<DeleteReportResultEvent>(_deleteReportResult);
     on<UpdateRadioButtonEvent>(_updateRadioButton);
+    on<FilterEvent>(_filter);
   }
 
   void _getListReportResult(
@@ -100,6 +102,64 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
         listReport: listReportResult,
         reportEnum: event.reportEnum));
   }
+
+  FutureOr<void> _filter(FilterEvent event, Emitter<ListReportResultState> emit) {
+    print("HoangCV: filter: ${event.result}");
+    var startTime = event.result[0]/*.replaceAll("/","-")*/;
+    var endTime = event.result[1]/*.replaceAll("/","-")*/;
+    var filter0 = event.result[2];
+    var filter1 = event.result[3];
+    var filter2 = event.result[4];
+    var filter3 = event.result[5];
+    List<ReportResult> list = state.listReportFilter.map((e) => ReportResult.copy(e)).toList();
+    //print("HoangCV: filter: ${minPrice} : ${maxPrice}");
+    List<ReportResult> filteredList = [];
+    for (var activity in list) {
+      DateTime transactionDate = DateTime.parse(activity.createDate ?? "");
+      bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+
+      if (withinStartTime && withinEndTime) {
+        filteredList.add(activity);
+      }
+    }
+    List<ReportResult> listFilter0 = [];
+    List<ReportResult> listFilter1 = [];
+    List<ReportResult> listFilter2 = [];
+    List<ReportResult> listFilter3 = [];
+    if(filter0 != -1) {
+      //filteredList.indexWhere((element) => element.id == filter0);
+      String name = filteredList[filteredList.indexWhere((element) => element.id == filter0)].surveyId ?? "";
+      listFilter0.addAll(filteredList.where((
+          activity) => activity.surveyId == name).toList());
+    } else{
+      listFilter0.addAll(filteredList);
+    }
+    if(filter1 != -1) {
+      listFilter1.addAll(listFilter0.where((
+          activity) => activity.internalInspectorId == filter1).toList());
+    } else{
+      listFilter1.addAll(listFilter0);
+    }
+    if(filter2 != -1) {
+      listFilter2.addAll(listFilter1.where((
+          activity) => activity.farmerId == filter2).toList());
+    } else{
+      listFilter2.addAll(listFilter1);
+    }
+    if(filter3 != -1) {
+      String name = filteredList[filteredList.indexWhere((element) => element.id == filter3)].state ?? "";
+      listFilter3.addAll(listFilter2.where((
+          activity) => activity.state == name).toList());
+    } else{
+      listFilter3.addAll(listFilter2);
+    }
+    print("HoangCV: ");
+    emit(state.copyWith(
+        isShowProgress: false,
+        listReport: listFilter3
+    ));
+  }
 }
 
 class ListReportResultEvent extends BlocEvent {
@@ -132,6 +192,15 @@ class UpdateRadioButtonEvent extends ListReportResultEvent {
 
   @override
   List<Object?> get props => [reportEnum];
+}
+
+class FilterEvent extends ListReportResultEvent {
+  final dynamic result;
+
+  FilterEvent(this.result);
+
+  @override
+  List<Object?> get props => [result];
 }
 
 class ListReportResultState extends BlocState {

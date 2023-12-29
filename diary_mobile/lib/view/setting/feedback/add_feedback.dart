@@ -117,11 +117,8 @@ class _AddFeedbackPageState extends State<AddFeedbackPage> {
                     Container(
                         //margin: const EdgeInsets.only(top: 25),
                         child: TextFormFieldInputText(
-                          noBorder: false,
-                          underLine: false,
                           "Nội dung:",
                           state.moTaController ?? TextEditingController(),
-                          false,
                           false,
                           focusNode,
                           (state.formStatus is ValidatePassFail) ? "Nội dung không được để trống" : "",

@@ -47,10 +47,7 @@ class NetworkExecutor{
                     path: element.api ?? '',
                     body: ObjectData(
                         token: route.body.token, params: element.toJson())));
-            //if (objectResult.responseCode == StatusConst.code00 && objectResult.responseCode == StatusConst.code01) {
-              print("HoangCV: loop remove ActDiaryNoNetwork: $objectResult ");
               await DiaryDB.instance.removeActDiaryNoNetWork(element.id ?? -1);
-            //}
           }
           List<QuestionUpload> listQsUl = await DiaryDB.instance
               .getListQuestionUploadNoNetWork();
@@ -183,7 +180,7 @@ class NetworkExecutor{
               validateStatus: (statusCode) =>
               (statusCode! >= HttpStatus.ok &&
                   statusCode <= HttpStatus.multipleChoices)));
-          print("HoangCV: result: ${response.data}");
+          //print("HoangCV: result: ${response.data}");
          // print("HoangCV: result: ${response.data['result']}");
        /*   Map<String, dynamic> jsonMap = json.decode(response.data);
           Map<String, dynamic> result = jsonMap['result'];*/

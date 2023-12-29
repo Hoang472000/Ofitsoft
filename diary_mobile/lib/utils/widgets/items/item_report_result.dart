@@ -119,7 +119,7 @@ class _ItemReportResultState extends State<ItemReportResult> {
                                       ? "Hoàn thành"
                                       : "Chưa hoàn thành",
                                   widget.reportResult.state == 'done'
-                                      ? AppColor.main
+                                      ? AppColor.green53
                                       : AppColor.orange,
                                   14))
                         ],

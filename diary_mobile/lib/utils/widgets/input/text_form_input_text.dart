@@ -14,7 +14,7 @@ import '../../utils.dart';
 class TextFormFieldInputText extends StatefulWidget {
   final String _label;
   final TextEditingController _textEditingController;
-  final bool _isTypePassword;
+  final bool? isTypePassword;
 
   final bool _errorValidate;
   final FocusNode _focusNode;
@@ -39,20 +39,20 @@ class TextFormFieldInputText extends StatefulWidget {
   const TextFormFieldInputText(
       this._label,
       this._textEditingController,
-      this._isTypePassword,
       this._errorValidate,
       this._focusNode,
       this.errorValidate,
       this.checkPass,
       this.changePass,
       {Key? key,
-        this.isNotValidStart,
+        this.isTypePassword = false,
+        this.isNotValidStart = true,
         this.isPhone,
         this.isNumber,
         this.isFromEnterInfo,
-        this.isTime, this.isNotEdit,
-        this.isNotPass, this.noBorder, this.underLine,
-        this.onChangeCallBack, this.isChangeCallBack, this.minLine, this.isShowAsterrick = true})
+        this.isTime, this.isNotEdit = false,
+        this.isNotPass, this.noBorder = false, this.underLine = false,
+        this.onChangeCallBack, this.isChangeCallBack, this.minLine = 1, this.isShowAsterrick = true})
       : super(key: key);
 
   @override
@@ -241,7 +241,7 @@ class _TextFormFieldInputTextState extends State<TextFormFieldInputText> {
             // });
           },
         )
-            : (!widget._isTypePassword
+            : (!(widget.isTypePassword ?? false)
             ? _showDeleteText && _hasFocus
             ? Row(
             mainAxisAlignment:
@@ -389,7 +389,7 @@ class _TextFormFieldInputTextState extends State<TextFormFieldInputText> {
           widget.isNumber != null ? TextInputType.number : TextInputType.text,
           controller: widget._textEditingController,
           decoration: createInputDecoration(),
-          obscureText: widget._isTypePassword ? _obscureText : false,
+          obscureText: (widget.isTypePassword ?? false) ? _obscureText : false,
           obscuringCharacter: "*",
           textAlign: /*widget.noBorder==true? TextAlign.right : */TextAlign.start ,
           onSubmitted: (text){

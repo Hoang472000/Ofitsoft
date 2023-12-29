@@ -21,6 +21,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     on<AddChooseAllDiary>(_addChooseAllDiary);
     on<GetListDiarySelected>(_getListDiarySelected);
     on<SearchListDiaryEvent>(_searchListDiary);
+    on<FilterEvent>(_filter);
 /*    add(GetListDiaryEvent());*/
   }
 
@@ -63,6 +64,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
         listSearchSelected: listSelected,
         listSearchDate: distinctMonthsAndYears,
         lengthSearchDiary: listDiary.length,
+        listDiaryFilter: listDiary,
         amountSelected: 0));
   }
 
@@ -186,6 +188,98 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     print("HoangCV: newListDate: ${newListDate.toString()}");
     emit(state.copyWith(listDiary: searchResults, listSelected: searchBoolResult, listDate: newListDate, lengthDiary: totalSublistItems, amountSelected: 0));
   }
+
+  FutureOr<void> _filter(FilterEvent event, Emitter<ListDiaryState> emit) async {
+    print("HoangCV: filter: ${event.result}");
+    var startTime = event.result[0];
+    var endTime = event.result[1];
+    var filter0 = event.result[2];
+    var filter1 = event.result[3];
+    var filter2 = event.result[4];
+    var filter3 = event.result[5];
+    List<Diary> listFilter = state.listDiaryFilter.map((e) => Diary.copy(e)).toList();
+    List<Diary> filteredList = [];
+    for (var activity in listFilter) {
+      DateTime transactionDate = DateTime.parse(activity.startDate ?? "");
+      bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      if (withinStartTime && withinEndTime) {
+        filteredList.add(activity);
+      }
+    }
+    List<Diary> listFilter0 = [];
+    List<Diary> listFilter1 = [];
+    List<Diary> listFilter2 = [];
+    List<Diary> listFilter3 = [];
+    if(filter0 != -1) {
+      listFilter0.addAll(filteredList.where((
+          activity) => activity.areaId == filter0).toList());
+    } else{
+      listFilter0.addAll(filteredList);
+    }
+    if(filter1 != -1) {
+      listFilter1.addAll(listFilter0.where((
+          activity) => activity.id == filter1).toList());
+    } else{
+      listFilter1.addAll(listFilter0);
+    }
+    print("HoangCV: listFilter1: ${listFilter1.length}");
+    if(filter2 != -1) {
+      listFilter2.addAll(listFilter1.where((
+          activity) => activity.cropId == filter2).toList());
+    } else{
+      listFilter2.addAll(listFilter1);
+    }
+    print("HoangCV: listFilter2: ${listFilter2.length} : ${filter3}");
+    if(filter3 != -1) {
+      listFilter3.addAll(listFilter2.where((
+          activity) => activity.farmerId == filter3).toList());
+    } else{
+      listFilter3.addAll(listFilter2);
+    }
+    print("HoangCV: listFilter3: ${listFilter3.length}");
+
+    if(listFilter3.isNotEmpty) {
+      List<String> distinctMonthsAndYears = [];
+      List<List<Diary>> list = [];
+      listFilter3
+          .sort((a, b) => (b.startDate ?? "").compareTo((a.startDate ?? "")));
+      for (var task in listFilter3) {
+        DateTime dateTime = Utils.formatStringToDate(task.startDate ?? "");
+        String monthAndYear = '${dateTime.month}/${dateTime.year}';
+        //String taskMonthAndYear = '${dateTime.month}/${dateTime.year}';
+        if (!distinctMonthsAndYears.contains(monthAndYear)) {
+          distinctMonthsAndYears.add(monthAndYear);
+        }
+      }
+      List<List<bool>> listSelected = List.generate(
+        distinctMonthsAndYears.length,
+            (_) => [],
+      );
+      for (int i = 0; i < distinctMonthsAndYears.length; i++) {
+        String monthAndYear = distinctMonthsAndYears[i];
+        List<Diary> tasksForMonthAndYear =
+        getTasksForMonthAndYear(monthAndYear, listFilter3);
+        list.add(tasksForMonthAndYear);
+        listSelected[i]
+            .addAll(List.generate(tasksForMonthAndYear.length, (index) => false));
+      }
+      // khoi tao list choose ban dau voi gia tri la false => khong chon
+      emit(state.copyWith(
+          isShowProgress: false,
+          listDiary: list,
+          listDate: distinctMonthsAndYears,
+          listSelected: listSelected,
+          lengthDiary: listFilter3.length,
+          listSearchDiary: list,
+          listSearchSelected: listSelected,
+          listSearchDate: distinctMonthsAndYears,
+          lengthSearchDiary: listFilter3.length,
+          amountSelected: 0));
+    }else if(listFilter3.isEmpty) {
+      emit(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Không tìm thấy thông tin nhật ký phù hợp.")));
+    }
+  }
 }
 
 class ListDiaryEvent extends BlocEvent {
@@ -236,6 +330,15 @@ class SearchListDiaryEvent extends ListDiaryEvent {
   List<Object?> get props => [textSearch];
 }
 
+class FilterEvent extends ListDiaryEvent {
+  final dynamic result;
+
+  FilterEvent(this.result);
+
+  @override
+  List<Object?> get props => [result];
+}
+
 class ListDiaryState extends BlocState {
   @override
   List<Object?> get props => [
@@ -251,8 +354,10 @@ class ListDiaryState extends BlocState {
         listSearchSelected,
         listSearchDate,
         lengthSearchDiary,
+    listDiaryFilter,
       ];
   final List<List<Diary>> listDiary;
+  final List<Diary> listDiaryFilter;
   final List<List<Diary>> listSearchDiary;
   final List<Diary> listDiarySelected;
   final List<String> listSearchDate;
@@ -267,6 +372,7 @@ class ListDiaryState extends BlocState {
 
   ListDiaryState(
       {this.listDiarySelected = const [],
+        this.listDiaryFilter = const [],
       this.listSearchDiary = const [],
       this.listDiary = const [],
       this.listSearchSelected = const [],
@@ -281,6 +387,7 @@ class ListDiaryState extends BlocState {
 
   ListDiaryState copyWith({
     List<List<Diary>>? listDiary,
+    List<Diary>? listDiaryFilter,
     List<List<Diary>>? listSearchDiary,
     List<String>? listDate,
     List<String>? listSearchDate,
@@ -295,6 +402,7 @@ class ListDiaryState extends BlocState {
   }) {
     return ListDiaryState(
       listDiary: listDiary ?? this.listDiary,
+      listDiaryFilter: listDiaryFilter ?? this.listDiaryFilter,
       listDate: listDate ?? this.listDate,
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,

@@ -384,21 +384,14 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                             child: Container(
                               //margin: const EdgeInsets.only(top: 25),
                                 child: TextFormFieldInputText(
-                                  noBorder: false,
-                                  underLine: false,
-                                  isNotEdit: false,
-                                  isNotValidStart: true,
-                                  minLine: 1,
                                   "Nhập tin nhắn cho quản lý",
                                   state.replyController ?? TextEditingController(),
-                                  false,
                                   false,
                                   focusNodeReply,
                                   (state.formStatus is ValidatePassFail) ? "" : "",
                                       (lostFocus) {
                                   },
                                   false,
-                                  //icons: '',
                                   onChangeCallBack: (text) {
                                     print("text: SaveReplyEvent: $text");
                                     blocContext.read<DetailFeedbackBloc>().add(

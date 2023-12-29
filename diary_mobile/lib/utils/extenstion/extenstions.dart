@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_picker/flutter_picker.dart';
 import 'package:intl/intl.dart';
 
+import '../../view_model/filter/filter_bloc.dart';
 import '../../view_model/setting/account/account_information_bloc.dart';
 import '../utils.dart';
 import 'input_register_model.dart';
@@ -79,6 +80,7 @@ class Extension {
       case AreaEntity:
       case ItemBasic:
       case Diary:
+      case ItemFilter:
         return model.name;
 /*
       case People:

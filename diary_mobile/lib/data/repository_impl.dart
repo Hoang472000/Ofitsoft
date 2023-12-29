@@ -482,14 +482,10 @@ class RepositoryImpl extends Repository {
     }
     else if(objectResult.responseCode == StatusConst.code06) {
       print("HoangCV: addActivityDiary not network");
-      ActDiaryNoNetwork actDiaryNoNetwork = ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
+      ActDiaryNoNetwork actDiaryNoNetwork =
+        ActDiaryNoNetwork.fromJsonConvert(diary, ApiConst.addActivityDiary);
       DiaryDB.instance.insertListActDiaryNoNetWork([actDiaryNoNetwork]);
       DiaryDB.instance.insertListActivityDiary([diary]);
-    /*  DiaLogManager.showDialogHTTPError(
-        status: objectResult.status,
-        resultStatus: objectResult.status,
-        resultObject: objectResult.message,
-      );*/
     }else if (objectResult.responseCode == StatusConst.code01) {
 
       print("HoangCV: addActivityDiary11 response: ${objectResult.responseCode}: ${objectResult.isOK}");

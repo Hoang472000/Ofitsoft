@@ -35,6 +35,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 
+import '../../view_model/filter/filter_bloc.dart';
 import '../entity/activity/activity_diary_no_network.dart';
 import '../entity/activity/activity_purchase.dart';
 import '../entity/activity/no_network/activity_transaction_no_network.dart';
@@ -224,7 +225,7 @@ class DiaryDB extends _$DiaryDB {
     });*/
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.convertToolsListToJson()}");
+        //print("HoangCV: entry: ${entry.convertToolsListToJson()}");
         final ActDiaryNoNetworkTableCompanion entryCompanion = ActDiaryNoNetworkTableCompanion(
           api: Value(entry.api),
           id: Value(entry.id),
@@ -413,7 +414,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertListReport(List<Report> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.toJson()}");
+        //print("HoangCV: entry: ${entry.toJson()}");
         final ReportTableCompanion entryCompanion = ReportTableCompanion(
             id: Value(entry.id),
             isPage: Value(entry.isPage),
@@ -466,7 +467,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertQuestionUploadNoNetWork(List<QuestionUpload> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: insertQuestionUploadNoNetWork:  ${entry.toJson()}");
+        //print("HoangCV: entry: insertQuestionUploadNoNetWork:  ${entry.toJson()}");
         final QuestionUploadNoNetworkTableCompanion entryCompanion = QuestionUploadNoNetworkTableCompanion(
           api: Value(entry.api),
           idOffline: Value(entry.idOffline),
@@ -542,7 +543,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertFarmerInspectorUploaddNoNetWork(List<FarmerInspectorUpload> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: insertFarmerInspectorUploaddNoNetWork : ${entry.toJson()}");
+        //print("HoangCV: entry: insertFarmerInspectorUploaddNoNetWork : ${entry.toJson()}");
         final FarmerInspectorUploadNoNetworkTableCompanion entryCompanion = FarmerInspectorUploadNoNetworkTableCompanion(
           api: Value(entry.api),
           idOffline: Value(entry.idOffline),
@@ -669,7 +670,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertListWorkflow(List<Workflow> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.toJson()}");
+        //print("HoangCV: entry: ${entry.toJson()}");
         final WorkflowTableCompanion entryCompanion = WorkflowTableCompanion(
           id: Value(entry.id),
           name: Value(entry.name),
@@ -681,7 +682,7 @@ class DiaryDB extends _$DiaryDB {
           productName: Value(entry.productName),
           stringProcessStageIds: Value(entry.convertProcessListToJson()),// Chuyển đổi thành chuỗi JSON
         );
-        print("HoangCV: stringProcessStageIds: ${entryCompanion.stringProcessStageIds}");
+        //print("HoangCV: stringProcessStageIds: ${entryCompanion.stringProcessStageIds}");
         batch.insertAllOnConflictUpdate(workflowTable, [entryCompanion]);
       }
     });
@@ -714,7 +715,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertListAreaEntity(List<AreaEntity> values) async {
     await batch((batch) {
       for (final entry in values) {
-        print("HoangCV: entry: ${entry.toJson()}");
+        //print("HoangCV: entry: ${entry.toJson()}");
         final AreaEntityTableCompanion entryCompanion = AreaEntityTableCompanion(
           id: Value(entry.id),
           name: Value(entry.name),
@@ -739,6 +740,23 @@ class DiaryDB extends _$DiaryDB {
         'userId': queriedEntry.userId,
         'seasons': jsonDecode(queriedEntry.stringSeasons??'[]'),
       }, userId);
+      workflow.add(diaryEntry);
+    }
+    return workflow;
+  }
+
+  Future<List<ItemFilter>> getListItemFilter(int userId) async {
+    final query = await (select(areaEntityTable)..where((tbl) => tbl.userId.equals(userId)))
+        .get();
+    final List<ItemFilter> workflow = [];
+
+    for (final queriedEntry in query) {
+
+      final diaryEntry = ItemFilter.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'list': jsonDecode(queriedEntry.stringSeasons??'[]'),
+      });
       workflow.add(diaryEntry);
     }
     return workflow;

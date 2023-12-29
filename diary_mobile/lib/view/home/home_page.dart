@@ -15,6 +15,7 @@ import '../../utils/constants/shared_preferences.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/utils.dart';
 import '../../view_model/home_bloc.dart';
+import '../diary/diary_monitor/diary_monitor_child_page.dart';
 import '../diary/diary_monitor/diary_monitor_view.dart';
 import '../diary/diary_view.dart';
 import '../notify/notify_view.dart';
@@ -106,7 +107,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         print("HoangCV: aor ma");
         screens = [
           const HomeRecordView(), //const Page1(),
-          const DiaryMonitorView(), // page ban hang const Page2(),
+          const DiaryMonitorChild(), // page ban hang const Page2(),
           const QRCodeView(), // page mua hang Page3(),
           const NotifyView(), //const Page4(),
           const SettingView(), //const Page5(),
@@ -117,7 +118,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       print("HoangCV: aor ma 1111 121312");
       screens = [
         const HomeView(), //const Page1(),
-        const DiaryMonitorView(), // page ban hang const Page2(),
+        const DiaryMonitorChild(), // page ban hang const Page2(),
         const QRCodeView(), // page mua hang Page3(),
         const NotifyView(), //const Page4(),
         const SettingView(), //const Page5(),
@@ -236,7 +237,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       onTap: () {
 
                         setState(() {
-                          currentScreen =  checkMonitor ? const DiaryMonitorView() : const DiaryView();
+                          currentScreen =  checkMonitor ? const DiaryMonitorChild() : const DiaryView();
                           currentTab = 1;
                         });
                       },

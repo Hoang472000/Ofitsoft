@@ -168,6 +168,8 @@ class Diary implements Insertable<Diary> {
     data['status_name'] = statusName;
     data['area_name'] = areaName;
     data['area_code'] = areaCode;
+    data['farmer_name'] = farmerName;
+    data['farmer_id'] = farmerId;
     data['farm_code'] = farmCode;
     data['google_map'] = googleMap;
     data['product_process_id'] = productProcessId;
@@ -175,6 +177,46 @@ class Diary implements Insertable<Diary> {
     data['area_id'] = areaId;
     return data;
   }
+
+  Diary.copy(Diary other)
+      : id = other.id,
+        userId = other.userId,
+        action = other.action,
+        name = other.name,
+        seasonId = other.seasonId,
+        farmName = other.farmName,
+        farmId = other.farmId,
+        productId = other.productId,
+        productName = other.productName,
+        cropName = other.cropName,
+        cropId = other.cropId,
+        amount = other.amount,
+        amountUnitName = other.amountUnitName,
+        amountUnitId = other.amountUnitId,
+        area = other.area,
+        areaUnitId = other.areaUnitId,
+        areaUnitName = other.areaUnitName,
+        yieldEstimate = other.yieldEstimate,
+        yieldEstimateUnitName = other.yieldEstimateUnitName,
+        yieldEstimateUnitId = other.yieldEstimateUnitId,
+        yieldReal = other.yieldReal,
+        yieldRealUnitName = other.yieldRealUnitName,
+        yieldRealUnitId = other.yieldRealUnitId,
+        harvesting = other.harvesting,
+        description = other.description,
+        endDate = other.endDate,
+        startDate = other.startDate,
+        status = other.status,
+        statusName = other.statusName,
+        areaName = other.areaName,
+        areaCode = other.areaCode,
+        farmerName = other.farmerName,
+        farmerId = other.farmerId,
+        farmCode = other.farmCode,
+        googleMap = other.googleMap,
+        productProcessId = other.productProcessId,
+        productProcessName = other.productProcessName,
+        areaId = other.areaId;
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
