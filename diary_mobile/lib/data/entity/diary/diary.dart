@@ -15,6 +15,7 @@ class Diary implements Insertable<Diary> {
   int? id;
   String? name;
   int? seasonId;
+  String? seasonName;
   int? farmId;
   String? farmName;
   int? cropId;
@@ -56,6 +57,7 @@ class Diary implements Insertable<Diary> {
     this.id,
     this.name,
     this.seasonId,
+    this.seasonName,
     this.farmId,
     this.farmName,
     this.cropId,
@@ -99,6 +101,7 @@ class Diary implements Insertable<Diary> {
       action: action,
       name: json['name'] ?? "",
       seasonId: json['season_id'] ?? -1,
+      seasonName: json['season_name'] ?? "",
       farmName: json['farm_name'] ?? '',
       farmId: json['farm_id'] ?? -1,
       cropId: json['crop_id'] ?? -1,
@@ -142,6 +145,7 @@ class Diary implements Insertable<Diary> {
     data['action'] = action;
     data['name'] = name;
     data['season_id'] = seasonId;
+    data['season_name'] = seasonName;
     data['farm_name'] = farmName;
     data['farm_id'] = farmId;
     data['product_id'] = productId;
@@ -184,6 +188,7 @@ class Diary implements Insertable<Diary> {
         action = other.action,
         name = other.name,
         seasonId = other.seasonId,
+        seasonName = other.seasonName,
         farmName = other.farmName,
         farmId = other.farmId,
         productId = other.productId,
@@ -226,6 +231,7 @@ class Diary implements Insertable<Diary> {
       userId: Value(userId),
       name: Value(name),
       seasonId: Value(seasonId),
+      seasonName: Value(seasonName),
       description: Value(description),
       farmId: Value(farmId),
       farmName: Value(farmName),

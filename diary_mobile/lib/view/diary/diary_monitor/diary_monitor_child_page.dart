@@ -286,7 +286,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
 
           if (isFilterOpen)
             AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 700),
               color: Colors.black.withOpacity(0.5),
               child: GestureDetector(
                 onTap: () {

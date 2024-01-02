@@ -28,6 +28,7 @@ import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/items/item_activity.dart';
 import '../../../utils/widgets/items/item_activity_avatar.dart';
+import '../../filter/filter_page.dart';
 import '../../report/add_report.dart';
 import '../monitor/detail_monitor_page.dart';
 import 'add_activity.dart';
@@ -72,6 +73,20 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
   OverlayEntry? _overlayEntry;
   bool updateHarvesting = false;
   List<ActivityDiary> listCallback = const [];
+  bool isFilterOpen = false;
+
+  void openFilter() {
+    setState(() {
+      isFilterOpen = true;
+    });
+  }
+
+  void closeFilter() {
+    setState(() {
+      isFilterOpen = false;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -92,7 +107,7 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ActivityBloc(context.read<Repository>())
-        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false, widget.listActivity, [], (_){})),
+        ..add(GetListActivityEvent(widget.seasonFarmId, widget.action, false, widget.listActivity, [], (_){}, first: true)),
       child: GestureDetector(
         onTap: () {
 /*          setState(() {
@@ -101,184 +116,239 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
           _overlayEntry?.remove();
           _overlayEntry = null;*/
         },
-        child: Scaffold(
-          appBar: OfitAppBar(context,
-              centerTitle: true,
-              hasBottom: true,
-              showDefaultBackButton: false,
-              callback: [updateHarvesting, listCallback],
-              title: Text(
-                widget.activityFarm.nameActivity,
-                style: StyleOfit.textStyleFW700(Colors.white, 20),
-              ),
-              leading: IconButton(
-                icon: const Icon(Icons.home_outlined),
-                onPressed: () async {
-                  Navigator.of(context).pushAndRemoveUntil(
-                      await HomePage.route(), (route) => false);
-                },
-                color: Colors.white,
-                //padding: EdgeInsets.zero,
-              ),),
-          //resizeToAvoidBottomInset: true,
-          backgroundColor: AppColor.background,
-          floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(
-            builder: (contextBloc, state) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Visibility(
-                    visible: visible,
-                    child: floatingActionButton(
-                        "", Icons.add,   (widget.diary.status??'').compareTo("done") == 0 ||
-                        (widget.diary.status??'').compareTo("cancelled") == 0 ?
-                        () {
-                      print("HoangCV: bug:Asdas : ${widget.diary.status}");
-                      if((widget.diary.status??'').compareTo("done") == 0 ) {
-                        DiaLogManager.displayDialog(context,
-                            "Nhật ký đã hoàn thành","Bạn không thể thêm mới hoạt động",
-                                (){Navigator.pop(context);}, () {
-                              print("HoangCV: bug:Asdas");
-                            },
-                            "",S.of(context).close_dialog);
-                      }
-                      if((widget.diary.status??'').compareTo("cancelled") == 0 ) {
-                        DiaLogManager.displayDialog(context,
-                            "Nhật ký đã đóng","Bạn không thể thêm mới hoạt động",
-                                (){Navigator.pop(context);}, () {},
-                            "",S.of(context).close_dialog);
-                      }
-                    }
-                        : () async {
-                      var result = widget.action.compareTo(
-                          "activity") == 0 || widget.action.compareTo(
-                          "harvesting") == 0
-                          ? await Navigator.of(context)
-                          .push(AddActivityPage.route(
-                          widget.seasonFarmId, widget.diary, widget.action))
-                          : widget.action.compareTo(
-                          "report") == 0 ? await Navigator.of(context)
-                          .push(AddReportViewPage.route(-1)): await Navigator.of(context).push(
-                          AddMonitorPage.route());
-                      if (result != null && result[0]) {
-                        if(result[1]){
-                          setState(() {
-                            updateHarvesting = result[1];
-                          });
-                        }
-                        contextBloc.read<ActivityBloc>().add(
-                            GetListActivityEvent(
-                                widget.seasonFarmId, widget.action,
-                                result[1], [], [], (listCallback){widget.onListActivityChanged(listCallback);}));
-                      }
-                    }),
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: OfitAppBar(context,
+                  centerTitle: true,
+                  hasBottom: true,
+                  showDefaultBackButton: false,
+                  callback: [updateHarvesting, listCallback],
+                  actions: [
+                    IconButton(
+                      icon: SvgPicture.asset(IconAsset.icFilter),
+                      onPressed: () {
+                        openFilter();
+                      },
+                    ),],
+                  title: Text(
+                    widget.activityFarm.nameActivity,
+                    style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
-                ],
-              );
-            },
-          ),
-          body: BlocConsumer<ActivityBloc, ActivityState>(
-              listener: (blocContext, state) async {
-                final formStatus = state.formStatus;
-                if(!state.isShowProgress){
-                  setState(() {
-                    listCallback = state.listCallback;
-                  });
-                }
-                if (formStatus is SubmissionFailed) {
-                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                    Get.back();
-                  }, () {
-                    Get.back();
-                  }, '', S.of(context).close_dialog);
-                } else if (formStatus is SubmissionSuccess) {
-                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                          () {
+                  leading: IconButton(
+                    icon: const Icon(Icons.home_outlined),
+                    onPressed: () async {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          await HomePage.route(), (route) => false);
+                    },
+                    color: Colors.white,
+                    //padding: EdgeInsets.zero,
+                  ),),
+              //resizeToAvoidBottomInset: true,
+              backgroundColor: AppColor.background,
+              floatingActionButton: BlocBuilder<ActivityBloc, ActivityState>(
+                builder: (contextBloc, state) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Visibility(
+                        visible: visible,
+                        child: floatingActionButton(
+                            "", Icons.add,   (widget.diary.status??'').compareTo("done") == 0 ||
+                            (widget.diary.status??'').compareTo("cancelled") == 0 ?
+                            () {
+                          print("HoangCV: bug:Asdas : ${widget.diary.status}");
+                          if((widget.diary.status??'').compareTo("done") == 0 ) {
+                            DiaLogManager.displayDialog(context,
+                                "Nhật ký đã hoàn thành","Bạn không thể thêm mới hoạt động",
+                                    (){Navigator.pop(context);}, () {
+                                  print("HoangCV: bug:Asdas");
+                                },
+                                "",S.of(context).close_dialog);
+                          }
+                          if((widget.diary.status??'').compareTo("cancelled") == 0 ) {
+                            DiaLogManager.displayDialog(context,
+                                "Nhật ký đã đóng","Bạn không thể thêm mới hoạt động",
+                                    (){Navigator.pop(context);}, () {},
+                                "",S.of(context).close_dialog);
+                          }
+                        }
+                            : () async {
+                          var result = widget.action.compareTo(
+                              "activity") == 0 || widget.action.compareTo(
+                              "harvesting") == 0
+                              ? await Navigator.of(context)
+                              .push(AddActivityPage.route(
+                              widget.seasonFarmId, widget.diary, widget.action))
+                              : widget.action.compareTo(
+                              "report") == 0 ? await Navigator.of(context)
+                              .push(AddReportViewPage.route(-1)): await Navigator.of(context).push(
+                              AddMonitorPage.route());
+                          if (result != null && result[0]) {
+                            if(result[1]){
+                              setState(() {
+                                updateHarvesting = result[1];
+                              });
+                            }
+                            contextBloc.read<ActivityBloc>().add(
+                                GetListActivityEvent(
+                                    widget.seasonFarmId, widget.action,
+                                    result[1], [], [], (listCallback){widget.onListActivityChanged(listCallback);}));
+                          }
+                        }),
+                      ),
+                    ],
+                  );
+                },
+              ),
+              body: BlocConsumer<ActivityBloc, ActivityState>(
+                  listener: (blocContext, state) async {
+                    final formStatus = state.formStatus;
+                    if(!state.isShowProgress){
+                      setState(() {
+                        listCallback = state.listCallback;
+                      });
+                    }
+                    if (formStatus is SubmissionFailed) {
+                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
                         Get.back();
                       }, () {
                         Get.back();
                       }, '', S.of(context).close_dialog);
-                } else if (formStatus is FormSubmitting) {
-                  //DiaLogManager.showDialogLoading(context);
-                }
-              }, builder: (blocContext, state) {
-            return state.isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                ? const Center(
-              child:
-              DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-            )
-                : RefreshIndicator(
-              onRefresh: () async {
-                blocContext.read<ActivityBloc>().add(GetListActivityEvent(
-                    widget.seasonFarmId, widget.action, false, [], [], (_){}));
-              },
-              child: ((widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 || widget.action.compareTo('sell') == 0) && state.listDiaryActivity.isEmpty) ||
-                  ((widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0) && state.listDiaryMonitor.isEmpty)
-                  ? const EmptyWidget()
-                  : SingleChildScrollView(
-                //physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0
-                          ? state.listDiaryActivity.length
-                          : state.listDiaryMonitor.length,
-                      itemBuilder: (BuildContext contextBloc, int index) {
-                        return ItemActivityAvatar(
-                            diary: widget.diary,
-                            activityDiary: widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0 ? state.listDiaryActivity[index] : ActivityDiary(),
-                            monitorDiary: widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0 ? state.listDiaryMonitor[index] : MonitorDiary(),
-                            action: widget.action,
-                            callbackChooseItem: () async {
-                              //Truyen id de sang man ben goi api hoac DB
-                              print("HoangCV: state.listDiaryActivity[index]: ${state.listDiaryActivity[index].toJson()}");
-                              if (widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0) {
-                                var result = await Navigator.push(
-                                    context,
-                                    DetailActivityPage.route(
-                                        state.listDiaryActivity[index],
-                                        widget.diary));
-                                if (result != null && result[0]) {
-                                  contextBloc.read<ActivityBloc>().add(
-                                      GetListActivityEvent(
-                                          widget.seasonFarmId,
-                                          widget.action,
-                                          result[1], [], [], (listCallback){
+                    } else if (formStatus is SubmissionSuccess) {
+                      DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                              () {
+                            Get.back();
+                          }, () {
+                            Get.back();
+                          }, '', S.of(context).close_dialog);
+                    } else if (formStatus is FormSubmitting) {
+                      //DiaLogManager.showDialogLoading(context);
+                    }
+                  }, builder: (blocContext, state) {
+                return state.isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
+                    ? const Center(
+                  child:
+                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<ActivityBloc>().add(GetListActivityEvent(
+                        widget.seasonFarmId, widget.action, false, [], [], (_){}));
+                  },
+                  child: ((widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 || widget.action.compareTo('sell') == 0) && state.listDiaryActivity.isEmpty) ||
+                      ((widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0) && state.listDiaryMonitor.isEmpty)
+                      ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0
+                              ? state.listDiaryActivity.length
+                              : state.listDiaryMonitor.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemActivityAvatar(
+                                diary: widget.diary,
+                                activityDiary: widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0 ? state.listDiaryActivity[index] : ActivityDiary(),
+                                monitorDiary: widget.action.compareTo('monitor') == 0  || widget.action.compareTo('report') == 0 ? state.listDiaryMonitor[index] : MonitorDiary(),
+                                action: widget.action,
+                                callbackChooseItem: () async {
+                                  //Truyen id de sang man ben goi api hoac DB
+                                  print("HoangCV: state.listDiaryActivity[index]: ${state.listDiaryActivity[index].toJson()}");
+                                  if (widget.action.compareTo('activity') == 0 || widget.action.compareTo('harvesting') == 0 ||widget.action.compareTo('sell') == 0) {
+                                    var result = await Navigator.push(
+                                        context,
+                                        DetailActivityPage.route(
+                                            state.listDiaryActivity[index],
+                                            widget.diary));
+                                    if (result != null && result[0]) {
+                                      contextBloc.read<ActivityBloc>().add(
+                                          GetListActivityEvent(
+                                              widget.seasonFarmId,
+                                              widget.action,
+                                              result[1], [], [], (listCallback){
+                                            widget.onListActivityChanged(listCallback);}));
+                                    }
+                                  } else {
+                                    var result = await Navigator.push(
+                                        context,
+                                        DetailMonitorPage.route(
+                                            state.listDiaryMonitor[index]));
+                                    if (result != null && result[0]) {
+                                      contextBloc.read<ActivityBloc>().add(
+                                          GetListActivityEvent(
+                                              widget.seasonFarmId,
+                                              widget.action,
+                                              false, [], [], (_){}));
+                                    }
+                                  }
+                                },
+                                callbackDelete: () {
+                                  blocContext.read<ActivityBloc>().add(
+                                      RemoveActivityEvent(
+                                          state.listDiaryActivity[index].id ?? -1,
+                                          widget.action, (listCallback){
                                         widget.onListActivityChanged(listCallback);}));
-                                }
-                              } else {
-                                var result = await Navigator.push(
-                                    context,
-                                    DetailMonitorPage.route(
-                                        state.listDiaryMonitor[index]));
-                                if (result != null && result[0]) {
-                                  contextBloc.read<ActivityBloc>().add(
-                                      GetListActivityEvent(
-                                          widget.seasonFarmId,
-                                          widget.action,
-                                          false, [], [], (_){}));
-                                }
-                              }
-                            },
-                            callbackDelete: () {
-                              blocContext.read<ActivityBloc>().add(
-                                  RemoveActivityEvent(
-                                      state.listDiaryActivity[index].id ?? -1,
-                                      widget.action, (listCallback){
-                                    widget.onListActivityChanged(listCallback);}));
-                            });
-                      },
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                                });
+                          },
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
+                  ),
+                );
+              }),
+            ),
+            if (isFilterOpen)
+              AnimatedContainer(
+                duration: const Duration(milliseconds: 700),
+                color: Colors.black.withOpacity(0.5),
+                child: GestureDetector(
+                  onTap: () {
+                    closeFilter();
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
                 ),
               ),
-            );
-          }),
+
+            // Sliding filter screen
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 700),
+              left: isFilterOpen ? MediaQuery.of(context).size.width * 0.1 : MediaQuery.of(context).size.width,
+              top: 0,
+              bottom: 0,
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(-1.0, 0.0),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(
+                  parent: ModalRoute.of(context)!.animation!,
+                  curve: Curves.ease,
+                )),
+                child: BlocBuilder<ActivityBloc, ActivityState>(
+                    builder: (contextBloc, state) {
+                      return state.listDiaryActivityFilter.length > 0 ? FilterPage(
+                        list: state.listDiaryActivityFilter,
+                        type: widget.action,
+                        onClose: closeFilter,
+                        callBack: (dynamic){
+                          contextBloc.read<ActivityBloc>().add(FilterEvent(dynamic, widget.action));
+                        },
+                        // Other parameters you might need to pass
+                      ) : SizedBox();
+                    }
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

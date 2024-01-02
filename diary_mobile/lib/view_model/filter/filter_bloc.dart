@@ -43,11 +43,17 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     List<ItemFilter> areaFilter = [ItemFilter(-1, "Tất cả")];
    // areaFilter.addAll(await DiaryDB.instance.getListItemFilter(userId));
 
-      itemFilters.addAll(listInput.map((object) {
+/*      itemFilters.addAll(listInput.map((object) {
         int id = object.id;
         String name = object.name;
         return ItemFilter(id, name);
-      }).toList());
+      }).toList());*/
+
+    Set seasonValues = listInput.map((obj) => obj.seasonName).toSet();
+    seasonValues.forEach((value) {
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.seasonName == value);
+      itemFilters.add(ItemFilter(correspondingObject.seasonId, correspondingObject.seasonName));
+    });
 
     Set areaValues = listInput.map((obj) => obj.areaName).toSet();
     areaValues.forEach((value) {
@@ -283,6 +289,43 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     ));
   }
 
+  Future<void> initFilterActivity(Emitter<FilterState> emit, List<dynamic> listInput) async{
+    List<ItemFilter> itemFilters = [ItemFilter(-1, "Tất cả")];
+    List<ItemFilter> activityFilters = [ItemFilter(-1, "Tất cả")];
+
+/*    itemFilters.addAll(listInput.map((object) {
+      int id = object.seasonFarmId;
+      String name = (object as ActivityPurchase).seasonFarmName ?? "";
+      return ItemFilter(id, name);
+    }).toList());*/
+
+    Set activityValues = listInput.map((obj) => obj.activityName).toSet();
+    activityValues.forEach((value) {
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.activityName == value);
+      activityFilters.add(ItemFilter(correspondingObject.activityId, correspondingObject.activityName));
+    });
+
+    List<InputRegisterModel> list = [];
+    if(activityFilters.isNotEmpty) {
+      list.add(InputRegisterModel<ItemFilter, ItemFilter>(
+        title: "Hoạt động",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: 0,
+        valueSelected: activityFilters[0],
+        listValue: activityFilters,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+      ));
+    }
+    emit(state.copyWith(
+      list: list,
+      isShowProgress: false,
+      listFilter: itemFilters,
+    ));
+  }
+
   FutureOr<void> _initFilter(InitFilterEvent event, Emitter<FilterState> emit) {
     emit(state.copyWith(
       isShowProgress: true,
@@ -296,6 +339,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       maxPrice: TextEditingController(),
       minQuantity: TextEditingController(),
       maxQuantity: TextEditingController(),
+      minArea: TextEditingController(),
+      maxArea: TextEditingController(),
       indexFilter0: -1,
       indexFilter1: -1,
       indexFilter2: -1,
@@ -308,6 +353,10 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       initFilterPurchase(emit, event.list);
     } else if(event.type.compareTo("report") == 0)  {
       initFilterReport(emit, event.list);
+    } else if (event.type.compareTo("activity") == 0) {
+      initFilterActivity(emit, event.list);
+    } else if (event.type.compareTo("harvesting") == 0) {
+      initFilterActivity(emit, event.list);
     }
   }
 
@@ -411,6 +460,12 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     } else if(event.type == "maxQuantity") {
       emit(state.copyWith(
           maxQuantity: TextEditingController(text: event.text)));
+    } else if(event.type == "minArea") {
+      emit(state.copyWith(
+          minArea: TextEditingController(text: event.text)));
+    } else if(event.type == "maxArea") {
+      emit(state.copyWith(
+          maxArea: TextEditingController(text: event.text)));
     }
   }
 }
@@ -512,6 +567,14 @@ class FilterState extends BlocState {
     maxQuantity, 
     minPrice, 
     maxPrice,
+    minArea,
+    maxArea,
+    minQuantityFocus,
+    maxQuantityFocus,
+    minPriceFocus,
+    maxPriceFocus,
+    minAreaFocus,
+    maxAreaFocus,
     indexFilter0,
     indexFilter1,
     indexFilter2,
@@ -528,10 +591,14 @@ class FilterState extends BlocState {
   TextEditingController? maxQuantity = TextEditingController();
   TextEditingController? minPrice = TextEditingController();
   TextEditingController? maxPrice = TextEditingController();
+  TextEditingController? minArea = TextEditingController();
+  TextEditingController? maxArea = TextEditingController();
   FocusNode? minQuantityFocus = FocusNode();
   FocusNode? maxQuantityFocus = FocusNode();
   FocusNode? minPriceFocus = FocusNode();
   FocusNode? maxPriceFocus = FocusNode();
+  FocusNode? minAreaFocus = FocusNode();
+  FocusNode? maxAreaFocus = FocusNode();
   int indexFilter0 = -1;
   int indexFilter1 = -1;
   int indexFilter2 = -1;
@@ -552,6 +619,10 @@ class FilterState extends BlocState {
     this.maxQuantityFocus,
     this.minPriceFocus,
     this.maxPriceFocus,
+    this.minAreaFocus,
+    this.maxAreaFocus,
+    this.minArea,
+    this.maxArea,
     this.indexFilter0 = -1,
     this.indexFilter1 = -1,
     this.indexFilter2 = -1,
@@ -569,10 +640,14 @@ class FilterState extends BlocState {
   TextEditingController? maxQuantity,
   TextEditingController? minPrice,
   TextEditingController? maxPrice,
+    TextEditingController? minArea,
+    TextEditingController? maxArea,
   FocusNode? minQuantityFocus,
   FocusNode? maxQuantityFocus,
   FocusNode? minPriceFocus,
   FocusNode? maxPriceFocus,
+    FocusNode? minAreaFocus,
+    FocusNode? maxAreaFocus,
     int? indexFilter0,
     int? indexFilter1,
     int? indexFilter2,
@@ -581,22 +656,26 @@ class FilterState extends BlocState {
     return FilterState(
       formStatus: formStatus ?? this.formStatus,
       isShowProgress: isShowProgress ?? this.isShowProgress,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-        list: list ?? this.list,
-        listFilter: listFilter ?? this.listFilter,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      list: list ?? this.list,
+      listFilter: listFilter ?? this.listFilter,
       minQuantity: minQuantity ?? this.minQuantity,
       maxQuantity: maxQuantity ?? this.maxQuantity,
       minPrice: minPrice ?? this.minPrice,
       maxPrice: maxPrice ?? this.maxPrice,
-        minQuantityFocus: minQuantityFocus ?? this.minQuantityFocus,
-        maxQuantityFocus: maxQuantityFocus ?? this.maxQuantityFocus,
-        minPriceFocus: minPriceFocus ?? this.minPriceFocus,
-        maxPriceFocus: maxPriceFocus ?? this.maxPriceFocus,
-        indexFilter0: indexFilter0 ?? this.indexFilter0,
-        indexFilter1: indexFilter1 ?? this.indexFilter1,
-        indexFilter2: indexFilter2 ?? this.indexFilter2,
-        indexFilter3: indexFilter3 ?? this.indexFilter3,
+      minArea: minArea ?? this.minArea,
+      maxArea: maxArea ?? this.maxArea,
+      minQuantityFocus: minQuantityFocus ?? this.minQuantityFocus,
+      maxQuantityFocus: maxQuantityFocus ?? this.maxQuantityFocus,
+      minPriceFocus: minPriceFocus ?? this.minPriceFocus,
+      maxPriceFocus: maxPriceFocus ?? this.maxPriceFocus,
+      minAreaFocus: minAreaFocus ?? this.minAreaFocus,
+      maxAreaFocus: maxAreaFocus ?? this.maxAreaFocus,
+      indexFilter0: indexFilter0 ?? this.indexFilter0,
+      indexFilter1: indexFilter1 ?? this.indexFilter1,
+      indexFilter2: indexFilter2 ?? this.indexFilter2,
+      indexFilter3: indexFilter3 ?? this.indexFilter3,
     );
   }
 }

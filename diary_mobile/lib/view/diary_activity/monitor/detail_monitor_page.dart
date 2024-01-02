@@ -83,16 +83,12 @@ class _DetailMonitorPageState extends State<DetailMonitorPage> {
                     edit = !edit;
                   });*/
                       Navigator.pop(context, [true]);
-                      /*blocContext.read<DetailActivityBloc>().add(
-                      GetListActivityEvent(widget.seasonFarmId));*/
                     }, () {
                       Get.back();
                       /*setState(() {
                     edit = !edit;
                   });*/
                       Navigator.pop(context, [true]);
-                      /*      blocContext.read<ActivityBloc>().add(
-                      GetListActivityEvent(widget.seasonFarmId));*/
                     }, '', S.of(context).close_dialog);
               } else if (formStatus is FormSubmitting) {
                 DiaLogManager.showDialogLoading(context);

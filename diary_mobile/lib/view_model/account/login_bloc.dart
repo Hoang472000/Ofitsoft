@@ -179,7 +179,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
                   () {},
               "",
               "Đồng ý",
-              dismissible: false);
+              dismissible: true);
         }
       } else {
         String androidVersion = sharedPreferences.getString(

@@ -336,9 +336,6 @@ class _DetailActivityTransactionPageState extends State<DetailActivityTransactio
                                               .read<DetailActivityTransactionBloc>()
                                               .add(ChangeEditActivityTransactionEvent());
                                         } else {
-                                          /*               blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(ChangeDetailActivityEvent());*/
                                         }
                                       });
                                     }),

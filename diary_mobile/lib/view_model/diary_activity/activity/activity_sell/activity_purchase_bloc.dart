@@ -16,6 +16,7 @@ import '../../../../data/entity/item_default/material_entity.dart';
 import '../../../../data/remote_data/object_model/object_result.dart';
 import '../../../../data/repository.dart';
 import '../../../../utils/status/form_submission_status.dart';
+import '../../../../utils/widgets/dialog/toast_widget.dart';
 import '../../../bloc_event.dart';
 import '../../../bloc_state.dart';
 
@@ -138,7 +139,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
       /*print("transactionDate: ${transactionDate} : ${Utils.stringToDate(startTime)}");
       print("DateTime.parse(startTime) : ${!transactionDate.isBefore(Utils.stringToDate(startTime))}");*/
       bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
-      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDateEnd(endTime)) : true;
       bool withinMinPrice = minPrice != -1 ? (activity.unitPrice ?? 0) * (activity.quantity ?? 0) >= minPrice : true;
       bool withinMaxPrice = maxPrice != -1 ? (activity.unitPrice ?? 0) * (activity.quantity ?? 0) <= maxPrice : true;
       bool withinMinQuantity = minQuantity != -1 ? (activity.quantity ?? 0) >= minQuantity : true;
@@ -163,10 +164,17 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     } else{
       listFilter1.addAll(listFilter0);
     }
-    emit(state.copyWith(
-      isShowProgress: false,
-      listActivityTransaction: listFilter1
-    ));
+    if(listFilter1.length > 0) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          listActivityTransaction: listFilter1
+      ));
+    } else{
+      Toast.showLongTop("Không tìm thấy thông tin giao dịch phù hợp");
+      emit(state.copyWith(
+        isShowProgress: false,
+      ));
+    }
   }
 }
 

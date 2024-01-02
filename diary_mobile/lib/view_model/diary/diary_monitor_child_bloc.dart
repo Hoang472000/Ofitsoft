@@ -157,6 +157,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
 
   FutureOr<void> _addChooseDiary(
       AddChooseDiary event, Emitter<DiaryMonitorChildState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<List<bool>> listChoose = state.listSelected;
     bool choose = event.isChoose;
     int amountChoose = state.amountSelected;
@@ -206,6 +207,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
 
   FutureOr<void> _getListDiarySelected(
       GetListDiarySelected event, Emitter<DiaryMonitorChildState> emit) async{
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<Diary> listSelected = [];
     for(int i = 0 ; i< state.listDiary.length;i++){
       for(int j = 0; j < state.listDiary[i].length;j++){
@@ -235,6 +237,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
   }
 
   FutureOr<void> _searchListDiary(SearchListDiaryEvent event, Emitter<DiaryMonitorChildState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<List<Diary>> list = state.listSearchDiary;
     List<String> listDate = state.listSearchDate;
     List<List<Diary>> searchResults = List.generate(list.length, (index) => []);
@@ -283,6 +286,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
   }
 
   FutureOr<void> _selectValue(OnSelectValueEvent event, Emitter<DiaryMonitorChildState> emit) async {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     int result;
     bool checkPass = true;
     if(event.index == 0 && state.listAreaEntity.isEmpty) {
@@ -330,6 +334,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
   }
 
   Future<FutureOr<void>> _filter(FilterEvent event, Emitter<DiaryMonitorChildState> emit) async {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     print("HoangCV: filter: ${event.result}");
     var startTime = event.result[0]/*.replaceAll("/","-")*/;
     var endTime = event.result[1]/*.replaceAll("/","-")*/;
@@ -346,7 +351,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
       /*print("transactionDate: ${transactionDate} : ${Utils.stringToDate(startTime)}");
       print("DateTime.parse(startTime) : ${!transactionDate.isBefore(Utils.stringToDate(startTime))}");*/
       bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
-      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDateEnd(endTime)) : true;
 
 
       //print("HoangCV: $withinStartTime : $withinEndTime : $withinMinPrice : $withinMaxPrice: $withinMinQuantity : $withinMaxQuantity");
@@ -366,7 +371,7 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
     }
     if(filter1 != -1) {
       listFilter1.addAll(listFilter0.where((
-          activity) => activity.id == filter1).toList());
+          activity) => activity.seasonId == filter1).toList());
     } else{
       listFilter1.addAll(listFilter0);
     }
@@ -412,7 +417,8 @@ class DiaryMonitorChildBloc extends Bloc<DiaryMonitorChildEvent, DiaryMonitorChi
           amountSelected: 0));
       isolateError.kill(priority: Isolate.immediate);
     }else if(listFilter3.isEmpty) {
-      emit(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Không tìm thấy thông tin nhật ký phù hợp.")));
+      Toast.showLongTop("Không tìm thấy thông tin nhật ký phù hợp.");
+      //emit(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Không tìm thấy thông tin nhật ký phù hợp.")));
     }
   }
 }

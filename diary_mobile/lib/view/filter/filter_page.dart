@@ -341,6 +341,58 @@ class _FilterPageState extends State<FilterPage> {
                           ),
                         ],
                       ),
+                      if(widget.type == "harvesting")
+                        Container(
+                          padding: const EdgeInsets.only(top: 7, bottom: 5),
+                          child: Text("Sản lượng",
+                              style: StyleOfit.textStyleFW500(
+                                  AppColor.black22, 15)),
+                        ),
+                      if(widget.type == "harvesting")
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                //margin: const EdgeInsets.only(top: 25),
+                                  child: TextFormFieldInputText(
+                                    isNumber: true,
+                                    "TỐI THIỂU",
+                                    state.minQuantity ?? TextEditingController(),
+                                    false,
+                                    state.minQuantityFocus ?? FocusNode(),
+                                    (state.formStatus is ValidatePassFail) ? "" : "",
+                                        (lostFocus) {
+                                    },
+                                    false,
+                                    onChangeCallBack: (text) {
+                                      print("text: SaveReplyEvent: $text");
+                                      contextBloc.read<FilterBloc>().add(
+                                          SaveValueTextEvent(text, "minPrice"));
+                                    },// textCapitalization: false,
+                                  )),
+                            ),Container(child: Text(" — "),),
+                            Expanded(
+                              child: Container(
+                                //margin: const EdgeInsets.only(top: 25),
+                                  child: TextFormFieldInputText(
+                                    isNumber: true,
+                                    "TỐI ĐA",
+                                    state.maxQuantity ?? TextEditingController(),
+                                    false,
+                                    state.maxQuantityFocus ?? FocusNode(),
+                                    (state.formStatus is ValidatePassFail) ? "" : "",
+                                        (lostFocus) {
+                                    },
+                                    false,
+                                    onChangeCallBack: (text) {
+                                      print("text: SaveReplyEvent: $text");
+                                      contextBloc.read<FilterBloc>().add(
+                                          SaveValueTextEvent(text, "maxPrice"));
+                                    },// textCapitalization: false,
+                                  )),
+                            ),
+                          ],
+                        ),
                     ],
                   ),
                   Positioned(
@@ -414,6 +466,26 @@ class _FilterPageState extends State<FilterPage> {
                                   state.indexFilter1,
                                   state.indexFilter2,
                                   state.indexFilter3,
+                                ]);
+                              }
+                              else if (widget.type == "activity") {
+                                widget.callBack([
+                                  state.startTime,
+                                  state.endTime,
+                                  state.minQuantity!.text,
+                                  state.maxQuantity!.text,
+                                  state.indexFilter0,
+                                  state.indexFilter1,
+                                ]);
+                              }
+                              else if (widget.type == "harvesting") {
+                                widget.callBack([
+                                  state.startTime,
+                                  state.endTime,
+                                  state.minQuantity!.text,
+                                  state.maxQuantity!.text,
+                                  state.indexFilter0,
+                                  state.indexFilter1,
                                 ]);
                               }
                               widget.onClose();

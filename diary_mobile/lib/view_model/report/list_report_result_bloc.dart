@@ -10,6 +10,7 @@ import '../../data/entity/report/report_select.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
 import '../../utils/utils.dart';
+import '../../utils/widgets/dialog/toast_widget.dart';
 import '../bloc_event.dart';
 import '../bloc_state.dart';
 
@@ -117,7 +118,7 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     for (var activity in list) {
       DateTime transactionDate = DateTime.parse(activity.createDate ?? "");
       bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
-      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDateEnd(endTime)) : true;
 
       if (withinStartTime && withinEndTime) {
         filteredList.add(activity);
@@ -155,10 +156,17 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
       listFilter3.addAll(listFilter2);
     }
     print("HoangCV: ");
-    emit(state.copyWith(
-        isShowProgress: false,
-        listReport: listFilter3
-    ));
+    if(listFilter3.length > 0) {
+      emit(state.copyWith(
+          isShowProgress: false,
+          listReport: listFilter3
+      ));
+    } else {
+      Toast.showLongTop("Không tìm thấy thông tin báo cáo phù hợp.");
+      emit(state.copyWith(
+          isShowProgress: false,
+      ));
+    }
   }
 }
 

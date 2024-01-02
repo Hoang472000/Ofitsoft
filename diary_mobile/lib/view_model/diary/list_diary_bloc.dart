@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -27,7 +28,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
 
   void _getListDiary(
       GetListDiaryEvent event, Emitter<ListDiaryState> emitter) async {
-    emitter(state.copyWith(isShowProgress: true));
+    emitter(state.copyWith(isShowProgress: true, formStatus: const InitialFormStatus()));
     final listDiary = await repository.getListDiary("farmer");
     List<String> distinctMonthsAndYears = [];
     List<List<Diary>> list = [];
@@ -70,6 +71,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
 
   FutureOr<void> _addChooseDiary(
       AddChooseDiary event, Emitter<ListDiaryState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<List<bool>> listChoose = state.listSelected;
     bool choose = event.isChoose;
     int amountChoose = state.amountSelected;
@@ -119,6 +121,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
 
   FutureOr<void> _getListDiarySelected(
       GetListDiarySelected event, Emitter<ListDiaryState> emit) async{
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<Diary> listSelected = [];
     for(int i = 0 ; i< state.listDiary.length;i++){
       for(int j = 0; j < state.listDiary[i].length;j++){
@@ -148,6 +151,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
   }
 
   FutureOr<void> _searchListDiary(SearchListDiaryEvent event, Emitter<ListDiaryState> emit) {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     List<List<Diary>> list = state.listSearchDiary;
     List<String> listDate = state.listSearchDate;
     List<List<Diary>> searchResults = List.generate(list.length, (index) => []);
@@ -190,6 +194,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
   }
 
   FutureOr<void> _filter(FilterEvent event, Emitter<ListDiaryState> emit) async {
+    emit(state.copyWith(formStatus: const InitialFormStatus()));
     print("HoangCV: filter: ${event.result}");
     var startTime = event.result[0];
     var endTime = event.result[1];
@@ -202,7 +207,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     for (var activity in listFilter) {
       DateTime transactionDate = DateTime.parse(activity.startDate ?? "");
       bool withinStartTime = startTime.isNotEmpty ? !transactionDate.isBefore(Utils.stringToDate(startTime)) : true;
-      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDate(endTime)) : true;
+      bool withinEndTime = endTime.isNotEmpty ? !transactionDate.isAfter(Utils.stringToDateEnd(endTime)) : true;
       if (withinStartTime && withinEndTime) {
         filteredList.add(activity);
       }
@@ -219,7 +224,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
     }
     if(filter1 != -1) {
       listFilter1.addAll(listFilter0.where((
-          activity) => activity.id == filter1).toList());
+          activity) => activity.seasonId == filter1).toList());
     } else{
       listFilter1.addAll(listFilter0);
     }
@@ -277,6 +282,7 @@ class ListDiaryBloc extends Bloc<ListDiaryEvent, ListDiaryState> {
           lengthSearchDiary: listFilter3.length,
           amountSelected: 0));
     }else if(listFilter3.isEmpty) {
+      Toast.showLongTop("Không tìm thấy thông tin nhật ký phù hợp.");
       emit(state.copyWith(isShowProgress: false, formStatus: SubmissionFailed("Không tìm thấy thông tin nhật ký phù hợp.")));
     }
   }

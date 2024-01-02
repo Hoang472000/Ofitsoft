@@ -337,9 +337,6 @@ class _DetailActivityPurchasePageState extends State<DetailActivityPurchasePage>
                                               .read<DetailActivityPurchaseBloc>()
                                               .add(ChangeEditActivityPurchaseEvent());
                                         } else {
-                                          /*               blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(ChangeDetailActivityEvent());*/
                                         }
                                       });
                                     }),

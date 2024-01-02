@@ -246,7 +246,7 @@ class Utils {
         final f1 = DateFormat('HH:mm');
         final time2 = f2.format(dateTime) ;
         String time1 = f1.format(dateTime) ;
-        if(dateTime.hour <= 12 && dateTime.hour >= 3){
+        if(dateTime.hour <= 12 && dateTime.hour >= 0){
           time1 += " Sáng, ";
         }else if(dateTime.hour > 12 && dateTime.hour <= 6){
           time1 += " Chiều, ";
@@ -344,6 +344,26 @@ class Utils {
         DateFormat formatter = DateFormat('dd/MM/yyyy');
         DateTime dateTime = formatter.parse(time);
         return dateTime;
+      }
+    } catch(_){
+      return DateTime.now();
+    }
+
+  }
+
+  static DateTime stringToDateEnd(String time) {
+    try {
+      if (time.contains(' ')) {
+        DateFormat formatter = DateFormat('dd/MM/yyyy HH:mm:ss');
+        DateTime dateTime = formatter.parse(time /*.replaceFirst(' ', 'T')*/);
+        print("HoangCV: End daTe4: ${dateTime}");
+        return dateTime;
+      } else {
+        DateFormat formatter = DateFormat('dd/MM/yyyy');
+        DateTime dateTime = formatter.parse(time);
+        DateTime endOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day, 23, 59, 59);
+
+        return endOfDay;
       }
     } catch(_){
       return DateTime.now();

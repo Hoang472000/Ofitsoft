@@ -35,6 +35,12 @@ class $DiaryTableTable extends DiaryTable
   late final GeneratedColumn<int> seasonId = GeneratedColumn<int>(
       'season_id', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _seasonNameMeta =
+      const VerificationMeta('seasonName');
+  @override
+  late final GeneratedColumn<String> seasonName = GeneratedColumn<String>(
+      'season_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _farmIdMeta = const VerificationMeta('farmId');
   @override
   late final GeneratedColumn<int> farmId = GeneratedColumn<int>(
@@ -142,15 +148,12 @@ class $DiaryTableTable extends DiaryTable
   static const VerificationMeta _harvestingMeta =
       const VerificationMeta('harvesting');
   @override
-  late final GeneratedColumn<bool> harvesting =
-      GeneratedColumn<bool>('harvesting', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("harvesting" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> harvesting = GeneratedColumn<bool>(
+      'harvesting', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("harvesting" IN (0, 1))'));
   static const VerificationMeta _startDateMeta =
       const VerificationMeta('startDate');
   @override
@@ -240,6 +243,7 @@ class $DiaryTableTable extends DiaryTable
         action,
         name,
         seasonId,
+        seasonName,
         farmId,
         farmName,
         productName,
@@ -275,9 +279,10 @@ class $DiaryTableTable extends DiaryTable
         areaId
       ];
   @override
-  String get aliasedName => _alias ?? 'diary';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'diary';
+  String get actualTableName => $name;
+  static const String $name = 'diary';
   @override
   VerificationContext validateIntegrity(Insertable<Diary> instance,
       {bool isInserting = false}) {
@@ -301,6 +306,12 @@ class $DiaryTableTable extends DiaryTable
     if (data.containsKey('season_id')) {
       context.handle(_seasonIdMeta,
           seasonId.isAcceptableOrUnknown(data['season_id']!, _seasonIdMeta));
+    }
+    if (data.containsKey('season_name')) {
+      context.handle(
+          _seasonNameMeta,
+          seasonName.isAcceptableOrUnknown(
+              data['season_name']!, _seasonNameMeta));
     }
     if (data.containsKey('farm_id')) {
       context.handle(_farmIdMeta,
@@ -485,6 +496,8 @@ class $DiaryTableTable extends DiaryTable
           .read(DriftSqlType.string, data['${effectivePrefix}name']),
       seasonId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}season_id']),
+      seasonName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}season_name']),
       farmId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}farm_id']),
       farmName: attachedDatabase.typeMapping
@@ -567,6 +580,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
   final Value<String?> action;
   final Value<String?> name;
   final Value<int?> seasonId;
+  final Value<String?> seasonName;
   final Value<int?> farmId;
   final Value<String?> farmName;
   final Value<String?> productName;
@@ -607,6 +621,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.action = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
+    this.seasonName = const Value.absent(),
     this.farmId = const Value.absent(),
     this.farmName = const Value.absent(),
     this.productName = const Value.absent(),
@@ -648,6 +663,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     this.action = const Value.absent(),
     this.name = const Value.absent(),
     this.seasonId = const Value.absent(),
+    this.seasonName = const Value.absent(),
     this.farmId = const Value.absent(),
     this.farmName = const Value.absent(),
     this.productName = const Value.absent(),
@@ -689,6 +705,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     Expression<String>? action,
     Expression<String>? name,
     Expression<int>? seasonId,
+    Expression<String>? seasonName,
     Expression<int>? farmId,
     Expression<String>? farmName,
     Expression<String>? productName,
@@ -730,6 +747,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       if (action != null) 'action': action,
       if (name != null) 'name': name,
       if (seasonId != null) 'season_id': seasonId,
+      if (seasonName != null) 'season_name': seasonName,
       if (farmId != null) 'farm_id': farmId,
       if (farmName != null) 'farm_name': farmName,
       if (productName != null) 'product_name': productName,
@@ -776,6 +794,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       Value<String?>? action,
       Value<String?>? name,
       Value<int?>? seasonId,
+      Value<String?>? seasonName,
       Value<int?>? farmId,
       Value<String?>? farmName,
       Value<String?>? productName,
@@ -816,6 +835,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
       action: action ?? this.action,
       name: name ?? this.name,
       seasonId: seasonId ?? this.seasonId,
+      seasonName: seasonName ?? this.seasonName,
       farmId: farmId ?? this.farmId,
       farmName: farmName ?? this.farmName,
       productName: productName ?? this.productName,
@@ -871,6 +891,9 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
     }
     if (seasonId.present) {
       map['season_id'] = Variable<int>(seasonId.value);
+    }
+    if (seasonName.present) {
+      map['season_name'] = Variable<String>(seasonName.value);
     }
     if (farmId.present) {
       map['farm_id'] = Variable<int>(farmId.value);
@@ -986,6 +1009,7 @@ class DiaryTableCompanion extends UpdateCompanion<Diary> {
           ..write('action: $action, ')
           ..write('name: $name, ')
           ..write('seasonId: $seasonId, ')
+          ..write('seasonName: $seasonName, ')
           ..write('farmId: $farmId, ')
           ..write('farmName: $farmName, ')
           ..write('productName: $productName, ')
@@ -1056,39 +1080,30 @@ class $ActivityTableTable extends ActivityTable
   static const VerificationMeta _isOrganicMeta =
       const VerificationMeta('isOrganic');
   @override
-  late final GeneratedColumn<bool> isOrganic =
-      GeneratedColumn<bool>('is_organic', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_organic" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isOrganic = GeneratedColumn<bool>(
+      'is_organic', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_organic" IN (0, 1))'));
   static const VerificationMeta _notationMeta =
       const VerificationMeta('notation');
   @override
-  late final GeneratedColumn<bool> notation =
-      GeneratedColumn<bool>('notation', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("notation" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> notation = GeneratedColumn<bool>(
+      'notation', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("notation" IN (0, 1))'));
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<bool> isActive =
-      GeneratedColumn<bool>('is_active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+      'is_active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
@@ -1125,15 +1140,12 @@ class $ActivityTableTable extends ActivityTable
   static const VerificationMeta _harvestingMeta =
       const VerificationMeta('harvesting');
   @override
-  late final GeneratedColumn<bool> harvesting =
-      GeneratedColumn<bool>('harvesting', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("harvesting" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> harvesting = GeneratedColumn<bool>(
+      'harvesting', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("harvesting" IN (0, 1))'));
   static const VerificationMeta _stringToolIdsMeta =
       const VerificationMeta('stringToolIds');
   @override
@@ -1166,9 +1178,10 @@ class $ActivityTableTable extends ActivityTable
         stringMaterialIds
       ];
   @override
-  String get aliasedName => _alias ?? 'activity';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity';
+  String get actualTableName => $name;
+  static const String $name = 'activity';
   @override
   VerificationContext validateIntegrity(Insertable<Activity> instance,
       {bool isInserting = false}) {
@@ -1543,39 +1556,30 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
   static const VerificationMeta _isOrganicMeta =
       const VerificationMeta('isOrganic');
   @override
-  late final GeneratedColumn<bool> isOrganic =
-      GeneratedColumn<bool>('is_organic', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_organic" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isOrganic = GeneratedColumn<bool>(
+      'is_organic', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_organic" IN (0, 1))'));
   static const VerificationMeta _notationMeta =
       const VerificationMeta('notation');
   @override
-  late final GeneratedColumn<bool> notation =
-      GeneratedColumn<bool>('notation', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("notation" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> notation = GeneratedColumn<bool>(
+      'notation', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("notation" IN (0, 1))'));
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<bool> isActive =
-      GeneratedColumn<bool>('is_active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+      'is_active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
@@ -1634,9 +1638,10 @@ class $ToolTableTable extends ToolTable with TableInfo<$ToolTableTable, Tool> {
         mediaContent
       ];
   @override
-  String get aliasedName => _alias ?? 'tool';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'tool';
+  String get actualTableName => $name;
+  static const String $name = 'tool';
   @override
   VerificationContext validateIntegrity(Insertable<Tool> instance,
       {bool isInserting = false}) {
@@ -1989,39 +1994,30 @@ class $MaterialTableTable extends MaterialTable
   static const VerificationMeta _isOrganicMeta =
       const VerificationMeta('isOrganic');
   @override
-  late final GeneratedColumn<bool> isOrganic =
-      GeneratedColumn<bool>('is_organic', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_organic" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isOrganic = GeneratedColumn<bool>(
+      'is_organic', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_organic" IN (0, 1))'));
   static const VerificationMeta _notationMeta =
       const VerificationMeta('notation');
   @override
-  late final GeneratedColumn<bool> notation =
-      GeneratedColumn<bool>('notation', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("notation" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> notation = GeneratedColumn<bool>(
+      'notation', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("notation" IN (0, 1))'));
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<bool> isActive =
-      GeneratedColumn<bool>('is_active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+      'is_active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
@@ -2081,9 +2077,10 @@ class $MaterialTableTable extends MaterialTable
         mediaContent
       ];
   @override
-  String get aliasedName => _alias ?? 'material';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'material';
+  String get actualTableName => $name;
+  static const String $name = 'material';
   @override
   VerificationContext validateIntegrity(Insertable<MaterialEntity> instance,
       {bool isInserting = false}) {
@@ -2431,39 +2428,30 @@ class $UnitTableTable extends UnitTable with TableInfo<$UnitTableTable, Unit> {
   static const VerificationMeta _isOrganicMeta =
       const VerificationMeta('isOrganic');
   @override
-  late final GeneratedColumn<bool> isOrganic =
-      GeneratedColumn<bool>('is_organic', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_organic" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isOrganic = GeneratedColumn<bool>(
+      'is_organic', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_organic" IN (0, 1))'));
   static const VerificationMeta _notationMeta =
       const VerificationMeta('notation');
   @override
-  late final GeneratedColumn<bool> notation =
-      GeneratedColumn<bool>('notation', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("notation" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> notation = GeneratedColumn<bool>(
+      'notation', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("notation" IN (0, 1))'));
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<bool> isActive =
-      GeneratedColumn<bool>('is_active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
+      'is_active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
@@ -2521,9 +2509,10 @@ class $UnitTableTable extends UnitTable with TableInfo<$UnitTableTable, Unit> {
         mediaContent
       ];
   @override
-  String get aliasedName => _alias ?? 'unit';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'unit';
+  String get actualTableName => $name;
+  static const String $name = 'unit';
   @override
   VerificationContext validateIntegrity(Insertable<Unit> instance,
       {bool isInserting = false}) {
@@ -2889,15 +2878,12 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isShowMeta = const VerificationMeta('isShow');
   @override
-  late final GeneratedColumn<bool> isShow =
-      GeneratedColumn<bool>('is_show', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_show" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isShow = GeneratedColumn<bool>(
+      'is_show', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_show" IN (0, 1))'));
   static const VerificationMeta _amountUnitIdMeta =
       const VerificationMeta('amountUnitId');
   @override
@@ -2918,15 +2904,12 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
   static const VerificationMeta _harvestingMeta =
       const VerificationMeta('harvesting');
   @override
-  late final GeneratedColumn<bool> harvesting =
-      GeneratedColumn<bool>('harvesting', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("harvesting" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> harvesting = GeneratedColumn<bool>(
+      'harvesting', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("harvesting" IN (0, 1))'));
   static const VerificationMeta _productIdMeta =
       const VerificationMeta('productId');
   @override
@@ -3035,9 +3018,10 @@ class $ActivityDiaryTableTable extends ActivityDiaryTable
         stringMedia
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_diary';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_diary';
+  String get actualTableName => $name;
+  static const String $name = 'activity_diary';
   @override
   VerificationContext validateIntegrity(Insertable<ActivityDiary> instance,
       {bool isInserting = false}) {
@@ -3645,15 +3629,12 @@ class $UserInfoTableTable extends UserInfoTable
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _activeMeta = const VerificationMeta('active');
   @override
-  late final GeneratedColumn<bool> active =
-      GeneratedColumn<bool>('active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+      'active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("active" IN (0, 1))'));
   static const VerificationMeta _groupMeta = const VerificationMeta('group');
   @override
   late final GeneratedColumn<String> group = GeneratedColumn<String>(
@@ -3685,9 +3666,10 @@ class $UserInfoTableTable extends UserInfoTable
         mediaContent
       ];
   @override
-  String get aliasedName => _alias ?? 'user_info';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'user_info';
+  String get actualTableName => $name;
+  static const String $name = 'user_info';
   @override
   VerificationContext validateIntegrity(Insertable<UserInfo> instance,
       {bool isInserting = false}) {
@@ -3946,27 +3928,21 @@ class $ActivityMonitorTableTable extends ActivityMonitorTable
   static const VerificationMeta _checkYesMeta =
       const VerificationMeta('checkYes');
   @override
-  late final GeneratedColumn<bool> checkYes =
-      GeneratedColumn<bool>('check_yes', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("check_yes" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> checkYes = GeneratedColumn<bool>(
+      'check_yes', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("check_yes" IN (0, 1))'));
   static const VerificationMeta _checkNoMeta =
       const VerificationMeta('checkNo');
   @override
-  late final GeneratedColumn<bool> checkNo =
-      GeneratedColumn<bool>('check_no', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("check_no" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> checkNo = GeneratedColumn<bool>(
+      'check_no', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("check_no" IN (0, 1))'));
   static const VerificationMeta _imageMeta = const VerificationMeta('image');
   @override
   late final GeneratedColumn<String> image = GeneratedColumn<String>(
@@ -3976,9 +3952,10 @@ class $ActivityMonitorTableTable extends ActivityMonitorTable
   List<GeneratedColumn> get $columns =>
       [id, diaryMonitorId, activityId, activity, checkYes, checkNo, image];
   @override
-  String get aliasedName => _alias ?? 'activity';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity';
+  String get actualTableName => $name;
+  static const String $name = 'activity';
   @override
   VerificationContext validateIntegrity(Insertable<ActivityMonitor> instance,
       {bool isInserting = false}) {
@@ -4226,9 +4203,10 @@ class $MonitorDiaryTableTable extends MonitorDiaryTable
         description
       ];
   @override
-  String get aliasedName => _alias ?? 'monitor_diary';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'monitor_diary';
+  String get actualTableName => $name;
+  static const String $name = 'monitor_diary';
   @override
   VerificationContext validateIntegrity(Insertable<MonitorDiary> instance,
       {bool isInserting = false}) {
@@ -4514,15 +4492,12 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isShowMeta = const VerificationMeta('isShow');
   @override
-  late final GeneratedColumn<bool> isShow =
-      GeneratedColumn<bool>('is_show', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_show" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isShow = GeneratedColumn<bool>(
+      'is_show', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_show" IN (0, 1))'));
   static const VerificationMeta _amountUnitIdMeta =
       const VerificationMeta('amountUnitId');
   @override
@@ -4543,15 +4518,12 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
   static const VerificationMeta _harvestingMeta =
       const VerificationMeta('harvesting');
   @override
-  late final GeneratedColumn<bool> harvesting =
-      GeneratedColumn<bool>('harvesting', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("harvesting" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> harvesting = GeneratedColumn<bool>(
+      'harvesting', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("harvesting" IN (0, 1))'));
   static const VerificationMeta _stringToolMeta =
       const VerificationMeta('stringTool');
   @override
@@ -4668,9 +4640,10 @@ class $ActDiaryNoNetworkTableTable extends ActDiaryNoNetworkTable
         stringSeasonFarmIds
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_diary_no_network';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_diary_no_network';
+  String get actualTableName => $name;
+  static const String $name = 'activity_diary_no_network';
   @override
   VerificationContext validateIntegrity(Insertable<ActDiaryNoNetwork> instance,
       {bool isInserting = false}) {
@@ -5291,15 +5264,12 @@ class $ReportTableTable extends ReportTable
       type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _isPageMeta = const VerificationMeta('isPage');
   @override
-  late final GeneratedColumn<bool> isPage =
-      GeneratedColumn<bool>('is_page', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_page" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isPage = GeneratedColumn<bool>(
+      'is_page', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_page" IN (0, 1))'));
   static const VerificationMeta _pageIdMeta = const VerificationMeta('pageId');
   @override
   late final GeneratedColumn<int> pageId = GeneratedColumn<int>(
@@ -5323,15 +5293,12 @@ class $ReportTableTable extends ReportTable
       type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _activeMeta = const VerificationMeta('active');
   @override
-  late final GeneratedColumn<bool> active =
-      GeneratedColumn<bool>('active', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("active" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> active = GeneratedColumn<bool>(
+      'active', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("active" IN (0, 1))'));
   static const VerificationMeta _hasConditionalQuestionsMeta =
       const VerificationMeta('hasConditionalQuestions');
   @override
@@ -5339,11 +5306,8 @@ class $ReportTableTable extends ReportTable
       GeneratedColumn<bool>('has_conditional_questions', aliasedName, true,
           type: DriftSqlType.bool,
           requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("has_conditional_questions" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+          defaultConstraints: GeneratedColumn.constraintIsAlways(
+              'CHECK ("has_conditional_questions" IN (0, 1))'));
   static const VerificationMeta _questionsSelectionMeta =
       const VerificationMeta('questionsSelection');
   @override
@@ -5384,9 +5348,10 @@ class $ReportTableTable extends ReportTable
         stringListFarmers
       ];
   @override
-  String get aliasedName => _alias ?? 'report';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'report';
+  String get actualTableName => $name;
+  static const String $name = 'report';
   @override
   VerificationContext validateIntegrity(Insertable<Report> instance,
       {bool isInserting = false}) {
@@ -5728,39 +5693,30 @@ class $QuestionUploadNoNetworkTableTable extends QuestionUploadNoNetworkTable
   static const VerificationMeta _skippedMeta =
       const VerificationMeta('skipped');
   @override
-  late final GeneratedColumn<bool> skipped =
-      GeneratedColumn<bool>('skipped', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("skipped" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> skipped = GeneratedColumn<bool>(
+      'skipped', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("skipped" IN (0, 1))'));
   static const VerificationMeta _isAnswerExistMeta =
       const VerificationMeta('isAnswerExist');
   @override
-  late final GeneratedColumn<bool> isAnswerExist =
-      GeneratedColumn<bool>('is_answer_exist', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_answer_exist" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isAnswerExist = GeneratedColumn<bool>(
+      'is_answer_exist', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_answer_exist" IN (0, 1))'));
   static const VerificationMeta _valueCheckBoxMeta =
       const VerificationMeta('valueCheckBox');
   @override
-  late final GeneratedColumn<bool> valueCheckBox =
-      GeneratedColumn<bool>('value_check_box', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("value_check_box" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> valueCheckBox = GeneratedColumn<bool>(
+      'value_check_box', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("value_check_box" IN (0, 1))'));
   static const VerificationMeta _tableRowIdMeta =
       const VerificationMeta('tableRowId');
   @override
@@ -5840,9 +5796,10 @@ class $QuestionUploadNoNetworkTableTable extends QuestionUploadNoNetworkTable
         visitDate
       ];
   @override
-  String get aliasedName => _alias ?? 'question_upload_no_network';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'question_upload_no_network';
+  String get actualTableName => $name;
+  static const String $name = 'question_upload_no_network';
   @override
   VerificationContext validateIntegrity(Insertable<QuestionUpload> instance,
       {bool isInserting = false}) {
@@ -6401,9 +6358,10 @@ class $FarmerInspectorUploadNoNetworkTableTable
         visitDate
       ];
   @override
-  String get aliasedName => _alias ?? 'farmer_inspector_upload_no_network';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'farmer_inspector_upload_no_network';
+  String get actualTableName => $name;
+  static const String $name = 'farmer_inspector_upload_no_network';
   @override
   VerificationContext validateIntegrity(
       Insertable<FarmerInspectorUpload> instance,
@@ -6684,21 +6642,19 @@ class $ReportSelectTableTable extends ReportSelectTable
   static const VerificationMeta _isInitialAssessmentMeta =
       const VerificationMeta('isInitialAssessment');
   @override
-  late final GeneratedColumn<bool> isInitialAssessment =
-      GeneratedColumn<bool>('is_initial_assessment', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_initial_assessment" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isInitialAssessment = GeneratedColumn<bool>(
+      'is_initial_assessment', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_initial_assessment" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns => [id, title, isInitialAssessment];
   @override
-  String get aliasedName => _alias ?? 'report_select_table';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'report_select_table';
+  String get actualTableName => $name;
+  static const String $name = 'report_select_table';
   @override
   VerificationContext validateIntegrity(Insertable<ReportSelect> instance,
       {bool isInserting = false}) {
@@ -6883,15 +6839,12 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
   static const VerificationMeta _isPurchaseMeta =
       const VerificationMeta('isPurchase');
   @override
-  late final GeneratedColumn<bool> isPurchase =
-      GeneratedColumn<bool>('is_purchase', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isPurchase = GeneratedColumn<bool>(
+      'is_purchase', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_purchase" IN (0, 1))'));
   static const VerificationMeta _personMeta = const VerificationMeta('person');
   @override
   late final GeneratedColumn<String> person = GeneratedColumn<String>(
@@ -6915,9 +6868,10 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
         person
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_purchase';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_purchase';
+  String get actualTableName => $name;
+  static const String $name = 'activity_purchase';
   @override
   VerificationContext validateIntegrity(Insertable<ActivityPurchase> instance,
       {bool isInserting = false}) {
@@ -7306,15 +7260,12 @@ class $ActivityTransactionTableTable extends ActivityTransactionTable
   static const VerificationMeta _isPurchaseMeta =
       const VerificationMeta('isPurchase');
   @override
-  late final GeneratedColumn<bool> isPurchase =
-      GeneratedColumn<bool>('is_purchase', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isPurchase = GeneratedColumn<bool>(
+      'is_purchase', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_purchase" IN (0, 1))'));
   static const VerificationMeta _personMeta = const VerificationMeta('person');
   @override
   late final GeneratedColumn<String> person = GeneratedColumn<String>(
@@ -7337,9 +7288,10 @@ class $ActivityTransactionTableTable extends ActivityTransactionTable
         person
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_transaction';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_transaction';
+  String get actualTableName => $name;
+  static const String $name = 'activity_transaction';
   @override
   VerificationContext validateIntegrity(
       Insertable<ActivityTransaction> instance,
@@ -7721,15 +7673,12 @@ class $ActivityTransactionNoNetworkTableTable
   static const VerificationMeta _isPurchaseMeta =
       const VerificationMeta('isPurchase');
   @override
-  late final GeneratedColumn<bool> isPurchase =
-      GeneratedColumn<bool>('is_purchase', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isPurchase = GeneratedColumn<bool>(
+      'is_purchase', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_purchase" IN (0, 1))'));
   static const VerificationMeta _personMeta = const VerificationMeta('person');
   @override
   late final GeneratedColumn<String> person = GeneratedColumn<String>(
@@ -7753,9 +7702,10 @@ class $ActivityTransactionNoNetworkTableTable
         person
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_transaction_no_network';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_transaction_no_network';
+  String get actualTableName => $name;
+  static const String $name = 'activity_transaction_no_network';
   @override
   VerificationContext validateIntegrity(
       Insertable<ActivityTransactionNoNetwork> instance,
@@ -8155,15 +8105,12 @@ class $ActivityPurchaseNoNetworkTableTable
   static const VerificationMeta _isPurchaseMeta =
       const VerificationMeta('isPurchase');
   @override
-  late final GeneratedColumn<bool> isPurchase =
-      GeneratedColumn<bool>('is_purchase', aliasedName, true,
-          type: DriftSqlType.bool,
-          requiredDuringInsert: false,
-          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
-            SqlDialect.sqlite: 'CHECK ("is_purchase" IN (0, 1))',
-            SqlDialect.mysql: '',
-            SqlDialect.postgres: '',
-          }));
+  late final GeneratedColumn<bool> isPurchase = GeneratedColumn<bool>(
+      'is_purchase', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_purchase" IN (0, 1))'));
   static const VerificationMeta _personMeta = const VerificationMeta('person');
   @override
   late final GeneratedColumn<String> person = GeneratedColumn<String>(
@@ -8187,9 +8134,10 @@ class $ActivityPurchaseNoNetworkTableTable
         person
       ];
   @override
-  String get aliasedName => _alias ?? 'activity_purchase_no_network';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'activity_purchase_no_network';
+  String get actualTableName => $name;
+  static const String $name = 'activity_purchase_no_network';
   @override
   VerificationContext validateIntegrity(
       Insertable<ActivityPurchaseNoNetWork> instance,
@@ -8569,9 +8517,10 @@ class $SeasonFarmTableTable extends SeasonFarmTable
         image
       ];
   @override
-  String get aliasedName => _alias ?? 'season_farm';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'season_farm';
+  String get actualTableName => $name;
+  static const String $name = 'season_farm';
   @override
   VerificationContext validateIntegrity(Insertable<SeasonFarm> instance,
       {bool isInserting = false}) {
@@ -8834,9 +8783,10 @@ class $WorkflowTableTable extends WorkflowTable
         stringProcessStageIds
       ];
   @override
-  String get aliasedName => _alias ?? 'workflow';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'workflow';
+  String get actualTableName => $name;
+  static const String $name = 'workflow';
   @override
   VerificationContext validateIntegrity(Insertable<Workflow> instance,
       {bool isInserting = false}) {
@@ -9084,9 +9034,10 @@ class $AreaEntityTableTable extends AreaEntityTable
   @override
   List<GeneratedColumn> get $columns => [userId, id, name, stringSeasons];
   @override
-  String get aliasedName => _alias ?? 'area_entity';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'area_entity';
+  String get actualTableName => $name;
+  static const String $name = 'area_entity';
   @override
   VerificationContext validateIntegrity(Insertable<AreaEntity> instance,
       {bool isInserting = false}) {
