@@ -275,6 +275,22 @@ class _AddActWriteByPageState extends State<AddActWriteByPage> {
                                             height: state.imageHeight,
                                             width: state.imageWidth,
                                             fit: BoxFit.cover,
+                                            errorBuilder: (context, error,
+                                                stackTrace) {
+                                              return Container(
+                                                height: state.imageHeight,
+                                                width: state.imageWidth,
+                                                decoration: BoxDecoration(
+                                                    color:  AppColor.grayC7),
+                                                child: Center(
+                                                  child: Text(
+                                                    "V",
+                                                    style:
+                                                    StyleOfit.textStyleFW700(AppColor.main, 16),
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),

@@ -19,6 +19,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../data/entity/image/image_entity.dart';
 import '../generated/l10n.dart';
