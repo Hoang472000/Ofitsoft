@@ -209,8 +209,7 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                         Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                            builder: (context) => ImagePlayerWidget(state.listImage[index]
-                                                                .contentView ?? ''),
+                                                            builder: (context) => ImagePlayerWidget(state.listImage, index),
                                                           ),
                                                         ) : null;
                                                       },
