@@ -520,7 +520,7 @@ class AddRecordDiaryBloc extends Bloc<AddRecordDiaryEvent, AddRecordDiaryState> 
     } else {
       emit(state.copyWith(isShowProgress: false, formStatus: FormSubmitting()));
       ActivityDiary diary = ActivityDiary(
-        seasonFarmId: state.listDiary[state.indexDiary].seasonId,
+        seasonFarmId: state.listDiary[state.indexDiary].id,
         activityId: state.listActivity[state.indexActivity].id,
         activityName: state.listActivity[state.indexActivity].name,
         actionTime: state.listWidget[3].valueSelected.toString().split('.')[
