@@ -114,7 +114,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                               CircleAvatar(
-                                  backgroundColor: const Color(0xFF319A4B),
+                                  //backgroundColor: const Color(0xFF319A4B),
                                   radius: 70,
                                   child:ClipOval(
                               child: state.userInfo != null ? (state.userInfo!.mediaContent == '' || state.userInfo!.mediaContent == null ?

@@ -992,6 +992,16 @@ class Utils {
     if (imageSource == ImageSource.gallery && multiSelect) {
       selectedMedias =
       await imagePicker.pickMultipleMedia(/*maxWidth: 512, maxHeight: 512*/);
+    } else if (imageSource == ImageSource.gallery && !multiSelect) {
+      print("HoangCV: gallery: $type");
+      XFile? xFile = await imagePicker.pickImage(
+        source: imageSource,
+/*        maxWidth: 512,
+        maxHeight: 512,*/
+      );
+      if (xFile != null) {
+        selectedMedias.add(xFile);
+      }
     } else if (imageSource == ImageSource.camera && type == "camera"){
       print("HoangCV: camera: $type");
       XFile? xFile = await imagePicker.pickImage(
