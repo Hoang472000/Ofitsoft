@@ -57,86 +57,88 @@ class _FilterPageState extends State<FilterPage> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(15.0))),
       context: context,
       builder: (_) {
-        return BlocProvider.value(
-          value: myModel,
-          child: SizedBox(
-            //  height: MediaQuery.of(context).copyWith().size.height * 0.53,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                /* const SizedBox(
-                  height: 12,
-                ),*/
-                Expanded(
-                  child: SizedBox(
-                    //height: MediaQuery.of(context).copyWith().size.height * 0.45,
-                    child: CalendarDatePicker2(
-                      config: CalendarDatePicker2Config(
-                          calendarType: CalendarDatePicker2Type.range,
-                          selectedDayHighlightColor: AppColor.main,
-                          weekdayLabelTextStyle: StyleOfit.textStyleFW500(
-                              AppColor.gray1, 14,
-                              overflow: TextOverflow.visible),
-                          //disableYearPicker: true,
-                          //lastDate: DateTime.now(),
-                          dayBorderRadius: BorderRadius.circular(12),
-                          controlsTextStyle: StyleOfit.textStyleFW500(
-                              AppColor.black22, 18,
-                              overflow: TextOverflow.visible)),
-                      onValueChanged: (dates) => {
-                        startTime = Utils.formatDateToString(dates[0]!),
-                        endTime = Utils.formatDateToString(
-                            dates.length > 1 ? dates[1]! : dates[0]!),
-                      }, value: [],
-                     // initialValue: [],
+        return SafeArea(
+          child: BlocProvider.value(
+            value: myModel,
+            child: SizedBox(
+              //  height: MediaQuery.of(context).copyWith().size.height * 0.53,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  /* const SizedBox(
+                    height: 12,
+                  ),*/
+                  Expanded(
+                    child: SizedBox(
+                      //height: MediaQuery.of(context).copyWith().size.height * 0.45,
+                      child: CalendarDatePicker2(
+                        config: CalendarDatePicker2Config(
+                            calendarType: CalendarDatePicker2Type.range,
+                            selectedDayHighlightColor: AppColor.main,
+                            weekdayLabelTextStyle: StyleOfit.textStyleFW500(
+                                AppColor.gray1, 14,
+                                overflow: TextOverflow.visible),
+                            //disableYearPicker: true,
+                            //lastDate: DateTime.now(),
+                            dayBorderRadius: BorderRadius.circular(12),
+                            controlsTextStyle: StyleOfit.textStyleFW500(
+                                AppColor.black22, 18,
+                                overflow: TextOverflow.visible)),
+                        onValueChanged: (dates) => {
+                          startTime = Utils.formatDateToString(dates[0]!),
+                          endTime = Utils.formatDateToString(
+                              dates.length > 1 ? dates[1]! : dates[0]!),
+                        }, value: [],
+                       // initialValue: [],
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 100,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColor.main,
-                            borderRadius:
-                            const BorderRadius.all(Radius.circular(10)),
+                  Container(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 100,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppColor.main,
+                              borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Text(S.of(context).cancel,
+                                style: StyleOfit.textScore(Colors.white)),
                           ),
-                          child: Text(S.of(context).cancel,
-                              style: StyleOfit.textScore(Colors.white)),
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      GestureDetector(
-                        child: Container(
-                          alignment: Alignment.center,
-                          width: 100,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColor.main,
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        GestureDetector(
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 100,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppColor.main,
+                              borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            ),
+                            child: Text(S.of(context).agree,
+                                style: StyleOfit.textScore(AppColor.whiteE8)),
                           ),
-                          child: Text(S.of(context).agree,
-                              style: StyleOfit.textScore(AppColor.whiteE8)),
+                          onTap: () {
+                            Navigator.pop(context);
+                            context
+                                .read<FilterBloc>()
+                                .add(OnChangeDateTime(startTime, endTime));
+                          },
                         ),
-                        onTap: () {
-                          Navigator.pop(context);
-                          context
-                              .read<FilterBloc>()
-                              .add(OnChangeDateTime(startTime, endTime));
-                        },
-                      ),
-                    ],
-                  ),
-                )
-              ],
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         );

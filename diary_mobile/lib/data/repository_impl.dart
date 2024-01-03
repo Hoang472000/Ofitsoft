@@ -476,7 +476,7 @@ class RepositoryImpl extends Repository {
             path: ApiConst.addActivityDiary,
             method: HttpMethod.GET,
             body: ObjectData(token: token, params: diary.toJson())));
-    print("HoangCV: addActivityDiary response: ${objectResult.responseCode}: ${objectResult.isOK}");
+    //print("HoangCV: addActivityDiary response: ${objectResult}: ${objectResult.isOK}");
     if (objectResult.responseCode == StatusConst.code00) {
       return objectResult;
     }
@@ -488,7 +488,7 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListActivityDiary([diary]);
     }else if (objectResult.responseCode == StatusConst.code01) {
 
-      print("HoangCV: addActivityDiary11 response: ${objectResult.responseCode}: ${objectResult.isOK}");
+     // print("HoangCV: addActivityDiary11 response: ${objectResult}: ${objectResult.isOK}");
       DiaLogManager.showDialogHTTPError(
         status: objectResult.status,
         resultStatus: objectResult.status,

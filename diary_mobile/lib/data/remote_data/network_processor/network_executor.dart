@@ -180,7 +180,7 @@ class NetworkExecutor{
               validateStatus: (statusCode) =>
               (statusCode! >= HttpStatus.ok &&
                   statusCode <= HttpStatus.multipleChoices)));
-          //print("HoangCV: result: ${response.data}");
+          print("HoangCV: result: ${response.data}");
          // print("HoangCV: result: ${response.data['result']}");
        /*   Map<String, dynamic> jsonMap = json.decode(response.data);
           Map<String, dynamic> result = jsonMap['result'];*/
