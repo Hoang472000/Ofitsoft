@@ -821,10 +821,16 @@ class RepositoryImpl extends Repository {
       DiaryDB.instance.insertListReport([list[1]]);
       //assignIdSelected(list[0].questionAndPageIds);
       ///Bug: đoạn này đang gen sai số lượng idSelect /// Cần xem lại
-      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 100000, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 1000, (index) => index + 1);
 
-      print("HoangCV: idSelectedList: ${idSelectedList.length}");
+      print("HoangCV: idSelectedList1: ${idSelectedList.length}");
+      DateTime before = DateTime.now();
       assignIdSelected(list[1].questionAndPageIds, idSelectedList);
+      DateTime after = DateTime.now();
+      Duration duration = after.difference(before);
+      print('Thời gian chạy của hàm là: ${duration.inMilliseconds} milliseconds');
+
+      print("HoangCV: idSelectedList2: ${idSelectedList.length}");
       final hierarchyList = buildReportHierarchy(list);
    /*   hierarchyList.forEach((element) {
         print("HoangCV: hierarchyList: ${element.questionAndPageIds.length} : ${element.toJson()}");
@@ -857,7 +863,7 @@ class RepositoryImpl extends Repository {
 
     List<Report> list = await DiaryDB.instance.getListReport(id);
     list.add(list[0]);
-    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 100000, (index) => index + 1);
+    List<int> idSelectedList = List.generate(list[1].questionAndPageIds.length * 1000, (index) => index + 1);
     assignIdSelected(list[1].questionAndPageIds, idSelectedList);
     final hierarchyList = buildReportHierarchy(list);
     /*hierarchyList.forEach((element) {
@@ -894,8 +900,8 @@ class RepositoryImpl extends Repository {
     //print("HoangCV: list1 length: ${list1.length}");
     for (int i = 0; i < list1.length - 1; i++) {
       bool checkQuestion = true;
-      if(i>0)
-      print("HoangCV: list111 length: ${list1[i].pageId} : ${list2.last.id}");
+      //if(i>0)
+      //print("HoangCV: list111 length: ${list1[i].pageId} : ${list2.last.id}");
       if ((i > 0 && list1[i].pageId != list2.last.id) || i == 0) {
         list2.add(list1[i]);
         int index = list2.indexWhere((element) => element.id == list1[i].id);
@@ -1117,7 +1123,7 @@ class RepositoryImpl extends Repository {
           .toList();
       //assignIdSelected(list[0].questionAndPageIds);
       print("HoangCV: getListActivityReport: ${list[1].surveyId[0].questionAndPageIds.length}");
-      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 100000, (index) => index + 1);
+      List<int> idSelectedList = List.generate(list[1].surveyId[0].questionAndPageIds.length * 1000, (index) => index + 1);
       assignIdSelected(list[1].surveyId[0].questionAndPageIds, idSelectedList);
       final hierarchyList = buildReportResult(list[1].surveyId);
       /*hierarchyList.forEach((element) {

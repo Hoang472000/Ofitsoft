@@ -258,8 +258,8 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     /*print("HoangCV: checkbox: id: $id : $index : ${listSelected[index].title} : ${listSelected.length}");
     */return Container(
       margin: EdgeInsets.only(top:isFirst? 14: 0),
-      height: 24.0,
-      width: 24.0,
+      height: 32.0,
+      width: 32.0,
       child: Checkbox(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         visualDensity: VisualDensity.compact,
@@ -355,11 +355,12 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ),
     );
   }
-  TableRow tableRowCheckBox(String title, bool isError, int id, List<Select> listSelected, BuildContext context, FarmerInspectorUpload farmerInspector, {bool isFirst = false}) {
+  TableRow tableRowCheckBox(String title, bool isError, int id, List<Select> listSelected,
+      BuildContext context, FarmerInspectorUpload farmerInspector, {bool isFirst = false}) {
     return TableRow(children: [
       checkBox(id, listSelected, context, farmerInspector, isFirst: isFirst),
       Padding(
-        padding: EdgeInsets.only(bottom: 8, top: isFirst ? 18 : 4),
+        padding: EdgeInsets.only(bottom: 8, top: isFirst ? 18 : 8),
         child: Text(
           title,
           textAlign: TextAlign.left,
@@ -1167,54 +1168,39 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     for(int i = 0 ; i < list.length; i++) {
       List<Table> tableSub = [];
       List<TableRow> tableRow = [];
+      List<ObjectTable> listWidget = [];
       List<TableRow> tableRowSub = [];
       List<Widget> tableWidgetText = [];
       List<Widget> tableWidgetTextField = [];
-      List<List<Widget>> tableWidgetFive = [];
+      List<Widget> tableWidgetFive = [];
       List<List<Widget>> listRow= [];
       List<List<Widget>> listRowField= [];
       form = checkForm(list[i]);
       print("HoangCV: list title : ${list[i].title} ${list[i].questionType} : ${form} : ${list[i].questionAndPageIds.length}");
       if(list[i].questionType == "simple_choice" || list[i].questionType == "multiple_choice"
           || list[i].questionType == "title"){
+        //form 5:
         if(list[i].questionAndPageIds.length>0){
+          // form 5:
           checkFormFour = true;
           List<Question> listParent = list[i].questionAndPageIds;
           for(int i = 0 ; i < listParent.length; i++) {
-            List<Table> tableSub = [];
-            List<TableRow> tableRow = [];
-            List<TableRow> tableRowSub = [];
+            print("HoangCCV: chac chan chạy vào đây đc");
+            List<ObjectTable> listWidget = [];
             form = 5;
-            //print("HoangCV: listParent title : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds.length} : ${form}");
-/*            if (listParent[i].suggestedAnswerIds.length <= 2 ||
-                listParent[i].suggestedAnswerIds.length >= 4) {*/
               for (int j = 0; j <
                   listParent[i].suggestedAnswerIds.length; j ++) {
-                //
-                //print("HoangCV: listParent suggestedAnswerIds : ${listParent[i].suggestedAnswerIds[j].value} : "
-                   // "${listParent[i].suggestedAnswerIds[j].questionAndPageIds.isNotEmpty}");
-
                 if (listParent[i].suggestedAnswerIds[j].questionAndPageIds
                     .isNotEmpty) {
-                  if (listParent[i].suggestedAnswerIds[j].commentAnswer ==
-                      true) {
-                    //print("HoangCV:commentAnswer1 $i : $j : ${listParent[i].title} :  ${listController.last.id}");
-                    tableRow.add(tableRowCheckBoxTextField(
+                  // tao thang con : Bao goi/cach khac
+                    print("HoangCCV: chac chan chạy vào đây đc: ${listParent[i].suggestedAnswerIds[j].value}");
+                    listWidget.add(ObjectTable(tableRowCheckBox(
                         "${listParent[i].suggestedAnswerIds[j].value}",
                         listParent[i].suggestedAnswerIds[j].isError ?? false,
                         listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect, listController, context, farmerInspector,
-                        isFirst: i == 0 ? true : false));
-                  } else {
-                    //print("HoangCV: $i : $j : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds[j].value} : ${listParent.length}");
-                    tableRow.add(tableRowCheckBox(
-                        "${listParent[i].suggestedAnswerIds[j].value}",
-                        listParent[i].suggestedAnswerIds[j].isError ?? false,
-                        listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect,
-                        context, farmerInspector, isFirst: i == 0 ? true : false));
-                  }
+                        listSelect, context, farmerInspector), list: []));
                   bool hasCheckBox = listParent[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
+                    // tao thang con: bao goi cua nong dan
                   for (int k = 0; k <
                       listParent[i].suggestedAnswerIds[j].questionAndPageIds
                           .length; k ++) {
@@ -1222,52 +1208,48 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                             .questionAndPageIds[k].questionType == "check_box" &&
                             listParent[i].suggestedAnswerIds[j]
                                 .questionAndPageIds[k].commentAnswer == true) {
-                      tableRowSub.add(tableRowCheckBoxTextField(
+                      listWidget.last.list.add(tableRowCheckBoxTextField(
                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                          listSelect, listController, context, farmerInspector,
-                          isFirst: i == 0 ? true : false));
+                          listSelect, listController, context, farmerInspector));
                     } else if(listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
                         listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box"){
-                      tableRowSub.add(tableRowTextFieldHasCheckbox(
-                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
-                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
-                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                           listController, context, farmerInspector,
-                           isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
-                    } else {
-                      tableRowSub.add(tableRowCheckBox(
+                      listWidget.last.list.add(tableRowTextFieldHasCheckbox(
                           "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
                           listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                          listSelect, context, farmerInspector,
-                          isFirst: i == 0 ? true : false));
+                          listController, context, farmerInspector, hasCheckbox: hasCheckBox));
+                    } else {
+                      listWidget.last.list.add(tableRowCheckBox(
+                          "${listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
+                          listParent[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
+                          listSelect, context, farmerInspector));
                     }
                   }
-                } else {
+                }
+                else {
+                  // check xem danh sach co thang nao co cau hoi con khong
+                  // neu co cau hoi con thi
                   bool hasNonEmptyValues = listParent[i].suggestedAnswerIds
                       .any((element) {
                     return element.questionAndPageIds.isNotEmpty;
                   });
                   if (hasNonEmptyValues) {
-                    //print("HoangCV:hasNonEmptyValues $i : $j : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds[j].value} : ${listParent[i].suggestedAnswerIds[j].idSelected}");
                     if (listParent[i].suggestedAnswerIds[j].commentAnswer ==
                         true) {
-                      //print("HoangCV:commentAnswer1 $i : $j : ${listParent[i].title} :  ${listController.last.id}");
-                      tableRow.add(tableRowCheckBoxTextField(
+                      listWidget.add(ObjectTable(tableRowCheckBoxTextField(
                           "${listParent[i].suggestedAnswerIds[j].value}",
                           listParent[i].suggestedAnswerIds[j].isError ?? false,
                           listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                          listSelect, listController, context, farmerInspector,
-                          isFirst: i == 0 ? true : false));
+                          listSelect, listController, context, farmerInspector), list: []));
                     } else {
-                      tableRow.add(tableRowCheckBox(
+                      listWidget.add(ObjectTable(tableRowCheckBox(
                           "${listParent[i].suggestedAnswerIds[j].value}",
                           listParent[i].suggestedAnswerIds[j].isError ?? false,
                           listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                          listSelect, context, farmerInspector,
-                          isFirst: i == 0 ? true : false));
+                          listSelect, context, farmerInspector), list: []));
                     }
                   } else {
                     bool hasCommentAnswer = listParent[i].suggestedAnswerIds
@@ -1275,207 +1257,56 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                       return element.commentAnswer == true;
                     });
                     if (hasCommentAnswer) {
-                      if(form != 5 && form != 1) form = 2;
                       if (listParent[i].suggestedAnswerIds[j].commentAnswer ==
                           true) {
-                        if(form == 5){
-                          tableRow.add(tableRowCheckBoxTextField(
-                              "${listParent[i].suggestedAnswerIds[j].value}",
-                              listParent[i].suggestedAnswerIds[j].isError ?? false,
-                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                              listSelect, listController, context, farmerInspector,
-                              isFirst: i == 0 ? true : false));
-                        } else{
-                          tableSub.add(tableForm2TextField(
-                              listParent[i].suggestedAnswerIds[j].value ?? '',
-                              listParent[i].suggestedAnswerIds[j].isError ?? false,
-                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                              listSelect, listController, context, farmerInspector));
-                        }
+                        listWidget.add(ObjectTable(tableRowCheckBoxTextField(
+                            "${listParent[i].suggestedAnswerIds[j].value}",
+                            listParent[i].suggestedAnswerIds[j].isError ?? false,
+                            listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                            listSelect, listController, context, farmerInspector), list: []));
                       } else {
-                        if(form == 5){
-                          tableRow.add(tableRowCheckBox(
-                              "${listParent[i].suggestedAnswerIds[j].value}",
-                              listParent[i].suggestedAnswerIds[j].isError ?? false,
-                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                              listSelect, context, farmerInspector,
-                              isFirst: i == 0 ? true : false));
-                        } else {
-                          tableSub.add(tableForm2(
-                              listParent[i].suggestedAnswerIds[j].value ?? '',
-                              listParent[i].suggestedAnswerIds[j].isError ?? false,
-                              listParent[i].suggestedAnswerIds[j].idSelected ??
-                                  -1,
-                              listSelect, context, farmerInspector,
-                              isFirst: i == 0 ? true : false));
-                        }
+                        listWidget.add(ObjectTable(tableRowCheckBox(
+                            "${listParent[i].suggestedAnswerIds[j].value}",
+                            listParent[i].suggestedAnswerIds[j].isError ?? false,
+                            listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                            listSelect, context, farmerInspector), list: []));
                       }
                     } else {
                       form = 3;
-                      tableRow.add(
-                          tableRowCheckBox(
-                            listParent[i].suggestedAnswerIds[j].value ?? '',
-                              listParent[i].suggestedAnswerIds[j].isError ?? false,
-                              listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                            listSelect, context, farmerInspector));
+                      listWidget.add(ObjectTable(tableRowCheckBox(
+                          listParent[i].suggestedAnswerIds[j].value ?? '',
+                          listParent[i].suggestedAnswerIds[j].isError ?? false,
+                          listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
+                          listSelect, context, farmerInspector), list: []));
                     }
                   }
                 }
               }
-/*            }
-            else if (listParent[i].suggestedAnswerIds.length > 2 &&
-                listParent[i].suggestedAnswerIds.length < 4) {
-              form = 1;
-              for (int j = 0; j <
-                  listParent[i].suggestedAnswerIds.length; j ++) {
-                if (listParent[i].suggestedAnswerIds[j]
-                    .commentAnswer == true) {
-                  tableSub.add(tableForm2TextField(
-                      listParent[i].suggestedAnswerIds[j].value ?? '',
-                      listParent[i].suggestedAnswerIds[j].isError ?? false,
-                      listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                      listSelect, listController, context, farmerInspector));
-                } else {
-                  tableSub.add(tableForm2(
-                      listParent[i].suggestedAnswerIds[j].value ?? '',
-                      listParent[i].suggestedAnswerIds[j].isError ?? false,
-                      listParent[i].suggestedAnswerIds[j].idSelected ?? -1,
-                      listSelect, context, farmerInspector));
-                }
-              }
-            }*/
-            if(form == 5){
-              tableWidgetFive.add([
-                Padding(
-                  padding: EdgeInsets.only(bottom: 16, top: 16),
-                  child: Text(
-                    "${listParent[i].title}",
-                    textAlign: TextAlign.center,
-                    style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
-                    AppColor.red11 : AppColor.black22, 14),
-                    maxLines: 7,
-                  ),
-                ),
-                tableRow.isNotEmpty
-                    ? Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  columnWidths: const {
-                    0: FlexColumnWidth(0.7),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: tableRow,
+            //if(form == 5){
+              // run way
+              tableWidgetFive.add(
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 8, top: 16, left: 16),
+                      child: Text(
+                        "${listParent[i].title}",
+                        textAlign: TextAlign.start,
+                        style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
+                        AppColor.red11 : AppColor.blueE8, 14),
+                        maxLines: 7,
+                      ),
+                    ),
+                    buildTableFromListWidget(listWidget),
+                  ],
                 )
-                    : Container(),
-                tableRowSub.isNotEmpty ?
-                Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  columnWidths: const {
-                    0: FlexColumnWidth(0.3),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: tableRowSub,
-                ) : Container(),
-              ]);
-            }
-            else if(tableSub.isEmpty && form != 0 && form != 1 && form != 2 && listParent[i].questionType != "table") {
-              //print("HoangCV: tableRow.isNotEmpty0: ${tableRow.isNotEmpty}");
-              tableWidgetFive.add([
-                Padding(
-                  padding: EdgeInsets.only(bottom: 16, top: 16),
-                  child: Text(
-                    "${listParent[i].title}",
-                    textAlign: TextAlign.center,
-                    style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
-                    AppColor.red11 : AppColor.black22, 14),
-                    maxLines: 7,
-                  ),
-                ),
-                tableRow.isNotEmpty
-                    ? Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  columnWidths: const {
-                    0: FlexColumnWidth(0.7),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: tableRow,
-                )
-                    : Container(),
-                tableRowSub.isNotEmpty ?
-                Table(
-                  defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                  columnWidths: const {
-                    0: FlexColumnWidth(0.3),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: tableRowSub,
-                ) : Container(),
-              ]);
-            }
-            else if(tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2
-                && listParent[i].questionType != "table"){
-            }
-            if(tableSub.isNotEmpty && form != 0 && form != 1 && form != 2
-                && listParent[i].questionType != "table") {
-              listTable1.add(Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                columnWidths: {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(1),
-                  2: FlexColumnWidth(2),
-                },
-                border: TableBorder.all(color: AppColor.black22),
-                children: [
-                  TableRow(
-                      children: tableSub
-                  ),
-                ],
-              ),);
-            }
-            else if(tableSub.isNotEmpty && form != 0 && form != 1 && form == 2
-                && listParent[i].questionType != "table") {
-              listTable1.add(Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                columnWidths: {
-                  0: FlexColumnWidth(1),
-                  1: FlexColumnWidth(1),
-                  2: FlexColumnWidth(2),
-                },
-                border: TableBorder.all(color: AppColor.black22),
-                children: [
-                  TableRow(
-                      children: [
-                        Table(
-                          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                          columnWidths: const {
-                            0: FlexColumnWidth(0.7),
-                            1: FlexColumnWidth(2),
-                          },
-                          children: [
-                            TableRow(children: [
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 16, top: 16),
-                                child: Text(
-                                  "${listParent[i].title}",
-                                  textAlign: TextAlign.center,
-                                  style: StyleOfit.textStyleFW400(listParent[i].isError == true ?
-                                  AppColor.red11 : AppColor.black22, 14),
-                                  maxLines: 6,
-                                ),
-                              ),
-                            ]),
-                          ],
-                        ),
-                        for(int i =0; i<tableSub.length; i++)
-                          tableSub[i]
-                      ]
-                  ),
-                ],
-              ),);
-            }
+              );
+            //}
           }
           List<TableRow> tableR = [];
           for(var table in tableWidgetFive){
-            tableR.add(TableRow(children: table));
+            tableR.add(TableRow(children: [table]));
           }
           // form 5. van chuyen sau thu hoach
           listTable1.add(Table(
@@ -1487,160 +1318,90 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
             border: TableBorder.all(color: AppColor.black22),
             children: [TableRow(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16, top: 16),
-                  child: Text(
-                    list[i].title??"",
-                    textAlign: TextAlign.center,
-                    style: StyleOfit.textStyleFW400(list[i].isError == true ?
-                    AppColor.red11 : AppColor.black22, 14),
-                    maxLines: 10,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 0, top: 16, left: 16),
+                      child: Text(
+                        list[i].title??"",
+                        textAlign: TextAlign.left,
+                        style: StyleOfit.textStyleFW500(list[i].isError == true ?
+                        AppColor.red11 : AppColor.black22, 14),
+                        maxLines: 10,
+                      ),
+                    ),
+                    Table(
+                      defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                      columnWidths: {
+                        0: FlexColumnWidth(0.8),
+                        1: FlexColumnWidth(1),
+                        2: FlexColumnWidth(2),
+                      },
+                     // border: TableBorder.all(color: AppColor.black22),
+                      children: tableR,
+                    ),
+                  ],
                 ),
-                Table(
-                defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                columnWidths: {
-                  0: FlexColumnWidth(0.8),
-                  1: FlexColumnWidth(1),
-                  2: FlexColumnWidth(2),
-                },
-                border: TableBorder.all(color: AppColor.black22),
-                children: tableR,
-          ),
+
               ],)]
             ),);
         }
-        //
-        //
         else{
-   /*     if(list[i].suggestedAnswerIds.length<=2 || list[i].suggestedAnswerIds.length>=4){*/
           checkFormFour = false;
           for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
             if (list[i].suggestedAnswerIds[j].questionAndPageIds.isNotEmpty){
-              if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
-                //print("HoangCV:commentAnswer1 $i : $j : ${list[i].title} :  ${listController.last.id}");
-                tableRow.add(tableRowCheckBoxTextField(
-                    "${list[i].suggestedAnswerIds[j].value}",
-                    list[i].suggestedAnswerIds[j].isError ?? false,
-                    list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                    listSelect, listController, context, farmerInspector,
-                    isFirst: i == 0 ? true : false));
-              } else {
-                //print("HoangCV: $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
-                tableRow.add(tableRowCheckBox("${list[i].suggestedAnswerIds[j].value}",
-                    list[i].suggestedAnswerIds[j].isError ?? false,
-                    list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect,
-                    context, farmerInspector, isFirst: i == 0 ? true : false));
-              }
+              // tao thang cha
+              listWidget.add(ObjectTable(tableRowCheckBox("${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1, listSelect,
+                  context, farmerInspector), list: []));
+                print("HoangC:V: chắc chắn chạy vào đây");
+                //Tao thang con
               for (int k = 0; k <
                 list[i].suggestedAnswerIds[j].questionAndPageIds.length; k ++) {
               if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "check_box" &&
                       list[i].suggestedAnswerIds[j].questionAndPageIds[k].commentAnswer == true) {
-                tableRowSub.add(tableRowCheckBoxTextField(
+                listWidget.last.list.add(tableRowCheckBoxTextField(
                     "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                     list[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
                     list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
                     listSelect, listController, context, farmerInspector,
-                    isFirst: i == 0 ? true : false));
+                    ));
               } else if (list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "numerical_box" ||
                   list[i].suggestedAnswerIds[j].questionAndPageIds[k].questionType == "char_box"){
                 bool hasCheckBox = list[i].suggestedAnswerIds[j].questionAndPageIds.any((element) => element.questionType == "check_box");
-                tableRowSub.add(tableRowTextFieldHasCheckbox(
-                "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
-                list[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
-                list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                listController, context, farmerInspector,
-                isFirst: i == 0 ? true : false, hasCheckbox: hasCheckBox));
-              } else{
-                tableRowSub.add(tableRowCheckBox(
+                listWidget.last.list.add(tableRowTextFieldHasCheckbox(
                     "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
                     list[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
                     list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
-                    listSelect, context, farmerInspector,
-                    isFirst: i == 0 ? true : false));
+                    listController, context, farmerInspector, hasCheckbox: hasCheckBox));
+              } else{
+                listWidget.last.list.add(tableRowCheckBox(
+                    "${list[i].suggestedAnswerIds[j].questionAndPageIds[k].title}",
+                    list[i].suggestedAnswerIds[j].questionAndPageIds[k].isError ?? false,
+                    list[i].suggestedAnswerIds[j].questionAndPageIds[k].idSelected ?? -1,
+                    listSelect, context, farmerInspector));
               }
             }
           } else{
-              bool hasNonEmptyValues = list[i].suggestedAnswerIds.any((element) {
-                return element.questionAndPageIds.isNotEmpty;
-              });
-              if(hasNonEmptyValues){
-                //print("HoangCV:hasNonEmptyValues $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list[i].suggestedAnswerIds[j].idSelected}");
-
-                tableRow.add(tableRowCheckBox(
-                    "${list[i].suggestedAnswerIds[j].value}",
-                    list[i].suggestedAnswerIds[j].isError ?? false,
-                    list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                    listSelect, context, farmerInspector, isFirst: i == 0 ? true : false));
-              }else {
-                /*bool hasCommentAnswer = list[i].suggestedAnswerIds.any((element) {
-                  return element.commentAnswer == true;
-                });
-                if(hasCommentAnswer) {
-                  if(form != 5 && form != 1) form = 2;
-                  //print("HoangCV:hasCommentAnswer $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
-
-                  if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
-                    tableSub.add(tableForm2TextField(
-                        list[i].suggestedAnswerIds[j].value ?? '',
-                        list[i].suggestedAnswerIds[j].isError ?? false,
-                        list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect, listController, context, farmerInspector));
-                  } else {
-                    tableSub.add(tableForm2(
-                        list[i].suggestedAnswerIds[j].value ?? '',
-                        list[i].suggestedAnswerIds[j].isError ?? false,
-                        list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect, context, farmerInspector, isFirst: i == 0 ? true : false));
-                  }
-                }else{*/
+              // Thằng cha form 1: Text không/No : có thể có comment
                   form = 3;
-                  //print("HoangCV:falseform = 3; $i : $j : ${list[i].title} : ${list[i].suggestedAnswerIds[j].value} : ${list.length}");
                   if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
-                    tableRow.add(tableRowCheckBoxTextField(
+                    listWidget.add(ObjectTable(tableRowCheckBoxTextField(
                         list[i].suggestedAnswerIds[j].value ?? '',
                         list[i].suggestedAnswerIds[j].isError ?? false,
                         list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect, listController, context, farmerInspector,
-                        isFirst: i == 0 ? true : false));
+                        listSelect, listController, context, farmerInspector)));
                   }else {
-                    tableRow.add(tableRowCheckBox(
+                    listWidget.add(ObjectTable(tableRowCheckBox(
                         list[i].suggestedAnswerIds[j].value ?? '',
                         list[i].suggestedAnswerIds[j].isError ?? false,
                         list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                        listSelect, context, farmerInspector,/* isFirst: i == 0 ? true : false*/));
-                  }
-/*                  tableRow.add(
-                  tableRowCheckBox(
-                      list[i].suggestedAnswerIds[j].value ?? '',
-                      list[i].suggestedAnswerIds[j].isError ?? false,
-                      list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                      listSelect, context, farmerInspector));*/
-                //}
+                        listSelect, context, farmerInspector)));
               }
             }
           }
-/*        }
-        else if(list[i].suggestedAnswerIds.length>2 && list[i].suggestedAnswerIds.length<4){
-          checkFormFour = false;
-          form = 1;
-          for (int j = 0; j < list[i].suggestedAnswerIds.length; j ++) {
-            if (list[i].suggestedAnswerIds[j]
-                .commentAnswer == true) {
-              tableSub.add(tableForm2TextField(
-                  list[i].suggestedAnswerIds[j].value ?? '',
-                  list[i].suggestedAnswerIds[j].isError ?? false,
-                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                  listSelect, listController, context, farmerInspector));
-            } else {
-              tableSub.add(tableForm2(
-                  list[i].suggestedAnswerIds[j].value ?? '',
-                  list[i].suggestedAnswerIds[j].isError ?? false,
-                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                  listSelect, context, farmerInspector));
-            }
-          }
-        }*/
         }
       }
       else if(list[i].questionType == "table"){
@@ -1760,90 +1521,43 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         }
       }
       if(!checkFormFour) {
-        //print("HoangCV: tableSub.isEmpty: ${tableSub.isEmpty} : ${list[i].title} : ${tableRowSub.isNotEmpty} : ${form}");
-
         if (tableSub.isEmpty && form != 0 && form != 1 && form != 2 &&
             list[i].questionType != "table" && list[i].questionType != "table_field") {
-          //print("HoangCV: tableSub.isEmpty: ${tableSub.isEmpty} : ${list[i].title} : ${tableRowSub.isNotEmpty}");
-          if(tableRowSub.isNotEmpty) {
-            listTable1.add(Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: {
-                0: FlexColumnWidth(0.8),
-                1: FlexColumnWidth(0.8),
-                2: FlexColumnWidth(2),
-              },
-              border: TableBorder.all(color: AppColor.black22),
-              children: [
-                TableRow(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16, top: 16),
-                    child: Text(
-                      "${list[i].title}",
-                      textAlign: TextAlign.center,
-                      style: StyleOfit.textStyleFW400(
-                          list[i].isError == true ? AppColor.red11 : AppColor
-                              .black22, 14),
-                      maxLines: 7,
-                    ),
+            listTable1.add(
+              Table(
+                defaultVerticalAlignment: TableCellVerticalAlignment.top,
+                columnWidths: {
+                  0: FlexColumnWidth(0.8),
+                  1: FlexColumnWidth(0.8),
+                  2: FlexColumnWidth(2),
+                },
+                border: TableBorder.all(color: AppColor.black22),
+                children: [
+                  TableRow(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 8, top: 16, left: 16),
+                            child: Text(
+                              "${list[i].title}",
+                              textAlign: TextAlign.left,
+                              style: StyleOfit.textStyleFW500(
+                                list[i].isError == true ? AppColor.red11 : AppColor.black22,
+                                14,
+                              ),
+                              maxLines: 7,
+                            ),
+                          ),
+                          buildTableFromListWidget(listWidget),
+                        ],
+                      ),
+                    ],
                   ),
-                  tableRow.isNotEmpty
-                      ? Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                    columnWidths: const {
-                      0: FlexColumnWidth(0.7),
-                      1: FlexColumnWidth(2),
-                    },
-                    children: tableRow,
-                  )
-                      : Container(),
-                  tableRowSub.isNotEmpty ?
-                  Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                    columnWidths: const {
-                      0: FlexColumnWidth(0.3),
-                      1: FlexColumnWidth(2),
-                    },
-                    children: tableRowSub,
-                  ) : Container(),
-                ]),
-              ],
-            ),);
-          } else{
-            listTable1.add(Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: {
-                0: FlexColumnWidth(1),
-                1: FlexColumnWidth(3),
-              },
-              border: TableBorder.all(color: AppColor.black22),
-              children: [
-                TableRow(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16, top: 16),
-                    child: Text(
-                      "${list[i].title}",
-                      textAlign: TextAlign.center,
-                      style: StyleOfit.textStyleFW400(
-                          list[i].isError == true ? AppColor.red11 : AppColor
-                              .black22, 14),
-                      maxLines: 7,
-                    ),
-                  ),
-                  tableRow.isNotEmpty
-                      ? Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                    columnWidths: const {
-                      0: FlexColumnWidth(0.2),
-                      1: FlexColumnWidth(2),
-                    },
-                    children: tableRow,
-                  )
-                      : Container(),
-                ]),
-              ],
-            ),);
-          }
+                ],
+              ),
+            );
         }
         else if (tableRow.isNotEmpty && tableRowSub.isEmpty && form != 2 &&
             list[i].questionType != "table" && list[i].questionType != "table_field") {}
@@ -1908,46 +1622,94 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           ),);
         }
       }
-      if(form == 0){
+      if(form ==0 || form == 1 ){
         if (list[i].questionType == "simple_choice" ||
             list[i].questionType == "multiple_choice") {
           for (int j = 0; j <
               list[i].suggestedAnswerIds.length; j ++) {
             if (list[i].suggestedAnswerIds[j].commentAnswer == true) {
-              //print("HoangCV:commentAnswer1 $i : $j : ${listParent[i].title} :  ${listController.last.id}");
+              listWidget.add(ObjectTable(tableRowCheckBoxTextField(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect, listController, context, farmerInspector)));
+              //
               tableRow.add(tableRowCheckBoxTextField(
                   "${list[i].suggestedAnswerIds[j].value}",
                   list[i].suggestedAnswerIds[j].isError ?? false,
                   list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                  listSelect,
-                  listController,
-                  context,
-                  farmerInspector,
-                  isFirst: i == 0 ? true : false));
+                  listSelect, listController, context, farmerInspector));
             } else {
-              //print("HoangCV: $i : $j : ${listParent[i].title} : ${listParent[i].suggestedAnswerIds[j].value} : ${listParent.length}");
+              listWidget.add(ObjectTable(tableRowCheckBox(
+                  "${list[i].suggestedAnswerIds[j].value}",
+                  list[i].suggestedAnswerIds[j].isError ?? false,
+                  list[i].suggestedAnswerIds[j].idSelected ?? -1,
+                  listSelect, context, farmerInspector)));
+              //
               tableRow.add(tableRowCheckBox(
                   "${list[i].suggestedAnswerIds[j].value}",
                   list[i].suggestedAnswerIds[j].isError ?? false,
                   list[i].suggestedAnswerIds[j].idSelected ?? -1,
-                  listSelect,
-                  context,
-                  farmerInspector,
-                  isFirst: i == 0 ? true : false));
+                  listSelect, context, farmerInspector));
             }
           }
         }
         else if(list[i].questionType == "char_box" || list[i].questionType =="numerical_box"){
+          listWidget.add(ObjectTable(tableRowTextField(list[i].title??'',
+              list[i].isError ?? false,
+              list[i].idSelected ?? -1,
+              listController, context, farmerInspector)));
+          //
               tableSub.add(formCharTextField(list[i].title??'',
                   list[i].isError ?? false,
                   list[i].idSelected ?? -1,
                   listController, context, farmerInspector));
-            }else if(list[i].questionType == "check_box"){
+            }
+        else if(list[i].questionType == "check_box"){
+          listWidget.add(ObjectTable(tableRowCheckBoxTextField(list[i].title ?? '',
+              list[i].isError ?? false,
+              list[i].idSelected ?? -1,
+              listSelect, listController, context, farmerInspector)));
+          //
               tableSub.add(tableForm2TextField(list[i].title ?? '',
                   list[i].isError ?? false,
                   list[i].idSelected ?? -1,
                   listSelect, listController, context, farmerInspector));
-            }else if(list[i].questionType == "datetime" || list[i].questionType == "date"){
+            }
+        else if(list[i].questionType == "datetime" || list[i].questionType == "date"){
+          listWidget.add(ObjectTable(TableRow(children: [
+            Padding(
+              padding: EdgeInsets.only(bottom: 16, top: 16),
+              child: Text(
+                list[i].title!,
+                textAlign: TextAlign.center,
+                style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                maxLines: 2,
+              ),
+            ),
+          ])));
+          int indexInput = listInputModel.indexWhere((element) => element.id == list[i].idSelected);
+          listWidget.add(ObjectTable(TableRow(children: [
+            Container(
+              padding: EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+              child: ContainerInputWidget(
+                contextParent: context,
+                color: AppColor.background,
+                inputRegisterModel: listInputModel[indexInput].inputModel,
+                onClick: () {
+                  bool checkPass = true;
+                  checkPass = Utils.checkPassFarm(farmerInspector);
+                  if (checkPass) {
+                    context
+                        .read<AddReportBloc>()
+                        .add(OnSelectValueEvent([listInputModel[indexInput].inputModel],
+                        0, context, id: list[i].id!, type: list[i].questionType!));
+                  }
+                },
+              ),
+            ),
+          ]),));
+          //
               tableSub.add(Table(
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
                 border: TableBorder.all(color: AppColor.black22),
@@ -1965,8 +1727,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                   ]),
                 ],
               ),);
-              int indexInput = listInputModel.indexWhere((element) => element.id == list[i].idSelected);
-              print("HoangCV: listInputModel: ${listInputModel.first.id} : ${list[i].idSelected} : ${indexInput}");
+              //int indexInput = listInputModel.indexWhere((element) => element.id == list[i].idSelected);
               tableSub.add(Table(
 
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -1994,123 +1755,32 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
                 ],
               ));
             }
-          print("HoangcVAS:DA sdas : ${tableSub.length} : ${tableRow.isNotEmpty}");
-        if(tableSub.length>0) {
-          listTable1.add(Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.top,
-            columnWidths: {
-              0: FlexColumnWidth(1),
-              1: FlexColumnWidth(3),
-            },
-            border: TableBorder.all(color: AppColor.black22),
-            children: [
-              TableRow(
-                  children:
-                  tableSub
-
-              ),
-            ],
-          ),);
-        }else {
-          if (tableRow.isEmpty) {
-            listTable1.add(Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: {
-                0: FlexColumnWidth(0.8),
-                1: FlexColumnWidth(0.8),
-                2: FlexColumnWidth(2),
-              },
-              border: TableBorder.all(color: AppColor.black22),
-              children: [
-                TableRow(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16, top: 16),
-                    child: Text(
-                      "${list[i].title}",
-                      textAlign: TextAlign.center,
-                      style: StyleOfit.textStyleFW400(
-                          list[i].isError == true ? AppColor.red11 : AppColor
-                              .black22, 14),
-                      maxLines: 7,
-                    ),
-                  ),
-                ]),
-              ],
-            ),);
-          } else {
-            listTable1.add(Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.top,
-              columnWidths: {
-                0: FlexColumnWidth(0.8),
-                1: FlexColumnWidth(0.8),
-                2: FlexColumnWidth(2),
-              },
-              border: TableBorder.all(color: AppColor.black22),
-              children: [
-                TableRow(children: [
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 16, top: 16),
-                    child: Text(
-                      "${list[i].title}",
-                      textAlign: TextAlign.center,
-                      style: StyleOfit.textStyleFW400(
-                          list[i].isError == true ? AppColor.red11 : AppColor
-                              .black22, 14),
-                      maxLines: 7,
-                    ),
-                  ),
-                  tableRow.isNotEmpty
-                      ? Table(
-                    defaultVerticalAlignment: TableCellVerticalAlignment.top,
-                    columnWidths: const {
-                      0: FlexColumnWidth(0.7),
-                      1: FlexColumnWidth(2),
-                    },
-                    children: tableRow,
-                  )
-                      : Container(),
-                ]),
-              ],
-            ),);
-          }
-        }
-        }
-      else if(form == 1){
-        listTable1.add(Table(
+      listTable1.add(
+        Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
-          columnWidths: { },
-          border: TableBorder.all(color: AppColor.black22),
-          children: [
-            TableRow(children: [
-              Padding(
-                padding: EdgeInsets.only(bottom: 16, top: 16),
-                child: Text(
-                  "${list[i].title}",
-                  textAlign: TextAlign.center,
-                  style: StyleOfit.textStyleFW400(list[i].isError == true ? AppColor.red11 : AppColor.black22, 14),
-                  maxLines: 3,
-                ),
-              ),
-            ]),
-          ],
-        ),);
-        listTable1.add(Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           columnWidths: {
-            0: FlexColumnWidth(1),
-            1: FlexColumnWidth(1),
+            0: FlexColumnWidth(0.8),
+            1: FlexColumnWidth(0.8),
             2: FlexColumnWidth(2),
-
           },
           border: TableBorder.all(color: AppColor.black22),
           children: [
             TableRow(
-                children: tableSub
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildTableFromListWidget(listWidget),
+                  ],
+                ),
+              ],
             ),
           ],
-        ),);
-      }
-      else if(list[i].questionType  == "table" && tableWidgetText.isNotEmpty){
+        ),
+      );
+        }
+
+      if(list[i].questionType  == "table" && tableWidgetText.isNotEmpty){
         // table
         //print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
         listTable1.add(Table(
@@ -2137,8 +1807,6 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         }
       }
       else if(list[i].questionType  == "table_field" && tableWidgetTextField.isNotEmpty){
-        // table
-        //print("HoangCV: form == 7 :  ${listRow.length} ${listRow[0].length}");
         listTable1.add(Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.top,
           columnWidths: {
@@ -2200,6 +1868,46 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
     );
   }
 
+  Widget buildTableFromListWidget(List<ObjectTable> listWidget) {
+    List<Widget> tableChildren = [];
+
+    for (int m = 0; m < listWidget.length; m++) {
+      tableChildren.add(
+        Table(
+          defaultVerticalAlignment: TableCellVerticalAlignment.top,
+          columnWidths: const {
+            0: FlexColumnWidth(0.3),
+            1: FlexColumnWidth(2),
+          },
+          children: [
+            listWidget[m].tableRow,
+          ],
+        ),
+      );
+
+      if (listWidget[m].list.length > 0) {
+        tableChildren.add(
+          Padding(
+            padding: EdgeInsets.only(left: 24.0), // Điều chỉnh khoảng cách ở đây
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.top,
+              columnWidths: const {
+                0: FlexColumnWidth(0.3),
+                1: FlexColumnWidth(2),
+              },
+              children: listWidget[m].list,
+            ),
+          ),
+        );
+      }
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: tableChildren,
+    );
+  }
+
   double checkTable(List<Question> list){
     if(list.length == 1 && (list.first.questionType == "table" || list.first.questionType == "table_field")){
       if(list.first.suggestedAnswerIds.length > 6){
@@ -2212,9 +1920,9 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
         return 1.0;
       }
     } else if(list.length == 1 && list.first.questionType != "table"){
-      return 1.1;
+      return 1;
     }
-    return 1.3;
+    return 1;
   }
   bool isTable(List<Question> list){
     if(list.length == 1 && (list.first.questionType == "table" /*|| list.first.questionType == "table_field"*/)){
@@ -2587,4 +2295,11 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
       ),
     );
   }
+}
+
+class ObjectTable {
+  TableRow tableRow;
+  List<TableRow> list;
+
+  ObjectTable(this.tableRow, {this.list = const []});
 }
