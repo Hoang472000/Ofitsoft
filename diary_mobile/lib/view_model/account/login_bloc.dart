@@ -176,8 +176,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
                 Utils.openAppInStore(
                     "https://apps.apple.com/us/app/id${ApiConst.appIdIOS}");
               },
-                  () {},
-              "",
+                  () {
+                    Navigator.pop(context);
+                  },
+              "Để sau",
               "Đồng ý",
               dismissible: true);
         }
