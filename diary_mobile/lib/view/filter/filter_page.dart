@@ -450,6 +450,8 @@ class _FilterPageState extends State<FilterPage> {
                                   state.maxQuantity!.text,
                                   state.indexFilter0,
                                   state.indexFilter1,
+                                  state.indexFilter2,
+                                  state.indexFilter3,
                                 ]);
                               } else if (widget.type == "diary") {
                                 widget.callBack([

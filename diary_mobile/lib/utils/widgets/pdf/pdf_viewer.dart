@@ -7,7 +7,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../utils.dart';
-import '../bkav_app_bar.dart';
+import '../ofit_app_bar.dart';
 
 
 class PDFScreen extends StatefulWidget {

@@ -11,10 +11,9 @@ import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
-import '../../utils/widgets/items/item_feedback.dart';
 import '../../utils/widgets/items/item_notify.dart';
 import '../../view_model/notify/notify_bloc.dart';
 
@@ -39,7 +38,7 @@ class _NotifyViewState extends State<NotifyView> {
   @override
   void initState() {
     FirebaseMessaging.instance.getInitialMessage();
-    //Bkav HoangLD lang nghe su kien tu firebase dang trong app
+    //HoangCV lang nghe su kien tu firebase dang trong app
     FirebaseMessaging.onMessage.listen((message) {
       if (message.data["flag"] == "1") {
         if (!mounted) return;

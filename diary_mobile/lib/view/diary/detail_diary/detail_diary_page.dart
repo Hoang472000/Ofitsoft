@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../data/entity/diary/diary.dart';
-import '../../../resource/color.dart';
-import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../diary_activity/infomation_diary/Info_diary_view.dart';
-import '../../diary_activity/infomation_diary/info_diary_page.dart';
 
 class DetailDiaryPage extends StatefulWidget {
   const DetailDiaryPage(

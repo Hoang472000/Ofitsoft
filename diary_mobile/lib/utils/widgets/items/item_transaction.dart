@@ -94,9 +94,6 @@ class _ItemTransactionState extends State<ItemTransaction> {
                       )),
                 )),
             Container(
-/*              padding:
-                  const EdgeInsets.only(top: 12, bottom: 12, left: 24, right: 16),
-              margin: const EdgeInsets.only(left: 20, right: 16, top: 4, bottom: 4),*/
               padding:
               const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
               margin: widget.amountSelected > 0
@@ -115,91 +112,95 @@ class _ItemTransactionState extends State<ItemTransaction> {
                   borderRadius: BorderRadius.circular(8),
                   color: /*widget.isChoose ? Colors.red[100] :*/
                       Colors.white),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(
-                    flex: 5,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 5),
-                          child: Text(
-                            "${widget.activityDiary.seasonFarmName}",
-                            style: StyleOfit.textStyleFW500(AppColor.black22, 15,
-                            overflow: TextOverflow.visible),
-                          ),
-                        ),
-                        Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.only(bottom: 5, top: 5),
-                            child: Utils.convertTextWidget(
-                                  "Ngày giao dịch: ",
-                                  Utils.formatTime("${widget.activityDiary.transactionDate}"),
-                                  AppColor.blue15,
-                                  14),
-                            ),
-                        SizedBox(
-                          child: Container(
-                              alignment: Alignment.centerLeft,
-                              margin: const EdgeInsets.only(bottom: 5, top: 5),
-                              child: Utils.convertTextWidget(
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 5),
+                    child: Text(
+                      "${widget.activityDiary.seasonFarmName}",
+                      style: StyleOfit.textStyleFW500(AppColor.black22, 16,
+                      overflow: TextOverflow.visible),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        flex: 5,
+                        child: Column(
+                          children: [
+                            Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(bottom: 5, top: 5),
+                                child: Utils.convertTextWidget(
+                                      "Ngày giao dịch: ",
+                                      Utils.formatTime("${widget.activityDiary.transactionDate}"),
+                                      AppColor.blue15,
+                                      14),
+                                ),
+                            SizedBox(
+                              child: Container(
+                                alignment: Alignment.centerLeft,
+                                margin: const EdgeInsets.only(bottom: 5, top: 5),
+                                child: Utils.convertTextWidget(
                                     "Sản lượng: ",
                                     "${Utils.convertNumber(widget.activityDiary.quantity ?? 0)} ${widget.activityDiary.quantityUnitName}",
                                     AppColor.blue15,
                                     14),
-                                ),
-                        ),
-                        Container(
-                            alignment: Alignment.centerLeft,
-                            margin: const EdgeInsets.only(top: 5),
-                            child: Utils.convertTextWidget(
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Utils.convertTextWidget(
                                   "Tổng tiền: ",
                                   "${Utils.convertNumber((widget.activityDiary.unitPrice ?? 0) * (widget.activityDiary.quantity ?? 0))}",
                                   AppColor.blue15,
                                   14),
-                              ),
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    //padding: EdgeInsets.only(left: 16, right: 4),
-                    icon: const Icon(Icons.file_download_outlined, color: AppColor.back09,size: 30,)/*Image(
-                      image: AssetImage(ImageAsset.imageInfo),
-                      //width: 40,
-                      fit: BoxFit.contain,
-                    )*/,
-                    onPressed: () {
-                      widget.callbackExport();
-                    },
-                  ),
-                  SizedBox(
-                    height: 44,
-                    width: 44,
-                    child: widget.action == "sell" &&
-                        ((widget.diary.status ?? '').compareTo("done") == 0 ||
-                                (widget.diary.status ?? '')
+                            ),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        children: [
+                          IconButton(
+                            padding: EdgeInsets.only(left: 16, right: 4),
+                            icon: const Icon(Icons.file_download_outlined, color: AppColor.back09,size: 30,),
+                            onPressed: () {
+                              widget.callbackExport();
+                            },
+                          ),
+                          SizedBox(
+                            height: 44,
+                            width: 44,
+                            child: widget.action == "sell" &&
+                                ((widget.diary.status ?? '').compareTo("done") == 0 ||
+                                    (widget.diary.status ?? '')
                                         .compareTo("cancelled") ==
-                                    0)
-                            ? Container()
-                            : IconButton(
-                                padding: EdgeInsets.only(left: 16, right: 4),
-                                icon: const Image(
-                                  image: AssetImage(ImageAsset.imageBin),
-                                  //width: 40,
-                                  fit: BoxFit.contain,
-                                ),
-                                onPressed: () {
-                                  DiaLogManager.displayDialog(context, "",
-                                      "Bạn có muốn xóa hoạt động này không.", () {
-                                    Get.back();
-                                    widget.callbackDelete();
-                                  }, () {
-                                    Get.back();
-                                  }, S.of(context).no, S.of(context).yes);
-                                },
+                                        0)
+                                ? Container()
+                                : IconButton(
+                              padding: EdgeInsets.only(left: 16, right: 4),
+                              icon: const Image(
+                                image: AssetImage(ImageAsset.imageBin),
+                                //width: 40,
+                                fit: BoxFit.contain,
                               ),
+                              onPressed: () {
+                                DiaLogManager.displayDialog(context, "",
+                                    "Bạn có muốn xóa hoạt động này không.", () {
+                                      Get.back();
+                                      widget.callbackDelete();
+                                    }, () {
+                                      Get.back();
+                                    }, S.of(context).no, S.of(context).yes);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                    ],
                   ),
                 ],
               ),

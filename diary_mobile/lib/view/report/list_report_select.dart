@@ -1,31 +1,17 @@
-import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
-import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
-import 'package:diary_mobile/view/report/test_scroll_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
-import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
-import '../../../utils/widgets/dialog/dialog_manager.dart';
-import '../../data/entity/report/report.dart';
-import '../../data/entity/report/report_result_title.dart';
 import '../../data/entity/report/report_select.dart';
-import '../../utils/widgets/items/item_report_result.dart';
 import '../../utils/widgets/items/item_report_select.dart';
-import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
-import '../../view_model/report/list_report_result_bloc.dart';
 import '../../view_model/report/list_report_select_bloc.dart';
 import 'add_report.dart';
-import 'detail_report.dart';
-import 'edit_report.dart';
 
 class ListReportSelect extends StatefulWidget {
   const ListReportSelect({super.key, required this.listReport});

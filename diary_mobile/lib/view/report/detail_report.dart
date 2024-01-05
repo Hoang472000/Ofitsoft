@@ -1,10 +1,6 @@
-import 'dart:convert';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import '../../../data/entity/diary/diary.dart';
-import '../../../generated/l10n.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../data/entity/report/answer.dart';
@@ -12,11 +8,9 @@ import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
 import '../../resource/assets.dart';
 import '../../utils/extenstion/input_register_model.dart';
-import '../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../utils/widgets/dashed_circle.dart';
-import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/detail_report_bloc.dart';
 
@@ -704,11 +698,8 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
     listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: {
-        0: FlexColumnWidth(1),
-        1: FlexColumnWidth(1.5),
-        2: FlexColumnWidth(1),
-        3: FlexColumnWidth(0.5),
-
+        0: FlexColumnWidth(1.5),
+        1: FlexColumnWidth(3),
       },
       border: TableBorder.all(color: AppColor.black22),
       children: [
@@ -716,7 +707,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
           Padding(
             padding: EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
-              "Tên nông dân",
+              "Tên nông hộ",
               textAlign: TextAlign.center,
               style: StyleOfit.textStyleFW700(AppColor.black22, 14),
             ),
@@ -730,12 +721,24 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
               onClick: () {},
             ),
           ),
+        ]),
+      ],
+    ),);
+    listTable1.add(Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      columnWidths: {
+        0: FlexColumnWidth(1.5),
+        1: FlexColumnWidth(3),
+      },
+      border: TableBorder.all(color: AppColor.black22),
+      children: [
+        TableRow(children: [
           Padding(
             padding: EdgeInsets.only(bottom: 16, top: 16),
             child: Text(
               "Mã nông hộ",
               textAlign: TextAlign.center,
-              style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+              style: StyleOfit.textStyleFW700(AppColor.black22, 14),
             ),
           ),
           Padding(
@@ -783,7 +786,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
     listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
-        0: FlexColumnWidth(1),
+        0: FlexColumnWidth(1.5),
         1: FlexColumnWidth(3),
       },
       border: TableBorder.all(color: AppColor.black22),
@@ -813,7 +816,7 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
     listTable1.add(Table(
       defaultVerticalAlignment: TableCellVerticalAlignment.middle,
       columnWidths: const {
-        0: FlexColumnWidth(1),
+        0: FlexColumnWidth(1.5),
         1: FlexColumnWidth(3),
       },
       border: TableBorder.all(color: AppColor.black22),

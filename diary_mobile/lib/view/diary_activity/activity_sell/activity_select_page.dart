@@ -1,4 +1,3 @@
-
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,7 +9,7 @@ import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/activity_select_bloc.dart';
 import '../../../utils/widgets/items/item_activity_select.dart';

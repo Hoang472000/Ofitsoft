@@ -63,7 +63,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         type: TypeInputRegister.Non,
         controller: state.idFarmerController,
         noBorder: true,
-        textAlign: TextAlign.center
+        textAlign: TextAlign.left
     ));
 
     list.add(InputRegisterModel<People, People>(
@@ -257,7 +257,7 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
             state.listWidget[4].valueSelected = null;
             state.listWidget[4].positionSelected = -1;
             emit(state.copyWith(
-            idFarmerController: TextEditingController(text: "${state.listFarmer[result].id}"),
+            idFarmerController: TextEditingController(text: "${state.listFarmer[result].login}"),
             farmerInspector: state.farmerInspector,
             listFarm: state.listFarmer[result].farmIds,
             ));

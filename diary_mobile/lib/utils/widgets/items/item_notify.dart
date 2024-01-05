@@ -6,7 +6,7 @@ import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 
-///Bkav HoangCV: item feedback
+///HoangCV: item feedback
 class ItemNotify extends StatefulWidget {
   final NotifyEntity notifyEntity;
   final VoidCallback callbackChooseItem;

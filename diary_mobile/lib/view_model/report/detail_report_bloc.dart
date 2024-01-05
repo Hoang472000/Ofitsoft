@@ -67,7 +67,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         type: TypeInputRegister.Non,
         controller: state.idFarmerController,
         noBorder: true,
-        textAlign: TextAlign.center
+        textAlign: TextAlign.left
     ));
 
     list.add(InputRegisterModel<People, People>(
@@ -164,7 +164,7 @@ class DetailReportBloc extends Bloc<DetailReportEvent, DetailReportState> {
         indexFarmer: indexFarmer,
         indexInspector: indexInspector,
         indexFarm: indexFarm,
-        idFarmerController: TextEditingController(text: "${report[0].farmerId == -1 ? "" : report[0].farmerId}"),
+        idFarmerController: TextEditingController(text: "${report[0].farmerLogin}"),
         startTimeController: TextEditingController(
             text: Utils.formatDate(report[0].visitDate ?? "")),
         farmerController: TextEditingController(

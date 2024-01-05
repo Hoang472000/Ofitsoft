@@ -1,21 +1,18 @@
-import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import '../../../data/entity/diary/diary.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../utils/widgets/input/text_form_input.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/add_activity_purchase_bloc.dart';
 
 class AddActivityPurchasePage extends StatefulWidget {

@@ -21,10 +21,7 @@ import '../../utils/utils.dart';
 import '../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/input/text_form_input_password.dart';
 import '../../view_model/account/login_bloc.dart';
-import '../diary_activity/activity/add_activity.dart';
-import '../forget_password/forget_password_page.dart';
 import '../home/home_page.dart';
-import '../setting/contact/contact_page.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage(
@@ -412,7 +409,7 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
               width: 6,
             ),
             Flexible(
-              child: Text("Hỗ trợ",
+              child: Text(S.of(context).support,
                   style: StyleOfit.textStyleFW700(AppColor.yellowFF, 16,
                       overflow: TextOverflow.visible)),
             )
@@ -470,10 +467,10 @@ class _LoginPageState extends State<LoginPage> with WidgetsBindingObserver {
                   backgroundColor: AppColor.whiteF2.withOpacity(0.5),
                 ),
                 onPressed: () async {
-                  Navigator.push(
+   /*               Navigator.push(
                       context,
                       await ForgetPasswordPage.route(
-                          _inputUsernameController.text));
+                          _inputUsernameController.text));*/
                 },
                 child: Text(S.of(context).forgot_password + " ?",
                     style: StyleOfit.textStyleFW600(AppColor.back09, 14,

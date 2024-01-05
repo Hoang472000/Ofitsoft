@@ -6850,6 +6850,24 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
   late final GeneratedColumn<String> person = GeneratedColumn<String>(
       'person', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerNameMeta =
+      const VerificationMeta('farmerName');
+  @override
+  late final GeneratedColumn<String> farmerName = GeneratedColumn<String>(
+      'farmer_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _farmerCodeMeta =
+      const VerificationMeta('farmerCode');
+  @override
+  late final GeneratedColumn<String> farmerCode = GeneratedColumn<String>(
+      'farmer_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _areaNameMeta =
+      const VerificationMeta('areaName');
+  @override
+  late final GeneratedColumn<String> areaName = GeneratedColumn<String>(
+      'area_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -6865,7 +6883,10 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
         productName,
         unitPrice,
         isPurchase,
-        person
+        person,
+        farmerName,
+        farmerCode,
+        areaName
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -6946,6 +6967,22 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
       context.handle(_personMeta,
           person.isAcceptableOrUnknown(data['person']!, _personMeta));
     }
+    if (data.containsKey('farmer_name')) {
+      context.handle(
+          _farmerNameMeta,
+          farmerName.isAcceptableOrUnknown(
+              data['farmer_name']!, _farmerNameMeta));
+    }
+    if (data.containsKey('farmer_code')) {
+      context.handle(
+          _farmerCodeMeta,
+          farmerCode.isAcceptableOrUnknown(
+              data['farmer_code']!, _farmerCodeMeta));
+    }
+    if (data.containsKey('area_name')) {
+      context.handle(_areaNameMeta,
+          areaName.isAcceptableOrUnknown(data['area_name']!, _areaNameMeta));
+    }
     return context;
   }
 
@@ -6983,6 +7020,12 @@ class $ActivityPurchaseTableTable extends ActivityPurchaseTable
           .read(DriftSqlType.string, data['${effectivePrefix}product_name']),
       isPurchase: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_purchase']),
+      farmerName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farmer_name']),
+      farmerCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}farmer_code']),
+      areaName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area_name']),
     );
   }
 
@@ -7007,6 +7050,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
   final Value<double?> unitPrice;
   final Value<bool?> isPurchase;
   final Value<String?> person;
+  final Value<String?> farmerName;
+  final Value<String?> farmerCode;
+  final Value<String?> areaName;
   final Value<int> rowid;
   const ActivityPurchaseTableCompanion({
     this.id = const Value.absent(),
@@ -7023,6 +7069,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
     this.unitPrice = const Value.absent(),
     this.isPurchase = const Value.absent(),
     this.person = const Value.absent(),
+    this.farmerName = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.areaName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ActivityPurchaseTableCompanion.insert({
@@ -7040,6 +7089,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
     this.unitPrice = const Value.absent(),
     this.isPurchase = const Value.absent(),
     this.person = const Value.absent(),
+    this.farmerName = const Value.absent(),
+    this.farmerCode = const Value.absent(),
+    this.areaName = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<ActivityPurchase> custom({
@@ -7057,6 +7109,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
     Expression<double>? unitPrice,
     Expression<bool>? isPurchase,
     Expression<String>? person,
+    Expression<String>? farmerName,
+    Expression<String>? farmerCode,
+    Expression<String>? areaName,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -7074,6 +7129,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
       if (unitPrice != null) 'unit_price': unitPrice,
       if (isPurchase != null) 'is_purchase': isPurchase,
       if (person != null) 'person': person,
+      if (farmerName != null) 'farmer_name': farmerName,
+      if (farmerCode != null) 'farmer_code': farmerCode,
+      if (areaName != null) 'area_name': areaName,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -7093,6 +7151,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
       Value<double?>? unitPrice,
       Value<bool?>? isPurchase,
       Value<String?>? person,
+      Value<String?>? farmerName,
+      Value<String?>? farmerCode,
+      Value<String?>? areaName,
       Value<int>? rowid}) {
     return ActivityPurchaseTableCompanion(
       id: id ?? this.id,
@@ -7109,6 +7170,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
       unitPrice: unitPrice ?? this.unitPrice,
       isPurchase: isPurchase ?? this.isPurchase,
       person: person ?? this.person,
+      farmerName: farmerName ?? this.farmerName,
+      farmerCode: farmerCode ?? this.farmerCode,
+      areaName: areaName ?? this.areaName,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -7158,6 +7222,15 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
     if (person.present) {
       map['person'] = Variable<String>(person.value);
     }
+    if (farmerName.present) {
+      map['farmer_name'] = Variable<String>(farmerName.value);
+    }
+    if (farmerCode.present) {
+      map['farmer_code'] = Variable<String>(farmerCode.value);
+    }
+    if (areaName.present) {
+      map['area_name'] = Variable<String>(areaName.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -7181,6 +7254,9 @@ class ActivityPurchaseTableCompanion extends UpdateCompanion<ActivityPurchase> {
           ..write('unitPrice: $unitPrice, ')
           ..write('isPurchase: $isPurchase, ')
           ..write('person: $person, ')
+          ..write('farmerName: $farmerName, ')
+          ..write('farmerCode: $farmerCode, ')
+          ..write('areaName: $areaName, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

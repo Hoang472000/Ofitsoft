@@ -15,7 +15,7 @@ import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/dashed_circle.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/ofit_app_bar.dart';
 import '../../view_model/access_origin/detail_access_origin_bloc.dart';
 
 class DetailAccessOrigin extends StatefulWidget {

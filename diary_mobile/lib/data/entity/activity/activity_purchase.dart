@@ -18,6 +18,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
   double? unitPrice;
   bool? isPurchase;
   String? person;
+  String? farmerName;
+  String? farmerCode;
+  String? areaName;
 
   ActivityPurchase({
     this.userId,
@@ -34,6 +37,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
     this.person,
     this.productName,
     this.isPurchase,
+    this.farmerName,
+    this.farmerCode,
+    this.areaName
   });
 
   factory ActivityPurchase.fromJson(Map<String, dynamic> json, int userId) {
@@ -52,6 +58,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
       person: json['person'] ?? '',
       unitPrice: json['unit_price'] ?? -1,
       isPurchase: json['is_purchase'] ?? false,
+      farmerName: json['farmer_name'] ?? '',
+      farmerCode: json['farmer_code'] ?? '',
+      areaName: json['area_name'] ?? '',
     );
   }
 
@@ -71,6 +80,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
     data['person'] = person;
     data['unit_price'] = unitPrice;
     data['is_purchase'] = isPurchase;
+    data['farmer_name'] = farmerName;
+    data['farmer_code'] = farmerCode;
+    data['area_name'] = areaName;
     return data;
   }
 
@@ -88,6 +100,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
         productName = other.productName,
         person = other.person,
         unitPrice = other.unitPrice,
+        farmerName = other.farmerName,
+        farmerCode = other.farmerCode,
+        areaName = other.areaName,
         isPurchase = other.isPurchase;
 
   @override
@@ -106,6 +121,9 @@ class ActivityPurchase implements Insertable<ActivityPurchase>{
         productName: Value(productName),
         person: Value(person),
         unitPrice: Value(unitPrice),
+      farmerName: Value(farmerName),
+      farmerCode: Value(farmerCode),
+      areaName: Value(areaName),
         isPurchase: Value(isPurchase),)
         .toColumns(nullToAbsent);
   }

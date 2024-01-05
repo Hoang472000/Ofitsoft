@@ -1,8 +1,4 @@
-import 'dart:ffi';
-
 import 'package:diary_mobile/resource/assets.dart';
-import 'package:diary_mobile/utils/widgets/items/item_card_activity.dart';
-import 'package:diary_mobile/view/diary_activity/infomation_diary/workflow_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,13 +7,10 @@ import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../home/home_page.dart';
-import '../../report/list_report_result_view.dart';
-import '../activity/activity_page.dart';
-import '../activity/activity_transaction_page.dart';
 
 class InfoDiaryPage extends StatefulWidget {
   const InfoDiaryPage({super.key, required this.id, required this.diary});

@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/constants/shared_preferences.dart';
 import '../../utils/utils.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
-import '../../utils/widgets/dialog/dialog_manager.dart';
-import '../../view_model/home_bloc.dart';
+import '../../utils/widgets/ofit_app_bar.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../report/list_report_result_view.dart';
-import '../setting/contact/contact_page.dart';
 
 class ManagerPage extends StatefulWidget {
   const ManagerPage({super.key});

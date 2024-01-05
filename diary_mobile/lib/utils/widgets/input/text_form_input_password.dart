@@ -385,9 +385,9 @@ class _TextFormFieldInputState extends State<TextFormFieldInputAiBook> {
                   {
                     if (!text.isNotEmpty)
                       {
-                        //Bkav HoangCV: check dieu kien khi text null
+                        //HoangCV: check dieu kien khi text null
                         _textIsNotEmpty = false,
-                      } // Bkav HoangCV: check khi co text trong form thi ko hien thong bao nhap text
+                      } //HoangCV: check khi co text trong form thi ko hien thong bao nhap text
                     else
                       {
                         textIsNotEmplty(true),

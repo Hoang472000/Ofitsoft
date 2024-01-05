@@ -193,6 +193,7 @@ class MonitoringVisitType {
 class People {
   final int id;
   final String name;
+  final String? login;
   final String? userCode;
   final String? code;
   final String? image;
@@ -205,6 +206,7 @@ class People {
       {required this.id,
       required this.name,
       this.code,
+        this.login,
       this.image,
       this.areaId,
       this.areaName,
@@ -216,6 +218,7 @@ class People {
     return People(
       id: json['id'] ?? -1,
       name: json['name'] ?? '',
+      login: json['login'] ?? '',
       code: json['code'] == false ? null : json['code'],
       userCode: json['user_code'] == false ? null : json['user_code'],
       areaId: json['area_id'] ?? -1,
@@ -245,6 +248,7 @@ class People {
     }
     data['id'] = id;
     data['name'] = name;
+    data['login'] = login;
     data['code'] = code;
     data['user_code'] = userCode;
     data['farm_ids'] = listFarm;
@@ -257,6 +261,7 @@ class People {
   People.copy(People other)
       : id = other.id,
         name = other.name,
+        login = other.login,
         code = other.code,
         userCode = other.userCode,
         farmIds = other.farmIds.map((answer) => People.copy(answer)).toList(),

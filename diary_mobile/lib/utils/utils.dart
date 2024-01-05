@@ -55,12 +55,12 @@ class Utils {
     service.showNotificationFirebase(message);
   }
 
-  static Future<void> downloadExcelFile(String base64String) async {
+  static Future<void> downloadExcelFile(String base64String, int id) async {
     List<int> bytes = base64Decode(base64String);
 
     // Lấy thư mục tạm thời
     final directory = await getTemporaryDirectory();
-    final filePath = '${directory.path}/example.xlsx'; // Đường dẫn file Excel
+    final filePath = '${directory.path}/HD_$id.xlsx'; // Đường dẫn file Excel
 
     // Lưu dữ liệu vào file tạm thời
     File file = File(filePath);
@@ -147,7 +147,7 @@ class Utils {
         .isFingerPrint;
   }
 
-  //HoangLD tạo 1 channel để call native ios
+  //HoangCV tạo 1 channel để call native ios
   static const channelBkav = MethodChannel('com.bkav.aibook/bkav_channel');
   static Future<bool> checkBiometricsFaceIdIos() async{
     bool faceId = false;
@@ -805,136 +805,6 @@ class Utils {
             text: " ${S.of(buildContext!).vnd}",
             style: StyleOfit.textStyleFW400(AppColor.gray57, 14))
     ]);
-  }
-
-  // vung hien thi trang thai
-  static Widget descriptionPaymentStatusWidget(int amount,int select,  BuildContext context,VoidCallback ontap,VoidCallback ontapAll,bool selectAll,
-      {bool isShowAll = true}) {
-    return Container(
-      padding: const EdgeInsets.only(top: 26, bottom: 0),
-      color: Colors.white,
-      child: Container(
-          margin: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-          child: Column(
-            children: [
-              Visibility(
-                visible: select<=0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      Utils.sumAmountSlip(amount, S.of(context).sum_amount_slip)
-                          .toUpperCase(),
-                      style: StyleOfit.textStyleFW600(
-                        AppColor.gray57,
-                        14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Visibility(
-                visible: select > 0,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: ontap,
-                        child: const Icon(Icons.check_box_outlined,color: AppColor.main,size: 20)),
-                    const SizedBox(width: 10,),
-                    Text(
-                      Utils.sumAmountSlip(select, S.of(context).select_amount_slip)
-                          .toUpperCase(),
-                      style: StyleOfit.textStyleFW600(
-                        AppColor.gray57,
-                        14,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding:const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    isShowAll
-                        ? Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const CircleAvatar(
-                                  backgroundColor: AppColor.green00,
-                                  radius: 10,
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    S.of(context).paid,
-                                    style: StyleOfit.textStyleFW600(
-                                      AppColor.gray57,
-                                      14,
-                                    ),
-                                    maxLines: 2,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                )
-                              ],
-                            ),
-                          )
-                        : Container(),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const CircleAvatar(
-                            backgroundColor: AppColor.orangeF4,
-                            radius: 10,
-                          ),
-                          Expanded(
-                            child: Text(
-                              S.of(context).unpaid,
-                              style: StyleOfit.textStyleFW600(
-                                AppColor.gray57,
-                                14,
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const CircleAvatar(
-                            backgroundColor: AppColor.yellowFF,
-                            radius: 10,
-                          ),
-                          Expanded(
-                            child: Text(
-                              S.of(context).partial_payment,
-                              style: StyleOfit.textStyleFW600(
-                                AppColor.gray57,
-                                14,
-                              ),
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )),
-    );
   }
 
   static Future<String> getImage(

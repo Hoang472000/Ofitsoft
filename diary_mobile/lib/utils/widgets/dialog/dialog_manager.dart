@@ -166,112 +166,6 @@ class DiaLogManager {
     return;
   }
 
-  //Bkav HoangLD dialog hiển thị hoàn thành trên giao diện
-  static Future<void> displayCompleteDialog(BuildContext context) async {
-    if (Get.isDialogOpen == true) {
-      Get.back();
-    }
-    Get.dialog(AlertDialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0))),
-      contentPadding: const EdgeInsets.all(0),
-      content: SizedBox(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 24),
-              child: SvgPicture.asset(
-                IconAsset.icComplete,
-                width: 48,
-                height: 48,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 32, right: 18, left: 18),
-              child: Text(
-                S.of(context).complete_dialog,
-                textAlign: TextAlign.center,
-                style: StyleOfit.textStyleBlack14NotOverflow(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ));
-  }
-  //HoangLD dialog hiển thị loading van tay trên giao diện
-  static Future<void> displayLoadingFiDialog(BuildContext context) async {
-    return showDialog(
-        barrierDismissible: false,
-        useRootNavigator: false,
-        context: context,
-        builder: (BuildContext context) {
-          Timer(const Duration(seconds: 1), () {
-            Get.back();
-            displayCompleteDialog(context);
-          });
-          return const AlertDialog(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16.0))),
-            contentPadding: EdgeInsets.only(top: 10.0),
-            content: Padding(
-              padding: EdgeInsets.only(top: 48, bottom: 48),
-              child: DashedCircle(size: 48, stringIcon:IconAsset.icLoadingFi ,),
-            ),
-          );
-        });
-  }
-  //HoangLD dialog hiển thị error van tay trên giao diện
-  static Future<void> displayErrorFiDialog(BuildContext context) async {
-    if (Get.isDialogOpen == true) {
-      Get.back();
-    }
-    Get.dialog(AlertDialog(
-      shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(16.0))),
-      contentPadding: const EdgeInsets.all(0),
-      content: SizedBox(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 24, bottom: 24),
-              child: SvgPicture.asset(
-                IconAsset.icEllipse,
-                width: 48,
-                height: 48,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 32, right: 18, left: 18),
-              child: Text(
-                S.of(context).error_dialog_fingerprint,
-                textAlign: TextAlign.center,
-                style: StyleOfit.textStyleBlack14NotOverflow(),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ));
-  }
-  static void showDialogValidatePhoneNumber(BuildContext context, String codeCustomer) {
-    String content =  S.of(context).enter_code + codeCustomer + S.of(context).enter_code ;
-    displayDialog(
-        context,
-        "",
-        content,
-            () {}, () {
-      Get.back();
-    }, S.of(context).close_dialog, "");
-    return;
-  }
-
   ///HoangCV: show dialog "Nhap thong tin thanh cong"
   static void showDialogSuccess(
       BuildContext context, String title, VoidCallback acceptCallback, {bool dismissible = true }) {
@@ -305,7 +199,7 @@ class DiaLogManager {
   ///HoangCV: show dialog "Nhap thong tin thanh cong"
   static void showDialogSendInformationSuccess(BuildContext context,
       String title, String dataHtml, VoidCallback acceptCallback) {
-    Logger.loggerDebug("Bkav HoangCV show dialog Datahtml: $dataHtml");
+    Logger.loggerDebug("HoangCV show dialog Datahtml: $dataHtml");
     Html html = createHtml(dataHtml, Colors.black);
 
     DiaLogManager.displayDialog(
@@ -336,14 +230,6 @@ class DiaLogManager {
     DiaLogManager.displayDialog(
         context, title, "", acceptCallback, () {}, "", "OK",
         widgetContent: html, contentHtml: true);
-  }
-
-  static void showDialogDeleteInventory(BuildContext context, String title, String refNo,
-      VoidCallback deleteFromSystem, VoidCallback deleteAllowRestore){
-          Widget contentWidget= RichText(text: transformWord(S.of(context).you_sure_want_delete_bill, refNo), textAlign: TextAlign.center,);
-
-          DiaLogManager.displayDialog(context, title, "", widgetContent: contentWidget, contentHtml: true, deleteFromSystem,
-              deleteAllowRestore, S.of(context).delete_warehouse_system, S.of(context).delete_warehouse_restore);
   }
 
   static Html createHtml(String dataHtml, Color color){

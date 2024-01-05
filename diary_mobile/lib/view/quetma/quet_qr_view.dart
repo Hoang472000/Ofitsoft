@@ -4,15 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../generated/l10n.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/status/form_submission_status.dart';
 import '../../utils/logger.dart';
 import '../../utils/utils.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/ofit_app_bar.dart';
 import '../../utils/widgets/button_widget.dart';
 import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../view_model/quetma/quet_qr_bloc.dart';
@@ -241,7 +239,7 @@ class _QRCodeViewState extends State<QRCodeView>{
             barCodeError= scanData.code.toString();
           });
           Logger.loggerDebug(
-              "Bkav HoangCV: scanData=============: ${scanData.code.toString()} ");
+              "HoangCV: scanData=============: ${scanData.code.toString()} ");
           /*"HH-0000000029"*/
           controller.pauseCamera();
           DiaLogManager.displayDialog(

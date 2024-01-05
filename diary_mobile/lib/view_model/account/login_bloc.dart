@@ -193,16 +193,14 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               "Cập nhật phiên bản",
               "Vui lòng cập nhật phiên bản mới nhất để sử dụng. Bấm \"Đồng ý\" để cập nhật.",
                   () {
+                    Navigator.pop(context);
                 Utils.openAppInStore(
                     "https://play.google.com/store/apps/details?id=com.ofitsoft.diary.diary_mobile");
-                if (Get.isLogEnable) {
-                  Get.back();
-                }
               },
                   () {},
               "",
               "Đồng ý",
-              dismissible: false);
+              dismissible: true);
         }
       }
     }

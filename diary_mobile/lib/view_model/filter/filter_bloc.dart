@@ -225,6 +225,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     List<ItemFilter> itemFilters = [ItemFilter(-1, "Tất cả")];
     List<ItemFilter> productFilters = [ItemFilter(-1, "Tất cả")];
     List<ItemFilter> peopleFilters = [ItemFilter(-1, "Tất cả")];
+    List<ItemFilter> areaFilters = [ItemFilter(-1, "Tất cả")];
 
     itemFilters.addAll(listInput.map((object) {
       int id = object.seasonFarmId;
@@ -238,13 +239,31 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       productFilters.add(ItemFilter(correspondingObject.productId, correspondingObject.productName));
     });
 
-/*    Set peopleValues = listInput.map((obj) => obj.farmName).toSet();
+    Set peopleValues = listInput.map((obj) => obj.farmerName).toSet();
     peopleValues.forEach((value) {
-      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.farmName == value);
-      peopleFilters.add(ItemFilter(correspondingObject.farmId, correspondingObject.farmName));
-    });*/
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.farmerName == value);
+      peopleFilters.add(ItemFilter(correspondingObject.id, correspondingObject.farmerName));
+    });
+
+    Set areaValues = listInput.map((obj) => obj.areaName).toSet();
+    areaValues.forEach((value) {
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.areaName == value);
+      areaFilters.add(ItemFilter(correspondingObject.id, correspondingObject.areaName));
+    });
 
     List<InputRegisterModel> list = [];
+    list.add(InputRegisterModel<ItemFilter, ItemFilter>(
+      title: "Vùng trồng",
+      isCompulsory: false,
+      type: TypeInputRegister.Select,
+      icon: Icons.arrow_drop_down,
+      positionSelected: 0,
+      valueSelected: areaFilters[0],
+      listValue: areaFilters,
+      typeInputEnum: TypeInputEnum.dmucItem,
+      hasSearch: true,
+    ));
+
     list.add(InputRegisterModel<ItemFilter, ItemFilter>(
       title: "Mùa vụ",
       isCompulsory: false,
@@ -256,6 +275,21 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       typeInputEnum: TypeInputEnum.dmucItem,
       hasSearch: true,
     ));
+
+    if(peopleFilters.isNotEmpty) {
+      list.add(InputRegisterModel<ItemFilter, ItemFilter>(
+        title: "Nông hộ",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: 0,
+        valueSelected: peopleFilters[0],
+        listValue: peopleFilters,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+      ));
+    }
+
     if(productFilters.isNotEmpty) {
       list.add(InputRegisterModel<ItemFilter, ItemFilter>(
         title: "Sản phẩm",
@@ -269,19 +303,6 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
         hasSearch: true,
       ));
     }
-    /*if(peopleFilters.isNotEmpty) {
-      list.add(InputRegisterModel<ItemFilter, ItemFilter>(
-        title: "Điều kiện 3",
-        isCompulsory: false,
-        type: TypeInputRegister.Select,
-        icon: Icons.arrow_drop_down,
-        positionSelected: 0,
-        valueSelected: peopleFilters[0],
-        listValue: peopleFilters,
-        typeInputEnum: TypeInputEnum.dmucItem,
-        hasSearch: true,
-      ));
-    }*/
     emit(state.copyWith(
       list: list,
       isShowProgress: false,

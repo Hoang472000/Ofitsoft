@@ -100,7 +100,7 @@ class Validator {
     return validateMobileNumber(phone) || validateLandlineNumber(phone);
   }
 
-  //Bkav ToanTDd: tách thành 2 luật riêng cho số di động và cố định
+  //tách thành 2 luật riêng cho số di động và cố định
   static bool validateMobileNumber(String? mobile) {
     RegExp regExp = RegExp(r'(?:[0]+([35789]))+([0-9]{8}$)');
     return regExp.hasMatch(mobile!) && !mobile.contains(" ");
@@ -114,7 +114,7 @@ class Validator {
 
   static bool validateFormatPhone(String? phone) {
     RegExp regExp = RegExp(r'^(?:[+0][1-9])?[0-9]{10}$');
-    Logger.loggerDebug("Bkav HoangCV: validateFormatPhone: ${regExp.hasMatch(phone!)}");
+    Logger.loggerDebug("HoangCV: validateFormatPhone: ${regExp.hasMatch(phone!)}");
     return (regExp.hasMatch(phone) && !phone.contains(" "));
   }
   static bool isEmail(String? em) {
@@ -152,7 +152,6 @@ class Validator {
     return true;
   }
 
-  /// Bkav ToanTDd add
   /// Cấu trúc MST:
   /// Trường hợp 10 ký tự: 10 ký tự số
   /// Trường hợp 14 ký tự : (10 ký tự số)(dấu '-')(3 ký tự số)

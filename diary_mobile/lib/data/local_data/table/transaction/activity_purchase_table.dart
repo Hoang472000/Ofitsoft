@@ -21,6 +21,9 @@ class ActivityPurchaseTable extends Table {
   RealColumn get unitPrice => real().nullable()();
   BoolColumn get isPurchase => boolean().nullable()();
   TextColumn get person => text().nullable()();
+  TextColumn get farmerName => text().nullable()();
+  TextColumn get farmerCode => text().nullable()();
+  TextColumn get areaName => text().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id, userId, uuid};

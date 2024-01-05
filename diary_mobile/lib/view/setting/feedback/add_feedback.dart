@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
@@ -14,11 +12,10 @@ import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/status/form_submission_status.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
-import '../../../utils/widgets/input/text_form_input.dart';
 import '../../../utils/widgets/input/text_form_input_text.dart';
 import '../../../utils/widgets/media/image_widget.dart';
 import '../../../utils/widgets/media/video_widget.dart';

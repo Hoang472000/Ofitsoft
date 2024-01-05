@@ -15,7 +15,7 @@ import '../../../utils/extenstion/extenstions.dart';
 import '../../../utils/extenstion/input_register_model.dart';
 import '../../../utils/extenstion/service_info_extension.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/button_widget.dart';
 import '../../../utils/widgets/input/container_input_widget.dart';
 import '../../../view_model/diary/list_diary_bloc.dart';

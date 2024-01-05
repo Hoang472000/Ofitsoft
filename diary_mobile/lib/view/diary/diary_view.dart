@@ -7,13 +7,11 @@ import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/utils.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
+import '../../utils/widgets/ofit_app_bar.dart';
 import '../../utils/widgets/dashed_circle.dart';
 import '../../utils/widgets/empty_widget.dart';
 import '../../view_model/diary/list_diary_bloc.dart';
-import '../diary_activity/activity_writeby/add_activity_writeby.dart';
 import '../filter/filter_page.dart';
-import 'detail_diary/detail_diary_page.dart';
 import '../../utils/widgets/items/item_diary.dart';
 
 class DiaryView extends StatefulWidget {

@@ -1,32 +1,22 @@
 import 'dart:async';
-
-import 'package:create_atom/create_atom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/utils.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
-import '../../utils/widgets/dialog/dialog_manager.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/home_bloc.dart';
 import '../access_origin/access_origin_page.dart';
-import '../diary_activity/activity/activity_transaction_page.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../diary_activity/record_diary/add_record_diary.dart';
-import '../manager/manager_page.dart';
 import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
 import '../setting/mananger/list_pdf_page.dart';
-import 'dart:math' as math;
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -211,12 +201,12 @@ class _HomeViewState extends State<HomeView> {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
+                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/40),
                                   child: GridView.builder(
                                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/30,
+                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/30,
                                     ),
                                     itemCount: state.listActivityFarm.length,
                                     padding: EdgeInsets.zero,
@@ -330,7 +320,7 @@ class _HomeViewState extends State<HomeView> {
               flex: 4,
               child: Image(
                 image: AssetImage(activity.iconActivity),
-                height: 40,
+                //height: 20,
                 fit: BoxFit.contain,
               ),
             ),
@@ -344,17 +334,8 @@ class _HomeViewState extends State<HomeView> {
                         style: StyleOfit.textStyleFW500(AppColor.black22, 16)),
                     textAlign: TextAlign.center,
                     maxLines: 2,
-                  ) /*Text(
-                  activity.nameActivity,
-                  style: StyleOfit.textStyleFW500(
-                    AppColor.black22,
-                    16,
-                    overflow: TextOverflow.visible,
-                    height: 1.2,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                ),*/
+                    //textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                  )
               ),
             ),
           ],

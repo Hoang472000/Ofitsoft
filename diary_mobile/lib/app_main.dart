@@ -116,7 +116,7 @@ Future<void> initOfit() async{
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
     Logger.loggerDebug(
-        "Bkav onMessage.listen ${message.toMap().toString()}");
+        "FirebaseMessaging onMessage.listen ${message.toMap().toString()}");
     Utils.handle(message, false);
   });
   messaging.requestPermission(
@@ -232,11 +232,25 @@ class _DiaryMobileView extends StatefulWidget {
 class _AIBookState extends State<_DiaryMobileView> {
   final _navigatorKey = NavigationService.navigatorKey;
   NavigatorState get _navigator => _navigatorKey.currentState!;
+  Locale? _locale;
+
+  setLocale(Locale locale){
+    setState(() {
+      _locale = _locale;
+    });
+  }
 
   @override
   void initState() {
     // context.read<Repository>().updateTokenFirebase();
     super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    //getLocale().then((locale)=> {setLocale(locale)});
+    super.didChangeDependencies();
   }
 
   @override

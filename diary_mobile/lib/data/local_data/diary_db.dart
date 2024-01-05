@@ -66,7 +66,7 @@ class DiaryDB extends _$DiaryDB {
   // you should bump this number whenever you change or add a table definition.
   // Migrations are covered later in the documentation.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   Future<void> deleteEverything() {
     return transaction(() async {
@@ -808,6 +808,12 @@ class DiaryDB extends _$DiaryDB {
           m.deleteTable("report_select_table");
           m.createTable(reportSelectTable);
           m.addColumn(diaryTable, diaryTable.seasonName);
+          //await m.addColumn(reportSelectTable, reportSelectTable.isInitialAssessment);
+        }
+        else if (from == 3) {
+          m.addColumn(activityPurchaseTable, activityPurchaseTable.farmerName);
+          m.addColumn(activityPurchaseTable, activityPurchaseTable.farmerCode);
+          m.addColumn(activityPurchaseTable, activityPurchaseTable.areaName);
           //await m.addColumn(reportSelectTable, reportSelectTable.isInitialAssessment);
         }
       },

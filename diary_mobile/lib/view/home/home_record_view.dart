@@ -1,31 +1,25 @@
 import 'dart:async';
 
-import 'package:create_atom/create_atom.dart';
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
 import 'package:diary_mobile/view/access_origin/access_origin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
 import '../../utils/utils.dart';
-import '../../utils/widgets/bkav_app_bar.dart';
-import '../../utils/widgets/dialog/dialog_manager.dart';
+import '../../utils/widgets/ofit_app_bar.dart';
 import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/home_bloc.dart';
-import '../diary/diary_view.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../diary_activity/record_diary/add_record_diary.dart';
-import '../manager/manager_page.dart';
 import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
 import '../setting/mananger/list_pdf_page.dart';
-import 'dart:math' as math;
 
 class HomeRecordView extends StatefulWidget {
   const HomeRecordView({super.key});
@@ -83,23 +77,6 @@ class _HomeRecordViewState extends State<HomeRecordView> {
       return Scaffold(
         //backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        /*appBar: _showAppbar ? OfitAppBar(
-          context,
-          centerTitle: true,
-          showDefaultBackButton: false,
-          title: Text(
-            "Trang chủ",
-            style: StyleOfit.textStyleFW700(AppColor.main, 20),
-          ),
-          backgroundColor: Colors.transparent,
-          flexibleSpace: SizedBox(),
-          hasBottom: true,
-          actions: [],
-        )
-            : PreferredSize(
-          child: Container(),
-          preferredSize: Size(0.0, 0.0),
-        ),*/
         body: Utils.bkavCheckOrientation(
             context,
             Stack(
@@ -117,12 +94,8 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 13,
                           left: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 4,
                           right: MediaQuery.of(context).size.width / 20),
-                      //color: const Color(0xFFEFF2F5),
                       child: Row(
                         children: [
-                          /*SizedBox(
-                          width: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 3.5,
-                        ),*/
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -210,12 +183,12 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                                   ),
                                 ),
                                 Container(
-                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/23),
+                                  padding: EdgeInsets.all(MediaQuery.sizeOf(context).width/40),
                                   child: GridView.builder(
                                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                       crossAxisCount: 3,
-                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/23,
-                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/23,
+                                      crossAxisSpacing: MediaQuery.sizeOf(context).width/30,
+                                      mainAxisSpacing: MediaQuery.sizeOf(context).width/30,
                                     ),
                                     itemCount: state.listActivityFarm.length,
                                     padding: EdgeInsets.zero,
@@ -329,7 +302,7 @@ class _HomeRecordViewState extends State<HomeRecordView> {
               flex: 4,
               child: Image(
                 image: AssetImage(activity.iconActivity),
-                height: 40,
+                //height: 20,
                 fit: BoxFit.contain,
               ),
             ),
@@ -343,17 +316,8 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                         style: StyleOfit.textStyleFW500(AppColor.black22, 16)),
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  ) /*Text(
-                  activity.nameActivity,
-                  style: StyleOfit.textStyleFW500(
-                    AppColor.black22,
-                    16,
-                    overflow: TextOverflow.visible,
-                    height: 1.2,
-                  ),
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                ),*/
+                  //textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                  )
               ),
             ),
           ],

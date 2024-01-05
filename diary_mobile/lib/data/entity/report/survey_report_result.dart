@@ -13,6 +13,7 @@ class SurveyRpRlt {
   //
   int? farmerId;
   String? farmerName;
+  String? farmerLogin;
   String? farmerCode;
   int? farmId;
   String? farmName;
@@ -42,6 +43,7 @@ class SurveyRpRlt {
     this.monitoringVisitType,
     this.surveyId = const [],
     this.visitDate,
+    this.farmerLogin,
     //
     this.listFarmers = const [],
     this.listInternalInspector = const [],
@@ -60,6 +62,7 @@ class SurveyRpRlt {
         farmId = other.farmId,
         farmName = other.farmName,
         farmCode = other.farmCode,
+        farmerLogin = other.farmerLogin,
         internalInspectorId = other.internalInspectorId,
         internalInspector = other.internalInspector,
         monitoringVisitType = other.monitoringVisitType,
@@ -86,6 +89,7 @@ class SurveyRpRlt {
       writeDate: json['write_date'] ?? '',
       farmerId: json['farmer_id'],
       farmerName: json['farmer_name'] ?? '',
+      farmerLogin: json['farmer_login'] ?? '',
       farmerCode: json['farmer_code'] ?? '',
       farmId: json['farm_id'],
       farmName: json['farm_name'] ?? '',
@@ -132,6 +136,7 @@ class SurveyRpRlt {
     data['farm_id'] = farmId;
     data['farm_name'] = farmName;
     data['farm_code'] = farmCode;
+    data['farmer_login'] = farmerLogin;
     data['internal_inspector_id'] = internalInspectorId;
     data['monitoring_visit_type'] = monitoringVisitType;
     data['survey_id'] = surveyId;

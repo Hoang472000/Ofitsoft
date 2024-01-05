@@ -1,28 +1,22 @@
 import 'dart:ui';
-
-import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
 import 'package:diary_mobile/view/setting/feedback/detail_feedback.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import '../../../data/entity/diary/diary.dart';
 import '../../../data/repository.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/items/item_feedback.dart';
 import '../../../view_model/setting/feedback/feedback_bloc.dart';
-import '../../report/add_report.dart';
 import 'add_feedback.dart';
 
 class FeedbackPage extends StatefulWidget {

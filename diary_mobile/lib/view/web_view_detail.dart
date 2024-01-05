@@ -4,7 +4,7 @@ import 'package:ai_book/resource/color.dart';
 import 'package:ai_book/resource/style.dart';
 import 'package:ai_book/utils/logger.dart';
 import 'package:ai_book/utils/utils.dart';
-import 'package:ai_book/utils/widgets/bkav_app_bar.dart';
+import 'package:ai_book/utils/widgets/ofit_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 

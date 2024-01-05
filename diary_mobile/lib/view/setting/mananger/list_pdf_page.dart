@@ -1,22 +1,16 @@
-import 'dart:convert';
-
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
-import 'package:diary_mobile/utils/widgets/dialog/dialog_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
-import '../../../utils/widgets/bkav_app_bar.dart';
+import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/pdf/pdf_viewer.dart';
 
-///Bkav HoangCV: GD tai khoan
+///HoangCV: GD PDF
 class ListPDFPage extends StatefulWidget {
   const ListPDFPage({
     Key? key,

@@ -1,24 +1,15 @@
-import 'package:diary_mobile/data/repository.dart';
-import 'package:diary_mobile/view/diary/diary_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../data/entity/image/image_entity.dart';
-import '../../../../generated/l10n.dart';
-import '../../../../resource/assets.dart';
 import '../../../../resource/color.dart';
 import '../../../../resource/style.dart';
 import '../../../../utils/extenstion/extenstions.dart';
 import '../../../../utils/extenstion/input_register_model.dart';
 import '../../../../utils/extenstion/service_info_extension.dart';
 import '../../../../utils/utils.dart';
-import '../../../../utils/widgets/bkav_app_bar.dart';
+import '../../../../utils/widgets/ofit_app_bar.dart';
 import '../../../../utils/widgets/button_widget.dart';
-import '../../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../../utils/widgets/input/container_input_widget.dart';
-import '../../../../view_model/diary/list_diary_bloc.dart';
 
 class AddMonitorSubPage extends StatefulWidget {
   AddMonitorSubPage({super.key, required this.listWidget});

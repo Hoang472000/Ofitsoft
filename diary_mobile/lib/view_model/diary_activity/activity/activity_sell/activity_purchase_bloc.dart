@@ -86,7 +86,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
 
     //DiaryDB.instance.getListDiary();
     if (objectResult.responseCode == StatusConst.code00) {
-      Utils.downloadExcelFile(objectResult.response);
+      Utils.downloadExcelFile(objectResult.response, event.ids.first);
       //add(GetListActivityPurchaseEvent());
       emit(state.copyWith(
           isShowProgress: false,
@@ -130,6 +130,8 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     var maxQuantity = double.parse(event.result[5] != "" ? event.result[5] : "-1");
     var filter0 = event.result[6];
     var filter1 = event.result[7];
+    var filter2 = event.result[8];
+    var filter3 = event.result[9];
     List<ActivityPurchase> list = state.listActivityTransactionFilter.map((e) => ActivityPurchase.copy(e)).toList();
     //print("HoangCV: filter: ${minPrice} : ${maxPrice}");
     List<ActivityPurchase> filteredList = [];
@@ -152,22 +154,38 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     }
     List<ActivityPurchase> listFilter0 = [];
     List<ActivityPurchase> listFilter1 = [];
+    List<ActivityPurchase> listFilter2 = [];
+    List<ActivityPurchase> listFilter3 = [];
     if(filter0 != -1) {
+      String name = filteredList[filteredList.indexWhere((element) => element.id == filter0)].areaName ?? "";
       listFilter0.addAll(filteredList.where((
-          activity) => activity.seasonFarmId == filter0).toList());
+          activity) => activity.areaName == name).toList());
     } else{
       listFilter0.addAll(filteredList);
     }
     if(filter1 != -1) {
       listFilter1.addAll(listFilter0.where((
-          activity) => activity.productId == filter1).toList());
+          activity) => activity.seasonFarmId == filter1).toList());
     } else{
       listFilter1.addAll(listFilter0);
     }
-    if(listFilter1.length > 0) {
+    if(filter2 != -1) {
+      String name = filteredList[filteredList.indexWhere((element) => element.id == filter2)].farmerName ?? "";
+      listFilter2.addAll(listFilter1.where((
+          activity) => activity.farmerName == name).toList());
+    } else{
+      listFilter2.addAll(listFilter1);
+    }
+    if(filter3 != -1) {
+      listFilter3.addAll(listFilter2.where((
+          activity) => activity.productId == filter3).toList());
+    } else{
+      listFilter3.addAll(listFilter2);
+    }
+    if(listFilter3.length > 0) {
       emit(state.copyWith(
           isShowProgress: false,
-          listActivityTransaction: listFilter1
+          listActivityTransaction: listFilter3
       ));
     } else{
       Toast.showLongTop("Không tìm thấy thông tin giao dịch phù hợp");
