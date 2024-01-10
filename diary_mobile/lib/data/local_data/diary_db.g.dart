@@ -5332,6 +5332,15 @@ class $ReportTableTable extends ReportTable
   late final GeneratedColumn<String> stringListFarmers =
       GeneratedColumn<String>('string_list_farmers', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isInitialAssessmentMeta =
+      const VerificationMeta('isInitialAssessment');
+  @override
+  late final GeneratedColumn<bool> isInitialAssessment = GeneratedColumn<bool>(
+      'is_initial_assessment', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_initial_assessment" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -5345,7 +5354,8 @@ class $ReportTableTable extends ReportTable
         questionsSelection,
         timeLimit,
         stringQuestionAndPageIds,
-        stringListFarmers
+        stringListFarmers,
+        isInitialAssessment
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -5414,6 +5424,12 @@ class $ReportTableTable extends ReportTable
           stringListFarmers.isAcceptableOrUnknown(
               data['string_list_farmers']!, _stringListFarmersMeta));
     }
+    if (data.containsKey('is_initial_assessment')) {
+      context.handle(
+          _isInitialAssessmentMeta,
+          isInitialAssessment.isAcceptableOrUnknown(
+              data['is_initial_assessment']!, _isInitialAssessmentMeta));
+    }
     return context;
   }
 
@@ -5447,6 +5463,8 @@ class $ReportTableTable extends ReportTable
       stringQuestionAndPageIds: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}string_question_and_page_ids']),
+      isInitialAssessment: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}is_initial_assessment']),
       stringListFarmers: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}string_list_farmers']),
     );
@@ -5471,6 +5489,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
   final Value<double?> timeLimit;
   final Value<String?> stringQuestionAndPageIds;
   final Value<String?> stringListFarmers;
+  final Value<bool?> isInitialAssessment;
   const ReportTableCompanion({
     this.id = const Value.absent(),
     this.isPage = const Value.absent(),
@@ -5484,6 +5503,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     this.timeLimit = const Value.absent(),
     this.stringQuestionAndPageIds = const Value.absent(),
     this.stringListFarmers = const Value.absent(),
+    this.isInitialAssessment = const Value.absent(),
   });
   ReportTableCompanion.insert({
     this.id = const Value.absent(),
@@ -5498,6 +5518,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     this.timeLimit = const Value.absent(),
     this.stringQuestionAndPageIds = const Value.absent(),
     this.stringListFarmers = const Value.absent(),
+    this.isInitialAssessment = const Value.absent(),
   });
   static Insertable<Report> custom({
     Expression<int>? id,
@@ -5512,6 +5533,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     Expression<double>? timeLimit,
     Expression<String>? stringQuestionAndPageIds,
     Expression<String>? stringListFarmers,
+    Expression<bool>? isInitialAssessment,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -5528,6 +5550,8 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       if (stringQuestionAndPageIds != null)
         'string_question_and_page_ids': stringQuestionAndPageIds,
       if (stringListFarmers != null) 'string_list_farmers': stringListFarmers,
+      if (isInitialAssessment != null)
+        'is_initial_assessment': isInitialAssessment,
     });
   }
 
@@ -5543,7 +5567,8 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       Value<String?>? questionsSelection,
       Value<double?>? timeLimit,
       Value<String?>? stringQuestionAndPageIds,
-      Value<String?>? stringListFarmers}) {
+      Value<String?>? stringListFarmers,
+      Value<bool?>? isInitialAssessment}) {
     return ReportTableCompanion(
       id: id ?? this.id,
       isPage: isPage ?? this.isPage,
@@ -5559,6 +5584,7 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
       stringQuestionAndPageIds:
           stringQuestionAndPageIds ?? this.stringQuestionAndPageIds,
       stringListFarmers: stringListFarmers ?? this.stringListFarmers,
+      isInitialAssessment: isInitialAssessment ?? this.isInitialAssessment,
     );
   }
 
@@ -5603,6 +5629,9 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
     if (stringListFarmers.present) {
       map['string_list_farmers'] = Variable<String>(stringListFarmers.value);
     }
+    if (isInitialAssessment.present) {
+      map['is_initial_assessment'] = Variable<bool>(isInitialAssessment.value);
+    }
     return map;
   }
 
@@ -5620,7 +5649,8 @@ class ReportTableCompanion extends UpdateCompanion<Report> {
           ..write('questionsSelection: $questionsSelection, ')
           ..write('timeLimit: $timeLimit, ')
           ..write('stringQuestionAndPageIds: $stringQuestionAndPageIds, ')
-          ..write('stringListFarmers: $stringListFarmers')
+          ..write('stringListFarmers: $stringListFarmers, ')
+          ..write('isInitialAssessment: $isInitialAssessment')
           ..write(')'))
         .toString();
   }
@@ -9247,6 +9277,371 @@ class AreaEntityTableCompanion extends UpdateCompanion<AreaEntity> {
   }
 }
 
+class $TaskEntityTableTable extends TaskEntityTable
+    with TableInfo<$TaskEntityTableTable, TaskEntity> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskEntityTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _stringSeasonFarmIdsMeta =
+      const VerificationMeta('stringSeasonFarmIds');
+  @override
+  late final GeneratedColumn<String> stringSeasonFarmIds =
+      GeneratedColumn<String>('string_season_farm_ids', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _activityIdMeta =
+      const VerificationMeta('activityId');
+  @override
+  late final GeneratedColumn<int> activityId = GeneratedColumn<int>(
+      'activity_id', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _activityNameMeta =
+      const VerificationMeta('activityName');
+  @override
+  late final GeneratedColumn<String> activityName = GeneratedColumn<String>(
+      'activity_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<String> startDate = GeneratedColumn<String>(
+      'start_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<String> endDate = GeneratedColumn<String>(
+      'end_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _completeDateMeta =
+      const VerificationMeta('completeDate');
+  @override
+  late final GeneratedColumn<String> completeDate = GeneratedColumn<String>(
+      'complete_date', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusNameMeta =
+      const VerificationMeta('statusName');
+  @override
+  late final GeneratedColumn<String> statusName = GeneratedColumn<String>(
+      'status_name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _resultMeta = const VerificationMeta('result');
+  @override
+  late final GeneratedColumn<String> result = GeneratedColumn<String>(
+      'result', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        name,
+        stringSeasonFarmIds,
+        activityId,
+        activityName,
+        startDate,
+        endDate,
+        completeDate,
+        status,
+        statusName,
+        result,
+        description
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'task_entity';
+  @override
+  VerificationContext validateIntegrity(Insertable<TaskEntity> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('string_season_farm_ids')) {
+      context.handle(
+          _stringSeasonFarmIdsMeta,
+          stringSeasonFarmIds.isAcceptableOrUnknown(
+              data['string_season_farm_ids']!, _stringSeasonFarmIdsMeta));
+    }
+    if (data.containsKey('activity_id')) {
+      context.handle(
+          _activityIdMeta,
+          activityId.isAcceptableOrUnknown(
+              data['activity_id']!, _activityIdMeta));
+    }
+    if (data.containsKey('activity_name')) {
+      context.handle(
+          _activityNameMeta,
+          activityName.isAcceptableOrUnknown(
+              data['activity_name']!, _activityNameMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('complete_date')) {
+      context.handle(
+          _completeDateMeta,
+          completeDate.isAcceptableOrUnknown(
+              data['complete_date']!, _completeDateMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('status_name')) {
+      context.handle(
+          _statusNameMeta,
+          statusName.isAcceptableOrUnknown(
+              data['status_name']!, _statusNameMeta));
+    }
+    if (data.containsKey('result')) {
+      context.handle(_resultMeta,
+          result.isAcceptableOrUnknown(data['result']!, _resultMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaskEntity map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskEntity(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
+      stringSeasonFarmIds: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}string_season_farm_ids']),
+      activityId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}activity_id']),
+      activityName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}activity_name']),
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}end_date']),
+      completeDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}complete_date']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      statusName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status_name']),
+      result: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}result']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+    );
+  }
+
+  @override
+  $TaskEntityTableTable createAlias(String alias) {
+    return $TaskEntityTableTable(attachedDatabase, alias);
+  }
+}
+
+class TaskEntityTableCompanion extends UpdateCompanion<TaskEntity> {
+  final Value<int?> id;
+  final Value<String?> name;
+  final Value<String?> stringSeasonFarmIds;
+  final Value<int?> activityId;
+  final Value<String?> activityName;
+  final Value<String?> startDate;
+  final Value<String?> endDate;
+  final Value<String?> completeDate;
+  final Value<String?> status;
+  final Value<String?> statusName;
+  final Value<String?> result;
+  final Value<String?> description;
+  const TaskEntityTableCompanion({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.stringSeasonFarmIds = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activityName = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.completeDate = const Value.absent(),
+    this.status = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.result = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  TaskEntityTableCompanion.insert({
+    this.id = const Value.absent(),
+    this.name = const Value.absent(),
+    this.stringSeasonFarmIds = const Value.absent(),
+    this.activityId = const Value.absent(),
+    this.activityName = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.completeDate = const Value.absent(),
+    this.status = const Value.absent(),
+    this.statusName = const Value.absent(),
+    this.result = const Value.absent(),
+    this.description = const Value.absent(),
+  });
+  static Insertable<TaskEntity> custom({
+    Expression<int>? id,
+    Expression<String>? name,
+    Expression<String>? stringSeasonFarmIds,
+    Expression<int>? activityId,
+    Expression<String>? activityName,
+    Expression<String>? startDate,
+    Expression<String>? endDate,
+    Expression<String>? completeDate,
+    Expression<String>? status,
+    Expression<String>? statusName,
+    Expression<String>? result,
+    Expression<String>? description,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (name != null) 'name': name,
+      if (stringSeasonFarmIds != null)
+        'string_season_farm_ids': stringSeasonFarmIds,
+      if (activityId != null) 'activity_id': activityId,
+      if (activityName != null) 'activity_name': activityName,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (completeDate != null) 'complete_date': completeDate,
+      if (status != null) 'status': status,
+      if (statusName != null) 'status_name': statusName,
+      if (result != null) 'result': result,
+      if (description != null) 'description': description,
+    });
+  }
+
+  TaskEntityTableCompanion copyWith(
+      {Value<int?>? id,
+      Value<String?>? name,
+      Value<String?>? stringSeasonFarmIds,
+      Value<int?>? activityId,
+      Value<String?>? activityName,
+      Value<String?>? startDate,
+      Value<String?>? endDate,
+      Value<String?>? completeDate,
+      Value<String?>? status,
+      Value<String?>? statusName,
+      Value<String?>? result,
+      Value<String?>? description}) {
+    return TaskEntityTableCompanion(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      stringSeasonFarmIds: stringSeasonFarmIds ?? this.stringSeasonFarmIds,
+      activityId: activityId ?? this.activityId,
+      activityName: activityName ?? this.activityName,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      completeDate: completeDate ?? this.completeDate,
+      status: status ?? this.status,
+      statusName: statusName ?? this.statusName,
+      result: result ?? this.result,
+      description: description ?? this.description,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (stringSeasonFarmIds.present) {
+      map['string_season_farm_ids'] =
+          Variable<String>(stringSeasonFarmIds.value);
+    }
+    if (activityId.present) {
+      map['activity_id'] = Variable<int>(activityId.value);
+    }
+    if (activityName.present) {
+      map['activity_name'] = Variable<String>(activityName.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<String>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<String>(endDate.value);
+    }
+    if (completeDate.present) {
+      map['complete_date'] = Variable<String>(completeDate.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (statusName.present) {
+      map['status_name'] = Variable<String>(statusName.value);
+    }
+    if (result.present) {
+      map['result'] = Variable<String>(result.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskEntityTableCompanion(')
+          ..write('id: $id, ')
+          ..write('name: $name, ')
+          ..write('stringSeasonFarmIds: $stringSeasonFarmIds, ')
+          ..write('activityId: $activityId, ')
+          ..write('activityName: $activityName, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('completeDate: $completeDate, ')
+          ..write('status: $status, ')
+          ..write('statusName: $statusName, ')
+          ..write('result: $result, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$DiaryDB extends GeneratedDatabase {
   _$DiaryDB(QueryExecutor e) : super(e);
   late final $DiaryTableTable diaryTable = $DiaryTableTable(this);
@@ -9286,6 +9681,8 @@ abstract class _$DiaryDB extends GeneratedDatabase {
   late final $WorkflowTableTable workflowTable = $WorkflowTableTable(this);
   late final $AreaEntityTableTable areaEntityTable =
       $AreaEntityTableTable(this);
+  late final $TaskEntityTableTable taskEntityTable =
+      $TaskEntityTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -9311,6 +9708,7 @@ abstract class _$DiaryDB extends GeneratedDatabase {
         activityPurchaseNoNetworkTable,
         seasonFarmTable,
         workflowTable,
-        areaEntityTable
+        areaEntityTable,
+        taskEntityTable
       ];
 }

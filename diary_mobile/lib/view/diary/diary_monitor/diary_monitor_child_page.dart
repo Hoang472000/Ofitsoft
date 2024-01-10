@@ -59,7 +59,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
               centerTitle: true,
               showDefaultBackButton: false,
               title: Text(
-                "Nhật ký ghi hộ",
+                S.of(context).diary_support,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               ),
               actions: [
@@ -147,8 +147,8 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                     SearchListDiaryEvent(value));
                               }
                             },
-                            decoration: const InputDecoration(
-                              labelText: 'Tìm kiếm',
+                            decoration: InputDecoration(
+                              labelText: S.of(context).search,
                               suffixIcon: Icon(Icons.search),
                               border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.all(8),

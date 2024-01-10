@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -59,7 +60,7 @@ class _ListPDFPageState extends State<ListPDFPage> {
             //backgroundColor: Colors.white,
             showDefaultBackButton: true,
             title: Text(
-              "Hướng dẫn sử dụng",
+              S.of(context).user_manual,
               style: StyleOfit.textStyleFW700(Colors.white, 20),
             ),
             // hasBottom: true,

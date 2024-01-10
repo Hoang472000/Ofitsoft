@@ -24,17 +24,19 @@ import '../activity/add_activity_sub/add_activity_sub.dart';
 
 
 class AddActWriteByPage extends StatefulWidget {
-  const AddActWriteByPage({super.key, required this.diary});
+  const AddActWriteByPage({super.key, required this.diary, this.activityId = -1});
 
   final List<Diary> diary;
+  final int activityId;
 
   @override
   _AddActWriteByPageState createState() => _AddActWriteByPageState();
 
-  static Route route(List<Diary> diary) {
+  static Route route(List<Diary> diary, {int activityId = -1}) {
     return Utils.pageRouteBuilder(
         AddActWriteByPage(
-            diary: diary
+            diary: diary,
+            activityId: activityId
         ),
         true);
   }
@@ -51,7 +53,7 @@ class _AddActWriteByPageState extends State<AddActWriteByPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddActWriteByBloc(context.read<Repository>())
-        ..add(InitAddActWriteByEvent(widget.diary)),
+        ..add(InitAddActWriteByEvent(widget.diary, activityId: widget.activityId)),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,

@@ -157,7 +157,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
     List<ActivityPurchase> listFilter2 = [];
     List<ActivityPurchase> listFilter3 = [];
     if(filter0 != -1) {
-      String name = filteredList[filteredList.indexWhere((element) => element.id == filter0)].areaName ?? "";
+      String name = list[list.indexWhere((element) => element.id == filter0)].areaName ?? "";
       listFilter0.addAll(filteredList.where((
           activity) => activity.areaName == name).toList());
     } else{
@@ -170,7 +170,7 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
       listFilter1.addAll(listFilter0);
     }
     if(filter2 != -1) {
-      String name = filteredList[filteredList.indexWhere((element) => element.id == filter2)].farmerName ?? "";
+      String name = list[list.indexWhere((element) => element.id == filter2)].farmerName ?? "";
       listFilter2.addAll(listFilter1.where((
           activity) => activity.farmerName == name).toList());
     } else{

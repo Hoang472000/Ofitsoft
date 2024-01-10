@@ -61,7 +61,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
               hasBottom: true,
               showDefaultBackButton: true,
               title: Text(
-                "Thông tin phản hồi",
+                S.of(context).feedback_information,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               )),
           //resizeToAvoidBottomInset: true,

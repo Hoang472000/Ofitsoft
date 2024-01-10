@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -46,7 +47,7 @@ class _AboutMePageState extends State<AboutMePage> {
             showDefaultBackButton: true,
             centerTitle: true,
             title: Text(
-              "Thông tin ứng dụng",
+              S.of(context).application_information,
               style: StyleOfit.textStyleFW700(AppColor.whiteF2, 20),
             ),
             //backgroundColor: Colors.transparent,
@@ -98,7 +99,7 @@ class _AboutMePageState extends State<AboutMePage> {
                           Padding(
                             padding: const EdgeInsets.all(4.0),
                             child: Text(
-                              "Thông tin ứng dụng",
+                              S.of(context).application_information,
                               style:
                               StyleOfit.textStyleFW500(AppColor.main, 18, height: 1),
                               textAlign: TextAlign.center,

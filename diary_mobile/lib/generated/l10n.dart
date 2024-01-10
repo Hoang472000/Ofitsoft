@@ -50,40 +50,50 @@ class S {
     return Localizations.of<S>(context, S);
   }
 
-  /// `Close`
+  /// `Đóng`
   String get close_dialog {
     return Intl.message(
-      'Close',
+      'Đóng',
       name: 'close_dialog',
       desc: '',
       args: [],
     );
   }
 
-  /// `Features are under development`
+  /// `Tính năng đang phát triển`
   String get feature_mess {
     return Intl.message(
-      'Features are under development',
+      'Tính năng đang phát triển',
       name: 'feature_mess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Please enter `
+  /// `Bạn không thể chỉnh sửa thông tin này`
+  String get warning_cannot_edit {
+    return Intl.message(
+      'Bạn không thể chỉnh sửa thông tin này',
+      name: 'warning_cannot_edit',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Vui lòng nhập `
   String get error_input_empty {
     return Intl.message(
-      'Please enter ',
+      'Vui lòng nhập ',
       name: 'error_input_empty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password can not be blank.`
+  /// `Mật khẩu không được để trống.`
   String get pass_empty {
     return Intl.message(
-      'Password can not be blank.',
+      'Mật khẩu không được để trống.',
       name: 'pass_empty',
       desc: '',
       args: [],
@@ -100,270 +110,330 @@ class S {
     );
   }
 
-  /// `cannot be left blank`
+  /// `không được để trống`
   String get not_emty {
     return Intl.message(
-      'cannot be left blank',
+      'không được để trống',
       name: 'not_emty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Cancel`
+  /// `Huỷ`
   String get cancel {
     return Intl.message(
-      'Cancel',
+      'Huỷ',
       name: 'cancel',
       desc: '',
       args: [],
     );
   }
 
-  /// `Forgot Password`
-  String get forgot_password {
+  /// `Tên đăng nhập`
+  String get login_user_name {
     return Intl.message(
-      'Forgot Password',
-      name: 'forgot_password',
+      'Tên đăng nhập',
+      name: 'login_user_name',
       desc: '',
       args: [],
     );
   }
 
-  /// `Agree`
+  /// `Đồng ý`
   String get agree {
     return Intl.message(
-      'Agree',
+      'Đồng ý',
       name: 'agree',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password must be 8 characters or more in length`
+  /// `Gửi không thành công`
+  String get send_not_success {
+    return Intl.message(
+      'Gửi không thành công',
+      name: 'send_not_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu phải có độ dài từ 8 ký tự trở lên`
   String get error_pass_length {
     return Intl.message(
-      'Password must be 8 characters or more in length',
+      'Mật khẩu phải có độ dài từ 8 ký tự trở lên',
       name: 'error_pass_length',
       desc: '',
       args: [],
     );
   }
 
-  /// `Incorrect password.`
+  /// `Mật khẩu không đúng.`
   String get pass_wrong {
     return Intl.message(
-      'Incorrect password.',
+      'Mật khẩu không đúng.',
       name: 'pass_wrong',
       desc: '',
       args: [],
     );
   }
 
-  /// `The new password must not be the same as the current password.`
+  /// `Mật khẩu mới không được trùng với mật khẩu hiện tại.`
   String get pass_duplicate {
     return Intl.message(
-      'The new password must not be the same as the current password.',
+      'Mật khẩu mới không được trùng với mật khẩu hiện tại.',
       name: 'pass_duplicate',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password is not in correct format.`
+  /// `Mật khẩu không đúng định dạng.`
   String get pass_format_wrong {
     return Intl.message(
-      'Password is not in correct format.',
+      'Mật khẩu không đúng định dạng.',
       name: 'pass_format_wrong',
       desc: '',
       args: [],
     );
   }
 
-  /// `The password does not match the new password.`
+  /// `Mật khẩu không khớp với mật khẩu mới.`
   String get pass_not_same_new_pass {
     return Intl.message(
-      'The password does not match the new password.',
+      'Mật khẩu không khớp với mật khẩu mới.',
       name: 'pass_not_same_new_pass',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password does not contain spaces, does not contain Username information`
+  /// `Mật khẩu không chứa khoảng trắng, không chứa thông tin Tên đăng nhập`
   String get error_pass_contain_space_info {
     return Intl.message(
-      'Password does not contain spaces, does not contain Username information',
+      'Mật khẩu không chứa khoảng trắng, không chứa thông tin Tên đăng nhập',
       name: 'error_pass_contain_space_info',
       desc: '',
       args: [],
     );
   }
 
-  /// `Logout`
+  /// `Quét mã thành công`
+  String get scan_success {
+    return Intl.message(
+      'Quét mã thành công',
+      name: 'scan_success',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đăng xuất`
   String get logout {
     return Intl.message(
-      'Logout',
+      'Đăng xuất',
       name: 'logout',
       desc: '',
       args: [],
     );
   }
 
-  /// `Moving the Camera to the progress code container will happen automatically`
+  /// `Bạn có chắc muốn đăng xuất không?`
+  String get are_you_sure {
+    return Intl.message(
+      'Bạn có chắc muốn đăng xuất không?',
+      name: 'are_you_sure',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Di chuyển Camera đến vùng chứa mã tiến trình sẽ diễn ra tự động`
   String get bar_mess {
     return Intl.message(
-      'Moving the Camera to the progress code container will happen automatically',
+      'Di chuyển Camera đến vùng chứa mã tiến trình sẽ diễn ra tự động',
       name: 'bar_mess',
       desc: '',
       args: [],
     );
   }
 
-  /// `Username`
+  /// `Nhập mã`
+  String get enter_code {
+    return Intl.message(
+      'Nhập mã',
+      name: 'enter_code',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tên đăng nhập`
   String get label_user_name {
     return Intl.message(
-      'Username',
+      'Tên đăng nhập',
       name: 'label_user_name',
       desc: '',
       args: [],
     );
   }
 
-  /// `Username cannot be blank`
+  /// `Tên đăng nhập không được để trống`
   String get label_user_name_empty {
     return Intl.message(
-      'Username cannot be blank',
+      'Tên đăng nhập không được để trống',
       name: 'label_user_name_empty',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password`
+  /// `Mật khẩu`
   String get label_password {
     return Intl.message(
-      'Password',
+      'Mật khẩu',
       name: 'label_password',
       desc: '',
       args: [],
     );
   }
 
-  /// `Login`
+  /// `Đăng nhập`
   String get button_login {
     return Intl.message(
-      'Login',
+      'Đăng nhập',
       name: 'button_login',
       desc: '',
       args: [],
     );
   }
 
-  /// `Current Password`
+  /// `Duy trì đăng nhập`
+  String get remember_pass {
+    return Intl.message(
+      'Duy trì đăng nhập',
+      name: 'remember_pass',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Mật khẩu hiện tại`
   String get pass_current {
     return Intl.message(
-      'Current Password',
+      'Mật khẩu hiện tại',
       name: 'pass_current',
       desc: '',
       args: [],
     );
   }
 
-  /// `New Password`
+  /// `Mật khẩu mới`
   String get pass_new {
     return Intl.message(
-      'New Password',
+      'Mật khẩu mới',
       name: 'pass_new',
       desc: '',
       args: [],
     );
   }
 
-  /// `Confirm New Password`
+  /// `Nhập lại mật khẩu mới`
   String get confirm_pass_new {
     return Intl.message(
-      'Confirm New Password',
+      'Nhập lại mật khẩu mới',
       name: 'confirm_pass_new',
       desc: '',
       args: [],
     );
   }
 
-  /// ` <h3>Note</h3><a>Password must satisfy the following 3 conditions:</a><ul><li>Must be <b>8 characters or more in length</b> </li><li><b>Contains no spaces or information Username</b></li><li><b>Contains 3 of 4 character types</b> (a – z, A – Z, 0 – 9, !@#$%^&*) </li></ul><a>Example: Ofit0722, Diary@Note</a>`
+  /// ` <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#$%^&*) </li></ul><a>Ví dụ: Ofit0722, Diary@Note</a>`
   String get note_change_password {
     return Intl.message(
-      ' <h3>Note</h3><a>Password must satisfy the following 3 conditions:</a><ul><li>Must be <b>8 characters or more in length</b> </li><li><b>Contains no spaces or information Username</b></li><li><b>Contains 3 of 4 character types</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Example: Ofit0722, Diary@Note</a>',
+      ' <h3>Lưu ý</h3><a>Mật khẩu phải thoả mãn đủ 3 điều kiện sau:</a><ul><li>Phải có độ dài từ <b>8 ký tự trở lên</b></li><li><b>Không chứa khoảng trắng hay thông tin Tên đăng nhập</b></li><li><b>Chứa 3 trong 4 kiểu ký tự</b> (a – z, A – Z, 0 – 9, !@#\$%^&*) </li></ul><a>Ví dụ: Ofit0722, Diary@Note</a>',
       name: 'note_change_password',
       desc: '',
       args: [],
     );
   }
 
-  /// `Setting`
+  /// `Cài đặt`
   String get setting {
     return Intl.message(
-      'Setting',
+      'Cài đặt',
       name: 'setting',
       desc: '',
       args: [],
     );
   }
 
-  /// `Note`
+  /// `Lưu mật khẩu`
+  String get text_button_save {
+    return Intl.message(
+      'Lưu mật khẩu',
+      name: 'text_button_save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lưu ý`
   String get note {
     return Intl.message(
-      'Note',
+      'Lưu ý',
       name: 'note',
       desc: '',
       args: [],
     );
   }
 
-  /// `Password must satisfy the following 3 conditions:`
+  /// `Mật khẩu phải thoả mãn đủ 3 điều kiện sau:`
   String get pass_have {
     return Intl.message(
-      'Password must satisfy the following 3 conditions:',
+      'Mật khẩu phải thoả mãn đủ 3 điều kiện sau:',
       name: 'pass_have',
       desc: '',
       args: [],
     );
   }
 
-  /// `Must have word length `
+  /// `Phải có độ dài từ `
   String get pass_have_length {
     return Intl.message(
-      'Must have word length ',
+      'Phải có độ dài từ ',
       name: 'pass_have_length',
       desc: '',
       args: [],
     );
   }
 
-  /// `8 characters or more`
+  /// `8 ký tự trở lên`
   String get pass_have_length_8 {
     return Intl.message(
-      '8 characters or more',
+      '8 ký tự trở lên',
       name: 'pass_have_length_8',
       desc: '',
       args: [],
     );
   }
 
-  /// `Does not contain spaces or Username information`
+  /// `Không chứa khoảng trắng hay thông tin Tên đăng nhập`
   String get pass_have_not_contain_space {
     return Intl.message(
-      'Does not contain spaces or Username information',
+      'Không chứa khoảng trắng hay thông tin Tên đăng nhập',
       name: 'pass_have_not_contain_space',
       desc: '',
       args: [],
     );
   }
 
-  /// `Contains 3 of 4 character styles `
+  /// `Chứa 3 trong 4 kiểu ký tự `
   String get pass_have_have {
     return Intl.message(
-      'Contains 3 of 4 character styles ',
+      'Chứa 3 trong 4 kiểu ký tự ',
       name: 'pass_have_have',
       desc: '',
       args: [],
@@ -380,31 +450,101 @@ class S {
     );
   }
 
-  /// `Example: Ofit2023, Ofit@Soft`
+  /// `Ví dụ: Ofit2023, Ofit@Soft`
   String get pass_have_vd {
     return Intl.message(
-      'Example: Ofit2023, Ofit@Soft',
+      'Ví dụ: Ofit2023, Ofit@Soft',
       name: 'pass_have_vd',
       desc: '',
       args: [],
     );
   }
 
-  /// `Sign out successfully!`
+  /// `Đăng xuất thành công!`
   String get logout_message {
     return Intl.message(
-      'Sign out successfully!',
+      'Đăng xuất thành công!',
       name: 'logout_message',
       desc: '',
       args: [],
     );
   }
 
-  /// `Username`
-  String get login_user_name {
+  /// `Lưu`
+  String get save {
     return Intl.message(
-      'Username',
-      name: 'login_user_name',
+      'Lưu',
+      name: 'save',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không có quyền`
+  String get no_permission {
+    return Intl.message(
+      'Không có quyền',
+      name: 'no_permission',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VND`
+  String get vnd {
+    return Intl.message(
+      'VND',
+      name: 'vnd',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chọn ảnh/video`
+  String get pick_a_photo {
+    return Intl.message(
+      'Chọn ảnh/video',
+      name: 'pick_a_photo',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Chụp ảnh`
+  String get from_camera {
+    return Intl.message(
+      'Chụp ảnh',
+      name: 'from_camera',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bộ sưu tập`
+  String get from_library {
+    return Intl.message(
+      'Bộ sưu tập',
+      name: 'from_library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Có`
+  String get yes {
+    return Intl.message(
+      'Có',
+      name: 'yes',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Không`
+  String get no {
+    return Intl.message(
+      'Không',
+      name: 'no',
       desc: '',
       args: [],
     );
@@ -430,101 +570,11 @@ class S {
     );
   }
 
-  /// `You are scanning qrcode not barcode. Please try again.`
-  String get barcode_error {
+  /// `Trống`
+  String get empty {
     return Intl.message(
-      'You are scanning qrcode not barcode. Please try again.',
-      name: 'barcode_error',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You are scanning barcode not qrcode. Please try again.`
-  String get qrcode_error {
-    return Intl.message(
-      'You are scanning barcode not qrcode. Please try again.',
-      name: 'qrcode_error',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Select photo/video`
-  String get pick_a_photo {
-    return Intl.message(
-      'Select photo/video',
-      name: 'pick_a_photo',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Take a photo`
-  String get from_camera {
-    return Intl.message(
-      'Take a photo',
-      name: 'from_camera',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Collection`
-  String get from_library {
-    return Intl.message(
-      'Collection',
-      name: 'from_library',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Are you sure you want to delete this photo?`
-  String get you_sure_want_delete_image {
-    return Intl.message(
-      'Are you sure you want to delete this photo?',
-      name: 'you_sure_want_delete_image',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Into money`
-  String get into_money {
-    return Intl.message(
-      'Into money',
-      name: 'into_money',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Scan the code`
-  String get code_scan {
-    return Intl.message(
-      'Scan the code',
-      name: 'code_scan',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Code`
-  String get code {
-    return Intl.message(
-      'Code',
-      name: 'code',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Does not exist, please try again`
-  String get code_not_exist {
-    return Intl.message(
-      'Does not exist, please try again',
-      name: 'code_not_exist',
+      'Trống',
+      name: 'empty',
       desc: '',
       args: [],
     );
@@ -550,101 +600,371 @@ class S {
     );
   }
 
-  /// `No right`
-  String get no_permission {
+  /// `Quét mã`
+  String get code_scan {
     return Intl.message(
-      'No right',
-      name: 'no_permission',
+      'Quét mã',
+      name: 'code_scan',
       desc: '',
       args: [],
     );
   }
 
-  /// `Change Password`
-  String get change_password {
+  /// `không tồn tại, vui lòng thử lại`
+  String get code_not_exist {
     return Intl.message(
-      'Change Password',
-      name: 'change_password',
+      'không tồn tại, vui lòng thử lại',
+      name: 'code_not_exist',
       desc: '',
       args: [],
     );
   }
 
-  /// `VND`
-  String get vnd {
+  /// `Mã`
+  String get code {
     return Intl.message(
-      'VND',
-      name: 'vnd',
+      'Mã',
+      name: 'code',
       desc: '',
       args: [],
     );
   }
 
-  /// `Total @ votes`
-  String get sum_amount_slip {
+  /// `Thành tiền`
+  String get into_money {
     return Intl.message(
-      'Total @ votes',
-      name: 'sum_amount_slip',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Empty`
-  String get empty {
-    return Intl.message(
-      'Empty',
-      name: 'empty',
+      'Thành tiền',
+      name: 'into_money',
       desc: '',
       args: [],
     );
   }
 
   /// `Hỗ trợ`
-  String get Support {
-    return Intl.message(
-      'Hỗ trợ',
-      name: 'Support',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Yes`
-  String get yes {
-    return Intl.message(
-      'Yes',
-      name: 'yes',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `No`
-  String get no {
-    return Intl.message(
-      'No',
-      name: 'no',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You cannot edit this information`
-  String get warning_cannot_edit {
-    return Intl.message(
-      'You cannot edit this information',
-      name: 'warning_cannot_edit',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Support`
   String get support {
     return Intl.message(
-      'Support',
+      'Hỗ trợ',
       name: 'support',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin tài khoản`
+  String get account_information {
+    return Intl.message(
+      'Thông tin tài khoản',
+      name: 'account_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Dữ liệu không hợp lệ! \nVui lòng kiểm tra lại.`
+  String get invalid_data {
+    return Intl.message(
+      'Dữ liệu không hợp lệ! \nVui lòng kiểm tra lại.',
+      name: 'invalid_data',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin ứng dụng`
+  String get application_information {
+    return Intl.message(
+      'Thông tin ứng dụng',
+      name: 'application_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danh sách thông báo`
+  String get notification_list {
+    return Intl.message(
+      'Danh sách thông báo',
+      name: 'notification_list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhật ký`
+  String get diary {
+    return Intl.message(
+      'Nhật ký',
+      name: 'diary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Danh sách nhật ký`
+  String get list_diary {
+    return Intl.message(
+      'Danh sách nhật ký',
+      name: 'list_diary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Nhật ký ghi hộ`
+  String get diary_support {
+    return Intl.message(
+      'Nhật ký ghi hộ',
+      name: 'diary_support',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tính năng`
+  String get feature {
+    return Intl.message(
+      'Tính năng',
+      name: 'feature',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Giao dịch mua hàng`
+  String get purchase_transaction {
+    return Intl.message(
+      'Giao dịch mua hàng',
+      name: 'purchase_transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh giá khảo sát`
+  String get survey_review {
+    return Intl.message(
+      'Đánh giá khảo sát',
+      name: 'survey_review',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đánh giá & khảo sát`
+  String get survey_reviews {
+    return Intl.message(
+      'Đánh giá & khảo sát',
+      name: 'survey_reviews',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Truy xuất`
+  String get trace {
+    return Intl.message(
+      'Truy xuất',
+      name: 'trace',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Truy xuất nguồn gốc`
+  String get traceability {
+    return Intl.message(
+      'Truy xuất nguồn gốc',
+      name: 'traceability',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Ghi nhật ký`
+  String get create_diary {
+    return Intl.message(
+      'Ghi nhật ký',
+      name: 'create_diary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Trao đổi`
+  String get communication {
+    return Intl.message(
+      'Trao đổi',
+      name: 'communication',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hướng dẫn`
+  String get er_manual {
+    return Intl.message(
+      'Hướng dẫn',
+      name: 'er_manual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hướng dẫn sử dụng`
+  String get user_manual {
+    return Intl.message(
+      'Hướng dẫn sử dụng',
+      name: 'user_manual',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Liên hệ`
+  String get contact {
+    return Intl.message(
+      'Liên hệ',
+      name: 'contact',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thông tin phản hồi`
+  String get feedback_information {
+    return Intl.message(
+      'Thông tin phản hồi',
+      name: 'feedback_information',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bộ lọc tìm kiếm`
+  String get search_filters {
+    return Intl.message(
+      'Bộ lọc tìm kiếm',
+      name: 'search_filters',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Khoảng thời gian`
+  String get interval {
+    return Intl.message(
+      'Khoảng thời gian',
+      name: 'interval',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Lọc theo`
+  String get filter_list {
+    return Intl.message(
+      'Lọc theo',
+      name: 'filter_list',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số tiền`
+  String get amount_of_money {
+    return Intl.message(
+      'Số tiền',
+      name: 'amount_of_money',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Số lượng`
+  String get amount {
+    return Intl.message(
+      'Số lượng',
+      name: 'amount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Áp dụng`
+  String get apply {
+    return Intl.message(
+      'Áp dụng',
+      name: 'apply',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Thiết lập lại`
+  String get reset {
+    return Intl.message(
+      'Thiết lập lại',
+      name: 'reset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tìm kiếm`
+  String get search {
+    return Intl.message(
+      'Tìm kiếm',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn có chắc chắn muốn xóa ảnh này?`
+  String get you_sure_want_delete_image {
+    return Intl.message(
+      'Bạn có chắc chắn muốn xóa ảnh này?',
+      name: 'you_sure_want_delete_image',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn đang quét qrcode chứ không phải mã vạch. Vui lòng thử lại.`
+  String get barcode_error {
+    return Intl.message(
+      'Bạn đang quét qrcode chứ không phải mã vạch. Vui lòng thử lại.',
+      name: 'barcode_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Bạn đang quét mã vạch chứ không phải qrcode. Vui lòng thử lại.`
+  String get qrcode_error {
+    return Intl.message(
+      'Bạn đang quét mã vạch chứ không phải qrcode. Vui lòng thử lại.',
+      name: 'qrcode_error',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Quên mật khẩu`
+  String get forgot_password {
+    return Intl.message(
+      'Quên mật khẩu',
+      name: 'forgot_password',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Đổi mật khẩu`
+  String get change_password {
+    return Intl.message(
+      'Đổi mật khẩu',
+      name: 'change_password',
       desc: '',
       args: [],
     );

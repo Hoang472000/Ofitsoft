@@ -65,60 +65,6 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     child: state.detailDiary !=null ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        /*Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
-                          child: GridView.builder(
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                crossAxisSpacing: 8.0,
-                                mainAxisSpacing: 12.0,
-                              ),
-                                itemCount: state.listActivityFarm.length,
-                                padding: EdgeInsets.zero,
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  return ItemCardActivity(
-                                      name: state
-                                          .listActivityFarm[index].nameActivity,
-                                      icon: state
-                                          .listActivityFarm[index].iconActivity,
-                                      onTap: () async{
-                                        if(state.listActivityFarm[index].id == 1){
-                                          var result = await Navigator.push(context,
-                                              ActivityPage.route("activity",
-                                                 widget.id, widget.diary,state
-                                                    .listActivityFarm[index], state.listActivityDiary));
-                                          if(result != null && result[1].isNotEmpty){
-                                            print("HoangCV: call back : ");
-                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], list: result[1]));
-                                          }
-                                        } else if(state.listActivityFarm[index].id == 2){
-                                          var result = await Navigator.push(context,
-                                              ActivityPage.route("harvesting",
-                                                widget.id, widget.diary,state
-                                                    .listActivityFarm[index], state.listActivityDiary));
-                                          if(result != null && result[0]){
-                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], list: result[1]));
-                                          }
-                                        } else if(state.listActivityFarm[index].id == 3){
-                                          var result = await Navigator.of(context).push(
-                                              WorkflowPage.route(
-                                                  state.detailDiary!.productProcessId ??
-                                                      -1));
-                                          *//*var result = await Navigator.push(context,
-                                              ActivityTransactionPage.route("sell",
-                                                seasonFarmId: widget.id,
-                                                  diary: widget.diary,
-                                                  listActivityTransaction: state.listActivityTransaction,
-                                                  listActivityDiary: state.listActivityDiary));
-                                          if(result != null && result[0]){
-                                            blocContext.read<DetailDiaryBloc>().add(GetDetailDiaryEvent(widget.id, updateHarvesting : result[0], listTransaction: result[1]));
-                                          }*//*
-                                        }
-                                      });
-                                }),
-                        ),*/
                           CardTile(
                             label: "Tên nhật ký",
                             value: "${state.detailDiary!.name}",

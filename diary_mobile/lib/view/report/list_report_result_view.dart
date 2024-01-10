@@ -75,7 +75,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                   showDefaultBackButton: true,
                   callback: [updateHarvesting, listCallback],
                   title: Text(
-                    "Đánh giá & Khảo sát",
+                    S.of(context).survey_reviews,
                     style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
               actions: [
@@ -95,7 +95,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                           () async {
                         if(state.listReportSelect.length > 1) {
                           var result = await Navigator.of(context)
-                              .push(ListReportSelect.route(state.listReportSelect));
+                              .push(ListReportSelect.route(state.listReportSelect, state.listReportFilter));
                           if (result != null && result[0]) {
                             contextBloc.read<ListReportResultBloc>().add(
                                 GetListReportResultEvent(
@@ -104,7 +104,8 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                         } else if (state.listReportSelect.isNotEmpty) {
                           var result = await Navigator.of(context)
                               .push(AddReportViewPage.route(
-                              state.listReportSelect[0].id ?? -1));
+                              state.listReportSelect[0].id ?? -1, state.listReportFilter,
+                              state.listReportSelect[0].isInitialAssessment ?? false));
                           if (result != null && result[0]) {
                             contextBloc.read<ListReportResultBloc>().add(
                                 GetListReportResultEvent(
@@ -248,7 +249,7 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                                   },
                                 callbackEdit: () async {
                                 var result = await Navigator.of(context)
-                                    .push(EditReportViewPage.route(state.listReport[index].id??-1));
+                                    .push(EditReportViewPage.route(state.listReport[index].id??-1, state.listReportFilter));
                                 if (result != null && result[0]) {
                                   contextBloc.read<ListReportResultBloc>().add(
                                       GetListReportResultEvent(checkUpdate: true));

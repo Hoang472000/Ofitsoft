@@ -25,6 +25,7 @@ import 'package:diary_mobile/data/local_data/table/report/question_upload_no_net
 import 'package:diary_mobile/data/local_data/table/report/report_select_table.dart';
 import 'package:diary_mobile/data/local_data/table/report/report_table.dart';
 import 'package:diary_mobile/data/local_data/table/setting/user_info_table.dart';
+import 'package:diary_mobile/data/local_data/table/task/task_table.dart';
 import 'package:diary_mobile/data/local_data/table/transaction/activity_purchase_table.dart';
 import 'package:diary_mobile/data/local_data/table/transaction/activity_transaction_table.dart';
 import 'package:diary_mobile/data/local_data/table/transaction/season_farm_table.dart';
@@ -47,6 +48,7 @@ import '../entity/monitor/monitor_diary.dart';
 import '../entity/report/question_upload.dart';
 import '../entity/report/report.dart';
 import '../entity/report/report_select.dart';
+import '../entity/task /task_entity.dart';
 import 'table/transaction/activity_purchase_no_network_table.dart';
 import 'table/transaction/activity_transaction_no_network_table.dart';
 part 'diary_db.g.dart';
@@ -55,7 +57,8 @@ part 'diary_db.g.dart';
   ActivityDiaryTable, UserInfoTable, ActivityMonitorTable, MonitorDiaryTable,
   ActDiaryNoNetworkTable, ReportTable, QuestionUploadNoNetworkTable, FarmerInspectorUploadNoNetworkTable,
   ReportSelectTable, ActivityPurchaseTable, ActivityTransactionTable, ActivityTransactionNoNetworkTable,
-  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable, AreaEntityTable])
+  ActivityPurchaseNoNetworkTable, SeasonFarmTable, WorkflowTable, AreaEntityTable,
+  TaskEntityTable])
 class DiaryDB extends _$DiaryDB {
   // we tell the database where to store the data with this constructor
   DiaryDB._internal() : super(_openConnection());
@@ -66,7 +69,7 @@ class DiaryDB extends _$DiaryDB {
   // you should bump this number whenever you change or add a table definition.
   // Migrations are covered later in the documentation.
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   Future<void> deleteEverything() {
     return transaction(() async {
@@ -766,6 +769,85 @@ class DiaryDB extends _$DiaryDB {
     return workflow;
   }
 
+  Future<void> insertListTaskEntity(List<TaskEntity> values) async {
+    await batch((batch) {
+      for (final entry in values) {
+        final TaskEntityTableCompanion entryCompanion =
+            TaskEntityTableCompanion(
+          id: Value(entry.id),
+          name: Value(entry.name),
+          activityId: Value(entry.activityId),
+          activityName: Value(entry.activityName),
+          startDate: Value(entry.startDate),
+          endDate: Value(entry.endDate),
+          completeDate: Value(entry.completeDate),
+          status: Value(entry.status),
+          statusName: Value(entry.statusName),
+          result: Value(entry.result),
+          description: Value(entry.description),
+          stringSeasonFarmIds: Value(entry
+              .convertSeasonFarmListToJson()), // Chuyển đổi thành chuỗi JSON
+        );
+        batch.insertAllOnConflictUpdate(areaEntityTable, [entryCompanion]);
+      }
+    });
+  }
+
+  Future<List<TaskEntity>> getListTaskEntity() async {
+    final query = await (select(taskEntityTable)).get();
+    final List<TaskEntity> workflow = [];
+
+    for (final queriedEntry in query) {
+
+      final diaryEntry = TaskEntity.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'activityId': queriedEntry.activityId,
+        'activityName': queriedEntry.activityName,
+        'startDate': queriedEntry.startDate,
+        'endDate': queriedEntry.endDate,
+        'completeDate': queriedEntry.completeDate,
+        'status': queriedEntry.status,
+        'statusName': queriedEntry.statusName,
+        'result': queriedEntry.result,
+        'description': queriedEntry.description,
+        'stringSeasonFarmIds': queriedEntry.stringSeasonFarmIds,
+        'seasonFarmIds': jsonDecode(queriedEntry.stringSeasonFarmIds??'[]'),
+      });
+      workflow.add(diaryEntry);
+    }
+    return workflow;
+  }
+
+  Future<TaskEntity> getDetailTaskEntity(int id) async {
+    final query = await (select(taskEntityTable)..where((tbl) => tbl.id.equals(id))).get();
+    final List<TaskEntity> workflow = [];
+
+    for (final queriedEntry in query) {
+
+      final diaryEntry = TaskEntity.fromJson({
+        'id': queriedEntry.id,
+        'name': queriedEntry.name,
+        'activityId': queriedEntry.activityId,
+        'activityName': queriedEntry.activityName,
+        'startDate': queriedEntry.startDate,
+        'endDate': queriedEntry.endDate,
+        'completeDate': queriedEntry.completeDate,
+        'status': queriedEntry.status,
+        'statusName': queriedEntry.statusName,
+        'result': queriedEntry.result,
+        'description': queriedEntry.description,
+        'stringSeasonFarmIds': queriedEntry.stringSeasonFarmIds,
+        'seasonFarmIds': jsonDecode(queriedEntry.stringSeasonFarmIds??'[]'),
+      });
+      workflow.add(diaryEntry);
+    }
+    if(workflow.isEmpty){
+      workflow.add(TaskEntity());
+    }
+    return workflow.first;
+  }
+
   SingleSelectable<UserInfo> singleUser(int userId) {
     return select(userInfoTable)..where((tbl) => tbl.id.equals(userId));
   }
@@ -815,6 +897,10 @@ class DiaryDB extends _$DiaryDB {
           m.addColumn(activityPurchaseTable, activityPurchaseTable.farmerCode);
           m.addColumn(activityPurchaseTable, activityPurchaseTable.areaName);
           //await m.addColumn(reportSelectTable, reportSelectTable.isInitialAssessment);
+        }
+        else if (from == 4) {
+          m.createTable(taskEntityTable);
+          m.addColumn(reportTable, reportTable.isInitialAssessment);
         }
       },
     );

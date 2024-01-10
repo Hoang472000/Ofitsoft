@@ -179,9 +179,7 @@ class _ActivityHarvestingPageState extends State<ActivityHarvestingPage> {
                               ? await Navigator.of(context)
                               .push(AddActivityPage.route(
                               widget.seasonFarmId, widget.diary, widget.action))
-                              : widget.action.compareTo(
-                              "report") == 0 ? await Navigator.of(context)
-                              .push(AddReportViewPage.route(-1)): await Navigator.of(context).push(
+                              : await Navigator.of(context).push(
                               AddMonitorPage.route());
                           if (result != null && result[0]) {
                             if(result[1]){

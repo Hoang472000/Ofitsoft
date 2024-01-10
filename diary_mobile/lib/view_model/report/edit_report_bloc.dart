@@ -11,6 +11,7 @@ import '../../data/entity/item_default/item_basic.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
 import '../../utils/extenstion/extenstions.dart';
@@ -2272,7 +2273,27 @@ class EditReportBloc extends Bloc<EditReportEvent, EditReportState> {
       );
       ObjectResult result = await repository.editFarmerInspector(
           questionUpload);
+
       if (result.responseCode == StatusConst.code00) {
+        List<int> list = event.listReportResult
+            .where((e) {
+          DateTime createDate = DateTime.parse(e.createDate ?? ""); // Chuyển chuỗi thành DateTime
+          DateTime visitDate = DateTime.parse(state.farmerInspector!.visitDate ?? ""); // Chuyển chuỗi thành DateTime
+          print("HoangCV:visitDate ${createDate} : ${visitDate}");
+          return e.farmerId == state.farmerInspector!.farmerId &&
+              e.isInitialAssessment == state.listReport[0].isInitialAssessment &&
+              createDate.year == visitDate.year;
+        })
+            .map((e) => e.id ?? -1)
+            .toList();
+        list.removeAt(list.indexWhere((element) => element == state.reportId));
+        print("HoangCV:listReportResult ${state.reportId} :${list.length} : ${event.listReportResult.length} : ${state.listReport[0].isInitialAssessment}");
+        if(list.isNotEmpty){
+          list.forEach((element) async {
+            repository.editFarmerInspector(
+                FarmerInspectorUpload(state: "storage", id: element));
+          });
+        }
         emit(state.copyWith(
             isShowProgress: false,
             reportId: result.response is int ? result.response : null,
@@ -2389,10 +2410,12 @@ class GetEditReportEvent extends EditReportEvent {
 
 class SubmitReportEvent extends EditReportEvent {
 
-  SubmitReportEvent();
+  final List<ReportResult> listReportResult;
+
+  SubmitReportEvent(this.listReportResult);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [listReportResult];
 }
 
 class UpdateEditReportEvent extends EditReportEvent {

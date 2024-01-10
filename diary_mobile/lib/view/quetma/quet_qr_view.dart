@@ -159,7 +159,7 @@ class _QRCodeViewState extends State<QRCodeView>{
                               height: 48,
                               child: OfitButton(
                                 color: AppColor.main,
-                                text: "Quét mã",
+                                text: S.of(context).code_scan,
                                 onPressed: () {
                                   controller!.resumeCamera();
                                   if (state.qrViewController != null) {

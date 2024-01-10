@@ -10,6 +10,7 @@ import '../../../resource/style.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../resource/assets.dart';
 import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
@@ -23,14 +24,16 @@ import '../../view_model/report/edit_report_bloc.dart';
 import 'add_report.dart';
 
 class EditReportViewPage extends StatefulWidget {
-  EditReportViewPage({super.key, required this.id});
+  EditReportViewPage({super.key, required this.id, required this.listReportResult});
   final int id;
+  final List<ReportResult> listReportResult;
   @override
   _EditReportViewPageState createState() => _EditReportViewPageState();
 
-  static Route route(int id) {
+  static Route route(int id, List<ReportResult> listReportResult) {
     return Utils.pageRouteBuilder(
         EditReportViewPage( id: id,
+            listReportResult: listReportResult
         ),
         true);
   }
@@ -190,7 +193,7 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
           child: OfitButton(
             text: "Hoàn Thành",
             onPressed: () {
-              context.read<EditReportBloc>().add(SubmitReportEvent());
+              context.read<EditReportBloc>().add(SubmitReportEvent(widget.listReportResult));
             },
           ),
         ),

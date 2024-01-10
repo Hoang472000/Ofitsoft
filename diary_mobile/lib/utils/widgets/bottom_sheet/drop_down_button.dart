@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:diary_mobile/resource/style.dart';
 import 'package:flutter/material.dart';
 
+import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../extenstion/extenstions.dart';
@@ -287,7 +288,7 @@ class _DropDownButtonCustomWidgetState extends State<DropDownButtonCustomWidget>
                   ),
                   suffixIcon: Icon(Icons.search),
                   border: InputBorder.none,
-                  hintText: "Tìm kiếm",
+                  hintText: S.of(context).search,
                   contentPadding: EdgeInsets.only(
                     left: 16,
                     right: 20,

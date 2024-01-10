@@ -56,7 +56,7 @@ class _AccessOriginPageState extends State<AccessOriginPage> {
               showDefaultBackButton: true,
               callback: [],
               title: Text(
-                "Truy xuất nguồn gốc",
+                S.of(context).traceability,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               )),
           //resizeToAvoidBottomInset: true,

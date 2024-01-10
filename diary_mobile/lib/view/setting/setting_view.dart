@@ -132,7 +132,7 @@ class _SettingViewState extends State<SettingView> {
                 ),
                 Container(
                   padding: const EdgeInsets.only(top: 14),
-                  child: itemAccount(context, text: "Thông tin tài khoản",
+                  child: itemAccount(context, text: S.of(context).account_information,
                       voidCallback: () async{
                         var result = await Navigator.push(context, AccountInformationPage.route());
                         print("result: $result");
@@ -170,7 +170,7 @@ class _SettingViewState extends State<SettingView> {
                 Container(
                   padding: const EdgeInsets.only(top: 0),
                   child: itemAccount(context,
-                      text: "Thông tin ứng dụng", voidCallback: () {
+                      text: S.of(context).application_information, voidCallback: () {
                         Navigator.push(context, AboutMePage.route());
                       }, icon: IconAsset.icUserManual),
                 ),

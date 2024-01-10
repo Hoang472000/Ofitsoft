@@ -1,16 +1,11 @@
-import 'dart:ui';
-
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
-import 'package:diary_mobile/utils/constants/name_icon.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
 import 'package:diary_mobile/view/diary_activity/activity/detail_activity.dart';
-import 'package:diary_mobile/view/diary_activity/activity_sell/activity_select_page.dart';
 import 'package:diary_mobile/view/diary_activity/monitor/add_monitor.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/activity_bloc.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/info_diary_bloc.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -163,9 +158,7 @@ class _ActivityPageState extends State<ActivityPage> {
                               ? await Navigator.of(context)
                               .push(AddActivityPage.route(
                               widget.seasonFarmId, widget.diary, widget.action))
-                              : widget.action.compareTo(
-                              "report") == 0 ? await Navigator.of(context)
-                              .push(AddReportViewPage.route(-1)): await Navigator.of(context).push(
+                              : await Navigator.of(context).push(
                               AddMonitorPage.route());
                           if (result != null && result[0]) {
                             if(result[1]){

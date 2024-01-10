@@ -167,7 +167,9 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     Set statusValues = listInput.map((obj) => obj.state).toSet();
     statusValues.forEach((value) {
       dynamic? correspondingObject = listInput.firstWhere((obj) => obj.state == value);
-      statusFilter.add(ItemFilter(correspondingObject.id, correspondingObject.state == "done" ? "Hoàn thành" : "Chưa hoàn thành"));
+      statusFilter.add(ItemFilter(correspondingObject.id, correspondingObject.state == "done" ?
+      "Hoàn thành" : correspondingObject.state == 'storage' ?
+      "Lưu trữ" : "Chưa hoàn thành"));
     });
 
     List<InputRegisterModel> list = [];
@@ -347,6 +349,67 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
     ));
   }
 
+  Future<void> initFilterTask(Emitter<FilterState> emit, List<dynamic> listInput) async{
+    List<ItemFilter> itemFilters = [ItemFilter(-1, "Tất cả")];
+    List<ItemFilter> activityFilters = [ItemFilter(-1, "Tất cả")];
+    List<ItemFilter> statusFilters = [ItemFilter(-1, "Tất cả")];
+
+/*    itemFilters.addAll(listInput.map((object) {
+      int id = object.seasonFarmId;
+      String name = (object as ActivityPurchase).seasonFarmName ?? "";
+      return ItemFilter(id, name);
+    }).toList());*/
+
+    Set activityValues = listInput.map((obj) => obj.activityName).toSet();
+    activityValues.forEach((value) {
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.activityName == value);
+      activityFilters.add(ItemFilter(correspondingObject.activityId, correspondingObject.activityName));
+    });
+
+    Set statusValues = listInput.map((obj) => obj.status).toSet();
+    statusValues.forEach((value) {
+      dynamic? correspondingObject = listInput.firstWhere((obj) => obj.status == value);
+      statusFilters.add(ItemFilter(correspondingObject.id,
+          (correspondingObject.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
+          (correspondingObject.status ?? '' ).compareTo("pending")==0?"Chờ xử lý":
+          (correspondingObject.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
+          (correspondingObject.status ?? '' ).compareTo("done")==0?"Hoàn thành":
+          (correspondingObject.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",));
+    });
+
+    List<InputRegisterModel> list = [];
+    if(activityFilters.isNotEmpty) {
+      list.add(InputRegisterModel<ItemFilter, ItemFilter>(
+        title: "Công việc",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: 0,
+        valueSelected: activityFilters[0],
+        listValue: activityFilters,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+      ));
+    } if(statusFilters.isNotEmpty) {
+      list.add(InputRegisterModel<ItemFilter, ItemFilter>(
+        title: "Trạng thái",
+        isCompulsory: false,
+        type: TypeInputRegister.Select,
+        icon: Icons.arrow_drop_down,
+        positionSelected: 0,
+        valueSelected: statusFilters[0],
+        listValue: statusFilters,
+        typeInputEnum: TypeInputEnum.dmucItem,
+        hasSearch: true,
+      ));
+    }
+    emit(state.copyWith(
+      list: list,
+      isShowProgress: false,
+      listFilter: itemFilters,
+    ));
+  }
+
   FutureOr<void> _initFilter(InitFilterEvent event, Emitter<FilterState> emit) {
     emit(state.copyWith(
       isShowProgress: true,
@@ -378,6 +441,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       initFilterActivity(emit, event.list);
     } else if (event.type.compareTo("harvesting") == 0) {
       initFilterActivity(emit, event.list);
+    } else if(event.type.compareTo("task") == 0){
+      initFilterTask(emit, event.list);
     }
   }
 

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../generated/l10n.dart';
 import '../resource/assets.dart';
 import '../utils/constants/shared_preferences.dart';
 import 'bloc_event.dart';
@@ -30,35 +31,35 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if(check[4]) {
       list.add(ActivityFarm(
           id: 1,
-          nameActivity: "Giao dịch mua hàng",
+          nameActivity: S.of(context).purchase_transaction,
           iconActivity: ImageAsset.imageSelling));
     } if(check[3]){
       list.add(ActivityFarm(
           id: 2,
-          nameActivity: "Đánh giá khảo sát",
+          nameActivity: S.of(context).survey_review,
           iconActivity: ImageAsset.imageManager));
     }
     if(check[3] || check[4]) {
       list.add(ActivityFarm(
           id: 3,
-          nameActivity: "Truy xuất",
+          nameActivity: S.of(context).trace,
           iconActivity: ImageAsset.imageQrCode));
     }
     list.add(ActivityFarm(
         id: 7,
-        nameActivity: "Ghi nhật ký",
+        nameActivity: S.of(context).create_diary,
         iconActivity: ImageAsset.imageDiary));
     list.add(ActivityFarm(
         id: 4,
-        nameActivity: "Trao đổi",
+        nameActivity: S.of(context).communication,
         iconActivity: ImageAsset.imageReply));
     list.add(ActivityFarm(
         id: 5,
-        nameActivity: "Hướng dẫn",
+        nameActivity: S.of(context).er_manual,
         iconActivity: ImageAsset.imageManual));
     list.add(ActivityFarm(
         id: 6,
-        nameActivity: "Liên hệ",
+        nameActivity: S.of(context).contact,
         iconActivity: ImageAsset.imagePhone));
     emit(state.copyWith(listActivityFarm: list));
   }

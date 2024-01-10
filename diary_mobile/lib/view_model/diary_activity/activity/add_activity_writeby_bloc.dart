@@ -234,9 +234,6 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
     listUnitArea.forEach((element) {
       print("HoangCV: indexArea:`11 ${element.toJson()}");
     });
-/*    int indexAreaUnit = listUnitArea
-        .indexWhere((element) => element.id == event.diary.areaUnitId);
-    print("HoangCV: indexArea: ${indexAreaUnit} : ${event.diary.areaUnitId}");*/
     emitter(state.copyWith(
       isShowProgress: false,
       formStatus: const InitialFormStatus(),
@@ -249,29 +246,47 @@ class AddActWriteByBloc extends Bloc<AddActWriteByEvent, AddActWriteByState> {
       listUnitAmount: listUnitAmount,
       listUnitArea: listUnitArea,
       listUnitYield: listUnitYield,
-      //indexArea: indexAreaUnit,
-      //seasonId: event.seasonId,
       startTimeController:
       TextEditingController(text: DateTime.now().toString().split('.')[0]),
-    //  areaController: TextEditingController(text: "${event.diary.area ?? 0}"),
       moTaController: TextEditingController(),
       yieldController: TextEditingController(),
-     // areaMax: (event.diary.area ?? 0.0) * double.parse('${listUnitArea[indexAreaUnit].convert}'),
-/*        moTaController: TextEditingController(text: detailActivity.description),
-        nameController: TextEditingController(text: listActivity[index].name),
-        peopleController: TextEditingController(),
-        startTimeController: TextEditingController(
-            text: Utils.formatDate(detailActivity.actionTime ?? "")),
-        endTimeController: TextEditingController(
-            text: Utils.formatDate(detailActivity.actionTime ?? "")),
-        indexActivity: index,
-        imageWidth: imageWidth, imageHeight: imageHeight*/
     ));
     _initViewAdd(emitter);
-/*    state.listWidgetArea[1].valueSelected = state.listUnitArea[indexAreaUnit];
-    state.listWidgetArea[1].positionSelected = indexAreaUnit;*/
     emit(state.copyWith(listWidgetArea: state.listWidgetArea, /*indexArea: indexAreaUnit,*/ isShowProgress: false,));
+    print("HoangCV: state.listActivity: ${state.listActivity.length} : ${event.activityId}");
+    if(event.activityId != -1){
+      int indexActivity = state.listActivity.indexWhere((element) => element.id == event.activityId);
+      if(indexActivity != -1) {
+        state.listWidget[0].valueSelected = state.listActivity[indexActivity];
+        state.listWidget[0].positionSelected = indexActivity;
+        emit(state.copyWith(listWidget: state.listWidget,
+          indexActivity: indexActivity,
+          isShowProgress: false,));
+        if (state.listActivity[indexActivity].harvesting == true) {
+          List<InputRegisterModel> listYield = [];
+          listYield.add(InputRegisterModel(
+            title: "Sản lượng",
+            isCompulsory: false,
+            type: TypeInputRegister.TextField,
+            typeInput: TextInputType.number,
+            controller: state.yieldController,
+            maxLengthTextInput: 10,
+            image: ImageAsset.imageBudget,
+          ));
 
+          listYield.add(InputRegisterModel(
+            title: "Đơn vị",
+            isCompulsory: false,
+            type: TypeInputRegister.Select,
+            icon: Icons.arrow_drop_down,
+            positionSelected: -1,
+            listValue: state.listUnitYield,
+            typeInputEnum: TypeInputEnum.dmucItem,
+          ));
+          emit(state.copyWith(listWidgetYield: listYield));
+        }
+      }
+    }
     emitter(state.copyWith(listWidget: state.listWidget));
     //print("state.indexArea: ${state.indexArea} : $indexAreaUnit : ${state.indexActivity} : ${state.detailActivity?.areaUnitId}");
   }
@@ -562,11 +577,12 @@ class AddActWriteByEvent extends BlocEvent {
 
 class InitAddActWriteByEvent extends AddActWriteByEvent {
   final List<Diary> diary;
+  final int activityId;
 
-  InitAddActWriteByEvent(this.diary);
+  InitAddActWriteByEvent(this.diary, {this.activityId = -1});
 
   @override
-  List<Object?> get props => [diary];
+  List<Object?> get props => [diary, activityId];
 }
 
 class ChangeEditActWriteByEvent extends AddActWriteByEvent {

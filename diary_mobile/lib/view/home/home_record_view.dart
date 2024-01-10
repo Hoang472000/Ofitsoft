@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
@@ -178,7 +179,7 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                                 Container(
                                   padding: EdgeInsets.only(left: 18, top: 18),
                                   child: Text(
-                                    "Tính năng",
+                                    S.of(context).feature,
                                     style: StyleOfit.textStyleFW600(Colors.black, 18),
                                   ),
                                 ),

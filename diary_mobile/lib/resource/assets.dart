@@ -135,6 +135,8 @@ class IconAsset {
   static const String icWebsite = "${iConsDiary}website.svg";
   static const String icFacebook = "${iConsDiary}facebook.svg";
   static const String icMail = "${iConsDiary}mail.svg";
+  static const String icTask = "${iConsDiary}ic_task.svg";
+  static const String icTask2 = "${iConsDiary}ic_task2.svg";
 }
 
 class ImageAsset {

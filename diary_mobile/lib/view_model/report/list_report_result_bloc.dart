@@ -130,7 +130,7 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     List<ReportResult> listFilter3 = [];
     if(filter0 != -1) {
       //filteredList.indexWhere((element) => element.id == filter0);
-      String name = filteredList[filteredList.indexWhere((element) => element.id == filter0)].surveyId ?? "";
+      String name = list[list.indexWhere((element) => element.id == filter0)].surveyId ?? "";
       listFilter0.addAll(filteredList.where((
           activity) => activity.surveyId == name).toList());
     } else{
@@ -148,8 +148,10 @@ class ListReportResultBloc extends Bloc<ListReportResultEvent, ListReportResultS
     } else{
       listFilter2.addAll(listFilter1);
     }
-    if(filter3 != -1) {
-      String name = filteredList[filteredList.indexWhere((element) => element.id == filter3)].state ?? "";
+    if(filter3 != "noFilter") {
+      //String name = list[list.indexWhere((element) => element.id == filter3)].state ?? "";
+      String name =
+      filter3 == "Hoàn thành" ? "done" : filter3 == "Lưu trữ" ? 'storage' :'in_process';
       listFilter3.addAll(listFilter2.where((
           activity) => activity.state == name).toList());
     } else{

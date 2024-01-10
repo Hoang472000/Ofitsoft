@@ -1,8 +1,10 @@
 import 'package:diary_mobile/data/repository.dart';
+import 'package:diary_mobile/view/task/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../data/entity/diary/diary.dart';
+import '../../generated/l10n.dart';
 import '../../resource/assets.dart';
 import '../../resource/color.dart';
 import '../../resource/style.dart';
@@ -74,7 +76,7 @@ class _DiaryViewState extends State<DiaryView> {
               centerTitle: true,
               showDefaultBackButton: false,
               title: Text(
-                "Danh sách nhật ký",
+                S.of(context).list_diary,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               ),
               backgroundColor: AppColor.background,
@@ -85,6 +87,18 @@ class _DiaryViewState extends State<DiaryView> {
                   openFilter();
                 },
               ),],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                Navigator.of(context).push(TaskPage.route());
+              },
+              child: SvgPicture.asset(
+                IconAsset.icTask2,
+                color: Colors.white,
+                height: 33,
+                width: 33,
+              ),
+              heroTag: null,
             ),
             body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
                 listener: (context, state) async {},
@@ -110,8 +124,8 @@ class _DiaryViewState extends State<DiaryView> {
                                   SearchListDiaryEvent(value));
                             }
                           },
-                          decoration: const InputDecoration(
-                            labelText: 'Tìm kiếm',
+                          decoration: InputDecoration(
+                            labelText: S.of(context).search,
                             suffixIcon: Icon(Icons.search),
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.all(8),

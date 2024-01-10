@@ -24,6 +24,7 @@ import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
 import 'entity/setting/feedback_info.dart';
 import 'entity/setting/user_info.dart';
+import 'entity/task /task_entity.dart';
 import 'entity/workflow/workflow.dart';
 
 
@@ -145,4 +146,10 @@ abstract class Repository {
   Future<DetailProductBatch> getDetailProductBatch(int id);
 
   Future<ObjectResult> getVersionApp();
+
+  Future<List<TaskEntity>> getListTaskEntity();
+
+  Future<TaskEntity> getDetailTask(int id);
+
+  Future<ObjectResult> editTask(String date, String result, int id);
 }

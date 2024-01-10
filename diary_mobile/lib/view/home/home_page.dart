@@ -25,12 +25,13 @@ import 'home_view.dart';
 
 
 class HomePage extends StatefulWidget {
-  const HomePage({
-    Key? key,
+  HomePage({
+    Key? key, this.crScreen = 0
   }) : super(key: key);
 
-  static Future<Route> route() async {
-    return Utils.pageRouteBuilder(const HomePage(), false);
+  int crScreen = 0;
+  static Future<Route> route({int crScreen = 0}) async {
+    return Utils.pageRouteBuilder(HomePage(crScreen: crScreen), false);
   }
 
   @override
@@ -49,6 +50,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     // TODO: implement initState
     super.initState();
     checkUser(context);
+    print("HoangCV: ${currentScreen} : ${screens} : ${widget.crScreen}");
   }
 
   void checkUser(BuildContext context) async {
@@ -113,7 +115,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           const SettingView(), //const Page5(),
         ];
       }
-      currentScreen = screens[0];
     } else {
       print("HoangCV: aor ma 1111 121312");
       screens = [
@@ -124,7 +125,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         const SettingView(), //const Page5(),
       ];
     }
-
+    setState(() {
+      currentScreen = screens[widget.crScreen];
+      currentTab = widget.crScreen;
+    });
+    print("HoangCV112123: ${currentScreen} : ${screens} : ${widget.crScreen}");
   }
 
   @override
@@ -249,7 +254,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                             height: 3,
                           ),
                           Text(
-                            "Nhật ký",
+                            S.of(context).diary,
                             style: StyleOfit.textStyleFW500(AppColor.black22, 12,
                                 overflow: TextOverflow.ellipsis),
                           ),

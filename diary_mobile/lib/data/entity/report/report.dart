@@ -18,14 +18,15 @@ class Report implements Insertable<Report> {
   bool? hasConditionalQuestions;
   String? questionsSelection;
   double? timeLimit;
+  bool? isInitialAssessment;
   List<Question> questionAndPageIds;
+  List<People> listFarmers;
+  String? stringListFarmers;
   String? stringQuestionAndPageIds;
 
-  //for farmer - inspector
-  List<People> listFarmers;
+  // khong dung nua
   List<People> listInternalInspector;
   List<MonitoringVisitType> listMonitoringVisitType;
-  String? stringListFarmers;
   String? stringListInternalInspector;
   String? stringListMonitoringVisitType;
 
@@ -42,6 +43,7 @@ class Report implements Insertable<Report> {
     this.timeLimit,
     this.questionAndPageIds = const [],
     this.stringQuestionAndPageIds,
+    this.isInitialAssessment,
     //
     this.listFarmers = const [],
     this.listInternalInspector = const [],
@@ -90,6 +92,7 @@ class Report implements Insertable<Report> {
       stringQuestionAndPageIds:
           jsonEncode(json['question_and_page_ids']) ?? '[]',
       stringListFarmers: jsonEncode(json['list_farmers']) ?? '[]',
+        isInitialAssessment: json['is_initial_assessment'] ?? false,
     );
   }
 
@@ -117,6 +120,7 @@ class Report implements Insertable<Report> {
     data['has_conditional_questions'] = hasConditionalQuestions;
     data['questions_selection'] = questionsSelection;
     data['time_limit'] = timeLimit;
+    data['is_initial_assessment'] = isInitialAssessment;
     //data['list_farmers'] = stringListFarmers;
     data['question_and_page_ids'] = questionAndPageIds;
     return data;
@@ -133,6 +137,7 @@ class Report implements Insertable<Report> {
         hasConditionalQuestions = other.hasConditionalQuestions,
         questionsSelection = other.questionsSelection,
         timeLimit = other.timeLimit,
+        isInitialAssessment = other.isInitialAssessment,
         questionAndPageIds = other.questionAndPageIds
             .map((answer) => Question.copy(answer))
             .toList(),

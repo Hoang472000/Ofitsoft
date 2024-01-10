@@ -7,6 +7,7 @@ import '../../../../resource/color.dart';
 import '../../../../resource/style.dart';
 import '../../../../utils/utils.dart';
 import '../../../../utils/widgets/dashed_circle.dart';
+import '../../../generated/l10n.dart';
 import '../../../utils/constants/shared_preferences.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../view_model/diary/diary_monitor_bloc.dart';
@@ -117,7 +118,7 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
                       centerTitle: true,
                       showDefaultBackButton: false,
                       title: Text(
-                        "Nhật ký ghi hộ",
+                        S.of(context).diary_support,
                         style: StyleOfit.textStyleFW700(Colors.white, 20),
                       ),
                       //backgroundColor: AppColor.background,

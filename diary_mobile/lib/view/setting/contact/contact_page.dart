@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -33,7 +34,7 @@ class _ContactPageState extends State<ContactPage> {
             showDefaultBackButton: true,
             centerTitle: true,
             title: Text(
-              "Liên hệ",
+              S.of(context).contact,
               style: StyleOfit.textStyleFW700(AppColor.whiteF2, 20),
             ),
             //backgroundColor: Colors.transparent,

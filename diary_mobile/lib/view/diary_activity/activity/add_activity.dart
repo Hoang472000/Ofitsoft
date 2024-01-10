@@ -23,21 +23,23 @@ import '../../../view_model/diary_activity/activity/add_actitivy_bloc.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class AddActivityPage extends StatefulWidget {
-  const AddActivityPage({super.key, required this.seasonFarmId, required this.diary, required this.action});
+  const AddActivityPage({super.key, required this.seasonFarmId, required this.diary, required this.action, this.activityId = -1});
 
   final int seasonFarmId;
   final Diary diary;
   final String action;
+  final int activityId;
 
   @override
   _AddActivityPageState createState() => _AddActivityPageState();
 
-  static Route route(int seasonFarmId, Diary diary, String action) {
+  static Route route(int seasonFarmId, Diary diary, String action, {int activityId = -1}) {
     return Utils.pageRouteBuilder(
         AddActivityPage(
           seasonFarmId: seasonFarmId,
             diary: diary,
             action: action,
+            activityId: activityId,
         ),
         true);
   }
@@ -54,7 +56,7 @@ class _AddActivityPageState extends State<AddActivityPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AddActivityBloc(context.read<Repository>())
-        ..add(InitAddActivityEvent(widget.seasonFarmId, widget.diary, widget.action)),
+        ..add(InitAddActivityEvent(widget.seasonFarmId, widget.diary, widget.action, activityId: widget.activityId )),
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,

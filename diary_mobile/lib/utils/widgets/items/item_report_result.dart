@@ -57,7 +57,8 @@ class _ItemReportResultState extends State<ItemReportResult> {
                 BoxShadow(
                   color: widget.reportResult.state == 'done'
                       ? AppColor.green53
-                      : AppColor.yellow07,
+                      : widget.reportResult.state == 'storage' ?
+                      AppColor.gray12 : AppColor.yellow07,
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),
@@ -117,10 +118,12 @@ class _ItemReportResultState extends State<ItemReportResult> {
                                   "Trạng thái: ",
                                   widget.reportResult.state == 'done'
                                       ? "Hoàn thành"
-                                      : "Chưa hoàn thành",
+                                      : widget.reportResult.state == 'storage' ?
+                                      "Lưu trữ": "Chưa hoàn thành",
                                   widget.reportResult.state == 'done'
                                       ? AppColor.green53
-                                      : AppColor.orange,
+                                      : widget.reportResult.state == 'storage' ?
+                                      AppColor.gray57 :AppColor.orange,
                                   14))
                         ],
                       ),

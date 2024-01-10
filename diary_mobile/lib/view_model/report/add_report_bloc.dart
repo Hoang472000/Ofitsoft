@@ -14,6 +14,7 @@ import '../../../data/repository.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../data/remote_data/object_model/object_result.dart';
 import '../../utils/constants/status_const.dart';
 import '../../utils/extenstion/extenstions.dart';
@@ -2210,6 +2211,24 @@ class AddReportBloc extends Bloc<AddReportEvent, AddReportState> {
         ObjectResult result = await repository.editFarmerInspector(
             questionUpload);
         if (result.responseCode == StatusConst.code00) {
+          List<int> list = event.listReportResult
+              .where((e) {
+            DateTime createDate = DateTime.parse(e.createDate ?? ""); // Chuyển chuỗi thành DateTime
+            DateTime visitDate = DateTime.parse(state.farmerInspector!.visitDate ?? ""); // Chuyển chuỗi thành DateTime
+            print("HoangCV:visitDate ${createDate} : ${visitDate}");
+            return e.farmerId == state.farmerInspector!.farmerId &&
+                e.isInitialAssessment == event.isInitialAssessment &&
+                createDate.year == visitDate.year;
+          })
+              .map((e) => e.id ?? -1)
+              .toList();
+          print("HoangCV:listReportResult ${list.length} : ${event.listReportResult.length} : ${event.isInitialAssessment}");
+          if(list.isNotEmpty){
+            list.forEach((element) async {
+              repository.editFarmerInspector(
+                  FarmerInspectorUpload(state: "storage", id: element));
+            });
+          }
           emit(state.copyWith(
               isShowProgress: false,
               reportId: result.response is int ? result.response : null,
@@ -2415,11 +2434,13 @@ class UpdateAddTableFieldEvent extends AddReportEvent {
 
 class SubmitReportEvent extends AddReportEvent {
 
+  final List<ReportResult> listReportResult;
+  final bool isInitialAssessment;
 
-  SubmitReportEvent();
+  SubmitReportEvent(this.listReportResult, this.isInitialAssessment);
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [listReportResult, isInitialAssessment];
 }
 
 class AddReportState extends BlocState {

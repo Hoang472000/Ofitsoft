@@ -95,7 +95,7 @@ class _ItemTransactionState extends State<ItemTransaction> {
                 )),
             Container(
               padding:
-              const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 16),
+              const EdgeInsets.only(top: 8, bottom: 8, left: 16, right: 8),
               margin: widget.amountSelected > 0
                   ? const EdgeInsets.only(
                   left: 52, right: 16, top: 4, bottom: 4)
@@ -164,15 +164,16 @@ class _ItemTransactionState extends State<ItemTransaction> {
                       Column(
                         children: [
                           IconButton(
-                            padding: EdgeInsets.only(left: 16, right: 4),
+                            padding: EdgeInsets.only(left: 0, right: 0),
                             icon: const Icon(Icons.file_download_outlined, color: AppColor.back09,size: 30,),
                             onPressed: () {
                               widget.callbackExport();
                             },
                           ),
+                          SizedBox(height: 4,),
                           SizedBox(
-                            height: 44,
-                            width: 44,
+                            height: 25,
+                            width: 25,
                             child: widget.action == "sell" &&
                                 ((widget.diary.status ?? '').compareTo("done") == 0 ||
                                     (widget.diary.status ?? '')
@@ -180,7 +181,7 @@ class _ItemTransactionState extends State<ItemTransaction> {
                                         0)
                                 ? Container()
                                 : IconButton(
-                              padding: EdgeInsets.only(left: 16, right: 4),
+                              padding: EdgeInsets.only(left: 0, right: 0),
                               icon: const Image(
                                 image: AssetImage(ImageAsset.imageBin),
                                 //width: 40,

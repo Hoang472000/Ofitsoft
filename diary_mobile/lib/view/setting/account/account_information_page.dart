@@ -48,7 +48,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
               showDefaultBackButton: true,
               centerTitle: true,
               title: Text(
-                "Thông tin tài khoản",
+                S.of(context).account_information,
                 style: StyleOfit.textStyleFW700(AppColor.whiteF2, 20),
               ),
               elevation: 0.0,

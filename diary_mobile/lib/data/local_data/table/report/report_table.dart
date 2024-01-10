@@ -18,6 +18,7 @@ class ReportTable extends Table {
   RealColumn get timeLimit => real().nullable()();
   TextColumn get stringQuestionAndPageIds => text().nullable()();
   TextColumn get stringListFarmers => text().nullable()();
+  BoolColumn get isInitialAssessment => boolean().nullable()();
 
   @override
   Set<Column>? get primaryKey => {id};

@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:diary_mobile/data/entity/report/question_upload.dart';
+import 'package:diary_mobile/data/entity/task%20/task_entity.dart';
 import 'package:diary_mobile/data/remote_data/network_processor/network_check_connect.dart';
 import 'package:diary_mobile/utils/widgets/dialog/toast_widget.dart';
+import 'package:diary_mobile/view/task/detail_task_page.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,12 +21,12 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
 
 import '../data/entity/image/image_entity.dart';
 import '../generated/l10n.dart';
 import '../resource/color.dart';
 import '../resource/style.dart';
+import '../view/home/home_page.dart';
 import '../view/notify/notify_view.dart';
 import '../view_model/navigation_service.dart';
 import 'constants/shared_preferences_key.dart';
@@ -43,9 +45,22 @@ class Utils {
             child: child,
           );
   }
-  static void launchAppFromNotification(Map<String, dynamic> jsonDecode) {
-    Navigator.of(NavigationService.navigatorKey.currentContext!)
-        .push(NotifyView.route());
+  static Future<void> launchAppFromNotification(Map<String, dynamic> jsonDecode) async {
+    try {
+      String action = jsonDecode['action'];
+      String id = jsonDecode['id'];
+      if (action == "TASK_NOTIFICATION") {
+        Navigator.of(NavigationService.navigatorKey.currentContext!)
+            .push(DetailTaskPage.route(TaskEntity(), int.parse(id), (){}));
+      } else {
+        Navigator.of(NavigationService.navigatorKey.currentContext!)
+            .push(await HomePage.route(crScreen: 3));
+      }
+    } catch (e){
+      Logger.loggerDebug(" error = $e");
+      Navigator.of(NavigationService.navigatorKey.currentContext!)
+          .push(await HomePage.route(crScreen: 3));
+    }
   }
 
   static void handle(RemoteMessage message, bool openApp) async {
@@ -164,6 +179,39 @@ class Utils {
   static String convertTime(String time) {
     final timeTemp = time.split('T');
     return timeTemp[0].split('-').reversed.join('-');
+  }
+
+  static DateTime parseDateString(String dateString) {
+    try {
+      return DateFormat('yyyy-MM-dd').parse(dateString);
+    } catch (e) {
+      print('Invalid date format. Please provide the date in the format YYYY-MM-DD');
+      return DateTime.now();
+    }
+  }
+  static String getRemainingTimeMessage(String endDate) {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    DateTime dateTime = dateFormat.parse(endDate);
+    DateTime currentDate = DateTime.now();
+    Duration remainingTime = dateTime.difference(currentDate);
+    print("HoangCV: remainingTime: ${remainingTime} : ${remainingTime.inDays} : ${remainingTime.inHours}");
+
+    if (remainingTime.inDays == 0) {
+      return 'Hết hạn trong hôm nay.';
+    } else if (remainingTime.isNegative) {
+      return 'Đã quá hạn ${remainingTime.inDays.abs()} ngày.';
+    } else {
+      return 'Còn lại ${remainingTime.inDays} ngày đến hạn.';
+    }
+  }
+
+  static bool checkDateTimeNow(String endDate) {
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+    DateTime dateTime = dateFormat.parse(endDate);
+    DateTime currentDate = DateTime.now();
+    Duration remainingTime = dateTime.difference(currentDate);
+
+    return remainingTime.isNegative;
   }
 
   static String convertTimeUpSever(String time) {
@@ -784,6 +832,7 @@ class Utils {
         ),
         SizedBox(width: 8), // Khoảng cách giữa các phần tử trong Row
         Flexible(
+          flex: 5,
           child: Text(
             value,
             style: StyleOfit.textStyleFW400(color, size),

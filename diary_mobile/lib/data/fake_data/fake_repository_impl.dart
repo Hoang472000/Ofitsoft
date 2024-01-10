@@ -1,12 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
-
 import 'package:diary_mobile/data/entity/access/detail_product_batch.dart';
 import 'package:diary_mobile/data/entity/access/product_batch.dart';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/activity/activity_transaction.dart';
 import 'package:diary_mobile/data/entity/diary/area_entity.dart';
-import 'package:diary_mobile/data/entity/diary/detail_diary.dart';
 import 'package:diary_mobile/data/entity/item_default/activity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/unit.dart';
@@ -15,15 +12,13 @@ import 'package:diary_mobile/data/entity/report/question_upload.dart';
 import 'package:diary_mobile/data/entity/report/report.dart';
 import 'package:diary_mobile/data/entity/report/report_result_title.dart';
 import 'package:diary_mobile/data/entity/setting/feedback_info.dart';
-import 'package:diary_mobile/data/entity/workflow/workflow.dart';
+import 'package:diary_mobile/data/entity/task%20/task_entity.dart';
 import 'package:diary_mobile/data/local_data/diary_db.dart';
 import 'package:diary_mobile/data/remote_data/object_model/object_result.dart';
-
 import '../../resource/assets.dart';
 import '../entity/activity/activity_purchase.dart';
 import '../entity/activity/season_farm.dart';
 import '../entity/diary/diary.dart';
-import '../entity/item_default/item_default.dart';
 import '../entity/item_default/tool.dart';
 import '../entity/monitor/monitor_diary.dart';
 import '../entity/report/report_select.dart';
@@ -685,4 +680,23 @@ class FakeRepositoryImpl extends Repository {
     // TODO: implement getVersionApp
     throw UnimplementedError();
   }
+
+  @override
+  Future<List<TaskEntity>> getListTaskEntity() {
+    // TODO: implement getListTaskEntity
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<TaskEntity> getDetailTask(int id) {
+    // TODO: implement getDetailTask
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<ObjectResult> editTask(String date, String result, int id) {
+    // TODO: implement editTask
+    throw UnimplementedError();
+  }
+
 }

@@ -10,6 +10,7 @@ import '../../../resource/style.dart';
 import '../../data/entity/report/answer.dart';
 import '../../data/entity/report/question.dart';
 import '../../data/entity/report/report.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../resource/assets.dart';
 import '../../utils/extenstion/input_register_model.dart';
 import '../../utils/status/form_submission_status.dart';
@@ -22,17 +23,20 @@ import '../../utils/widgets/input/container_input_widget.dart';
 import '../../view_model/report/add_report_bloc.dart';
 
 class AddReportViewPage extends StatefulWidget {
-  AddReportViewPage({super.key, required this.id});
+  AddReportViewPage({super.key, required this.id, required this.listReportResult, required this.isInitialAssessment});
 
   final int id;
+  final bool isInitialAssessment;
+  final List<ReportResult> listReportResult;
   @override
   _AddReportViewPageState createState() => _AddReportViewPageState();
 
-  static Route route(int id) {
+  static Route route(int id, List<ReportResult> listReportResult, bool isInitialAssessment) {
     return Utils.pageRouteBuilder(
         AddReportViewPage(
-          id: id
-        ),
+            id: id,
+            listReportResult: listReportResult,
+            isInitialAssessment: isInitialAssessment),
         true);
   }
 }
@@ -197,7 +201,7 @@ class _AddReportViewPageState extends State<AddReportViewPage> {
           child: OfitButton(
             text: "Hoàn Thành",
             onPressed: () {
-              context.read<AddReportBloc>().add(SubmitReportEvent());
+              context.read<AddReportBloc>().add(SubmitReportEvent(widget.listReportResult, widget.isInitialAssessment));
             },
           ),
         ),

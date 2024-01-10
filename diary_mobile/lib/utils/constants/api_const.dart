@@ -74,6 +74,11 @@ class ApiConst {
 
   static const String exportPdf = "/export/xlsx_invoice/";
 
+  //Danh sach nhiem vu
+  static const String getListTaskEntity = "/get/season_task";//
+  static const String getDetailTask = "/get/season_task/";//id //detail task
+  static const String editTask = "/edit/season_task/";//id //detail task
+
   //version app
   static const String getVersionApp = "/get/version";
   static const String addVersionApp = "/add/version";

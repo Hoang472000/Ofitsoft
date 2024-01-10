@@ -167,10 +167,10 @@ class _FilterPageState extends State<FilterPage> {
                       Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(12),
-                        child: Text("Bộ lọc tìm kiếm",
+                        child: Text(S.of(context).search_filters,
                             style: StyleOfit.textStyleFW500(AppColor.black22, 18)),
                       ),
-                      Text("Khoảng thời gian",
+                      Text(S.of(context).interval,
                           style: StyleOfit.textStyleFW500(
                               AppColor.black22, 15)),
                       Padding(
@@ -221,7 +221,7 @@ class _FilterPageState extends State<FilterPage> {
                       Container(
                         padding:
                         const EdgeInsets.only(top: 7, bottom: 5),
-                        child: Text("Lọc theo",
+                        child: Text(S.of(context).filter_list,
                             style: StyleOfit.textStyleFW500(
                                 AppColor.black22, 15)),
                       ),
@@ -242,7 +242,7 @@ class _FilterPageState extends State<FilterPage> {
                       if(widget.type == "season")
                         Container(
                           padding: const EdgeInsets.only(top: 7, bottom: 5),
-                          child: Text("Số tiền",
+                          child: Text(S.of(context).amount_of_money,
                               style: StyleOfit.textStyleFW500(
                                   AppColor.black22, 15)),
                         ),
@@ -294,7 +294,7 @@ class _FilterPageState extends State<FilterPage> {
                       if (widget.type == "season")
                         Container(
                           padding: const EdgeInsets.only(top: 7, bottom: 5),
-                          child: Text("Số lượng",
+                          child: Text(S.of(context).amount,
                               style: StyleOfit.textStyleFW500(
                                   AppColor.black22, 15)),
                         ),
@@ -416,7 +416,7 @@ class _FilterPageState extends State<FilterPage> {
                               borderRadius: BorderRadius.circular(4),
                               color: Colors.white),
                           child: TextButton(
-                            child: Text("Thiết lập lại",
+                            child: Text(S.of(context).reset,
                               style: StyleOfit.textStyleFW500(AppColor.main, 16),),
                             onPressed: (){
                               contextBloc.read<FilterBloc>().add(InitFilterEvent(widget.type, widget.list));
@@ -437,7 +437,7 @@ class _FilterPageState extends State<FilterPage> {
                               borderRadius: BorderRadius.circular(4),
                               color: AppColor.main),
                           child: TextButton(
-                            child: Text("Áp dụng",
+                            child: Text(S.of(context).apply,
                               style: StyleOfit.textStyleFW500(AppColor.whiteF2, 16),),
                             onPressed: (){
                               if (widget.type == "season") {
@@ -469,7 +469,7 @@ class _FilterPageState extends State<FilterPage> {
                                   state.indexFilter0,
                                   state.indexFilter1,
                                   state.indexFilter2,
-                                  state.indexFilter3,
+                                  state.list[3].positionSelected != 0 ? state.list[3].valueSelected.name : "noFilter",
                                 ]);
                               }
                               else if (widget.type == "activity") {
@@ -488,6 +488,14 @@ class _FilterPageState extends State<FilterPage> {
                                   state.endTime,
                                   state.minQuantity!.text,
                                   state.maxQuantity!.text,
+                                  state.indexFilter0,
+                                  state.indexFilter1,
+                                ]);
+                              }
+                              else if (widget.type == "task") {
+                                widget.callBack([
+                                  state.startTime,
+                                  state.endTime,
                                   state.indexFilter0,
                                   state.indexFilter1,
                                 ]);

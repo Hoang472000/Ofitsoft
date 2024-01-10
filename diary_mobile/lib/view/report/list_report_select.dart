@@ -8,22 +8,27 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
+import '../../data/entity/report/report_result_title.dart';
 import '../../data/entity/report/report_select.dart';
 import '../../utils/widgets/items/item_report_select.dart';
 import '../../view_model/report/list_report_select_bloc.dart';
 import 'add_report.dart';
 
 class ListReportSelect extends StatefulWidget {
-  const ListReportSelect({super.key, required this.listReport});
+  const ListReportSelect({super.key, required this.listReport, required this.listReportResult});
 
   final List<ReportSelect> listReport;
+  final List<ReportResult> listReportResult;
 
   @override
   _ListReportSelectState createState() => _ListReportSelectState();
 
-  static Route route(List<ReportSelect> listReport) {
+  static Route route(List<ReportSelect> listReport, List<ReportResult> listReportResult) {
     return Utils.pageRouteBuilder(
-        ListReportSelect(listReport: listReport), true);
+        ListReportSelect(
+            listReport: listReport,
+            listReportResult: listReportResult),
+        true);
   }
 }
 
@@ -77,7 +82,8 @@ class _ListReportSelectState extends State<ListReportSelect> {
                                         var result = await Navigator.of(context)
                                             .push(AddReportViewPage.route(
                                                 widget.listReport[index].id ??
-                                                    -1));
+                                                    -1, widget.listReportResult,
+                                            widget.listReport[index].isInitialAssessment ?? false));
                       /*                  var result = await Navigator.of(context)
                                             .push(TestScrollList.route());*/
                                         if (result != null && result[0]) {

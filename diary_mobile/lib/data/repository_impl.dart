@@ -30,6 +30,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../generated/l10n.dart';
 import '../utils/constants/shared_preferences.dart';
 import '../utils/constants/shared_preferences_key.dart';
 import '../utils/widgets/dialog/dialog_manager.dart';
@@ -47,6 +48,7 @@ import 'entity/report/report_result_title.dart';
 import 'entity/report/report_select.dart';
 import 'entity/report/survey_report_result.dart';
 import 'entity/setting/feedback_info.dart';
+import 'entity/task /task_entity.dart';
 import 'fake_data/fake_repository_impl.dart';
 import 'local_data/diary_db.dart';
 import 'remote_data/api_model/api_base_generator.dart';
@@ -1859,4 +1861,91 @@ class RepositoryImpl extends Repository {
     return objectResult;
   }
 
+  @override
+  Future<List<TaskEntity>> getListTaskEntity() async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getListTaskEntity,
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListWorkflow response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      List<TaskEntity> list = List.from(objectResult.response)
+          .map((json) => TaskEntity.fromJson(json))
+          .toList();
+      DiaryDB.instance.insertListTaskEntity(list);
+      return list;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return DiaryDB.instance.getListTaskEntity();
+  }
+
+  @override
+  Future<TaskEntity> getDetailTask(int id) async{
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token = sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.getDetailTask + "$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token)));
+    print("HoangCV: getListWorkflow response: ${objectResult.response}");
+    if (objectResult.responseCode == StatusConst.code00) {
+      TaskEntity list = TaskEntity.fromJson(objectResult.response);
+      DiaryDB.instance.insertListTaskEntity([list]);
+      return list;
+    }
+    else if(objectResult.responseCode == StatusConst.code02){
+
+    }
+    else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return DiaryDB.instance.getDetailTaskEntity(id);
+  }
+
+  @override
+  Future<ObjectResult> editTask(String date, String result, int id) async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    String token =
+        sharedPreferences.getString(SharedPreferencesKey.token) ?? "";
+    ObjectResult objectResult = await networkExecutor.request(
+        route: ApiBaseGenerator(
+            path: ApiConst.editTask + "$id",
+            method: HttpMethod.GET,
+            body: ObjectData(token: token, params: {
+              "complete_date": date,
+              "result": result,
+              "status": "done"
+            })));
+    //ObjectResult objectResult =  ObjectResult(1, "object", "1", "", false, false);
+    print("HoangCV: editTask response: ${objectResult.response}");
+    //Map<String, dynamic> jsonData = jsonDecode(objectResult.response);
+    if (objectResult.responseCode == StatusConst.code00) {
+      return objectResult;
+    } else if (objectResult.responseCode == StatusConst.code02) {
+    } else {
+      DiaLogManager.showDialogHTTPError(
+        status: objectResult.status,
+        resultStatus: objectResult.status,
+        resultObject: objectResult.message,
+      );
+    }
+    return objectResult;
+  }
 }

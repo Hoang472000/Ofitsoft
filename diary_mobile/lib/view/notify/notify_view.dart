@@ -64,7 +64,7 @@ class _NotifyViewState extends State<NotifyView> {
               hasBottom: true,
               showDefaultBackButton: false,
               title: Text(
-                "Danh sách thông báo",
+                S.of(context).notification_list,
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               )),
           //resizeToAvoidBottomInset: true,

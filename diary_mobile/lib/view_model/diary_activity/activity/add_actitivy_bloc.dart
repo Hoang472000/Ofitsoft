@@ -250,6 +250,39 @@ class AddActivityBloc extends Bloc<AddActivityEvent, AddActivityState> {
       yieldController: TextEditingController(),
     ));
     _initViewAdd(emitter, event.action);
+    if(event.activityId != -1){
+      int indexActivity = state.listActivity.indexWhere((element) => element.id == event.activityId);
+      if(indexActivity != -1) {
+        state.listWidget[0].valueSelected = state.listActivity[indexActivity];
+        state.listWidget[0].positionSelected = indexActivity;
+        emit(state.copyWith(listWidget: state.listWidget,
+          indexActivity: indexActivity,
+          isShowProgress: false,));
+        if (state.listActivity[indexActivity].harvesting == true) {
+          List<InputRegisterModel> listYield = [];
+          listYield.add(InputRegisterModel(
+            title: "Sản lượng",
+            isCompulsory: false,
+            type: TypeInputRegister.TextField,
+            typeInput: TextInputType.number,
+            controller: state.yieldController,
+            maxLengthTextInput: 10,
+            image: ImageAsset.imageBudget,
+          ));
+
+          listYield.add(InputRegisterModel(
+            title: "Đơn vị",
+            isCompulsory: false,
+            type: TypeInputRegister.Select,
+            icon: Icons.arrow_drop_down,
+            positionSelected: -1,
+            listValue: state.listUnitYield,
+            typeInputEnum: TypeInputEnum.dmucItem,
+          ));
+          emit(state.copyWith(listWidgetYield: listYield));
+        }
+      }
+    }
     if(indexAreaUnit != -1){
       state.listWidgetArea[1].valueSelected = state.listUnitArea[indexAreaUnit];
       state.listWidgetArea[1].positionSelected = indexAreaUnit;
@@ -576,11 +609,12 @@ class InitAddActivityEvent extends AddActivityEvent {
   int seasonId;
   final Diary diary;
   String action;
+  int? activityId;
 
-  InitAddActivityEvent(this.seasonId, this.diary, this.action);
+  InitAddActivityEvent(this.seasonId, this.diary, this.action, {this.activityId = -1});
 
   @override
-  List<Object?> get props => [seasonId, diary, action];
+  List<Object?> get props => [seasonId, diary, action, activityId];
 }
 
 class ChangeEditActivityEvent extends AddActivityEvent {

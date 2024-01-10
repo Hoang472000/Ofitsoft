@@ -98,7 +98,7 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                   showDefaultBackButton: true,
                   callback: [updateHarvesting, listCallback],
                   title: Text(
-                    "Giao dịch mua hàng",
+                    S.of(context).purchase_transaction,
                     style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ), actions: [
                   BlocBuilder<ActivityPurchaseBloc, ActivityPurchaseState>(
