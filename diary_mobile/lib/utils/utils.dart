@@ -176,9 +176,16 @@ class Utils {
     }
     return faceId;
   }
+
   static String convertTime(String time) {
     final timeTemp = time.split('T');
     return timeTemp[0].split('-').reversed.join('-');
+  }
+
+  static String formatCurrencyViVn(double amount, {String donVi = ""}) {
+    final formatter = NumberFormat.currency(locale: 'vi_VN', symbol: ''); // Chọn locale phù hợp với định dạng tiền tệ
+
+    return donVi.isEmpty ? formatter.format(amount) : '${formatter.format(amount)} $donVi';
   }
 
   static DateTime parseDateString(String dateString) {

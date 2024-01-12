@@ -187,7 +187,7 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                 ),
                                 SizedBox(
                                   height:
-                                  state.listImage.isNotEmpty ? state.imageHeight + 50 : 0,
+                                  state.listImage.isNotEmpty ? state.imageHeight + 20 : 0,
                                   child: ListView.builder(
                                       padding: EdgeInsets.zero,
                                       shrinkWrap: true,
@@ -269,23 +269,23 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                         );
                                       }),
                                 ),
-                                state.listReply.length > 0 ? SizedBox(
+                             /*   state.listReply.length > 0 ? SizedBox(
                                   child: Align(
                                     alignment: Alignment.topLeft,
                                     child: Text("Phản hồi:", style: StyleOfit.textStyleFW500(AppColor.black22, 14),),
                                   ),
-                                ) : SizedBox(),
+                                ) : SizedBox(),*/
                                 state.listReply.length > 0 ? SizedBox(
                                   child: Container(
                                     width: double.infinity,
                                     //height: 300,
-                                    decoration: BoxDecoration(
+                         /*           decoration: BoxDecoration(
                                         border: Border.all(
                                           color: Color(0xFFB2B8BB),
                                           width: 1.5,
                                         ),
                                         borderRadius: BorderRadius.all(Radius.circular(5)),
-                                        color: AppColor.whiteF2),
+                                        color: AppColor.whiteF2),*/
                                     padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
                                     child: Container(
                                       child: SingleChildScrollView(
@@ -304,6 +304,7 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                     padding: const EdgeInsets.only(top: 8.0),
                                                     child: Container(
                                                       child: Column(
+                                                        mainAxisSize: MainAxisSize.min,
                                                         //crossAxisAlignment: CrossAxisAlignment.start,
                                                         children: [
                                                           index > 0 && DateFormat("yyyy-MM-dd").format(DateTime.parse(state.listReply[index].createDate ?? "" ))
@@ -323,9 +324,9 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                                 child: Container(
                                                                     decoration: BoxDecoration(
                                                                         border: Border.all(
-                                                                          color: AppColor.cyanDisible, width: 1,),
-                                                                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                                        color: AppColor.whiteF2),
+                                                                          color: AppColor.grayC7, width: 1,),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                                        color: Colors.white),
                                                                     padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
                                                                     child: Column(
                                                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -341,17 +342,16 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                                     )),
                                                               )
                                                             ],
-                                                          ) : Row(
-                                                            mainAxisAlignment: MainAxisAlignment.end,
-                                                            crossAxisAlignment: CrossAxisAlignment.end,
-                                                            children: [
-                                                              Flexible(
+                                                          ) : Align(
+                                                            alignment: Alignment.centerRight,
+                                                            child: IntrinsicWidth(
+                                                              child: SizedBox(
                                                                 child: Container(
                                                                     decoration: BoxDecoration(
                                                                         border: Border.all(
-                                                                          color: AppColor.cyanDisible, width: 1,),
-                                                                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                                                                        color: AppColor.whiteF2),
+                                                                          color: AppColor.grayC7, width: 1,),
+                                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                                        color: AppColor.cyan99),
                                                                     padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
                                                                     alignment: Alignment.topRight,
                                                                     child: Column(
@@ -359,7 +359,7 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                                       children: [
                                                                         Text("${state.listReply[index].description}",
                                                                           style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-                                                                        overflow: TextOverflow.visible,),
+                                                                          overflow: TextOverflow.visible,),
                                                                         SizedBox(height: 10,),
                                                                         Container(
                                                                           //alignment: Alignment.centerRight,
@@ -369,7 +369,7 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                                                       ],
                                                                     )),
                                                               ),
-                                                            ],
+                                                            ),
                                                           ),
 
                                                         ],

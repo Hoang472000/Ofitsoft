@@ -6,6 +6,7 @@ import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
 import 'package:diary_mobile/view_model/filter/filter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../generated/l10n.dart';
@@ -41,6 +42,8 @@ class FilterPage extends StatefulWidget {
 }
 
 class _FilterPageState extends State<FilterPage> {
+
+  List<Widget> listWidgetYear = [];
   @override
   void initState() {
     // TODO: implement initState
@@ -175,14 +178,14 @@ class _FilterPageState extends State<FilterPage> {
                               AppColor.black22, 15)),
                       Padding(
                           padding:
-                          const EdgeInsets.symmetric(vertical: 5),
+                          const EdgeInsets.only(top: 5),
                           child: GestureDetector(
                             onTap: () {
                               _showModalBottomSheet(contextBloc);
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 5),
+                              padding: const EdgeInsets.only(
+                                  top: 5),
                               child: FormField<String>(
                                 builder:
                                     (FormFieldState<String> stateFrom) {
@@ -218,6 +221,15 @@ class _FilterPageState extends State<FilterPage> {
                               ),
                             ),
                           )),
+                      state.listYear.isNotEmpty ?
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(child: widgetYear(state.listYear, contextBloc, 0)),
+                          Expanded(child: widgetYear(state.listYear, contextBloc, 1)),
+                          Expanded(child: widgetYear(state.listYear, contextBloc, 2)),
+                        ],
+                      ): SizedBox(),
                       Container(
                         padding:
                         const EdgeInsets.only(top: 7, bottom: 5),
@@ -511,6 +523,58 @@ class _FilterPageState extends State<FilterPage> {
             );
           }),
         ),
+      ),
+    );
+  }
+
+  Widget widgetYear(List<ItemFilter> listYear, BuildContext context, int id){
+    return Container(
+      margin:
+      EdgeInsets.only(bottom: 0, left: id == 0 ? 0 : 8, right: id == 2 ? 0 : 8),
+      child: TextButton(
+        style: ButtonStyle(
+            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+            backgroundColor: MaterialStateProperty.all<Color>(listYear[id].image== "1" ? AppColor.main : Colors.white,),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    side: BorderSide(color: AppColor.main)
+                )
+            )
+        ),
+
+        child: Text(
+          listYear[id].name,
+          style:
+          StyleOfit.textStyleFW500(
+              listYear[id].image== "1" ? Colors.white : AppColor.main, 16),
+        ),
+        onPressed: () {
+          for (int i = 0; i < listYear.length; i++) {
+            if (id == 0) {
+              listYear[0].image = "1";
+              continue;
+            } else {
+              listYear[i].image = "";
+            }
+          }
+          int begin = DateTime.now().year;
+          String startTime = "01/01/$begin";
+          String endTime = "31/12/$begin";
+          if(id == 2){
+            startTime = "01/01/$begin";
+            endTime = "31/12/$begin";
+          }
+          if(id == 1){
+            startTime = "01/01/${begin-1}";
+            endTime = "31/12/${begin-1}";
+          }
+          if(id == 0){
+            startTime = "01/01/${begin-2}";
+            endTime = "31/12/${begin-2}";
+          }
+          context.read<FilterBloc>().add(OnChangeDateTime(startTime, endTime, id: id));
+        },
       ),
     );
   }

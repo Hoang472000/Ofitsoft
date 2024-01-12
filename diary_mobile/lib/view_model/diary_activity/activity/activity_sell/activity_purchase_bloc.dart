@@ -9,12 +9,16 @@ import 'package:diary_mobile/data/entity/monitor/monitor_diary.dart';
 import 'package:diary_mobile/utils/constants/status_const.dart';
 import 'package:diary_mobile/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/entity/activity/activity_purchase.dart';
 import '../../../../data/entity/diary/diary.dart';
+import '../../../../data/entity/item_default/item_expansion.dart';
 import '../../../../data/entity/item_default/material_entity.dart';
+import '../../../../data/local_data/diary_db.dart';
 import '../../../../data/remote_data/object_model/object_result.dart';
 import '../../../../data/repository.dart';
+import '../../../../utils/constants/shared_preferences_key.dart';
 import '../../../../utils/status/form_submission_status.dart';
 import '../../../../utils/widgets/dialog/toast_widget.dart';
 import '../../../bloc_event.dart';
@@ -39,6 +43,11 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
         formStatus: const InitialFormStatus()));
     List<ActivityPurchase> listActivityTransaction = [];
     List<ActivityPurchase> listCallbackTransaction = [];
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final categoryIdUnitYield =
+        sharedPreferences.getInt(SharedPreferencesKey.unitYield) ?? -1;
+    final listUnitYield =
+    await DiaryDB.instance.getListUnit(categoryIdUnitYield);
 
       emitter(state.copyWith(
           isShowProgress: true));
@@ -54,7 +63,35 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
       listActivityTransactionFilter : listActivityTransaction,
       listSelected: listSelected,
       amountSelected: 0,
+      listUnit: listUnitYield,
     ));
+    String donVi = listUnitYield[listUnitYield
+                .indexWhere((element) => (element.convert ?? 1) / 1 == 1)]
+            .name ??
+        "";
+    List<ItemExpansion> listExpansion =
+        calculateTotal(listActivityTransaction, listUnitYield, donVi);
+    emitter(state.copyWith(
+        isShowProgress: false,
+        listExpansion: listExpansion,
+        donVi: donVi));
+  }
+
+  List<ItemExpansion> calculateTotal(List<ActivityPurchase> listCallbackTransaction, List<Unit> listUnit, String donVi) {
+    double totalQuantity = listCallbackTransaction.fold(
+        0, (previousValue, element) => previousValue + (element.quantity ?? 0) * (listUnit[listUnit.indexWhere((e) => e.id == element.quantityUnitId)].convert ?? 1));
+    double totalAmount = listCallbackTransaction.fold(
+        0,
+        (previousValue, element) =>
+            previousValue +
+            ((element.quantity ?? 0) * (element.unitPrice ?? 0)));
+
+    List<ItemExpansion> resultList = [
+      ItemExpansion(name: 'Tổng tiền', amount: Utils.formatCurrencyViVn(totalAmount)),
+      ItemExpansion(name: 'Tổng sản lượng', amount: Utils.formatCurrencyViVn(totalQuantity, donVi: donVi)),
+    ];
+
+    return resultList;
   }
 
   FutureOr<void> _removeActivityPurchase(
@@ -187,6 +224,11 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
           isShowProgress: false,
           listActivityTransaction: listFilter3
       ));
+      List<ItemExpansion> listExpansion = calculateTotal(listFilter3, state.listUnit, state.donVi);
+      emit(state.copyWith(
+        isShowProgress: false,
+        listExpansion: listExpansion,
+      ));
     } else{
       Toast.showLongTop("Không tìm thấy thông tin giao dịch phù hợp");
       emit(state.copyWith(
@@ -268,6 +310,8 @@ class ActivityPurchaseState extends BlocState {
     listCallbackTransaction,
     amountSelected,
     listSelected,
+    listExpansion,
+    donVi,
   ];
   final List<ActivityDiary> listDiaryActivity;
   final List<MaterialEntity> listMaterial;
@@ -286,6 +330,8 @@ class ActivityPurchaseState extends BlocState {
   final List<ActivityPurchase> listActivityTransactionFilter;
   final List<bool> listSelected;
   final int amountSelected;
+  final List<ItemExpansion> listExpansion;
+  final String donVi;
 
   ActivityPurchaseState({
     this.listActivityTransaction = const [],
@@ -305,6 +351,8 @@ class ActivityPurchaseState extends BlocState {
     this.listCallbackTransaction = const [],
     this.listSelected = const [],
     this.amountSelected = 0,
+    this.listExpansion = const [],
+    this.donVi = "",
   });
 
   ActivityPurchaseState copyWith({
@@ -325,6 +373,8 @@ class ActivityPurchaseState extends BlocState {
     List<ActivityPurchase>? listActivityTransactionFilter,
     List<bool>? listSelected,
     int? amountSelected,
+    List<ItemExpansion>? listExpansion,
+    String? donVi,
   }) {
     return ActivityPurchaseState(
         listDiaryActivity: listDiaryActivity ?? this.listDiaryActivity,
@@ -347,6 +397,8 @@ class ActivityPurchaseState extends BlocState {
         listCallback: listCallback ?? this.listCallback,
         listSelected: listSelected ?? this.listSelected,
         amountSelected: amountSelected ?? this.amountSelected,
+        listExpansion: listExpansion ?? this.listExpansion,
+        donVi: donVi ?? this.donVi,
     );
   }
 }

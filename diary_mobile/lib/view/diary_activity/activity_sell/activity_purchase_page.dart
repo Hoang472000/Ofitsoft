@@ -14,6 +14,7 @@ import '../../../resource/assets.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
+import '../../../utils/widgets/bottom_sheet/expansion_tile_custom.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
@@ -204,63 +205,74 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                         blocContext.read<ActivityPurchaseBloc>().add(GetListActivityPurchaseEvent());
                       },
                       child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
-                          : SingleChildScrollView(
+                          : Column(
+                            children: [
+                              state.listExpansion.isNotEmpty ? ExpansionTileCustom(
+                                key: UniqueKey(), // Add a unique key to ExpansionTileCustom
+                                list: state.listExpansion, // Pass your list of ItemBasic
+                              ) : SizedBox(),
+                              Expanded(
+                                child: SingleChildScrollView(
                         //physics: const NeverScrollableScrollPhysics(),
                         child: Column(
-                          children: [
-                            ListView.builder(
-                              itemCount: state.listActivityTransaction.length,
-                              itemBuilder: (BuildContext contextBloc, int index) {
-                                return ItemTransaction(
-                                    diary: Diary(),
-                                    activityDiary:
-                                    state.listActivityTransaction[index],
-                                    action: widget.action,
-                                    chooseItem: () async {
-                                      //Truyen id de sang man ben goi api hoac DB
-                                      //if (widget.action.compareTo('sell') == 0) {
-                                      var result = await Navigator.push(
-                                          context,
-                                          DetailActivityPurchasePage.route(
-                                              state
-                                                  .listActivityTransaction[index],
-                                              widget.action));
-                                      if (result != null && result[0]) {
-                                        contextBloc.read<ActivityPurchaseBloc>().add(
-                                            GetListActivityPurchaseEvent());
-                                      }
-                                      //}
+                                children: [
+                                  ListView.builder(
+                                    itemCount: state.listActivityTransaction.length,
+                                    itemBuilder: (BuildContext contextBloc, int index) {
+                                      return ItemTransaction(
+                                          diary: Diary(),
+                                          activityDiary:
+                                          state.listActivityTransaction[index],
+                                          action: widget.action,
+                                          chooseItem: () async {
+                                            //Truyen id de sang man ben goi api hoac DB
+                                            //if (widget.action.compareTo('sell') == 0) {
+                                            var result = await Navigator.push(
+                                                context,
+                                                DetailActivityPurchasePage.route(
+                                                    state
+                                                        .listActivityTransaction[index],
+                                                    widget.action));
+                                            if (result != null && result[0]) {
+                                              contextBloc.read<ActivityPurchaseBloc>().add(
+                                                  GetListActivityPurchaseEvent());
+                                            }
+                                            //}
+                                          },
+                                        callbackChooseItem: (isChoose){
+                                          blocContext.read<ActivityPurchaseBloc>().add(
+                                              AddChoosePurchaseEvent(
+                                                  index, !isChoose));
+                                        },
+                                          callbackDelete: () {
+                                            blocContext.read<ActivityPurchaseBloc>().add(
+                                                RemoveActivityPurchaseEvent(
+                                                    state.listActivityTransaction[index].id ??
+                                                        -1,
+                                                    widget.action));
+                                          },
+                                      callbackExport: (){
+                                        blocContext.read<ActivityPurchaseBloc>().add(
+                                            ExportPDFEvent(
+                                                [state.listActivityTransaction[index].id ??
+                                                    -1]));
+                                      }, amountSelected: state.amountSelected,
+                                        isChoose: state.listSelected[index],
+                                      );
                                     },
-                                  callbackChooseItem: (isChoose){
-                                    blocContext.read<ActivityPurchaseBloc>().add(
-                                        AddChoosePurchaseEvent(
-                                            index, !isChoose));
-                                  },
-                                    callbackDelete: () {
-                                      blocContext.read<ActivityPurchaseBloc>().add(
-                                          RemoveActivityPurchaseEvent(
-                                              state.listActivityTransaction[index].id ??
-                                                  -1,
-                                              widget.action));
-                                    },
-                                callbackExport: (){
-                                  blocContext.read<ActivityPurchaseBloc>().add(
-                                      ExportPDFEvent(
-                                          [state.listActivityTransaction[index].id ??
-                                              -1]));
-                                }, amountSelected: state.amountSelected,
-                                  isChoose: state.listSelected[index],
-                                );
-                              },
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                            ),
-                            SizedBox(
-                              height: 60,
-                            )
-                          ],
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    padding: EdgeInsets.zero,
+                                  ),
+                                  SizedBox(
+                                    height: 60,
+                                  )
+                                ],
                         ),
                       ),
+                              ),
+                            ],
+                          ),
                     );
                   }),
             ),

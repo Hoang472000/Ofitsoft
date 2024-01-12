@@ -12,6 +12,8 @@ import '../../data/entity/diary/area_entity.dart';
 import '../../data/entity/diary/diary.dart';
 import '../../data/local_data/diary_db.dart';
 import '../../data/repository.dart';
+import '../../resource/color.dart';
+import '../../resource/style.dart';
 import '../../utils/constants/shared_preferences_key.dart';
 import '../../utils/extenstion/extenstions.dart';
 import '../../utils/extenstion/input_register_model.dart';
@@ -411,6 +413,16 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
   }
 
   FutureOr<void> _initFilter(InitFilterEvent event, Emitter<FilterState> emit) {
+    int begin = DateTime.now().year;
+    List<ItemFilter> listYear = [
+      ItemFilter(0, "${begin-2}"),
+      ItemFilter(1, "${begin-1}"),
+      ItemFilter(2, "${begin}"),
+    ];
+    emit(state.copyWith(
+      listYear: listYear
+    ));
+    List<Widget> listWidgetYear= [];
     emit(state.copyWith(
       isShowProgress: true,
       startTime: "",
@@ -429,6 +441,8 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       indexFilter1: -1,
       indexFilter2: -1,
       indexFilter3: -1,
+      listYear: listYear,
+      listWidgetYear: listWidgetYear,
     ));
     print("HoangCV: event.type:0 ${event.type}");
     if(event.type.compareTo("diary") == 0) {
@@ -523,6 +537,16 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
 
 
   FutureOr<void> _onChangeDateTime(OnChangeDateTime event, Emitter<FilterState> emit) async {
+    if(event.id != -1){
+      for (int i = 0; i < state.listYear.length; i++) {
+        if (event.id == i) {
+          state.listYear[i].image = "1";
+          continue;
+        } else {
+          state.listYear[i].image = "";
+        }
+      }
+    }
     emit(state.copyWith(
       startTime: event.startTime.isNotEmpty
           ? event.startTime
@@ -530,6 +554,7 @@ class FilterBloc extends Bloc<FilterEvent, FilterState> {
       endTime: event.endTime.isNotEmpty
           ? event.endTime
           : Utils.formatDateToString(DateTime.now()),
+      listYear: state.listYear,
     ));
   }
 
@@ -618,10 +643,11 @@ class UpdateAvatarEvent extends FilterEvent {
 }
 
 class OnChangeDateTime extends FilterEvent {
-  OnChangeDateTime(this.startTime, this.endTime);
+  OnChangeDateTime(this.startTime, this.endTime, {this.id = -1});
 
   final String startTime;
   final String endTime;
+  final int id;
 
   @override
   List<Object?> get props => [startTime, endTime];
@@ -665,6 +691,8 @@ class FilterState extends BlocState {
     indexFilter1,
     indexFilter2,
     indexFilter3,
+    listYear,
+    listWidgetYear,
   ];
 
   final FormSubmissionStatus formStatus;
@@ -673,6 +701,8 @@ class FilterState extends BlocState {
   String endTime;
   List<InputRegisterModel> list;
   List<ItemFilter> listFilter;
+  List<ItemFilter> listYear;
+  List<Widget> listWidgetYear;
   TextEditingController? minQuantity = TextEditingController();
   TextEditingController? maxQuantity = TextEditingController();
   TextEditingController? minPrice = TextEditingController();
@@ -697,6 +727,8 @@ class FilterState extends BlocState {
     this.endTime = '',
     this.list = const [],
     this.listFilter = const [],
+    this.listYear = const [],
+    this.listWidgetYear = const [],
     this.minQuantity, 
     this.maxQuantity, 
     this.minPrice, 
@@ -721,7 +753,9 @@ class FilterState extends BlocState {
     String? startTime,
     String? endTime,
     List<InputRegisterModel>? list,
+    List<ItemFilter>? listYear,
     List<ItemFilter>? listFilter,
+    List<Widget>? listWidgetYear,
   TextEditingController? minQuantity,
   TextEditingController? maxQuantity,
   TextEditingController? minPrice,
@@ -746,6 +780,8 @@ class FilterState extends BlocState {
       endTime: endTime ?? this.endTime,
       list: list ?? this.list,
       listFilter: listFilter ?? this.listFilter,
+      listYear: listYear ?? this.listYear,
+      listWidgetYear: listWidgetYear ?? this.listWidgetYear,
       minQuantity: minQuantity ?? this.minQuantity,
       maxQuantity: maxQuantity ?? this.maxQuantity,
       minPrice: minPrice ?? this.minPrice,

@@ -899,6 +899,8 @@ class DiaryDB extends _$DiaryDB {
           //await m.addColumn(reportSelectTable, reportSelectTable.isInitialAssessment);
         }
         else if (from == 4) {
+          m.deleteTable("diary");
+          m.createTable(diaryTable);
           m.createTable(taskEntityTable);
           m.addColumn(reportTable, reportTable.isInitialAssessment);
         }
