@@ -85,9 +85,11 @@ class ActivityPurchaseBloc extends Bloc<ActivityPurchaseEvent, ActivityPurchaseS
         (previousValue, element) =>
             previousValue +
             ((element.quantity ?? 0) * (element.unitPrice ?? 0)));
+    int totalTransaction = listCallbackTransaction.length;
 
     List<ItemExpansion> resultList = [
       ItemExpansion(name: 'Tổng tiền', amount: Utils.formatCurrencyViVn(totalAmount)),
+      ItemExpansion(name: 'Tổng giao dịch', amount: "${totalTransaction} giao dịch"),
       ItemExpansion(name: 'Tổng sản lượng', amount: Utils.formatCurrencyViVn(totalQuantity, donVi: donVi)),
     ];
 
