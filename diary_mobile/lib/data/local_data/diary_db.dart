@@ -901,6 +901,10 @@ class DiaryDB extends _$DiaryDB {
         else if (from == 4) {
           m.deleteTable("diary");
           m.createTable(diaryTable);
+          m.addColumn(diaryTable, diaryTable.seasonName);
+          m.addColumn(diaryTable, diaryTable.areaId);
+          m.addColumn(diaryTable, diaryTable.productProcessId);
+          m.addColumn(diaryTable, diaryTable.productProcessName);
           m.createTable(taskEntityTable);
           m.addColumn(reportTable, reportTable.isInitialAssessment);
         }
