@@ -1,3 +1,4 @@
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,7 +20,36 @@ class ContactPage extends StatefulWidget {
   State<StatefulWidget> createState() => _ContactPageState();
 }
 
-class _ContactPageState extends State<ContactPage> {
+class _ContactPageState extends State<ContactPage>  with TickerProviderStateMixin{
+
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
+
+    _animation = Tween<double>(begin: 0.97, end: 1.03).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack));
+    _animationController.forward();
+    _animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed)
+        _animationController.reverse();
+      else if (status == AnimationStatus.dismissed)
+        _animationController.forward();
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -74,7 +104,10 @@ class _ContactPageState extends State<ContactPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Image(image: AssetImage(ImageAsset.imageOfitsoftText),/* opacity: const AlwaysStoppedAnimation(.9),*/ height: 100,),
+                        RotationTransition(
+                            turns: _animation,
+                            child: const Image(
+                              image: AssetImage(ImageAsset.imageOfitsoftText),/* opacity: const AlwaysStoppedAnimation(.9),*/ height: 100,)),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

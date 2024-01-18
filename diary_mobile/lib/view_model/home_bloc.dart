@@ -50,6 +50,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         nameActivity: S.of(context).create_diary,
         iconActivity: ImageAsset.imageDiary));
     list.add(ActivityFarm(
+        id: 8,
+        nameActivity: S.of(context).history_activity,
+        iconActivity: ImageAsset.imageHistoryActivity));
+    list.add(ActivityFarm(
         id: 4,
         nameActivity: S.of(context).communication,
         iconActivity: ImageAsset.imageReply));

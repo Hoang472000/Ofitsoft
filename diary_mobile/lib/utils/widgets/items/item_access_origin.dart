@@ -35,16 +35,15 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
           const EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 0),
           margin: const EdgeInsets.only(left: 20, right: 16, top: 4, bottom: 4),
           decoration: BoxDecoration(
-              boxShadow: [
+             /* boxShadow: [
                 BoxShadow(
                   color: AppColor.main,
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),
-              ],
+              ],*/
               borderRadius: BorderRadius.circular(8),
-              color: /*widget.isChoose ? Colors.red[100] :*/
-              Colors.white),
+              color: AppColor.whiteF2.withOpacity(0.9)),
           child: Container(
             padding:
             const EdgeInsets.only(top: 5, bottom: 12, left: 16, right: 0),

@@ -14,6 +14,7 @@ import '../../view_model/home_bloc.dart';
 import '../access_origin/access_origin_page.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../diary_activity/record_diary/add_record_diary.dart';
+import '../history_activity/history_activity_page.dart';
 import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
@@ -26,7 +27,7 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
   final PageController _pageController = PageController(initialPage: 0,
     viewportFraction: 1,);
   int _currentPage = 0;
@@ -35,17 +36,34 @@ class _HomeViewState extends State<HomeView> {
   bool isScrollingDown = false;
   double bottomBarHeight = 75;
   String userName = '';
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _startAutoScroll();
     myScroll();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
+
+    _animation = Tween<double>(begin: 0.97, end: 1.03).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack));
+    _animationController.forward();
+    _animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed)
+        _animationController.reverse();
+      else if (status == AnimationStatus.dismissed)
+        _animationController.forward();
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -68,30 +86,12 @@ class _HomeViewState extends State<HomeView> {
       userName = sharedPreferences.getString(SharedPreferencesKey.fullName) ?? "";
     });
   }
-
   Widget build(BuildContext context) {
     //print("runqay Home record view");
     return BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
       return Scaffold(
         //backgroundColor: Colors.transparent,
         extendBodyBehindAppBar: true,
-        /*appBar: _showAppbar ? OfitAppBar(
-          context,
-          centerTitle: true,
-          showDefaultBackButton: false,
-          title: Text(
-            "Trang chủ",
-            style: StyleOfit.textStyleFW700(AppColor.main, 20),
-          ),
-          backgroundColor: Colors.transparent,
-          flexibleSpace: SizedBox(),
-          hasBottom: true,
-          actions: [],
-        )
-            : PreferredSize(
-          child: Container(),
-          preferredSize: Size(0.0, 0.0),
-        ),*/
         body: Utils.bkavCheckOrientation(
             context,
             Stack(
@@ -101,20 +101,16 @@ class _HomeViewState extends State<HomeView> {
                     image: DecorationImage(
                         opacity: 1,
                         image: AssetImage(
-                            ImageAsset.imageOfitSoftBackground),
-                        fit: BoxFit.fill),
+                            ImageAsset.imageOfitSoftBG),
+                        fit: BoxFit.cover),
                   ),
                   child:  Container(
                       width: double.infinity,
                       padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 13,
                           left: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 4,
                           right: MediaQuery.of(context).size.width / 20),
-                      //color: const Color(0xFFEFF2F5),
                       child: Row(
                         children: [
-                          /*SizedBox(
-                          width: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 3.5,
-                        ),*/
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,19 +144,22 @@ class _HomeViewState extends State<HomeView> {
                       )),),
                 Container(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 15, left: MediaQuery.of(context).size.width / 20),
-                  child: Image(
-                    image: AssetImage(
-                        ImageAsset.imageOfitsoftText),
-                    opacity: const AlwaysStoppedAnimation(.8),
-                    height: MediaQuery.of(context).size.width / 4,
+                  child: RotationTransition(
+                    turns: _animation,
+                    child: Image(
+                      image: AssetImage(
+                          ImageAsset.imageOfitsoftText),
+                      opacity: const AlwaysStoppedAnimation(.8),
+                      height: MediaQuery.of(context).size.width / 4,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.5),
                   child: Container(
                     //height: MediaQuery.of(context).size.height / 9,
-                    decoration: ShapeDecoration(
-                      gradient: const LinearGradient(
+                    decoration: const ShapeDecoration(
+                      gradient: LinearGradient(
                         colors: [Colors.white,Colors.white ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -173,16 +172,17 @@ class _HomeViewState extends State<HomeView> {
                       ),
                       shadows: [
                         BoxShadow(
-                          color: AppColor.grayDC,
-                          offset: const Offset(0, -2), // Dịch shadow lên trên (âm số)
-                          blurRadius: 3, // Bán kính blur của shadow
-                          spreadRadius: 0, // Khoảng lan rộng của shadow
+                          color: AppColor.whiteF2,
+                          offset: Offset(0, -2), // Dịch shadow lên trên (âm số)
+                          blurRadius: 0.2, // Bán kính blur của shadow
+                          spreadRadius: 0.2, // Khoảng lan rộng của shadow
                         ),
                       ],
                     ),
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 3.5,
@@ -230,7 +230,9 @@ class _HomeViewState extends State<HomeView> {
                                           } else if (activity.id == 6) {
                                             Navigator.push(context, ContactPage.route());
                                           } else if (activity.id == 7) {
-                                            Navigator.push(context, AddRecordDiaryPage.route("farmer"));
+                                            Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                          } else if (activity.id == 8) {
+                                            Navigator.push(context, HistoryActivityPage.route());
                                           }
                                         },
                                         child: item(activity),

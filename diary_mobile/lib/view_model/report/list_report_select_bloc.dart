@@ -22,7 +22,7 @@ class ListReportSelectBloc extends Bloc<ListReportSelectEvent, ListReportSelectS
   void _getListReportSelect(
       GetListReportSelectEvent event, Emitter<ListReportSelectState> emitter) async {
     emitter(state.copyWith(
-      isShowProgress: true,
+      isShowProgress: false,
       formStatus: const InitialFormStatus(),));
     if(event.checkUpdate){
       final listReportSelect = await repository.getListReportSelect();

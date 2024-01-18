@@ -55,5 +55,6 @@ class AppColor {
   static const Color green29= Color(0xFF295F2D);
   static const Color yellowFE= Color(0xFFFFE67B);
   static const Color cyan99= Color(0xFFE6efff);
+  static const Color colorBG= Color(0xFF807D7D);
 
 }

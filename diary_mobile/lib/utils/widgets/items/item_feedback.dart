@@ -44,16 +44,16 @@ class _ItemFeedbackState extends State<ItemFeedback> {
           const EdgeInsets.only(top: 12, bottom: 12, left: 16, right: 16),
           margin: const EdgeInsets.only(left: 20, right: 16, top: 4, bottom: 4),
           decoration: BoxDecoration(
-              boxShadow: const [
+              /*boxShadow: const [
                 BoxShadow(
                   color: AppColor.main,
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),
-              ],
+              ],*/
               borderRadius: BorderRadius.circular(8),
               color: /*widget.isChoose ? Colors.red[100] :*/
-              Colors.white),
+              Colors.white.withOpacity(0.9)),
           child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [

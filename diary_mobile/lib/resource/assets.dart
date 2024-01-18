@@ -235,10 +235,16 @@ class ImageAsset {
   static const String imagePurchase3 = "${iMages}purchase3.jpeg";
   static const String imageManagerSmart1 = "${iMages}image_manager_smart1.png";
   static const String imageManagerSmart2 = "${iMages}images_manager_smart2.jpeg";
+  //
+  static const String imageHistoryActivity = "${iMages}history_activity.png";
 
   static const String imageOfitSoftBackground = "${iMages}image_ofitsoft_background.jpg";
 
   static const String imageEmptyData = "${iMages}empty_data.png";
+  static const String imageEmpty = "${iMages}image_empty.png";
 
   static const String imageBackgroundDigital = "${iMages}background_digital.png";
+  static const String imageBackground1 = "${iMages}image_background1.jpg";
+  static const String imageBackground2 = "${iMages}image_background2.jpg";
+  static const String imageOfitSoftBG = "${iMages}image_ofitsoft.jpg";
 }

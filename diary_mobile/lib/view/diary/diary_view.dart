@@ -104,7 +104,8 @@ class _DiaryViewState extends State<DiaryView> {
                 listener: (context, state) async {},
                 builder: (blocContext, state) {
                   return state
-                      .isShowProgress ? const Center(
+                      .isShowProgress ? Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
                     child:
                     DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
                   )

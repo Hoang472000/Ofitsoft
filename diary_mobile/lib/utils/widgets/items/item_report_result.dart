@@ -53,7 +53,7 @@ class _ItemReportResultState extends State<ItemReportResult> {
           const EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 0),
           margin: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
           decoration: BoxDecoration(
-              boxShadow: [
+         /*     boxShadow: [
                 BoxShadow(
                   color: widget.reportResult.state == 'done'
                       ? AppColor.green53
@@ -62,9 +62,9 @@ class _ItemReportResultState extends State<ItemReportResult> {
                   blurRadius: 0,
                   offset: Offset(-5.0, 0),
                 ),
-              ],
+              ],*/
               borderRadius: BorderRadius.circular(8),
-              color: Colors.white),
+              color: Colors.white.withOpacity(0.9)),
           child: Stack(
             children: [
               Container(

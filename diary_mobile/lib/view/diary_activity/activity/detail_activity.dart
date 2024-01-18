@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:diary_mobile/data/entity/activity/activity_diary.dart';
 import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/repository.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:diary_mobile/view_model/diary_activity/activity/detail_activity_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,19 +23,21 @@ import '../../../utils/widgets/input/container_input_widget.dart';
 import 'add_activity_sub/add_activity_sub.dart';
 
 class DetailActivityPage extends StatefulWidget {
-  DetailActivityPage({super.key, required this.activityDiary, required this.diary});
+  DetailActivityPage({super.key, required this.activityDiary, required this.diary, required this.isEdit});
 
   final ActivityDiary activityDiary;
   final Diary diary;
+  final bool isEdit;
 
   @override
   _DetailActivityPageState createState() => _DetailActivityPageState();
 
-  static Route route(ActivityDiary activityDiary, Diary diary) {
+  static Route route(ActivityDiary activityDiary, Diary diary, {bool isEdit = true}) {
     return Utils.pageRouteBuilder(
         DetailActivityPage(
           activityDiary: activityDiary,
-            diary: diary
+            diary: diary,
+            isEdit: isEdit
         ),
         true);
   }
@@ -77,650 +80,646 @@ class _DetailActivityPageState extends State<DetailActivityPage> {
           ),
           backgroundColor: AppColor.main,
           actions: [],
-          /*leading: BlocBuilder<DetailActivityBloc, DetailActivityState>(
-  builder: (blocContext, state) {
-    return IconButton(
-            onPressed: () {
-              print("HoangCV: bugugugu");
-              blocContext
-                  .read<DetailActivityBloc>()
-                  .add(BackEvent(copiesActivityDiary, listCopies2, listCopies));
-              Navigator.pop(context);
-            },
-      icon: SvgPicture.asset(
-          IconAsset.icArrowLeft,
-          height: 20,
-          color: AppColor.whiteF2
-      ),
-      color: Colors.white,
-      padding: EdgeInsets.zero,
-          );
-  },
-),*/
         ),
-        body: SafeArea(
-          child: BlocConsumer<DetailActivityBloc, DetailActivityState>(
-              listener: (blocContext, state) async {
-            final formStatus = state.formStatus;
-            if (formStatus is SubmissionFailed) {
-              DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                Get.back();
-              }, () {
-                Get.back();
-              }, '', S.of(context).close_dialog);
-            } else if (formStatus is SubmissionSuccess) {
-              DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                  () {
-                Get.back();
-                Navigator.pop(context, [true, state.listActivity[state.indexActivity].harvesting]);
-              }, () {
+        body: BlocConsumer<DetailActivityBloc, DetailActivityState>(
+            listener: (blocContext, state) async {
+          final formStatus = state.formStatus;
+          if (formStatus is SubmissionFailed) {
+            DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+              Get.back();
+            }, () {
+              Get.back();
+            }, '', S.of(context).close_dialog);
+          } else if (formStatus is SubmissionSuccess) {
+            DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                () {
+              Get.back();
+              Navigator.pop(context, [true, state.listActivity[state.indexActivity].harvesting]);
+            }, () {
       /*        Get.back();
-                Navigator.pop(context, [true]);*/
-              }, '', S.of(context).close_dialog, dismissible: false);
-            } else if (formStatus is FormSubmitting) {
-              DiaLogManager.showDialogLoading(context);
-            }
-          }, builder: (blocContext, state) {
-            return WillPopScope(
-              onWillPop: () async{
+              Navigator.pop(context, [true]);*/
+            }, '', S.of(context).close_dialog, dismissible: false);
+          } else if (formStatus is FormSubmitting) {
+            DiaLogManager.showDialogLoading(context);
+          }
+        }, builder: (blocContext, state) {
+          return WillPopScope(
+            onWillPop: () async{
    /*           blocContext
-                    .read<DetailActivityBloc>()
-                    .add(BackEvent(copiesActivityDiary, listCopies2, listCopies));*/
-                Navigator.pop(context);
-                return false;
-              },
-              child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: SingleChildScrollView(
-                    //physics: NeverScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: state.listWidget.length,
-                          itemBuilder: (_, index) => ContainerInputWidget(
-                            contextParent: context,
-                            inputRegisterModel: state.listWidget[index],
-                            onClick: () {
-                              setState(() {});
-                              blocContext.read<DetailActivityBloc>().add(
-                                  OnSelectValueEvent(
-                                      state.listWidget, index, context));
-                              //onSelectValue(state.listWidget[index], context);
-                            },
-                            onMutiChoice: (id) {
-                              setState(() {
-                                state.listWidget[index].listMutiChoice![id]
-                                        .isSelected =
-                                    !state.listWidget[index].listMutiChoice![id]
-                                        .isSelected;
-                              });
-                            },
-                            onChangeText: (text) {},
-                          ),
-                        ),
-                        state.listWidgetArea.isNotEmpty
-                            ? Row(
-                                children: [
-                                  Expanded(
-                                      //flex: 8,
-                                      child: ContainerInputWidget(
-                                        contextParent: context,
-                                        inputRegisterModel: state.listWidgetArea[0],
-                                        onClick: () {
-                                          setState(() {});
-                                          blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(OnSelectValueEvent(
-                                                  state.listWidgetArea,
-                                                  0,
-                                                  context));
-                                        },
-                                        onChangeText: (text) {
-                                          blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(SaveValueTextFieldEvent(text,
-                                                  state.listWidgetArea[0], 0));
-                                        },
-                                        onSubmittedText: (text) {
-                                        },
-                                        onEditingComplete: (text) {
-                                           blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(SaveValueTextFieldEvent(text,
-                                                  state.listWidgetArea[0], 0));
-                                        },
-                                      )),
-                                  const SizedBox(
-                                    width: 8,
-                                  ),
-                                  Expanded(
-                                      //flex: 5,
-                                      child: ContainerInputWidget(
-                                        contextParent: context,
-                                        inputRegisterModel: state.listWidgetArea[1],
-                                        onClick: () {
-                                          setState(() {});
-                                          blocContext
-                                              .read<DetailActivityBloc>()
-                                              .add(OnSelectValueEvent(
-                                                  state.listWidgetArea,
-                                                  1,
-                                                  context));
-                                        },
-                                        onChangeText: (text) {},
-                                        onEditingComplete: (text) {},
-                                      )),
-                                ],
-                              )
-                            : const SizedBox(),
-                        state.listWidgetYield.isNotEmpty
-                            ? Row(
-                          children: [
-                            Expanded(
-                                //flex: 8,
-                                child: ContainerInputWidget(
-                                  contextParent: context,
-                                  inputRegisterModel: state.listWidgetYield[0],
-                                  onClick: () {
-                                    setState(() {});
-                                    blocContext.read<DetailActivityBloc>().add(
-                                        OnSelectValueEvent(
-                                            state.listWidgetYield,
-                                            0,
-                                            context));
-                                  },
-                                  onChangeText: (text) {
-                                    blocContext.read<DetailActivityBloc>().add(
-                                        SaveValueTextFieldEvent(text,
-                                            state.listWidgetYield[0], 0));
-                                  },
-                                  onSubmittedText: (text) {
-                                    print(
-                                        "HoangCV: onSubmittedText: ${text}");
-                                  },
-                                  onEditingComplete: (text) {
-                                    print(
-                                        "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
-                                    blocContext.read<DetailActivityBloc>().add(
-                                        SaveValueTextFieldEvent(text,
-                                            state.listWidgetYield[0], 0));
-                                  },
-                                )),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                                //flex: 5,
-                                child: ContainerInputWidget(
-                                  contextParent: context,
-                                  inputRegisterModel: state.listWidgetYield[1],
-                                  onClick: () {
-                                    setState(() {});
-                                    blocContext.read<DetailActivityBloc>().add(
-                                        OnSelectValueEvent(
-                                            state.listWidgetYield,
-                                            1,
-                                            context));
-                                  },
-                                  onChangeText: (text) {},
-                                  onEditingComplete: (text) {},
-                                )),
-                          ],
-                        )
-                            : const SizedBox(),
-                        itemAccount(context,
-                            text: "Danh sách vật tư, công cụ",
-                            image: ImageAsset.imageGardening,
-                            voidCallback: () async {
-                          print(
-                              "HoangCV: state.listWidgetVT: ${state.listVatTuAdd.length} : ${state.listCongCuAdd.length}");
-                          var result = await Navigator.of(context).push(
-                              AddActivitySubPage.route(
-                                  state.listVatTuAdd,
-                                  state.listCongCuAdd,
-                                  state.listWidgetVT,
-                                  state.listWidgetCC,
-                                  edit));
-
-                        }),
-                        SizedBox(
-                          height:
-                              state.listImage.isNotEmpty ? state.imageHeight : 0,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: state.listImage.length,
-                              itemBuilder: (context, index) {
-                                /*      double imageWidth =
-                                        130; // Kích thước mặc định nếu có >= 3 ảnh
-                                    double imageHeight =
-                                    100;*/
-                                return Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Image.memory(
-                                        gaplessPlayback: true,
-                                        base64Decode(state.listImage[index]
-                                            .contentView ??
-                                            ""),
-                                        height: state.imageHeight,
-                                        width: state.imageWidth,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error,
-                                            stackTrace) {
-                                          return Container(
-                                            height: state.imageHeight,
-                                            width: state.imageWidth,
-                                            decoration: BoxDecoration(
-                                                color:  AppColor.grayC7),
-                                            child: Center(
-                                              child: Text(
-                                                "V",
-                                                style:
-                                                StyleOfit.textStyleFW700(AppColor.main, 16),
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      Visibility(
-                                        visible: state.listImage[index].type == "2",
-                                        child: Positioned.fill(
-                                          child: IconButton(
-                                              onPressed: () {},
-                                              icon: SizedBox(
-                                                height: state.imageWidth/4,
-                                                child: Image(
-                                                  image:
-                                                  AssetImage(ImageAsset.imageYoutube),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: edit,
-                                        child: Positioned(
-                                          top: -5,
-                                          right: -10,
-                                          child: IconButton(
-                                              onPressed: () async {
-                                                DiaLogManager.displayDialog(
-                                                    context,
-                                                    "",
-                                                    S
-                                                        .of(context)
-                                                        .you_sure_want_delete_image,
-                                                    () async {
-                                                  Get.back();
-                                                  setState(() {
-                                                    blocContext
-                                                        .read<DetailActivityBloc>()
-                                                        .add(AddOrDeleteImageEvent(
-                                                            state.listImage,
-                                                            index,
-                                                            context));
-                                                  });
-                                                }, () {
-                                                  Get.back();
-                                                }, S.of(context).cancel,
-                                                    S.of(context).agree);
-                                              },
-                                              icon: const SizedBox(
-                                                height: 25,
-                                                child: Image(
-                                                  image: AssetImage(
-                                                      ImageAsset.imageBin),
-                                                  //width: 40,
-                                                  fit: BoxFit.contain,
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                        ),
-                        Visibility(
-                          visible: edit,
-                          child: TextButton(
-                            onPressed: () {
-                              Get.bottomSheet(
-                                SizedBox(
-                                    //height: 140,
-                                    //padding: EdgeInsets.symmetric(horizontal: 15),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(12),
-                                            topLeft: Radius.circular(12)),
-                                        color: Colors.white,
-                                      ),
-                                      constraints: BoxConstraints(
-                                        maxHeight: MediaQuery.of(context).size.height * 0.2, // Hoặc giá trị phù hợp với nhu cầu của bạn
-                                      ),
-                                      child: Center(
-                                        child: Column(
-                                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Container(
-                                              height: 44,
-                                              decoration: BoxDecoration(
-                                                  borderRadius: BorderRadius.only(
-                                                      topRight: Radius.circular(12),
-                                                      topLeft: Radius.circular(12)),
-                                                  color: Theme.of(context)
-                                                      .primaryColor),
-                                              child: Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  Container(
-                                                    alignment: Alignment.center,
-                                                    padding: const EdgeInsets.only(
-                                                        left: 10,
-                                                        top: 8,
-                                                        bottom: 8),
-                                                    child: Text(
-                                                        S.of(context).pick_a_photo,
-                                                        style: StyleOfit
-                                                            .textStyleFW700(
-                                                                Colors.white, 18)),
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.clear,
-                                                      color: Colors.white,
-                                                      size: 20.0,
-                                                    ),
-                                                    onPressed: () {
-                                                      Get.back();
-                                                    },
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              padding:
-                                                  const EdgeInsets.only(top: 18),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.spaceEvenly,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        const Image(
-                                                          image: AssetImage(
-                                                              ImageAsset
-                                                                  .imageCamera),
-                                                          width: 40,
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                        Text(
-                                                          S.of(context).from_camera,
-                                                          style: StyleOfit
-                                                              .textStyleFW500(
-                                                                  AppColor.black22,
-                                                                  14),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      Get.back();
-                                                      List<ImageEntity> list =
-                                                          await Utils
-                                                              .getImagePicker(
-                                                                  ImageSource
-                                                                      .camera);
-                                                      setState(() {
-                                                        if (list.length > 0) {
-                                                          blocContext
-                                                              .read<
-                                                                  DetailActivityBloc>()
-                                                              .add(
-                                                                  AddOrDeleteImageEvent(
-                                                                      list,
-                                                                      -1,
-                                                                      context));
-                                                        }
-                                                      });
-                                                      //HoangCV pick camera
-                                                    },
-                                                  ),
-                                                  GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        const Image(
-                                                          image: AssetImage(
-                                                              ImageAsset
-                                                                  .imageGallery),
-                                                          width: 40,
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                        Text(
-                                                          S
-                                                              .of(context)
-                                                              .from_library,
-                                                          style: StyleOfit
-                                                              .textStyleFW500(
-                                                                  AppColor.black22,
-                                                                  14),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      //TODO: Tam tat tinh nang nay
-                                                      Get.back();
-
-                                                      //HoangCV: chup anh
-                                                      List<ImageEntity> list =
-                                                          await Utils
-                                                              .getImagePicker(
-                                                                  ImageSource
-                                                                      .gallery);
-                                                      setState(() {
-                                                        if (list.length > 0) {
-                                                          blocContext
-                                                              .read<
-                                                                  DetailActivityBloc>()
-                                                              .add(
-                                                                  AddOrDeleteImageEvent(
-                                                                      list,
-                                                                      -1,
-                                                                      context));
-                                                        }
-                                                      });
-                                                    },
-                                                  ),
-                                              /*    GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        const Image(
-                                                          image: AssetImage(
-                                                              ImageAsset.imageYoutube),
-                                                          width: 40,
-                                                          fit: BoxFit.contain,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 2,
-                                                        ),
-                                                        Text(
-                                                          "Quay video",
-                                                          style: StyleOfit
-                                                              .textStyleFW500(
-                                                              AppColor.black22,
-                                                              14),
-                                                        )
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      Get.back();
-                                                      List<ImageEntity> list =
-                                                      await Utils.getImagePicker(
-                                                          ImageSource.camera, type: "video");
-                                                      setState(() {
-                                                        if (list.length > 0) {
-                                                          blocContext
-                                                              .read<DetailActivityBloc>()
-                                                              .add(
-                                                              AddOrDeleteImageEvent(
-                                                                  list,
-                                                                  -1,
-                                                                  context));
-                                                        }
-                                                      });
-                                                      //HoangCV pick camera
-                                                    },
-                                                  ),*/
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    )),
-                                // barrierColor: Colors.transparent,
-                                isDismissible: true,
-                                enableDrag: true,
-                              );
-                            },
-                            child: Container(
-
-                              margin: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 5),
-                              decoration: BoxDecoration(
-                                //color: AppColor.gray1.withOpacity(0.9),
-                                gradient: const LinearGradient(
-                                  colors: [AppColor.grayC7, AppColor.gray9B],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(32),
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 6, vertical: 5),
-                                    child: Image(
-                                      image: AssetImage(ImageAsset.imageCamera),
-                                      width: 40,
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  Text(
-                                    "Chụp ảnh",
-                                    style: StyleOfit.textStyleFW500(
-                                        AppColor.gray57, 16),
-                                  )
-                                ],
-                              ),
+                  .read<DetailActivityBloc>()
+                  .add(BackEvent(copiesActivityDiary, listCopies2, listCopies));*/
+              Navigator.pop(context);
+              return false;
+            },
+            child: HomeBackGround(
+              children: [
+                Container(
+                 /*   decoration: BoxDecoration(
+                      color: AppColor.whiteF2.withOpacity(0.2),
+                      borderRadius:
+                      BorderRadius.all(Radius.circular(10)),
+                    ),*/
+                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                    child: SingleChildScrollView(
+                      //physics: NeverScrollableScrollPhysics(),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          ListView.builder(
+                            padding: EdgeInsets.zero,
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: state.listWidget.length,
+                            itemBuilder: (_, index) => ContainerInputWidget(
+                              contextParent: context,
+                              inputRegisterModel: state.listWidget[index],
+                              onClick: () {
+                                setState(() {});
+                                blocContext.read<DetailActivityBloc>().add(
+                                    OnSelectValueEvent(
+                                        state.listWidget, index, context));
+                                //onSelectValue(state.listWidget[index], context);
+                              },
+                              onMutiChoice: (id) {
+                                setState(() {
+                                  state.listWidget[index].listMutiChoice![id]
+                                          .isSelected =
+                                      !state.listWidget[index].listMutiChoice![id]
+                                          .isSelected;
+                                });
+                              },
+                              onChangeText: (text) {},
                             ),
                           ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 8),
-                          child: Row(
-                            children: [
-                              Visibility(
-                                visible: !edit,
-                                child: Expanded(
-                                  child: OfitButton(
-                                      text: "Sửa hoạt động",
-                                      onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
-                                          (widget.diary.status??'').compareTo("cancelled") == 0)?
-                                          () {
-                                        if((widget.diary.status??'').compareTo("done") == 0 ) {
-                                          DiaLogManager.displayDialog(context,
-                                              "Nhật ký đã hoàn thành","Bạn không thể sửa hoạt động",
-                                                  (){Navigator.pop(context);}, () {},
-                                              "",S.of(context).close_dialog);
-                                        }
-                                        if((widget.diary.status??'').compareTo("done") == 0 ) {
-                                          DiaLogManager.displayDialog(context,
-                                              "Nhật ký đã đóng","Bạn không thể sửa hoạt động",
-                                                  (){Navigator.pop(context);}, () {},
-                                              "",S.of(context).close_dialog);
-                                        }
-                                      }
-                                          :() {
-                                        setState(() {
-                                          edit = !edit;
-                                          //state.listWidget.clear();
-                                          if (edit) {
+                          state.listWidgetArea.isNotEmpty
+                              ? Row(
+                                  children: [
+                                    Expanded(
+                                        //flex: 8,
+                                        child: ContainerInputWidget(
+                                          contextParent: context,
+                                          inputRegisterModel: state.listWidgetArea[0],
+                                          onClick: () {
+                                            setState(() {});
                                             blocContext
                                                 .read<DetailActivityBloc>()
-                                                .add(ChangeEditActivityEvent());
-                                          } else {
-                             /*               blocContext
+                                                .add(OnSelectValueEvent(
+                                                    state.listWidgetArea,
+                                                    0,
+                                                    context));
+                                          },
+                                          onChangeText: (text) {
+                                            blocContext
                                                 .read<DetailActivityBloc>()
-                                                .add(ChangeDetailActivityEvent());*/
-                                          }
-                                        });
-                                      }),
-                                ),
-                              ),
-                              Visibility(
-                                visible: edit,
-                                child: Expanded(
-                                  child: OfitButton(
-                                      text: "Hủy",
-                                      onPressed: () {
-                                        setState(() {
-                                          edit = !edit;
-                                        });
-                                        blocContext
-                                            .read<DetailActivityBloc>()
-                                            .add(GetDetailActivityEvent(widget.activityDiary, widget.diary, resetView: true));
-                                      }),
-                                ),
-                              ),
-                              Visibility(
-                                  visible: edit,
-                                  child: SizedBox(
-                                    width: 16,
+                                                .add(SaveValueTextFieldEvent(text,
+                                                    state.listWidgetArea[0], 0));
+                                          },
+                                          onSubmittedText: (text) {
+                                          },
+                                          onEditingComplete: (text) {
+                                             blocContext
+                                                .read<DetailActivityBloc>()
+                                                .add(SaveValueTextFieldEvent(text,
+                                                    state.listWidgetArea[0], 0));
+                                          },
+                                        )),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    Expanded(
+                                        //flex: 5,
+                                        child: ContainerInputWidget(
+                                          contextParent: context,
+                                          inputRegisterModel: state.listWidgetArea[1],
+                                          onClick: () {
+                                            setState(() {});
+                                            blocContext
+                                                .read<DetailActivityBloc>()
+                                                .add(OnSelectValueEvent(
+                                                    state.listWidgetArea,
+                                                    1,
+                                                    context));
+                                          },
+                                          onChangeText: (text) {},
+                                          onEditingComplete: (text) {},
+                                        )),
+                                  ],
+                                )
+                              : const SizedBox(),
+                          state.listWidgetYield.isNotEmpty
+                              ? Row(
+                            children: [
+                              Expanded(
+                                  //flex: 8,
+                                  child: ContainerInputWidget(
+                                    contextParent: context,
+                                    inputRegisterModel: state.listWidgetYield[0],
+                                    onClick: () {
+                                      setState(() {});
+                                      blocContext.read<DetailActivityBloc>().add(
+                                          OnSelectValueEvent(
+                                              state.listWidgetYield,
+                                              0,
+                                              context));
+                                    },
+                                    onChangeText: (text) {
+                                      blocContext.read<DetailActivityBloc>().add(
+                                          SaveValueTextFieldEvent(text,
+                                              state.listWidgetYield[0], 0));
+                                    },
+                                    onSubmittedText: (text) {
+                                      print(
+                                          "HoangCV: onSubmittedText: ${text}");
+                                    },
+                                    onEditingComplete: (text) {
+                                      print(
+                                          "HoangCV: onEditingComplete: ${text} : ${state.listWidgetYield[0].controller}");
+                                      blocContext.read<DetailActivityBloc>().add(
+                                          SaveValueTextFieldEvent(text,
+                                              state.listWidgetYield[0], 0));
+                                    },
                                   )),
-                              Visibility(
-                                visible: edit,
-                                child: Expanded(
-                                  child: OfitButton(
-                                      text: "Lưu",
-                                      onPressed: () {
-                                        /// luu goi api
-                                        blocContext
-                                            .read<DetailActivityBloc>()
-                                            .add(UpdateActivityEvent());
-                                      }),
-                                ),
-                              )
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Expanded(
+                                  //flex: 5,
+                                  child: ContainerInputWidget(
+                                    contextParent: context,
+                                    inputRegisterModel: state.listWidgetYield[1],
+                                    onClick: () {
+                                      setState(() {});
+                                      blocContext.read<DetailActivityBloc>().add(
+                                          OnSelectValueEvent(
+                                              state.listWidgetYield,
+                                              1,
+                                              context));
+                                    },
+                                    onChangeText: (text) {},
+                                    onEditingComplete: (text) {},
+                                  )),
                             ],
+                          )
+                              : const SizedBox(),
+                          itemAccount(context,
+                              text: "Danh sách vật tư, công cụ",
+                              image: ImageAsset.imageGardening,
+                              voidCallback: () async {
+                            print(
+                                "HoangCV: state.listWidgetVT: ${state.listVatTuAdd.length} : ${state.listCongCuAdd.length}");
+                            var result = await Navigator.of(context).push(
+                                AddActivitySubPage.route(
+                                    state.listVatTuAdd,
+                                    state.listCongCuAdd,
+                                    state.listWidgetVT,
+                                    state.listWidgetCC,
+                                    edit));
+
+                          }),
+                          Container(
+                            /*decoration: BoxDecoration(
+                              color: AppColor.whiteF2.withOpacity(0.8),
+                              borderRadius:
+                              BorderRadius.all(Radius.circular(10)),
+                            ),*/
+                            //padding: const EdgeInsets.only(left: 8, top: 5, bottom: 5),
+                            child: SizedBox(
+                              height:
+                                  state.listImage.isNotEmpty ? state.imageHeight : 0,
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.listImage.length,
+                                  itemBuilder: (context, index) {
+                                    /*      double imageWidth =
+                                            130; // Kích thước mặc định nếu có >= 3 ảnh
+                                        double imageHeight =
+                                        100;*/
+                                    return Container(
+                                      padding: const EdgeInsets.only(right: 8.0),
+                                      child: Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Image.memory(
+                                            gaplessPlayback: true,
+                                            base64Decode(state.listImage[index]
+                                                .contentView ??
+                                                ""),
+                                            height: state.imageHeight,
+                                            width: state.imageWidth,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error,
+                                                stackTrace) {
+                                              return Container(
+                                                height: state.imageHeight,
+                                                width: state.imageWidth,
+                                                decoration: BoxDecoration(
+                                                    color:  AppColor.grayC7),
+                                                child: Center(
+                                                  child: Text(
+                                                    "V",
+                                                    style:
+                                                    StyleOfit.textStyleFW700(AppColor.main, 16),
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          Visibility(
+                                            visible: state.listImage[index].type == "2",
+                                            child: Positioned.fill(
+                                              child: IconButton(
+                                                  onPressed: () {},
+                                                  icon: SizedBox(
+                                                    height: state.imageWidth/4,
+                                                    child: Image(
+                                                      image:
+                                                      AssetImage(ImageAsset.imageYoutube),
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible: edit,
+                                            child: Positioned(
+                                              top: -5,
+                                              right: -10,
+                                              child: IconButton(
+                                                  onPressed: () async {
+                                                    DiaLogManager.displayDialog(
+                                                        context,
+                                                        "",
+                                                        S
+                                                            .of(context)
+                                                            .you_sure_want_delete_image,
+                                                        () async {
+                                                      Get.back();
+                                                      setState(() {
+                                                        blocContext
+                                                            .read<DetailActivityBloc>()
+                                                            .add(AddOrDeleteImageEvent(
+                                                                state.listImage,
+                                                                index,
+                                                                context));
+                                                      });
+                                                    }, () {
+                                                      Get.back();
+                                                    }, S.of(context).cancel,
+                                                        S.of(context).agree);
+                                                  },
+                                                  icon: const SizedBox(
+                                                    height: 25,
+                                                    child: Image(
+                                                      image: AssetImage(
+                                                          ImageAsset.imageBin),
+                                                      //width: 40,
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  )),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                            ),
                           ),
-                        )
-                      ],
-                    ),
-                  )),
-            );
-          }),
-        ),
+                          Visibility(
+                            visible: edit,
+                            child: TextButton(
+                              onPressed: () {
+                                Get.bottomSheet(
+                                  SizedBox(
+                                      //height: 140,
+                                      //padding: EdgeInsets.symmetric(horizontal: 15),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.only(
+                                              topRight: Radius.circular(12),
+                                              topLeft: Radius.circular(12)),
+                                          color: Colors.white,
+                                        ),
+                                        constraints: BoxConstraints(
+                                          maxHeight: MediaQuery.of(context).size.height * 0.2, // Hoặc giá trị phù hợp với nhu cầu của bạn
+                                        ),
+                                        child: Center(
+                                          child: Column(
+                                            // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                            children: [
+                                              Container(
+                                                height: 44,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.only(
+                                                        topRight: Radius.circular(12),
+                                                        topLeft: Radius.circular(12)),
+                                                    color: Theme.of(context)
+                                                        .primaryColor),
+                                                child: Row(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Container(
+                                                      alignment: Alignment.center,
+                                                      padding: const EdgeInsets.only(
+                                                          left: 10,
+                                                          top: 8,
+                                                          bottom: 8),
+                                                      child: Text(
+                                                          S.of(context).pick_a_photo,
+                                                          style: StyleOfit
+                                                              .textStyleFW700(
+                                                                  Colors.white, 18)),
+                                                    ),
+                                                    IconButton(
+                                                      icon: Icon(
+                                                        Icons.clear,
+                                                        color: Colors.white,
+                                                        size: 20.0,
+                                                      ),
+                                                      onPressed: () {
+                                                        Get.back();
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.only(top: 18),
+                                                child: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.spaceEvenly,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    GestureDetector(
+                                                      child: Column(
+                                                        children: [
+                                                          const Image(
+                                                            image: AssetImage(
+                                                                ImageAsset
+                                                                    .imageCamera),
+                                                            width: 40,
+                                                            fit: BoxFit.contain,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
+                                                          ),
+                                                          Text(
+                                                            S.of(context).from_camera,
+                                                            style: StyleOfit
+                                                                .textStyleFW500(
+                                                                    AppColor.black22,
+                                                                    14),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      onTap: () async {
+                                                        Get.back();
+                                                        List<ImageEntity> list =
+                                                            await Utils
+                                                                .getImagePicker(
+                                                                    ImageSource
+                                                                        .camera);
+                                                        setState(() {
+                                                          if (list.length > 0) {
+                                                            blocContext
+                                                                .read<
+                                                                    DetailActivityBloc>()
+                                                                .add(
+                                                                    AddOrDeleteImageEvent(
+                                                                        list,
+                                                                        -1,
+                                                                        context));
+                                                          }
+                                                        });
+                                                        //HoangCV pick camera
+                                                      },
+                                                    ),
+                                                    GestureDetector(
+                                                      child: Column(
+                                                        children: [
+                                                          const Image(
+                                                            image: AssetImage(
+                                                                ImageAsset
+                                                                    .imageGallery),
+                                                            width: 40,
+                                                            fit: BoxFit.contain,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
+                                                          ),
+                                                          Text(
+                                                            S
+                                                                .of(context)
+                                                                .from_library,
+                                                            style: StyleOfit
+                                                                .textStyleFW500(
+                                                                    AppColor.black22,
+                                                                    14),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      onTap: () async {
+                                                        //TODO: Tam tat tinh nang nay
+                                                        Get.back();
+
+                                                        //HoangCV: chup anh
+                                                        List<ImageEntity> list =
+                                                            await Utils
+                                                                .getImagePicker(
+                                                                    ImageSource
+                                                                        .gallery);
+                                                        setState(() {
+                                                          if (list.length > 0) {
+                                                            blocContext
+                                                                .read<
+                                                                    DetailActivityBloc>()
+                                                                .add(
+                                                                    AddOrDeleteImageEvent(
+                                                                        list,
+                                                                        -1,
+                                                                        context));
+                                                          }
+                                                        });
+                                                      },
+                                                    ),
+                                                /*    GestureDetector(
+                                                      child: Column(
+                                                        children: [
+                                                          const Image(
+                                                            image: AssetImage(
+                                                                ImageAsset.imageYoutube),
+                                                            width: 40,
+                                                            fit: BoxFit.contain,
+                                                          ),
+                                                          const SizedBox(
+                                                            height: 2,
+                                                          ),
+                                                          Text(
+                                                            "Quay video",
+                                                            style: StyleOfit
+                                                                .textStyleFW500(
+                                                                AppColor.black22,
+                                                                14),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      onTap: () async {
+                                                        Get.back();
+                                                        List<ImageEntity> list =
+                                                        await Utils.getImagePicker(
+                                                            ImageSource.camera, type: "video");
+                                                        setState(() {
+                                                          if (list.length > 0) {
+                                                            blocContext
+                                                                .read<DetailActivityBloc>()
+                                                                .add(
+                                                                AddOrDeleteImageEvent(
+                                                                    list,
+                                                                    -1,
+                                                                    context));
+                                                          }
+                                                        });
+                                                        //HoangCV pick camera
+                                                      },
+                                                    ),*/
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )),
+                                  // barrierColor: Colors.transparent,
+                                  isDismissible: true,
+                                  enableDrag: true,
+                                );
+                              },
+                              child: Container(
+
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 5),
+                                decoration: BoxDecoration(
+                                  //color: AppColor.gray1.withOpacity(0.9),
+                                  gradient: const LinearGradient(
+                                    colors: [AppColor.grayC7, AppColor.gray9B],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(32),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 6, vertical: 5),
+                                      child: Image(
+                                        image: AssetImage(ImageAsset.imageCamera),
+                                        width: 40,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                    Text(
+                                      "Chụp ảnh",
+                                      style: StyleOfit.textStyleFW500(
+                                          AppColor.gray57, 16),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
+                            child: Row(
+                              children: [
+                                Visibility(
+                                  visible: !edit && widget.isEdit,
+                                  child: Expanded(
+                                    child: OfitButton(
+                                        text: "Sửa hoạt động",
+                                        onPressed: ((widget.diary.status??'').compareTo("done") == 0 ||
+                                            (widget.diary.status??'').compareTo("cancelled") == 0)?
+                                            () {
+                                          if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                            DiaLogManager.displayDialog(context,
+                                                "Nhật ký đã hoàn thành","Bạn không thể sửa hoạt động",
+                                                    (){Navigator.pop(context);}, () {},
+                                                "",S.of(context).close_dialog);
+                                          }
+                                          if((widget.diary.status??'').compareTo("done") == 0 ) {
+                                            DiaLogManager.displayDialog(context,
+                                                "Nhật ký đã đóng","Bạn không thể sửa hoạt động",
+                                                    (){Navigator.pop(context);}, () {},
+                                                "",S.of(context).close_dialog);
+                                          }
+                                        }
+                                            :() {
+                                          setState(() {
+                                            edit = !edit;
+                                            //state.listWidget.clear();
+                                            if (edit) {
+                                              blocContext
+                                                  .read<DetailActivityBloc>()
+                                                  .add(ChangeEditActivityEvent());
+                                            } else {
+                               /*               blocContext
+                                                  .read<DetailActivityBloc>()
+                                                  .add(ChangeDetailActivityEvent());*/
+                                            }
+                                          });
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                  visible: edit,
+                                  child: Expanded(
+                                    child: OfitButton(
+                                        text: "Hủy",
+                                        onPressed: () {
+                                          setState(() {
+                                            edit = !edit;
+                                          });
+                                          blocContext
+                                              .read<DetailActivityBloc>()
+                                              .add(GetDetailActivityEvent(widget.activityDiary, widget.diary, resetView: true));
+                                        }),
+                                  ),
+                                ),
+                                Visibility(
+                                    visible: edit,
+                                    child: SizedBox(
+                                      width: 16,
+                                    )),
+                                Visibility(
+                                  visible: edit,
+                                  child: Expanded(
+                                    child: OfitButton(
+                                        text: "Lưu",
+                                        onPressed: () {
+                                          /// luu goi api
+                                          blocContext
+                                              .read<DetailActivityBloc>()
+                                              .add(UpdateActivityEvent());
+                                        }),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+              ],
+            ),
+          );
+        }),
       ),
     );
   }

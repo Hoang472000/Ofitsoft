@@ -79,7 +79,8 @@ class _AddActivityPurchasePageState extends State<AddActivityPurchasePage> {
               }
             }, builder: (blocContext, state) {
           return state.isShowProgress ?
-          const Center(
+          Padding(
+            padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
             child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
               : Container(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),

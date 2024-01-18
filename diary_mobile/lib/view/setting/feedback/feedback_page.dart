@@ -16,6 +16,7 @@ import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/items/item_feedback.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 import '../../../view_model/setting/feedback/feedback_bloc.dart';
 import 'add_feedback.dart';
 
@@ -80,77 +81,82 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   });
             },
           ),
-          body: BlocConsumer<FeedbackBloc, FeedbackState>(
-              listener: (blocContext, state) async {
-                final formStatus = state.formStatus;
-                if(!state.isShowProgress){
-                  setState(() {
-                  });
-                }
-                if (formStatus is SubmissionFailed) {
-                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                    Get.back();
-                  }, () {
-                    Get.back();
-                  }, '', S.of(context).close_dialog);
-                } else if (formStatus is SubmissionSuccess) {
-                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                          () {
+          body: HomeBackGround(
+            children: [
+              BlocConsumer<FeedbackBloc, FeedbackState>(
+                  listener: (blocContext, state) async {
+                    final formStatus = state.formStatus;
+                    if(!state.isShowProgress){
+                      setState(() {
+                      });
+                    }
+                    if (formStatus is SubmissionFailed) {
+                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
                         Get.back();
                       }, () {
                         Get.back();
                       }, '', S.of(context).close_dialog);
-                } else if (formStatus is FormSubmitting) {
-                  //DiaLogManager.showDialogLoading(context);
-                }
-              }, builder: (blocContext, state) {
-            return state.isShowProgress /*&& (state.listDiaryFeedback.length == 0 || state.listDiaryMonitor.length == 0)*/
-                ? const Center(
-              child:
-              DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-            )
-                : RefreshIndicator(
-              onRefresh: () async {
-                blocContext.read<FeedbackBloc>().add(GetListFeedbackEvent());
-              },
-              child: state.listFeedback.isEmpty
-                  ? const EmptyWidget()
-                  : SingleChildScrollView(
-                //physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: state.listFeedback.length,
-                      itemBuilder: (BuildContext contextBloc, int index) {
-                        return ItemFeedback(
-                            feedbackInfo: state.listFeedback[index],
-                            callbackChooseItem: () async {
-                              var result = await Navigator.push(
-                                    context,
-                                    DetailFeedbackPage.route(
-                                        state.listFeedback[index].id ?? -1));
-                               /* if (result != null && result[0]) {
-                                  contextBloc.read<FeedbackBloc>().add(
-                                      GetListFeedbackEvent(
-                                          widget.seasonFarmId,
-                                          widget.action,
-                                          false, [], []));
-                                }*/
-                            },
-                            callbackDelete: () {
-                            });
-                      },
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                    } else if (formStatus is SubmissionSuccess) {
+                      DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                              () {
+                            Get.back();
+                          }, () {
+                            Get.back();
+                          }, '', S.of(context).close_dialog);
+                    } else if (formStatus is FormSubmitting) {
+                      //DiaLogManager.showDialogLoading(context);
+                    }
+                  }, builder: (blocContext, state) {
+                return state.isShowProgress /*&& (state.listDiaryFeedback.length == 0 || state.listDiaryMonitor.length == 0)*/
+                    ? Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                  child:
+                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<FeedbackBloc>().add(GetListFeedbackEvent());
+                  },
+                  child: state.listFeedback.isEmpty
+                      ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: state.listFeedback.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemFeedback(
+                                feedbackInfo: state.listFeedback[index],
+                                callbackChooseItem: () async {
+                                  var result = await Navigator.push(
+                                        context,
+                                        DetailFeedbackPage.route(
+                                            state.listFeedback[index].id ?? -1));
+                                   /* if (result != null && result[0]) {
+                                      contextBloc.read<FeedbackBloc>().add(
+                                          GetListFeedbackEvent(
+                                              widget.seasonFarmId,
+                                              widget.action,
+                                              false, [], []));
+                                    }*/
+                                },
+                                callbackDelete: () {
+                                });
+                          },
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

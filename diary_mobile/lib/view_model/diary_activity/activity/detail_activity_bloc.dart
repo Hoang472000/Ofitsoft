@@ -527,9 +527,9 @@ class DetailActivityBloc
         await DiaryDB.instance.getListUnit(categoryIdUnitYield);
     _initViewDetail(emitter, detailActivity.harvesting ?? false);
     print("HoangCV: detailActivity.activityId: ${detailActivity.toJson()}");
-    listActivity.forEach((element) {print("HoangCV: listActivity: ${element.toJson()}");});
+    //listActivity.forEach((element) {print("HoangCV: listActivity: ${element.toJson()}");});
 
-    listUnitArea.forEach((element) {print("HoangCV: listUnitArea: ${element.toJson()}");});
+    //listUnitArea.forEach((element) {print("HoangCV: listUnitArea: ${element.toJson()}");});
     int index = listActivity
         .indexWhere((element) => element.id == detailActivity.activityId);
     int indexArea = listUnitArea
@@ -538,7 +538,12 @@ class DetailActivityBloc
         .indexWhere((element) => element.id == event.diary.areaUnitId);
     int indexYield = listUnitYield
         .indexWhere((element) => element.id == detailActivity.amountUnitId);
-/*    int indexYield = listUnitYield
+    double areaMax = 0;
+    if(indexAreaMax != -1) {
+      areaMax = (event.diary.area ?? 0.0) *
+          double.parse('${listUnitArea[indexAreaMax].convert}');
+    }
+    /*   int indexYield = listUnitYield
         .indexWhere((element) => element.id == detailActivity.actionAreaUnitId);*/
     double imageWidth = state.imageWidth;
     double imageHeight = state.imageHeight;
@@ -585,7 +590,7 @@ class DetailActivityBloc
         yieldUnitController:
             TextEditingController(text: "${detailActivity.amountUnitName}"),
         diary: event.diary,
-        areaMax: (event.diary.area ?? 0.0) * double.parse('${listUnitArea[indexAreaMax].convert}'),
+        areaMax: areaMax,
         indexActivity: index,
         indexDonViArea: indexArea,
         indexYieldUnit: indexYield,

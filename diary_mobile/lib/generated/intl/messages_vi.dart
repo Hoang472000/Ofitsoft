@@ -71,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Quên mật khẩu"),
         "from_camera": MessageLookupByLibrary.simpleMessage("Chụp ảnh"),
         "from_library": MessageLookupByLibrary.simpleMessage("Bộ sưu tập"),
+        "history_activity":
+            MessageLookupByLibrary.simpleMessage("Lịch sử hoạt động"),
         "home_label": MessageLookupByLibrary.simpleMessage("Trang chủ"),
         "interval": MessageLookupByLibrary.simpleMessage("Khoảng thời gian"),
         "into_money": MessageLookupByLibrary.simpleMessage("Thành tiền"),

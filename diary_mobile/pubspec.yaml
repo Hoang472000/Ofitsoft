@@ -78,6 +78,8 @@ dependencies:
   flutter_slidable: ^3.0.1
   create_atom: ^2.1.0-nullsafety
   calendar_date_picker2: ^0.5.3
+  keyboard_dismisser: ^3.0.0
+  scale_button: ^2.1.2
 
 dev_dependencies:
   flutter_test:

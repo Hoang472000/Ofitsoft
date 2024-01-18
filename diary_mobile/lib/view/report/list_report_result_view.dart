@@ -15,6 +15,7 @@ import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../data/entity/report/report_result_title.dart';
 import '../../utils/widgets/items/item_report_result.dart';
+import '../../utils/widgets/view_page_widget.dart';
 import '../../view_model/report/list_report_result_bloc.dart';
 import '../filter/filter_page.dart';
 import 'add_report.dart';
@@ -117,157 +118,178 @@ class _ListReportResultViewState extends State<ListReportResultView> {
                   });
                 },
               ),
-              body: BlocConsumer<ListReportResultBloc, ListReportResultState>(
-                  listener: (blocContext, state) async {
-                    final formStatus = state.formStatus;
-                    if(!state.isShowProgress){
-                    }
-                    if (formStatus is SubmissionFailed) {
-                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                        Get.back();
-                      }, () {
-                        Get.back();
-                      }, '', S.of(context).close_dialog);
-                    } else if (formStatus is SubmissionSuccess) {
-                      setState(() {
-                        updateHarvesting = true;
-                        listCallback = state.listReport;
-                      });
-                      if ((formStatus.success ?? "").isNotEmpty) {
-                      DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                              () {
+              body: HomeBackGround(
+                children: [
+                  BlocConsumer<ListReportResultBloc, ListReportResultState>(
+                      listener: (blocContext, state) async {
+                        final formStatus = state.formStatus;
+                        if(!state.isShowProgress){
+                        }
+                        if (formStatus is SubmissionFailed) {
+                          DiaLogManager.displayDialog(context, "", formStatus.exception, () {
                             Get.back();
                           }, () {
                             Get.back();
                           }, '', S.of(context).close_dialog);
-                      }
-                    } else if (formStatus is FormSubmitting) {
-                    }
-                  }, builder: (blocContext, state) {
-                return state.isShowProgress
-                    ? const Center(
-                  child:
-                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-                )
-                    : RefreshIndicator(
-                  onRefresh: () async {
-                    blocContext.read<ListReportResultBloc>().add(
-                        GetListReportResultEvent(checkUpdate: true));
-                  },
-                  child: SingleChildScrollView(
-                    //physics: const NeverScrollableScrollPhysics(),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Row(
-                            children: <Widget>[
-                              Flexible(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    blocContext
-                                        .read<ListReportResultBloc>()
-                                        .add(
-                                          UpdateRadioButtonEvent(
-                                              ReportEnum.report),
-                                        );
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Radio<ReportEnum>(
-                                        value: ReportEnum.report,
-                                        groupValue: state.reportEnum,
-                                        onChanged: (ReportEnum? value) {
-                                          blocContext
-                                              .read<ListReportResultBloc>()
-                                              .add(
-                                                UpdateRadioButtonEvent(
-                                                    value as ReportEnum),
-                                              );
-                                        },
+                        } else if (formStatus is SubmissionSuccess) {
+                          setState(() {
+                            updateHarvesting = true;
+                            listCallback = state.listReport;
+                          });
+                          if ((formStatus.success ?? "").isNotEmpty) {
+                          DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                                  () {
+                                Get.back();
+                              }, () {
+                                Get.back();
+                              }, '', S.of(context).close_dialog);
+                          }
+                        } else if (formStatus is FormSubmitting) {
+                        }
+                      }, builder: (blocContext, state) {
+                    return state.isShowProgress
+                        ? Padding(
+                      padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                      child:
+                      DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                    )
+                        : RefreshIndicator(
+                      onRefresh: () async {
+                        blocContext.read<ListReportResultBloc>().add(
+                            GetListReportResultEvent(checkUpdate: true));
+                      },
+                      child: SingleChildScrollView(
+                        //physics: const NeverScrollableScrollPhysics(),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Flexible(
+                              child: Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        blocContext
+                                            .read<ListReportResultBloc>()
+                                            .add(
+                                              UpdateRadioButtonEvent(
+                                                  ReportEnum.report),
+                                            );
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Theme(
+                                            data: ThemeData(
+                                              //here change to your color
+                                              unselectedWidgetColor: AppColor.whiteF2,
+                                            ),
+                                            child: Radio<ReportEnum>(
+                                              activeColor: AppColor.main,
+                                              value: ReportEnum.report,
+                                              groupValue: state.reportEnum,
+                                              onChanged: (ReportEnum? value) {
+                                                blocContext
+                                                    .read<ListReportResultBloc>()
+                                                    .add(
+                                                      UpdateRadioButtonEvent(
+                                                          value as ReportEnum),
+                                                    );
+                                              },
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              title: Text(
+                                                  'Đánh giá nội bộ',
+                                                style: StyleOfit.textStyleFW500(AppColor.whiteF2, 16),),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: const Text(
-                                              'Đánh giá nội bộ'),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Flexible(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    blocContext
-                                        .read<ListReportResultBloc>()
-                                        .add(UpdateRadioButtonEvent(
-                                            ReportEnum.survey));
-                                  },
-                                  child: Row(
-                                    children: [
-                                      Radio<ReportEnum>(
-                                        value: ReportEnum.survey,
-                                        groupValue: state.reportEnum,
-                                        onChanged: (ReportEnum? value) {
-                                          blocContext
-                                              .read<ListReportResultBloc>()
-                                              .add(UpdateRadioButtonEvent(
-                                                  value as ReportEnum));
-                                        },
+                                  Flexible(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        blocContext
+                                            .read<ListReportResultBloc>()
+                                            .add(UpdateRadioButtonEvent(
+                                                ReportEnum.survey));
+                                      },
+                                      child: Row(
+                                        children: [
+                                          Theme(
+                                            data: ThemeData(
+                                              //here change to your color
+                                              unselectedWidgetColor: AppColor.whiteF2,
+                                            ),
+                                               child: Radio<ReportEnum>(
+                                                activeColor: AppColor.main,
+                                                value: ReportEnum.survey,
+                                                groupValue: state.reportEnum,
+                                                onChanged: (ReportEnum? value) {
+                                                  blocContext
+                                                      .read<ListReportResultBloc>()
+                                                      .add(UpdateRadioButtonEvent(
+                                                          value as ReportEnum));
+                                                },
+                                            ),
+                                             ),
+                                          Expanded(
+                                            child: ListTile(
+                                              contentPadding: EdgeInsets.zero,
+                                              title: Text(
+                                                  'Khảo sát ban đầu',
+                                                  style: StyleOfit.textStyleFW500(AppColor.whiteF2, 16)),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: ListTile(
-                                          contentPadding: EdgeInsets.zero,
-                                          title: const Text(
-                                              'Khảo sát ban đầu'),
-                                        ),
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
-                          ),
-                              ),
-                        (state.listReport.isEmpty)
-                            ? const EmptyWidget()
-                            : Flexible(
-                          child: ListView.builder(
-                            itemCount: state.listReport.length,
-                            itemBuilder: (BuildContext contextBloc, int index) {
-                              return ItemReportResult(
-                                  reportResult: state.listReport[index],
-                                  callbackChooseItem: () {
-                                    Navigator.of(context)
-                                        .push(DetailReportViewPage.route(state.listReport[index].id??-1));
-                                  },
-                                  callbackDelete: () {
+                                  ),
+                            (state.listReport.isEmpty)
+                                ? const EmptyWidget()
+                                : Flexible(
+                              child: ListView.builder(
+                                itemCount: state.listReport.length,
+                                itemBuilder: (BuildContext contextBloc, int index) {
+                                  return ItemReportResult(
+                                      reportResult: state.listReport[index],
+                                      callbackChooseItem: () {
+                                        Navigator.of(context)
+                                            .push(DetailReportViewPage.route(state.listReport[index].id??-1));
+                                      },
+                                      callbackDelete: () {
+                                          contextBloc.read<ListReportResultBloc>().add(
+                                              DeleteReportResultEvent(state.listReport[index].id??-1));
+                                      },
+                                    callbackEdit: () async {
+                                    var result = await Navigator.of(context)
+                                        .push(EditReportViewPage.route(state.listReport[index].id??-1, state.listReportFilter));
+                                    if (result != null && result[0]) {
                                       contextBloc.read<ListReportResultBloc>().add(
-                                          DeleteReportResultEvent(state.listReport[index].id??-1));
-                                  },
-                                callbackEdit: () async {
-                                var result = await Navigator.of(context)
-                                    .push(EditReportViewPage.route(state.listReport[index].id??-1, state.listReportFilter));
-                                if (result != null && result[0]) {
-                                  contextBloc.read<ListReportResultBloc>().add(
-                                      GetListReportResultEvent(checkUpdate: true));
-                                }
-                              }, overlayEntry: overlayEntry,);
-                            },
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                          ),
+                                          GetListReportResultEvent(checkUpdate: true));
+                                    }
+                                  }, overlayEntry: overlayEntry,);
+                                },
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 60,
+                            )
+                          ],
                         ),
-                        SizedBox(
-                          height: 60,
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
             if (isFilterOpen)
               AnimatedContainer(

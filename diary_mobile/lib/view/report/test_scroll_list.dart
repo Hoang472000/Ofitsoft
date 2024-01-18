@@ -118,7 +118,8 @@ class _TestScrollListState extends State<TestScrollList> {
             listener: (blocContext, state) async {},
             builder: (blocContext, state) {
               return state.isShowProgress
-                  ? const Center(
+                  ? Padding(
+                padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
                       child: DashedCircle(
                           size: 39, stringIcon: IconAsset.icLoadOtp),
                     )

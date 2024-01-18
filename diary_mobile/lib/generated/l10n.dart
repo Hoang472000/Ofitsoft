@@ -969,6 +969,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Lịch sử hoạt động`
+  String get history_activity {
+    return Intl.message(
+      'Lịch sử hoạt động',
+      name: 'history_activity',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

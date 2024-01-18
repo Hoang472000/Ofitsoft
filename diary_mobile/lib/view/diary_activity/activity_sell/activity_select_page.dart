@@ -14,6 +14,7 @@ import '../../../utils/widgets/dashed_circle.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/activity_select_bloc.dart';
 import '../../../utils/widgets/items/item_activity_select.dart';
 
+// man hinh chon hoat dong thu hoach de mua // da bo
 class ActivitySelectPage extends StatefulWidget {
   const ActivitySelectPage(
       {super.key,
@@ -69,32 +70,13 @@ class _ActivitySelectPageState extends State<ActivitySelectPage> {
             ),
             backgroundColor: AppColor.main,
             actions: [],
-            /*leading: BlocBuilder<DetailActivityBloc, DetailActivityState>(
-  builder: (blocContext, state) {
-    return IconButton(
-            onPressed: () {
-              print("HoangCV: bugugugu");
-              blocContext
-                  .read<DetailActivityBloc>()
-                  .add(BackEvent(copiesActivityDiary, listCopies2, listCopies));
-              Navigator.pop(context);
-            },
-      icon: SvgPicture.asset(
-          IconAsset.icArrowLeft,
-          height: 20,
-          color: AppColor.whiteF2
-      ),
-      color: Colors.white,
-      padding: EdgeInsets.zero,
-          );
-  },
-),*/
           ),
           body: BlocConsumer<ActivitySelectBloc, ActivitySelectState>(
               listener: (blocContext, state) async {
               }, builder: (blocContext, state) {
             return state.isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                ? const Center(
+                ? Padding(
+              padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
               child:
               DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
             )

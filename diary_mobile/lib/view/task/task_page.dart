@@ -79,7 +79,8 @@ class _TaskPageState extends State<TaskPage> {
                 BlocBuilder<TaskBloc, TaskState>(builder: (blocContext, state) {
               return state
                       .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                  ? const Center(
+                  ? Padding(
+                padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
                       child: DashedCircle(
                           size: 39, stringIcon: IconAsset.icLoadOtp),
                     )

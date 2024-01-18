@@ -106,7 +106,8 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
       child: BlocBuilder<DiaryMonitorBloc, DiaryMonitorState>(
         builder: (context, state) {
           return state.isShowProgress /*|| !_tabControllerInitialized*/
-              ? const Center(
+              ? Padding(
+            padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
             child: DashedCircle(
                 size: 39, stringIcon: IconAsset.icLoadOtp),
           ) : Stack(
@@ -150,7 +151,8 @@ class _DiaryMonitorViewState extends State<DiaryMonitorView>
                   body: BlocBuilder<DiaryMonitorBloc, DiaryMonitorState>(
                     builder: (context, state) {
                       return state.isShowProgress /*|| !_tabControllerInitialized*/
-                          ? const Center(
+                          ? Padding(
+                        padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
                         child: DashedCircle(
                             size: 39, stringIcon: IconAsset.icLoadOtp),
                       )

@@ -105,7 +105,8 @@ class _EditReportViewPageState extends State<EditReportViewPage> {
                   return false;
                 },
                 child: state.isShowProgress && state.listReport.isEmpty ?
-                const Center(
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
                   child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),):
                 state.listReport.isEmpty
                     ? Container()

@@ -424,7 +424,20 @@ class Utils {
     } catch(_){
       return DateTime.now();
     }
+  }
 
+  static String calculateStartTime(int daysAgo) {
+    DateTime now = DateTime.now();
+    DateTime resultDate = now.subtract(Duration(days: daysAgo));
+
+    int beginYear = resultDate.year;
+    int beginMonth = resultDate.month;
+    int beginDay = resultDate.day;
+
+    // Format the result as a string
+    String startTime = "$beginDay/$beginMonth/$beginYear";
+
+    return startTime;
   }
 
   static DateTime stringToDateDOB(String time) {
@@ -820,12 +833,12 @@ class Utils {
       {bool isMoney = false, BuildContext? buildContext}) {
     return TextSpan(children: [
       TextSpan(
-          text: title, style: StyleOfit.textStyleFW400(AppColor.gray57, size)),
+          text: title, style: StyleOfit.textStyleFW400(AppColor.black22, size)),
       TextSpan(text: value, style: StyleOfit.textStyleFW400(color, size)),
       if (isMoney = true && buildContext != null)
         TextSpan(
             text: " ${S.of(buildContext!).vnd}",
-            style: StyleOfit.textStyleFW400(AppColor.gray57, 14))
+            style: StyleOfit.textStyleFW400(AppColor.black22, 14))
     ]);
   }
   static Widget convertTextWidget(String title, String value, Color color, double size,
@@ -834,7 +847,7 @@ class Utils {
       children: [
         Text(
           title,
-          style: StyleOfit.textStyleFW400(AppColor.gray57, size),
+          style: StyleOfit.textStyleFW400(AppColor.black22, size),
           overflow: TextOverflow.visible,
         ),
         SizedBox(width: 8), // Khoảng cách giữa các phần tử trong Row

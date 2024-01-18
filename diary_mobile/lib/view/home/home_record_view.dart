@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:diary_mobile/view/access_origin/access_origin_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scale_button/scale_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../generated/l10n.dart';
@@ -17,6 +19,7 @@ import '../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../view_model/home_bloc.dart';
 import '../diary_activity/activity_sell/activity_purchase_page.dart';
 import '../diary_activity/record_diary/add_record_diary.dart';
+import '../history_activity/history_activity_page.dart';
 import '../report/list_report_result_view.dart';
 import '../setting/contact/contact_page.dart';
 import '../setting/feedback/feedback_page.dart';
@@ -29,27 +32,43 @@ class HomeRecordView extends StatefulWidget {
   State<HomeRecordView> createState() => _HomeRecordViewState();
 }
 
-class _HomeRecordViewState extends State<HomeRecordView> {
+class _HomeRecordViewState extends State<HomeRecordView> with TickerProviderStateMixin{
   final PageController _pageController = PageController(initialPage: 0,
     viewportFraction: 1,);
   int _currentPage = 0;
   final int _totalPages = 5;
   Timer? _timer;
-  bool _showAppbar = true;
   bool isScrollingDown = false;
   double bottomBarHeight = 75;
   String userName = '';
+  late AnimationController _animationController;
+  late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
     _startAutoScroll();
     myScroll();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 5),
+    );
+
+    _animation = Tween<double>(begin: 0.97, end: 1.03).animate(
+        CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack));
+    _animationController.forward();
+    _animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed)
+        _animationController.reverse();
+      else if (status == AnimationStatus.dismissed)
+        _animationController.forward();
+    });
   }
 
   @override
   void dispose() {
     _timer?.cancel();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -87,8 +106,8 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                     image: DecorationImage(
                         opacity: 1,
                         image: AssetImage(
-                            ImageAsset.imageOfitSoftBackground),
-                        fit: BoxFit.fill),
+                            ImageAsset.imageOfitSoftBG),
+                        fit: BoxFit.cover),
                   ),
                   child:  Container(
                       width: double.infinity,
@@ -130,19 +149,22 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                       )),),
                 Container(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 15, left: MediaQuery.of(context).size.width / 20),
-                  child: Image(
-                    image: AssetImage(
-                        ImageAsset.imageOfitsoftText),
-                    opacity: const AlwaysStoppedAnimation(.8),
-                    height: MediaQuery.of(context).size.width / 4,
+                  child: RotationTransition(
+                    turns: _animation,
+                    child: Image(
+                      image: AssetImage(
+                          ImageAsset.imageOfitsoftText),
+                      opacity: const AlwaysStoppedAnimation(.8),
+                      height: MediaQuery.of(context).size.width / 4,
+                    ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.5),
                   child: Container(
                     //height: MediaQuery.of(context).size.height / 9,
-                    decoration: ShapeDecoration(
-                      gradient: const LinearGradient(
+                    decoration: const ShapeDecoration(
+                      gradient: LinearGradient(
                         colors: [Colors.white,Colors.white ],
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
@@ -155,16 +177,17 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                       ),
                       shadows: [
                         BoxShadow(
-                          color: AppColor.grayDC,
-                          offset: const Offset(0, -2), // Dịch shadow lên trên (âm số)
-                          blurRadius: 3, // Bán kính blur của shadow
-                          spreadRadius: 0, // Khoảng lan rộng của shadow
+                          color: AppColor.whiteF2,
+                          offset: Offset(0, -2), // Dịch shadow lên trên (âm số)
+                          blurRadius: 0.2, // Bán kính blur của shadow
+                          spreadRadius: 0.2, // Khoảng lan rộng của shadow
                         ),
                       ],
                     ),
                   ),
                 ),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
                       height: MediaQuery.of(context).size.height / 3.5,
@@ -213,6 +236,8 @@ class _HomeRecordViewState extends State<HomeRecordView> {
                                             Navigator.push(context, ContactPage.route());
                                           } else if (activity.id == 7) {
                                             Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                          } else if (activity.id == 8) {
+                                            Navigator.push(context, HistoryActivityPage.route());
                                           }
                                         },
                                         child: item(activity),

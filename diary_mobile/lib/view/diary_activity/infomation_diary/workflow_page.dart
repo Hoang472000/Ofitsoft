@@ -10,6 +10,7 @@ import '../../../utils/utils.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/empty_widget.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 import '../../../view_model/diary_activity/activity/workflow_bloc.dart';
 import '../../home/home_page.dart';
 
@@ -60,86 +61,91 @@ class _WorkflowPageState extends State<WorkflowPage> {
           backgroundColor: AppColor.background,
           actions: [],
         ),
-        body: BlocBuilder<WorkflowBloc, WorkflowState>(
-            builder: (blocContext, state) {
-              return state.isShowProgress ?
-              const Center(
-                child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-                  : state.empty ? const EmptyWidget() : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                  child: SingleChildScrollView(
-                    //physics: const NeverScrollableScrollPhysics(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        cardTile(
-                            label: "Tên quy trình",
-                            value: "${state.workflow!.name}",
-                            image: ImageAsset.imageWorkProcess),
-                        cardTileDouble(
-                            label1: "Loại vật nuôi/cây trồng",
-                            value1:  "${state.workflow!.cropName}",
-                            value2: "${state.workflow!.productName}",
-                            image: ImageAsset.imageTree),
-                        cardTile(
-                            label: "Tiêu chuẩn",
-                            value: "${state.workflow!.standard}",
-                            image: ImageAsset.imageFile),
-                        cardTile(
-                            label: "Mô tả",
-                            value: "${state.workflow!.description}",
-                            image: ImageAsset.imageDiary),
-                        ExpansionTile(
-                          title: Text(state.workflow!.name ?? ""),
-                          children:  List.generate(state.workflow!.processStageIds.length, (index) {
-                            final processStage = state.workflow!.processStageIds[index];
-                            final romanNumeral = convertToRoman(index + 1);
-                            return ExpansionTile(
-                              title: Text(" $romanNumeral. ${processStage.name ?? ""}"),
-                              children: List.generate(processStage.processStageTaskIds.length, (taskIndex) {
-                                final processStageTask = processStage.processStageTaskIds[taskIndex];
+        body: HomeBackGround(
+          children: [
+            BlocBuilder<WorkflowBloc, WorkflowState>(
+                builder: (blocContext, state) {
+                  return state.isShowProgress ?
+                  Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                    child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                      : state.empty ? const EmptyWidget() : Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
+                      child: SingleChildScrollView(
+                        //physics: const NeverScrollableScrollPhysics(),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            cardTile(
+                                label: "Tên quy trình",
+                                value: "${state.workflow!.name}",
+                                image: ImageAsset.imageWorkProcess),
+                            cardTileDouble(
+                                label1: "Loại vật nuôi/cây trồng",
+                                value1:  "${state.workflow!.cropName}",
+                                value2: "${state.workflow!.productName}",
+                                image: ImageAsset.imageTree),
+                            cardTile(
+                                label: "Tiêu chuẩn",
+                                value: "${state.workflow!.standard}",
+                                image: ImageAsset.imageFile),
+                            cardTile(
+                                label: "Mô tả",
+                                value: "${state.workflow!.description}",
+                                image: ImageAsset.imageDiary),
+                            ExpansionTile(
+                              title: Text(state.workflow!.name ?? ""),
+                              children:  List.generate(state.workflow!.processStageIds.length, (index) {
+                                final processStage = state.workflow!.processStageIds[index];
+                                final romanNumeral = convertToRoman(index + 1);
                                 return ExpansionTile(
-                                  title: Text("   ${taskIndex + 1}. ${processStageTask.activityName}" ?? '',),
-                                  children: [
-                                          Container(
-                                            padding: const EdgeInsets.only(top: 8, bottom: 8),
-                                            child: Text("Mô tả: ${processStageTask.description}" ?? '',
-                                              style: StyleOfit.textStyleFW400(AppColor.black22, 16),
-                                              maxLines: 100,),
-                                          ),
-                                          (processStageTask.image ?? "").isNotEmpty ?
-                                          Container(
-                                                padding: const EdgeInsets.only(top: 8,  bottom: 8),
-                                            child: Image.memory(
-                                              gaplessPlayback: true,
-                                              base64Decode(processStageTask.image ?? ""),
-                                              height: 240,
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error,
-                                                  stackTrace) {
-                                                return const Image(
-                                                  image: AssetImage(
-                                                      ImageAsset
-                                                          .imageEmptyData),
+                                  title: Text(" $romanNumeral. ${processStage.name ?? ""}"),
+                                  children: List.generate(processStage.processStageTaskIds.length, (taskIndex) {
+                                    final processStageTask = processStage.processStageTaskIds[taskIndex];
+                                    return ExpansionTile(
+                                      title: Text("   ${taskIndex + 1}. ${processStageTask.activityName}" ?? '',),
+                                      children: [
+                                              Container(
+                                                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                                                child: Text("Mô tả: ${processStageTask.description}" ?? '',
+                                                  style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                                                  maxLines: 100,),
+                                              ),
+                                              (processStageTask.image ?? "").isNotEmpty ?
+                                              Container(
+                                                    padding: const EdgeInsets.only(top: 8,  bottom: 8),
+                                                child: Image.memory(
+                                                  gaplessPlayback: true,
+                                                  base64Decode(processStageTask.image ?? ""),
                                                   height: 240,
-                                                  // width: 360,
-                                                  fit: BoxFit.contain,
-                                                );
-                                              },
-                                            ),
-                                          ) : SizedBox(),
-                                        ],
+                                                  fit: BoxFit.cover,
+                                                  errorBuilder: (context, error,
+                                                      stackTrace) {
+                                                    return const Image(
+                                                      image: AssetImage(
+                                                          ImageAsset
+                                                              .imageEmptyData),
+                                                      height: 240,
+                                                      // width: 360,
+                                                      fit: BoxFit.contain,
+                                                    );
+                                                  },
+                                                ),
+                                              ) : SizedBox(),
+                                            ],
 
+                                    );
+                                  }).toList(),
                                 );
                               }).toList(),
-                            );
-                          }).toList(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ));
-            }),
+                      ));
+                }),
+          ],
+        ),
       ),
     );
   }
@@ -181,7 +187,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     label,
-                    style: StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
+                    style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16, overflow: TextOverflow.visible,),
                   ),
                 ),
                 Container(
@@ -189,7 +195,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     value,
-                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                    style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -227,14 +233,14 @@ class _WorkflowPageState extends State<WorkflowPage> {
                   padding: const EdgeInsets.all(4),
                   child: Text(
                     label1,
-                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                    style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                   ),
                 ),
                 RichText(
                     overflow: TextOverflow.clip,
                     text: TextSpan(
                       text: "$value1 ${value2.isNotEmpty ? "- " : ""}",
-                      style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                      style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                       children:  <TextSpan>[
                         TextSpan(
                           text: value2,
@@ -277,7 +283,7 @@ class _WorkflowPageState extends State<WorkflowPage> {
                 child: SizedBox(
                   child: Text(
                     text,
-                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                    style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                   ),
                 ),
               ),

@@ -20,6 +20,7 @@ class ItemActivityAvatar extends StatefulWidget {
   final String action;
   final VoidCallback callbackChooseItem;
   final VoidCallback callbackDelete;
+  final bool notDelete;
 
   const ItemActivityAvatar({
     Key? key,
@@ -29,6 +30,7 @@ class ItemActivityAvatar extends StatefulWidget {
     required this.action,
     required this.callbackChooseItem,
     required this.callbackDelete,
+    this.notDelete = false,
   }) : super(key: key);
 
   @override
@@ -76,7 +78,7 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                   child: Text(
                     Utils.formatDateForDiaryActivity("${widget.activityDiary.actionTime}"),
                     style: StyleOfit.textStyleFW500(
-                      AppColor.black22,
+                      AppColor.whiteF2,
                       14,
                     ),
                     maxLines: 1,
@@ -85,9 +87,9 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
               Container(
                 margin:
                 const EdgeInsets.only(top: 5, bottom: 5, left: 32, right: 15),
-                decoration: BoxDecoration(
+         /*       decoration: BoxDecoration(
                     color: AppColor.blue15,
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10)),*/
                 child: _item(context),
               ),
             ],
@@ -101,11 +103,11 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
     return Container(
       padding: const EdgeInsets.only(left: 5, right: 16, top: 5, bottom: 5),
       decoration: BoxDecoration(
-          boxShadow: const [
-            BoxShadow(blurRadius: 5, spreadRadius: 3, color: AppColor.grayEC),
-          ],
+          /*boxShadow: const [
+            BoxShadow(blurRadius: 1, spreadRadius: 1, color: AppColor.grayEC),
+          ],*/
           borderRadius: BorderRadius.circular(10),
-          color: /*widget.isChoose ? Colors.red[100] :*/ Colors.white),
+          color: AppColor.whiteF2.withOpacity(0.9)),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.only(left: 0, top: 0, bottom: 5),
@@ -261,9 +263,8 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
                         width: 50,
                         child: /*(state.listDiaryActivity[index].harvesting ?? false) || */
                         (widget.diary.status ?? '').compareTo("done") == 0 ||
-                            (widget.diary.status ?? '')
-                                .compareTo("cancelled") ==
-                                0
+                            (widget.diary.status ?? '').compareTo("cancelled") == 0 ||
+                            widget.notDelete
                             ? Container()
                             : IconButton(
                           padding: EdgeInsets.only(left: 16, right: 4),

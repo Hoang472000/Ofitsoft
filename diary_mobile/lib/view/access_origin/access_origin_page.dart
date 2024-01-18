@@ -1,6 +1,7 @@
 import 'package:diary_mobile/data/entity/access/detail_product_batch.dart';
 import 'package:diary_mobile/utils/status/form_submission_status.dart';
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -61,58 +62,63 @@ class _AccessOriginPageState extends State<AccessOriginPage> {
               )),
           //resizeToAvoidBottomInset: true,
           backgroundColor: AppColor.background,
-          body: BlocConsumer<AccessOriginBloc, AccessOriginState>(
-              listener: (blocContext, state) async {
-                final formStatus = state.formStatus;
-                if(!state.isShowProgress){
-                }
-                if (formStatus is SubmissionFailed) {
-                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                    Get.back();
-                  }, () {
-                    Get.back();
-                  }, '', S.of(context).close_dialog);
-                } else if (formStatus is SubmissionSuccess) {
-                } else if (formStatus is FormSubmitting) {
-                }
-              }, builder: (blocContext, state) {
-            return state.isShowProgress
-                ? const Center(
-              child:
-              DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-            )
-                : RefreshIndicator(
-              onRefresh: () async {
-                blocContext.read<AccessOriginBloc>().add(
-                    GetAccessOriginEvent());
-              },
-              child: (state.listAccessOrigin.isEmpty)
-                  ? const EmptyWidget()
-                  : SingleChildScrollView(
-                //physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: state.listAccessOrigin.length,
-                      itemBuilder: (BuildContext contextBloc, int index) {
-                        return ItemAccessOrigin(
-                          productBatch: state.listAccessOrigin[index],
-                          callbackChooseItem: () {
-                            Navigator.of(context)
-                                .push(DetailAccessOrigin.route(state.listAccessOrigin[index].id??-1));
-                          },);
-                      },
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+          body: HomeBackGround(
+            children: [
+              BlocConsumer<AccessOriginBloc, AccessOriginState>(
+                  listener: (blocContext, state) async {
+                    final formStatus = state.formStatus;
+                    if(!state.isShowProgress){
+                    }
+                    if (formStatus is SubmissionFailed) {
+                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                        Get.back();
+                      }, () {
+                        Get.back();
+                      }, '', S.of(context).close_dialog);
+                    } else if (formStatus is SubmissionSuccess) {
+                    } else if (formStatus is FormSubmitting) {
+                    }
+                  }, builder: (blocContext, state) {
+                return state.isShowProgress
+                    ? Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                  child:
+                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<AccessOriginBloc>().add(
+                        GetAccessOriginEvent());
+                  },
+                  child: (state.listAccessOrigin.isEmpty)
+                      ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: state.listAccessOrigin.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemAccessOrigin(
+                              productBatch: state.listAccessOrigin[index],
+                              callbackChooseItem: () {
+                                Navigator.of(context)
+                                    .push(DetailAccessOrigin.route(state.listAccessOrigin[index].id??-1));
+                              },);
+                          },
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

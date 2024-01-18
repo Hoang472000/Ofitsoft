@@ -1,4 +1,5 @@
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../data/repository.dart';
@@ -55,48 +56,53 @@ class _ListReportSelectState extends State<ListReportSelect> {
         body: BlocConsumer<ListReportSelectBloc, ListReportSelectState>(
           listener: (blocContext, state) async {},
           builder: (blocContext, state) {
-            return RefreshIndicator(
-              onRefresh: () async {
-                print('Refresh triggered');
-                blocContext.read<ListReportSelectBloc>().add(
-                    GetListReportSelectEvent(const [],
-                        checkUpdate: true));
-              },
-              child: state.isShowProgress
-                  ? const Center(
-                      child: DashedCircle(
-                          size: 39, stringIcon: IconAsset.icLoadOtp),
-                    )
-                  : (state.listReport.isEmpty)
-                      ? const EmptyWidget()
-                      : SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              ListView.builder(
-                                itemCount: widget.listReport.length,
-                                itemBuilder:
-                                    (BuildContext contextBloc, int index) {
-                                  return ItemReportSelect(
-                                      report: widget.listReport[index],
-                                      callbackChooseItem: () async {
-                                        var result = await Navigator.of(context)
-                                            .push(AddReportViewPage.route(
-                                                widget.listReport[index].id ??
-                                                    -1, widget.listReportResult,
-                                            widget.listReport[index].isInitialAssessment ?? false));
-                      /*                  var result = await Navigator.of(context)
-                                            .push(TestScrollList.route());*/
-                                        if (result != null && result[0]) {
-                                          Navigator.of(context).pop(result);
-                                        }
-                                      });
-                                },
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
+            return HomeBackGround(
+              children: [
+                RefreshIndicator(
+                  onRefresh: () async {
+                    print('Refresh triggered');
+                    blocContext.read<ListReportSelectBloc>().add(
+                        GetListReportSelectEvent(const [],
+                            checkUpdate: true));
+                  },
+                  child: state.isShowProgress
+                      ? Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                          child: DashedCircle(
+                              size: 39, stringIcon: IconAsset.icLoadOtp),
+                        )
+                      : (state.listReport.isEmpty)
+                          ? const EmptyWidget()
+                          : SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  ListView.builder(
+                                    itemCount: widget.listReport.length,
+                                    itemBuilder:
+                                        (BuildContext contextBloc, int index) {
+                                      return ItemReportSelect(
+                                          report: widget.listReport[index],
+                                          callbackChooseItem: () async {
+                                            var result = await Navigator.of(context)
+                                                .push(AddReportViewPage.route(
+                                                    widget.listReport[index].id ??
+                                                        -1, widget.listReportResult,
+                                                widget.listReport[index].isInitialAssessment ?? false));
+                          /*                  var result = await Navigator.of(context)
+                                                .push(TestScrollList.route());*/
+                                            if (result != null && result[0]) {
+                                              Navigator.of(context).pop(result);
+                                            }
+                                          });
+                                    },
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                ),
+              ],
             );
           },
         ),

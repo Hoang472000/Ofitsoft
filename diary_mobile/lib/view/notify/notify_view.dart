@@ -15,6 +15,7 @@ import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../utils/widgets/items/item_notify.dart';
+import '../../utils/widgets/view_page_widget.dart';
 import '../../view_model/notify/notify_bloc.dart';
 
 class NotifyView extends StatefulWidget {
@@ -68,84 +69,89 @@ class _NotifyViewState extends State<NotifyView> {
                 style: StyleOfit.textStyleFW700(Colors.white, 20),
               )),
           //resizeToAvoidBottomInset: true,
-          backgroundColor: AppColor.background,
-          body: BlocConsumer<NotifyBloc, NotifyState>(
-              listener: (blocContext, state) async {
-                final formStatus = state.formStatus;
-                if(!state.isShowProgress){
-                  setState(() {
-                  });
-                }
-                if (formStatus is SubmissionFailed) {
-                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                    Get.back();
-                  }, () {
-                    Get.back();
-                  }, '', S.of(context).close_dialog);
-                } else if (formStatus is SubmissionSuccess) {
-                  DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                          () {
+          //backgroundColor: AppColor.background,
+          body: HomeBackGround(
+            children: [
+              BlocConsumer<NotifyBloc, NotifyState>(
+                  listener: (blocContext, state) async {
+                    final formStatus = state.formStatus;
+                    if(!state.isShowProgress){
+                      setState(() {
+                      });
+                    }
+                    if (formStatus is SubmissionFailed) {
+                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
                         Get.back();
                       }, () {
                         Get.back();
                       }, '', S.of(context).close_dialog);
-                } else if (formStatus is FormSubmitting) {
-                  //DiaLogManager.showDialogLoading(context);
-                }
-              },
-              builder: (blocContext, state) {
-                if (onchange) {
-                  context
-                      .read<NotifyBloc>()
-                      .add(GetListNotifyEvent());
-                  onchange = false;
-                }
-            return state.isShowProgress /*&& (state.listDiarylistNotify.length == 0 || state.listDiaryMonitor.length == 0)*/
-                ? const Center(
-              child:
-              DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-            )
-                : RefreshIndicator(
-              onRefresh: () async {
-                blocContext.read<NotifyBloc>().add(GetListNotifyEvent());
-              },
-              child: state.listNotify.isEmpty
-                  ? const EmptyWidget()
-                  : SingleChildScrollView(
-                //physics: const NeverScrollableScrollPhysics(),
-                child: Column(
-                  children: [
-                    ListView.builder(
-                      itemCount: state.listNotify.length,
-                      itemBuilder: (BuildContext contextBloc, int index) {
-                        return ItemNotify(
-                            notifyEntity: state.listNotify[index],
-                            callbackChooseItem: () async {
+                    } else if (formStatus is SubmissionSuccess) {
+                      DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                              () {
+                            Get.back();
+                          }, () {
+                            Get.back();
+                          }, '', S.of(context).close_dialog);
+                    } else if (formStatus is FormSubmitting) {
+                      //DiaLogManager.showDialogLoading(context);
+                    }
+                  },
+                  builder: (blocContext, state) {
+                    if (onchange) {
+                      context
+                          .read<NotifyBloc>()
+                          .add(GetListNotifyEvent());
+                      onchange = false;
+                    }
+                return state.isShowProgress /*&& (state.listDiarylistNotify.length == 0 || state.listDiaryMonitor.length == 0)*/
+                    ? Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                  child:
+                  DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                )
+                    : RefreshIndicator(
+                  onRefresh: () async {
+                    blocContext.read<NotifyBloc>().add(GetListNotifyEvent());
+                  },
+                  child: state.listNotify.isEmpty
+                      ? const EmptyWidget()
+                      : SingleChildScrollView(
+                    //physics: const NeverScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        ListView.builder(
+                          itemCount: state.listNotify.length,
+                          itemBuilder: (BuildContext contextBloc, int index) {
+                            return ItemNotify(
+                                notifyEntity: state.listNotify[index],
+                                callbackChooseItem: () async {
 
-                      /*        var result = await Navigator.push(
-                                  context,
-                                  DetailNotifyView.route(
-                                      state.listlistNotify[index].id ?? -1));
-                               if (result != null && result[0]) {*/
-                                  contextBloc.read<NotifyBloc>().add(
-                                      EditNotificationEvent(
-                                          state.listNotify[index].id ?? -1));
-                               // }
-                            },
-                            callbackDelete: () {
-                            });
-                      },
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
+                          /*        var result = await Navigator.push(
+                                      context,
+                                      DetailNotifyView.route(
+                                          state.listlistNotify[index].id ?? -1));
+                                   if (result != null && result[0]) {*/
+                                      contextBloc.read<NotifyBloc>().add(
+                                          EditNotificationEvent(
+                                              state.listNotify[index].id ?? -1));
+                                   // }
+                                },
+                                callbackDelete: () {
+                                });
+                          },
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
+                        SizedBox(
+                          height: 60,
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 60,
-                    )
-                  ],
-                ),
-              ),
-            );
-          }),
+                  ),
+                );
+              }),
+            ],
+          ),
         ),
       ),
     );

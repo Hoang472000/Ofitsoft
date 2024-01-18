@@ -3,6 +3,7 @@ import 'package:diary_mobile/data/entity/image/image_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/material_entity.dart';
 import 'package:diary_mobile/data/entity/item_default/tool.dart';
 import 'package:diary_mobile/data/repository.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../resource/assets.dart';
@@ -131,13 +132,12 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
             backgroundColor: AppColor.main,
             actions: [],
           ),
-          body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
-              listener: (context, state) async {},
-              builder: (blocContext, state) {
-                return Container(
-                  //color: Color(0xff3008ce),
-                    //padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: SingleChildScrollView(
+          body: HomeBackGround(
+            children: [
+              BlocConsumer<ListDiaryBloc, ListDiaryState>(
+                  listener: (context, state) async {},
+                  builder: (blocContext, state) {
+                    return SingleChildScrollView(
                       //physics: NeverScrollableScrollPhysics(),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -145,9 +145,9 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             margin: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [AppColor.grayEC, AppColor.grayC7], // Đặt 2 màu ở đây
+                                colors: [AppColor.grayEC.withOpacity(0.8), AppColor.grayC7.withOpacity(0.9)], // Đặt 2 màu ở đây
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                               ),
@@ -391,9 +391,9 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             margin: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [AppColor.grayEC, AppColor.grayC7],   // Đặt 2 màu ở đây
+                                colors: [AppColor.grayEC.withOpacity(0.8), AppColor.grayC7.withOpacity(0.9)],   // Đặt 2 màu ở đây
                                 begin: Alignment.centerLeft,
                                 end: Alignment.centerRight,
                               ),
@@ -650,8 +650,10 @@ class _AddActivitySubPageState extends State<AddActivitySubPage> {
                           )
                         ],
                       ),
-                    ));
-              }),
+                    );
+                  }),
+            ],
+          ),
         ),
       ),
     );

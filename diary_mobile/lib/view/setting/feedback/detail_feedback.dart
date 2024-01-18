@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../generated/l10n.dart';
 import '../../../resource/assets.dart';
@@ -105,326 +106,328 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                   DiaLogManager.showDialogLoading(context);
                 }
               }, builder: (blocContext, state) {
-            return Container(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: state.listWidget.length >0 ? Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)),
-                                  color: AppColor.grayDC),
-                                  padding: EdgeInsets.all(4),
-                                  child: Text(Utils.formatDate("${state.startTimeController!.text}")),
-                                ),
-                                Container(
-                                  decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)),
-                                      color: Colors.white),
-                                  padding: EdgeInsets.only(top: 8, bottom: 8, right: 8),
-                                  margin: EdgeInsets.only(top:16, bottom: 16),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.only(left: 8.0, right: 8),
-                                        child: CircleAvatar(
-                                          backgroundColor: AppColor.background,
-                                          radius: MediaQuery.sizeOf(context).width/12,
-                                          child:ClipOval(
-                                              child: image == '' ?
-                                              Image.asset(ImageAsset.imagePersonProfile,         fit: BoxFit.cover,
-                                                ) :
-                                              Image.memory(
-                                                base64Decode(image),
-                                                gaplessPlayback: true,
-                                                fit: BoxFit.cover,
-
-                                                errorBuilder: (context, error, stackTrace) {
-                                                  // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
-                                                  print("HoangCV: run way");
-                                                  return Image.asset(
-                                                    ImageAsset.imagePersonProfile,
-                                                    fit: BoxFit.cover,
-
-                                                  );
-                                                },
-                                              )), //CircleAvatar
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                                padding: const EdgeInsets.only(bottom: 5),
-                                                child: Text(
-                                                    "Nội dung:",
-                                                    style: StyleOfit.textStyleFW700(
-                                                        Colors.black, 16,
-                                                        overflow: TextOverflow.visible))),
-                                            Container(
-                                              child: Text(state.moTaController!.text,
-                                                style: StyleOfit.textStyleFW400(
-                                                    Colors.black, 16,
-                                                    overflow: TextOverflow.visible),
-                                                maxLines: 1000,),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+            return KeyboardDismisser(
+              child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: state.listWidget.length >0 ? Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)),
+                                    color: AppColor.grayDC),
+                                    padding: EdgeInsets.all(4),
+                                    child: Text(Utils.formatDate("${state.startTimeController!.text}")),
                                   ),
-                                ),
-                                SizedBox(
-                                  height:
-                                  state.listImage.isNotEmpty ? state.imageHeight + 20 : 0,
-                                  child: ListView.builder(
-                                      padding: EdgeInsets.zero,
-                                      shrinkWrap: true,
-                                      scrollDirection: Axis.horizontal,
-                                      itemCount: state.listImage.length,
-                                      itemBuilder: (context, index) {
-                                        print("HoangCV: type: ${state.listImage[index].type}");
-                                        return Padding(
-                                          padding: const EdgeInsets.only(right: 8.0),
+                                  Container(
+                                    decoration: const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8)),
+                                        color: Colors.white),
+                                    padding: EdgeInsets.only(top: 8, bottom: 8, right: 8),
+                                    margin: EdgeInsets.only(top:16, bottom: 16),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 8.0, right: 8),
+                                          child: CircleAvatar(
+                                            backgroundColor: AppColor.background,
+                                            radius: MediaQuery.sizeOf(context).width/12,
+                                            child:ClipOval(
+                                                child: image == '' ?
+                                                Image.asset(ImageAsset.imagePersonProfile,         fit: BoxFit.cover,
+                                                  ) :
+                                                Image.memory(
+                                                  base64Decode(image),
+                                                  gaplessPlayback: true,
+                                                  fit: BoxFit.cover,
+
+                                                  errorBuilder: (context, error, stackTrace) {
+                                                    // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
+                                                    print("HoangCV: run way");
+                                                    return Image.asset(
+                                                      ImageAsset.imagePersonProfile,
+                                                      fit: BoxFit.cover,
+
+                                                    );
+                                                  },
+                                                )), //CircleAvatar
+                                          ),
+                                        ),
+                                        Expanded(
                                           child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
                                             children: [
-                                              Stack(
-                                                alignment: Alignment.center,
-                                                children: [
-                                                  Container(
-                                                    child: GestureDetector(
-                                                      onTap: () {
-                                                        state.listImage[index].type != "2" ?
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder: (context) => ImagePlayerWidget(state.listImage, index),
-                                                          ),
-                                                        ) : null;
-                                                      },
-                                                      child: Image.memory(
-                                                        gaplessPlayback: true,
-                                                        base64Decode(state.listImage[index]
-                                                            .contentView ??
-                                                            ""),
-                                                        height: state.imageHeight,
-                                                        width: state.imageWidth,
-                                                        fit: BoxFit.cover,
-                                                        errorBuilder: (context, error,
-                                                            stackTrace) {
-                                                          return Container(
-                                                            height: state.imageHeight,
-                                                            width: state.imageWidth,
-                                                            decoration: BoxDecoration(
-                                                                color:  AppColor.grayC7),
-                                                            child: Center(
-                                                              child: Text(
-                                                                "V",
-                                                                style:
-                                                                StyleOfit.textStyleFW700(AppColor.main, 16),
-                                                              ),
-                                                            ),
-                                                          );
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Visibility(
-                                                    visible: state.listImage[index].type == "2",
-                                                    child: Positioned(
-                                                      child: IconButton(
-                                                          onPressed: () {
-                                                            print("HoangCV: state.listImage[index].filePath: ${state.listImage[index].filePath}");
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => VideoPlayerWidget(state.listImage[index].filePath??''),
-                                                              ),
-                                                            );
-                                                          },
-                                                          icon: Transform.scale(
-                                                            scale: (state.imageWidth/4)/30,
-                                                            child: Image(
-                                                              image:
-                                                              AssetImage(ImageAsset.imageYoutube),
-                                                            ),
-                                                          )),
-                                                    ),
-                                                  ),
-                                                ],
+                                              Container(
+                                                  padding: const EdgeInsets.only(bottom: 5),
+                                                  child: Text(
+                                                      "Nội dung:",
+                                                      style: StyleOfit.textStyleFW700(
+                                                          Colors.black, 16,
+                                                          overflow: TextOverflow.visible))),
+                                              Container(
+                                                child: Text(state.moTaController!.text,
+                                                  style: StyleOfit.textStyleFW400(
+                                                      Colors.black, 16,
+                                                      overflow: TextOverflow.visible),
+                                                  maxLines: 1000,),
                                               ),
                                             ],
                                           ),
-                                        );
-                                      }),
-                                ),
-                             /*   state.listReply.length > 0 ? SizedBox(
-                                  child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text("Phản hồi:", style: StyleOfit.textStyleFW500(AppColor.black22, 14),),
-                                  ),
-                                ) : SizedBox(),*/
-                                state.listReply.length > 0 ? SizedBox(
-                                  child: Container(
-                                    width: double.infinity,
-                                    //height: 300,
-                         /*           decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Color(0xFFB2B8BB),
-                                          width: 1.5,
                                         ),
-                                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                                        color: AppColor.whiteF2),*/
-                                    padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                                    child: Container(
-                                      child: SingleChildScrollView(
-                                        physics: NeverScrollableScrollPhysics(),
-                                        child: Column(
-                                          children: [
-                                            ListView.builder(
-                                                physics: NeverScrollableScrollPhysics(),
-                                                padding: EdgeInsets.zero,
-                                                shrinkWrap: true,
-                                                scrollDirection: Axis.vertical,
-                                                itemCount: state.listReply.length,
-                                                itemBuilder: (context, index) {
-                                                  print("HoangCV: type: ${state.listReply.length}");
-                                                  return Padding(
-                                                    padding: const EdgeInsets.only(top: 8.0),
-                                                    child: Container(
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        //crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          index > 0 && DateFormat("yyyy-MM-dd").format(DateTime.parse(state.listReply[index].createDate ?? "" ))
-                                                              == DateFormat("yyyy-MM-dd").format(DateTime.parse(state.listReply[index - 1].createDate ?? "" ))
-                                                              ? /*Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}")*/SizedBox()
-                                                              : Container(
-                                                              padding:EdgeInsets.only(bottom: 4),
-                                                              child: Text("${Utils.formatDateMonth("${state.listReply[index].createDate}")}",
-                                                                style: StyleOfit.textStyleFW400(AppColor.black22, 13,),)),
-                                                          state.userId != state.listReply[index].userId ?
-                                                          Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Text("Admin: "),
-                                                              Flexible(
-                                                                child: Container(
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                          color: AppColor.grayC7, width: 1,),
-                                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                                        color: Colors.white),
-                                                                    padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Text("${state.listReply[index].description}",
-                                                                          style: StyleOfit.textStyleFW400(AppColor.black22, 14,),
-                                                                        //maxLines: 5,
-                                                                        overflow: TextOverflow.visible,),
-                                                                        SizedBox(height: 10,),
-                                                                        Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
-                                                                          style: StyleOfit.textStyleFW400(AppColor.back09, 10),)
-                                                                      ],
-                                                                    )),
-                                                              )
-                                                            ],
-                                                          ) : Align(
-                                                            alignment: Alignment.centerRight,
-                                                            child: IntrinsicWidth(
-                                                              child: SizedBox(
-                                                                child: Container(
-                                                                    decoration: BoxDecoration(
-                                                                        border: Border.all(
-                                                                          color: AppColor.grayC7, width: 1,),
-                                                                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                                                                        color: AppColor.cyan99),
-                                                                    padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
-                                                                    alignment: Alignment.topRight,
-                                                                    child: Column(
-                                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                                      children: [
-                                                                        Text("${state.listReply[index].description}",
-                                                                          style: StyleOfit.textStyleFW400(AppColor.black22, 14),
-                                                                          overflow: TextOverflow.visible,),
-                                                                        SizedBox(height: 10,),
-                                                                        Container(
-                                                                          //alignment: Alignment.centerRight,
-                                                                          child: Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
-                                                                            style: StyleOfit.textStyleFW400(AppColor.back09, 10),),
-                                                                        )
-                                                                      ],
-                                                                    )),
-                                                              ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height:
+                                    state.listImage.isNotEmpty ? state.imageHeight + 20 : 0,
+                                    child: ListView.builder(
+                                        padding: EdgeInsets.zero,
+                                        shrinkWrap: true,
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: state.listImage.length,
+                                        itemBuilder: (context, index) {
+                                          print("HoangCV: type: ${state.listImage[index].type}");
+                                          return Padding(
+                                            padding: const EdgeInsets.only(right: 8.0),
+                                            child: Column(
+                                              children: [
+                                                Stack(
+                                                  alignment: Alignment.center,
+                                                  children: [
+                                                    Container(
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          state.listImage[index].type != "2" ?
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) => ImagePlayerWidget(state.listImage, index),
                                                             ),
-                                                          ),
-
-                                                        ],
+                                                          ) : null;
+                                                        },
+                                                        child: Image.memory(
+                                                          gaplessPlayback: true,
+                                                          base64Decode(state.listImage[index]
+                                                              .contentView ??
+                                                              ""),
+                                                          height: state.imageHeight,
+                                                          width: state.imageWidth,
+                                                          fit: BoxFit.cover,
+                                                          errorBuilder: (context, error,
+                                                              stackTrace) {
+                                                            return Container(
+                                                              height: state.imageHeight,
+                                                              width: state.imageWidth,
+                                                              decoration: BoxDecoration(
+                                                                  color:  AppColor.grayC7),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "V",
+                                                                  style:
+                                                                  StyleOfit.textStyleFW700(AppColor.main, 16),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
                                                       ),
                                                     ),
-                                                  );
-                                                }),
-                                          ],
+                                                    Visibility(
+                                                      visible: state.listImage[index].type == "2",
+                                                      child: Positioned(
+                                                        child: IconButton(
+                                                            onPressed: () {
+                                                              print("HoangCV: state.listImage[index].filePath: ${state.listImage[index].filePath}");
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                  builder: (context) => VideoPlayerWidget(state.listImage[index].filePath??''),
+                                                                ),
+                                                              );
+                                                            },
+                                                            icon: Transform.scale(
+                                                              scale: (state.imageWidth/4)/30,
+                                                              child: Image(
+                                                                image:
+                                                                AssetImage(ImageAsset.imageYoutube),
+                                                              ),
+                                                            )),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                               /*   state.listReply.length > 0 ? SizedBox(
+                                    child: Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text("Phản hồi:", style: StyleOfit.textStyleFW500(AppColor.black22, 14),),
+                                    ),
+                                  ) : SizedBox(),*/
+                                  state.listReply.length > 0 ? SizedBox(
+                                    child: Container(
+                                      width: double.infinity,
+                                      //height: 300,
+                           /*           decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Color(0xFFB2B8BB),
+                                            width: 1.5,
+                                          ),
+                                          borderRadius: BorderRadius.all(Radius.circular(5)),
+                                          color: AppColor.whiteF2),*/
+                                      padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                                      child: Container(
+                                        child: SingleChildScrollView(
+                                          physics: NeverScrollableScrollPhysics(),
+                                          child: Column(
+                                            children: [
+                                              ListView.builder(
+                                                  physics: NeverScrollableScrollPhysics(),
+                                                  padding: EdgeInsets.zero,
+                                                  shrinkWrap: true,
+                                                  scrollDirection: Axis.vertical,
+                                                  itemCount: state.listReply.length,
+                                                  itemBuilder: (context, index) {
+                                                    print("HoangCV: type: ${state.listReply.length}");
+                                                    return Padding(
+                                                      padding: const EdgeInsets.only(top: 8.0),
+                                                      child: Container(
+                                                        child: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          //crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            index > 0 && DateFormat("yyyy-MM-dd").format(DateTime.parse(state.listReply[index].createDate ?? "" ))
+                                                                == DateFormat("yyyy-MM-dd").format(DateTime.parse(state.listReply[index - 1].createDate ?? "" ))
+                                                                ? /*Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}")*/SizedBox()
+                                                                : Container(
+                                                                padding:EdgeInsets.only(bottom: 4),
+                                                                child: Text("${Utils.formatDateMonth("${state.listReply[index].createDate}")}",
+                                                                  style: StyleOfit.textStyleFW400(AppColor.black22, 13,),)),
+                                                            state.userId != state.listReply[index].userId ?
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text("Admin: "),
+                                                                Flexible(
+                                                                  child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color: AppColor.grayC7, width: 1,),
+                                                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                                          color: Colors.white),
+                                                                      padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("${state.listReply[index].description}",
+                                                                            style: StyleOfit.textStyleFW400(AppColor.black22, 14,),
+                                                                          //maxLines: 5,
+                                                                          overflow: TextOverflow.visible,),
+                                                                          SizedBox(height: 10,),
+                                                                          Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
+                                                                            style: StyleOfit.textStyleFW400(AppColor.back09, 10),)
+                                                                        ],
+                                                                      )),
+                                                                )
+                                                              ],
+                                                            ) : Align(
+                                                              alignment: Alignment.centerRight,
+                                                              child: IntrinsicWidth(
+                                                                child: SizedBox(
+                                                                  child: Container(
+                                                                      decoration: BoxDecoration(
+                                                                          border: Border.all(
+                                                                            color: AppColor.grayC7, width: 1,),
+                                                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                                                          color: AppColor.cyan99),
+                                                                      padding: EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 4),
+                                                                      alignment: Alignment.topRight,
+                                                                      child: Column(
+                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                        children: [
+                                                                          Text("${state.listReply[index].description}",
+                                                                            style: StyleOfit.textStyleFW400(AppColor.black22, 14),
+                                                                            overflow: TextOverflow.visible,),
+                                                                          SizedBox(height: 10,),
+                                                                          Container(
+                                                                            //alignment: Alignment.centerRight,
+                                                                            child: Text("${Utils.formatDateDay("${state.listReply[index].createDate}")}",
+                                                                              style: StyleOfit.textStyleFW400(AppColor.back09, 10),),
+                                                                          )
+                                                                        ],
+                                                                      )),
+                                                                ),
+                                                              ),
+                                                            ),
+
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ) : SizedBox(),
+                                  ) : SizedBox(),
 
-                              ],
+                                ],
+                              ),
+                            ],
+                          ) :
+                          SizedBox(),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                //margin: const EdgeInsets.only(top: 25),
+                                  child: TextFormFieldInputText(
+                                    "Nhập tin nhắn cho quản lý",
+                                    state.replyController ?? TextEditingController(),
+                                    false,
+                                    focusNodeReply,
+                                    (state.formStatus is ValidatePassFail) ? "" : "",
+                                        (lostFocus) {
+                                    },
+                                    false,
+                                    onChangeCallBack: (text) {
+                                      print("text: SaveReplyEvent: $text");
+                                      blocContext.read<DetailFeedbackBloc>().add(
+                                          SaveReplyEvent(text));
+                                    },// textCapitalization: false,
+                                  )),
                             ),
+                            IconButton(
+                                onPressed: (){
+                                  blocContext.read<DetailFeedbackBloc>().add(
+                                      AddReplyEvent());
+                                },
+                                icon: Icon(Icons.send, color: AppColor.blue15, size: 30,))
                           ],
-                        ) :
-                        SizedBox(),
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              //margin: const EdgeInsets.only(top: 25),
-                                child: TextFormFieldInputText(
-                                  "Nhập tin nhắn cho quản lý",
-                                  state.replyController ?? TextEditingController(),
-                                  false,
-                                  focusNodeReply,
-                                  (state.formStatus is ValidatePassFail) ? "" : "",
-                                      (lostFocus) {
-                                  },
-                                  false,
-                                  onChangeCallBack: (text) {
-                                    print("text: SaveReplyEvent: $text");
-                                    blocContext.read<DetailFeedbackBloc>().add(
-                                        SaveReplyEvent(text));
-                                  },// textCapitalization: false,
-                                )),
-                          ),
-                          IconButton(
-                              onPressed: (){
-                                blocContext.read<DetailFeedbackBloc>().add(
-                                    AddReplyEvent());
-                              },
-                              icon: Icon(Icons.send, color: AppColor.blue15, size: 30,))
-                        ],
-                      ),
-                    ),
-                  ],
-                ));
+                    ],
+                  )),
+            );
           }),
         ),
       ),

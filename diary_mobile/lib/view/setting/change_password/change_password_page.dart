@@ -1,3 +1,4 @@
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -81,255 +82,272 @@ class _ChangePassWordPageState extends State<ChangePassWordPage> {
                     style: StyleOfit.textStyleFW700(Colors.white, 20),
                   ),
                 ),
-                body: BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
-                    builder: (context, state) {
-                      if (state.formStatus is ValidatePassFail) {
-                        validatePassFail = state.formStatus as ValidatePassFail;
-                      } else if (state.formStatus is ChangePasswordFailed) {
-                        changePasswordFailed =
-                        state.formStatus as ChangePasswordFailed;
-                      }
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          FocusScope.of(context).unfocus();
-                        },
-                        child: Container(
-                          //color: Colors.white,
-                          height: double.infinity,
-                          width: double.infinity,
-                          child: Form(
-                            key: _formKey,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 32),
-                              child: SingleChildScrollView(
-                                physics: const AlwaysScrollableScrollPhysics(),
-                                //scrollDirection: Axis.vertical,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                      height: 30,
-                                    ),
-                                    const NotePassWord(),
-                                    Container(
-                                        margin: const EdgeInsets.only(top: 25),
-                                        child: TextFormFieldInput(
-                                          noBorder: false,
-                                          underLine: false,
-                                          S.of(context).pass_current,
-                                          _inputPassCurrent,
-                                          true,
-                                          (state.formStatus is ValidatePassFail &&
-                                              validatePassFail?.errorPassCurrent !=
-                                                  "")
-                                              ? true
-                                              : false,
-                                          _focusNodePassCurrent,
-                                          (state.formStatus is ValidatePassFail &&
-                                              validatePassFail?.errorPassCurrent !=
-                                                  "")
-                                              ? validatePassFail!.errorPassCurrent
-                                              : S.of(context).pass_empty,
-                                              (lostFocus) {
-                                            context.read<ChangePasswordBloc>().add(
-                                                ValidatePassNew(
-                                                    passCurrent:
-                                                    _inputPassCurrent.text,
-                                                    passNew: _inputPassNew.text,
-                                                    passNewConfirm:
-                                                    _inputConfirmPassNew.text,
-                                                    context: context));
-                                            if (!lostFocus) {
-                                              _focusNodePassNew.requestFocus();
-                                            }
-                                          },
-                                          true,
-                                          //icons: '',
-                                          onChangeCallBack: (text) {
-                                            setState(() {
-                                              onchangePassOld = text;
-                                            });
-                                          },// textCapitalization: false,
-                                          // false
-                                        )),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 25),
-                                      child: TextFormFieldInput(
-                                        noBorder: false,
-                                        underLine: false,
-                                        S.of(context).pass_new,
-                                        _inputPassNew,
-                                        true,
-                                        (state.formStatus is ValidatePassFail &&
-                                            validatePassFail?.errorPassNew !=
-                                                "")
-                                            ? true
-                                            : false,
-                                        _focusNodePassNew,
-                                        (state.formStatus is ValidatePassFail &&
-                                            validatePassFail?.errorPassNew !=
-                                                "")
-                                            ? validatePassFail!.errorPassNew
-                                            : S.of(context).pass_empty,
-                                            (lostFocus) {
-                                          context.read<ChangePasswordBloc>().add(
-                                              ValidatePassNew(
-                                                  passCurrent:
-                                                  _inputPassCurrent.text,
-                                                  passNew: _inputPassNew.text,
-                                                  passNewConfirm:
-                                                  _inputConfirmPassNew.text,
-                                                  context: context));
-                                          if (!lostFocus) {
-                                            _focusConfirmPassNew.requestFocus();
-                                          }
-                                        },
-                                        true,
-                                        //icons: '',
-                                        onChangeCallBack: (text) {
-                                          setState(() {
-                                            onchangePassNew = text;
-                                            context.read<ChangePasswordBloc>().add(
-                                                ValidatePassNew(
-                                                    passCurrent:
-                                                    onchangePassOld,
-                                                    passNew: onchangePassNew,
-                                                    passNewConfirm:
-                                                    onchangePassCon,
-                                                    context: context));
-                                          });
-                                        }, //textCapitalization: false,
+                body: HomeBackGround(
+                  children: [
+                    BlocBuilder<ChangePasswordBloc, ChangePasswordState>(
+                        builder: (context, state) {
+                          if (state.formStatus is ValidatePassFail) {
+                            validatePassFail = state.formStatus as ValidatePassFail;
+                          } else if (state.formStatus is ChangePasswordFailed) {
+                            changePasswordFailed =
+                            state.formStatus as ChangePasswordFailed;
+                          }
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              FocusScope.of(context).unfocus();
+                            },
+                            child: Form(
+                              key: _formKey,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                child: SingleChildScrollView(
+                                  physics: const AlwaysScrollableScrollPhysics(),
+                                  //scrollDirection: Axis.vertical,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(
+                                        height: 30,
                                       ),
-                                    ),
-                                    Container(
-                                        margin: const EdgeInsets.only(top: 25),
-                                        child: TextFormFieldInput(
-                                          noBorder: false,
-                                          underLine: false,
-                                          S.of(context).confirm_pass_new,
-                                          _inputConfirmPassNew,
-                                          true,
-                                          (state.formStatus is ValidatePassFail &&
-                                              validatePassFail
-                                                  ?.errorPassNewConfirm !=
-                                                  "")
-                                              ? true
-                                              : false,
-                                          _focusConfirmPassNew,
-                                          (state.formStatus is ValidatePassFail &&
-                                              validatePassFail
-                                                  ?.errorPassNewConfirm !=
-                                                  "")
-                                              ? validatePassFail!
-                                              .errorPassNewConfirm
-                                              : S.of(context).pass_empty,
-                                              (lostFocus) {
-                                            context.read<ChangePasswordBloc>().add(
-                                                ValidatePassNew(
-                                                    passCurrent:
-                                                    _inputPassCurrent.text,
-                                                    passNew: _inputPassNew.text,
-                                                    passNewConfirm:
-                                                    _inputConfirmPassNew.text,
-                                                    context: context));
-                                            if (!lostFocus) {
-                                              FocusScope.of(context).unfocus();
-                                            }
-                                          },
-                                          true,
-                                          //icons: '',
-                                          onChangeCallBack: (string) {
-                                            setState(() {
-                                              onchangePassCon = string;
-                                            });
-                                          }, //textCapitalization: false,
-                                        )),
-                                    // const NotePassWord(),
-                                    SizedBox(height: 80,),
-                                    Center(
-                                      child: Container(
-                                        margin: const EdgeInsets.only(top: 0),
-                                        width: 180,
-                                        child:onchangePassCon==onchangePassNew&&onchangePassOld!=onchangePassNew&&onchangePassNew.isNotEmpty&&onchangePassOld.length>=8&&validatePassFail?.errorPassNew==""
-                                            ? OfitButton(
-                                          text: S.of(context).agree,
-                                          onPressed: () async {
-                                            String passCurrent =
-                                                _inputPassCurrent.text;
-                                            String passNew =
-                                                _inputPassNew.text;
-                                            String confirmPassNew =
-                                                _inputConfirmPassNew.text;
-                                            _formKey.currentState!
-                                                .validate();
-                                            if (validatePassFail
-                                                ?.errorPassCurrent ==
-                                                "" &&
-                                                passCurrent.isNotEmpty) {
+                                      Container(
+                                          margin: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                                            color: AppColor.whiteF2.withOpacity(0.9),
+                                          ),
+                                          child: const NotePassWord()),
+                                      Container(
+                                        margin: const EdgeInsets.all(8),
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                                          color: AppColor.whiteF2.withOpacity(0.9),
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Container(
+                                                margin: const EdgeInsets.only(top: 0),
+                                                child: TextFormFieldInput(
+                                                  noBorder: false,
+                                                  underLine: false,
+                                                  S.of(context).pass_current,
+                                                  _inputPassCurrent,
+                                                  true,
+                                                  (state.formStatus is ValidatePassFail &&
+                                                      validatePassFail?.errorPassCurrent !=
+                                                          "")
+                                                      ? true
+                                                      : false,
+                                                  _focusNodePassCurrent,
+                                                  (state.formStatus is ValidatePassFail &&
+                                                      validatePassFail?.errorPassCurrent !=
+                                                          "")
+                                                      ? validatePassFail!.errorPassCurrent
+                                                      : S.of(context).pass_empty,
+                                                      (lostFocus) {
+                                                    context.read<ChangePasswordBloc>().add(
+                                                        ValidatePassNew(
+                                                            passCurrent:
+                                                            _inputPassCurrent.text,
+                                                            passNew: _inputPassNew.text,
+                                                            passNewConfirm:
+                                                            _inputConfirmPassNew.text,
+                                                            context: context));
+                                                    if (!lostFocus) {
+                                                      _focusNodePassNew.requestFocus();
+                                                    }
+                                                  },
+                                                  true,
+                                                  //icons: '',
+                                                  onChangeCallBack: (text) {
+                                                    setState(() {
+                                                      onchangePassOld = text;
+                                                    });
+                                                  },// textCapitalization: false,
+                                                  // false
+                                                )),
+                                            Container(
+                                              margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInput(
+                                                noBorder: false,
+                                                underLine: false,
+                                                S.of(context).pass_new,
+                                                _inputPassNew,
+                                                true,
+                                                (state.formStatus is ValidatePassFail &&
+                                                    validatePassFail?.errorPassNew !=
+                                                        "")
+                                                    ? true
+                                                    : false,
+                                                _focusNodePassNew,
+                                                (state.formStatus is ValidatePassFail &&
+                                                    validatePassFail?.errorPassNew !=
+                                                        "")
+                                                    ? validatePassFail!.errorPassNew
+                                                    : S.of(context).pass_empty,
+                                                    (lostFocus) {
+                                                  context.read<ChangePasswordBloc>().add(
+                                                      ValidatePassNew(
+                                                          passCurrent:
+                                                          _inputPassCurrent.text,
+                                                          passNew: _inputPassNew.text,
+                                                          passNewConfirm:
+                                                          _inputConfirmPassNew.text,
+                                                          context: context));
+                                                  if (!lostFocus) {
+                                                    _focusConfirmPassNew.requestFocus();
+                                                  }
+                                                },
+                                                true,
+                                                //icons: '',
+                                                onChangeCallBack: (text) {
+                                                  setState(() {
+                                                    onchangePassNew = text;
+                                                    context.read<ChangePasswordBloc>().add(
+                                                        ValidatePassNew(
+                                                            passCurrent:
+                                                            onchangePassOld,
+                                                            passNew: onchangePassNew,
+                                                            passNewConfirm:
+                                                            onchangePassCon,
+                                                            context: context));
+                                                  });
+                                                }, //textCapitalization: false,
+                                              ),
+                                            ),
+                                            Container(
+                                                margin: const EdgeInsets.only(top: 25),
+                                                child: TextFormFieldInput(
+                                                  noBorder: false,
+                                                  underLine: false,
+                                                  S.of(context).confirm_pass_new,
+                                                  _inputConfirmPassNew,
+                                                  true,
+                                                  (state.formStatus is ValidatePassFail &&
+                                                      validatePassFail
+                                                          ?.errorPassNewConfirm !=
+                                                          "")
+                                                      ? true
+                                                      : false,
+                                                  _focusConfirmPassNew,
+                                                  (state.formStatus is ValidatePassFail &&
+                                                      validatePassFail
+                                                          ?.errorPassNewConfirm !=
+                                                          "")
+                                                      ? validatePassFail!
+                                                      .errorPassNewConfirm
+                                                      : S.of(context).pass_empty,
+                                                      (lostFocus) {
+                                                    context.read<ChangePasswordBloc>().add(
+                                                        ValidatePassNew(
+                                                            passCurrent:
+                                                            _inputPassCurrent.text,
+                                                            passNew: _inputPassNew.text,
+                                                            passNewConfirm:
+                                                            _inputConfirmPassNew.text,
+                                                            context: context));
+                                                    if (!lostFocus) {
+                                                      FocusScope.of(context).unfocus();
+                                                    }
+                                                  },
+                                                  true,
+                                                  //icons: '',
+                                                  onChangeCallBack: (string) {
+                                                    setState(() {
+                                                      onchangePassCon = string;
+                                                    });
+                                                  }, //textCapitalization: false,
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(height: 60,),
+                                      Center(
+                                        child: Container(
+                                          margin: const EdgeInsets.only(top: 0),
+                                          width: 180,
+                                          child:onchangePassCon==onchangePassNew&&onchangePassOld!=onchangePassNew&&onchangePassNew.isNotEmpty&&onchangePassOld.length>=8&&validatePassFail?.errorPassNew==""
+                                              ? OfitButton(
+                                            text: S.of(context).agree,
+                                            onPressed: () async {
+                                              String passCurrent =
+                                                  _inputPassCurrent.text;
+                                              String passNew =
+                                                  _inputPassNew.text;
+                                              String confirmPassNew =
+                                                  _inputConfirmPassNew.text;
+                                              _formKey.currentState!
+                                                  .validate();
                                               if (validatePassFail
-                                                  ?.errorPassNew !=
-                                                  "" ||
-                                                  passNew.isEmpty) {
-                                                _focusNodePassNew
-                                                    .requestFocus();
-                                              } else if (validatePassFail
-                                                  ?.errorPassNewConfirm !=
-                                                  "" ||
-                                                  confirmPassNew.isEmpty) {
-                                                _focusConfirmPassNew
+                                                  ?.errorPassCurrent ==
+                                                  "" &&
+                                                  passCurrent.isNotEmpty) {
+                                                if (validatePassFail
+                                                    ?.errorPassNew !=
+                                                    "" ||
+                                                    passNew.isEmpty) {
+                                                  _focusNodePassNew
+                                                      .requestFocus();
+                                                } else if (validatePassFail
+                                                    ?.errorPassNewConfirm !=
+                                                    "" ||
+                                                    confirmPassNew.isEmpty) {
+                                                  _focusConfirmPassNew
+                                                      .requestFocus();
+                                                }
+                                              } else {
+                                                _focusNodePassCurrent
                                                     .requestFocus();
                                               }
-                                            } else {
-                                              _focusNodePassCurrent
-                                                  .requestFocus();
-                                            }
-                                            if (changePasswordFailed !=
-                                                null) {
-                                              _focusNodePassCurrent
-                                                  .requestFocus();
-                                            }
-                                            if (passCurrent.isNotEmpty &&
-                                                passNew.isNotEmpty &&
-                                                confirmPassNew.isNotEmpty) {
+                                              if (changePasswordFailed !=
+                                                  null) {
+                                                _focusNodePassCurrent
+                                                    .requestFocus();
+                                              }
+                                              if (passCurrent.isNotEmpty &&
+                                                  passNew.isNotEmpty &&
+                                                  confirmPassNew.isNotEmpty) {
+                                                context
+                                                    .read<
+                                                    ChangePasswordBloc>()
+                                                    .add(ValidatePassNew(
+                                                    passCurrent:
+                                                    passCurrent,
+                                                    passNew: passNew,
+                                                    passNewConfirm:
+                                                    confirmPassNew,
+                                                    context: context,
+                                                    submit: true));
+                                                requestFocus();
+                                              }
+                                            },
+                                            color: AppColor.main,
+                                          )
+                                              : OfitButton(
+                                            text: S.of(context).agree,
+                                            onPressed: () {
                                               context
                                                   .read<
                                                   ChangePasswordBloc>()
-                                                  .add(ValidatePassNew(
-                                                  passCurrent:
-                                                  passCurrent,
-                                                  passNew: passNew,
-                                                  passNewConfirm:
-                                                  confirmPassNew,
-                                                  context: context,
-                                                  submit: true));
-                                              requestFocus();
-                                            }
-                                          },
-                                          color: AppColor.main,
-                                        )
-                                            : OfitButton(
-                                          text: S.of(context).agree,
-                                          onPressed: () {
-                                            context
-                                                .read<
-                                                ChangePasswordBloc>()
-                                                .add(SubmissionChangePassword(
-                                                _inputPassCurrent.text, _inputPassNew.text));
-                                          },
-                                          color: AppColor.main
-                                              .withOpacity(0.3),
+                                                  .add(SubmissionChangePassword(
+                                                  _inputPassCurrent.text, _inputPassNew.text));
+                                            },
+                                            color: AppColor.main
+                                                .withOpacity(0.3),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                      );
-                    })),
+                          );
+                        }),
+                  ],
+                )),
           ),
         ));
   }

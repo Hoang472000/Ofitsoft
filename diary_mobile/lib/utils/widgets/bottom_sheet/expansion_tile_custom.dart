@@ -30,7 +30,7 @@ class _ExpansionTileCustomState extends State<ExpansionTileCustom> {
           title: widget.list.isNotEmpty ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("${widget.list[0].name}", style: StyleOfit.textStyleFW500(AppColor.black22, 15)),
+              Text("${widget.list[0].name}", style: StyleOfit.textStyleFW500(AppColor.whiteF2, 15)),
               Text("${widget.list[0].amount}", style: StyleOfit.textStyleFW500(AppColor.main, 15),),
             ],
           ) : Text('No Items'),
@@ -54,7 +54,7 @@ class _ExpansionTileCustomState extends State<ExpansionTileCustom> {
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("${widget.list[i].name}", style: StyleOfit.textStyleFW500(AppColor.black22, 15)),
+                Text("${widget.list[i].name}", style: StyleOfit.textStyleFW500(AppColor.whiteF2, 15)),
                 Text("${widget.list[i].amount}", style: StyleOfit.textStyleFW500(AppColor.main, 15),),
               ],
             ),

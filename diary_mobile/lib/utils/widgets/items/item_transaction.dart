@@ -102,16 +102,15 @@ class _ItemTransactionState extends State<ItemTransaction> {
                   : const EdgeInsets.only(
                   left: 16, right: 16, top: 4, bottom: 4),
               decoration: BoxDecoration(
-                  boxShadow: const [
+                  /*boxShadow: const [
                     BoxShadow(
                       color: AppColor.main,
                       blurRadius: 0,
                       offset: Offset(-5.0, 0),
                     ),
-                  ],
+                  ],*/
                   borderRadius: BorderRadius.circular(8),
-                  color: /*widget.isChoose ? Colors.red[100] :*/
-                      Colors.white),
+                  color: AppColor.whiteF2.withOpacity(0.9)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

@@ -9,6 +9,7 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 import '../../../view_model/diary_activity/activity/info_diary_bloc.dart';
 import '../../home/home_page.dart';
 
@@ -52,104 +53,115 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
         //resizeToAvoidBottomInset: true,
         backgroundColor: AppColor.background,
         resizeToAvoidBottomInset: true,
-        body: BlocBuilder<DetailDiaryBloc, DetailDiaryState>(
-            builder: (blocContext, state) {
-              return state.isShowProgress ?
-              const Center(
-                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-              : Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                  child: SingleChildScrollView(
-                    //physics: const NeverScrollableScrollPhysics(),
-                    child: state.detailDiary !=null ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                          CardTile(
-                            label: "Tên nhật ký",
-                            value: "${state.detailDiary!.name}",
-                        image: ImageAsset.imageDiary),
-                        CardTile(
-                            label: "Tên nông hộ",
-                            value: "${state.detailDiary!.farmerName}",
-                            image: ImageAsset.imageFarmerProfile),
-                        CardTile(
-                            label: "Tên vùng trồng",
-                            value: "${state.detailDiary!.areaName} ${state.detailDiary!.areaCode}",
-                            image: ImageAsset.imageManagement),
-                        CardTile(
-                            label: "Tên lô trồng",
-                            value: "${state.detailDiary!.farmName} ${state.detailDiary!.farmCode}",
-                            image: ImageAsset.imageManagement),
-                        if((state.detailDiary!.googleMap??"").isNotEmpty)
-                        cardUrl(
-                            label: "Địa chỉ",
-                            value: "${state.detailDiary!.googleMap}",
-                            image: ImageAsset.imageLocation),
+        body: HomeBackGround(
+          children: [
+            BlocBuilder<DetailDiaryBloc, DetailDiaryState>(
+                builder: (blocContext, state) {
+                  return state.isShowProgress ?
+                  Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                      child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                  : Container(
+                      margin: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                      width: double.infinity,
+                      //padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
+                      child: SingleChildScrollView(
+                        //physics: const NeverScrollableScrollPhysics(),
+                        child: state.detailDiary !=null ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                              CardTile(
+                                label: "Tên nhật ký",
+                                value: "${state.detailDiary!.name}",
+                            image: ImageAsset.imageDiary),
+                            CardTile(
+                                label: "Tên nông hộ",
+                                value: "${state.detailDiary!.farmerName}",
+                                image: ImageAsset.imageFarmerProfile),
+                            CardTile(
+                                label: "Tên vùng trồng",
+                                value: "${state.detailDiary!.areaName} ${state.detailDiary!.areaCode}",
+                                image: ImageAsset.imageManagement),
+                            CardTile(
+                                label: "Tên lô trồng",
+                                value: "${state.detailDiary!.farmName} ${state.detailDiary!.farmCode}",
+                                image: ImageAsset.imageManagement),
+                            if((state.detailDiary!.googleMap??"").isNotEmpty)
+                            cardUrl(
+                                label: "Địa chỉ",
+                                value: "${state.detailDiary!.googleMap}",
+                                image: ImageAsset.imageLocation),
        /*                 CardTile(
-                            label: "Địa chỉ",
-                            value:
-                                "số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam,số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam",
-                            image: ImageAsset.imageDisaster),*/
+                                label: "Địa chỉ",
+                                value:
+                                    "số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam,số 108 Lò Đúc, Hai Bà Trưng, Hà Nội, Việt Nam",
+                                image: ImageAsset.imageDisaster),*/
        /*                 (state.detailDiary!.productProcessName ?? "").isNotEmpty ?
-                          itemAccount(context,
-                              image: ImageAsset.imageDiary,
-                              text: "${state.detailDiary!.productProcessName}",
-                              voidCallback: () async {
-                                var result = await Navigator.of(context).push(
-                                    WorkflowPage.route(
-                                        state.detailDiary!.productProcessId ??
-                                            -1));
-                              }) : SizedBox(),*/
-                        CardTile(
-                            label: "Loại vật nuôi/cây trồng",
-                            value: "${state.detailDiary!.cropName}",
-                            image: ImageAsset.imageTree),
-                        CardTile(
-                            label: "Diện tích",
-                            value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnitName}",
-                            image: ImageAsset.imageManagement),
-                        state.detailDiary!.amount == -1 ?
-                        Container() :
-                        CardTileDouble(
-                            label1: "Số lượng ban đầu",
-                            value1:  "${state.detailDiary!.amount == -1 ? '' : state.detailDiary!.amount??0}",
-                            value2: "${state.detailDiary!.amountUnitName}",
-                            image: ImageAsset.imageBudget),
-                        state.detailDiary!.yieldReal == -1 ?
-                        Container() :
-                        CardTileDouble(
-                            label1: "Sản lượng thu hoạch",
-                            value1:  "${state.detailDiary!.yieldReal == -1 ? '' : state.detailDiary!.yieldReal??0}",
-                            value2: "${state.detailDiary!.yieldRealUnitName}",
-                            image: ImageAsset.imageBudget),
-                        state.detailDiary!.yieldEstimate == -1 ?
-                        Container() :
-                        CardTileDouble(
-                            label1: "Sản lượng ước tính",
-                            value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : state.detailDiary!.yieldEstimate??0}",
-                            value2: "${state.detailDiary!.yieldEstimateUnitName}",
-                            image: ImageAsset.imageBudget),
-                        CardTile(
-                            label: "Ngày bắt đầu",
-                            value: Utils.formatTime("${state.detailDiary!.startDate}"),
-                            image: ImageAsset.imageCalendarBegin),
-                        ((state.detailDiary!.status??'').compareTo("done") == 0)?CardTile(
-                            label: "Ngày kết thúc",
-                            value: Utils.formatTime("${state.detailDiary!.endDate}"),
-                            image: ImageAsset.imageCalendarEnd): Container(),
-                        //draft//processing//done//cancelled//
-                        CardTile(
-                            label: "Trạng thái",
-                            value: (state.detailDiary!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
-                            (state.detailDiary!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
-                            (state.detailDiary!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
-                            (state.detailDiary!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
-                            image: ImageAsset.imageStatus),
-                      ],
-                    ) : Container(),
-                  ));
-            }),
+                              itemAccount(context,
+                                  image: ImageAsset.imageDiary,
+                                  text: "${state.detailDiary!.productProcessName}",
+                                  voidCallback: () async {
+                                    var result = await Navigator.of(context).push(
+                                        WorkflowPage.route(
+                                            state.detailDiary!.productProcessId ??
+                                                -1));
+                                  }) : SizedBox(),*/
+                            CardTile(
+                                label: "Loại vật nuôi/cây trồng",
+                                value: "${state.detailDiary!.cropName}",
+                                image: ImageAsset.imageTree),
+                            CardTile(
+                                label: "Diện tích",
+                                value: "${state.detailDiary!.area} ${state.detailDiary!.areaUnitName}",
+                                image: ImageAsset.imageManagement),
+                            state.detailDiary!.amount == -1 ?
+                            Container() :
+                            CardTileDouble(
+                                label1: "Số lượng ban đầu",
+                                value1:  "${state.detailDiary!.amount == -1 ? '' : state.detailDiary!.amount??0}",
+                                value2: "${state.detailDiary!.amountUnitName}",
+                                image: ImageAsset.imageBudget),
+                            state.detailDiary!.yieldReal == -1 ?
+                            Container() :
+                            CardTileDouble(
+                                label1: "Sản lượng thu hoạch",
+                                value1:  "${state.detailDiary!.yieldReal == -1 ? '' : state.detailDiary!.yieldReal??0}",
+                                value2: "${state.detailDiary!.yieldRealUnitName}",
+                                image: ImageAsset.imageBudget),
+                            state.detailDiary!.yieldEstimate == -1 ?
+                            Container() :
+                            CardTileDouble(
+                                label1: "Sản lượng ước tính",
+                                value1: "${state.detailDiary!.yieldEstimate == -1 ? '' : state.detailDiary!.yieldEstimate??0}",
+                                value2: "${state.detailDiary!.yieldEstimateUnitName}",
+                                image: ImageAsset.imageBudget),
+                            CardTile(
+                                label: "Ngày bắt đầu",
+                                value: Utils.formatTime("${state.detailDiary!.startDate}"),
+                                image: ImageAsset.imageCalendarBegin),
+                            ((state.detailDiary!.status??'').compareTo("done") == 0)?CardTile(
+                                label: "Ngày kết thúc",
+                                value: Utils.formatTime("${state.detailDiary!.endDate}"),
+                                image: ImageAsset.imageCalendarEnd): Container(),
+                            //draft//processing//done//cancelled//
+                            CardTile(
+                                label: "Trạng thái",
+                                value: (state.detailDiary!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
+                                (state.detailDiary!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
+                                (state.detailDiary!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
+                                (state.detailDiary!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
+                                image: ImageAsset.imageStatus),
+                          ],
+                        ) : Container(),
+                      ));
+                }),
+          ],
+        ),
       ),
     );
   }
@@ -164,7 +176,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
         //crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4,right: 8.0),
+            padding: const EdgeInsets.only(left: 0,right: 8.0),
             child: Image(
               image: AssetImage(image),
               width: 40,

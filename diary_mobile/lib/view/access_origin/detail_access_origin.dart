@@ -4,6 +4,7 @@ import 'dart:ffi';
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:diary_mobile/utils/constants/api_const.dart';
 import 'package:diary_mobile/utils/widgets/items/item_card_activity.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:diary_mobile/view/diary_activity/infomation_diary/workflow_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,104 +48,112 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
           ),
           backgroundColor: AppColor.background,
         ),
-        body: SafeArea(
-          child: BlocBuilder<DetailAccessOriginBloc, DetailAccessOriginState>(
-              builder: (blocContext, state) {
-                return state.isShowProgress ?
-                const Center(
-                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-                    : Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                    child: SingleChildScrollView(
-                      //physics: const NeverScrollableScrollPhysics(),
-                      child: state.detailAccessOrigin !=null ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: (){
-                              Utils.launchBrowserUrl('${ApiConst.qrCode}${state.detailAccessOrigin!.guid}');
-                            },
-                            child: QrImageView(
-                              data: '${ApiConst.qrCode}${state.detailAccessOrigin!.guid}',
-                              version: QrVersions.auto,
-                              size: 200.0,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-
-                              CardTile(
-                                  label: "Tên lô sản phẩm",
-                                  value: "${state.detailAccessOrigin!.name} - ${state.detailAccessOrigin!.batchCode}",
-                                  image: ImageAsset.imageDiary),
-                              CardTile(
-                                  label: "Tên công ty",
-                                  value: "${state.detailAccessOrigin!.companyName}",
-                                  image: ImageAsset.imageCompany),
-                              CardTile(
-                                  label: "Tên sản phẩm",
-                                  value: "${state.detailAccessOrigin!.productName}",
-                                  image: ImageAsset.imageTree),
-                              CardTile(
-                                  label: "Trọng lượng",
-                                  value: "${state.detailAccessOrigin!.weightTree}",
-                                  image: ImageAsset.imageFarmerProfile),
-                              CardTile(
-                                  label: "Số lượng",
-                                  value: "${state.detailAccessOrigin!.quantity} ${state.detailAccessOrigin!.quantityUnitId}",
-                                  image: ImageAsset.imageBudget),
-                              CardTile(
-                                  label: "Ngày sản xuất",
-                                  value: Utils.formatTime("${state.detailAccessOrigin!.manufactureDate}"),
-                                  image: ImageAsset.imageCalendarBegin),
-                              CardTile(
-                                  label: "Ngày hết hạn",
-                                  value: Utils.formatTime("${state.detailAccessOrigin!.expireDate}"),
-                                  image: ImageAsset.imageCalendarEnd),
-                              (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
-                              Container(
-                                padding: const EdgeInsets.only(top: 8, bottom: 0, left: 4),
-                                child: Text("Hình ảnh liên quan", style:
-                                StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),),
-                              ) : const SizedBox(),
-                              Container(
-                                padding: const EdgeInsets.all(24),
-                                child: Center(
-                                  child: Image.memory(
-                                    gaplessPlayback: true,
-                                    base64Decode(state.detailAccessOrigin!.image ??
-                                        ""),
-                                    //height: MediaQuery.of(context).size.height/2,
-                                    //width: MediaQuery.of(context).size.width/1.5,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error,
-                                        stackTrace) {
-                                      return Container(
-                                        /*height: MediaQuery.of(context).size.width/2,
-                                        width: MediaQuery.of(context).size.width/2,
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(12),
-                                            color:  AppColor.grayC7),
-                                        child: Center(
-                                          child: Text(
-                                            (state.detailAccessOrigin!.productName ?? "")*//*.substring(0,1)*//*,
-                                            style:
-                                            StyleOfit.textStyleFW700(AppColor.green53, 16),
-                                          ),
-                                        ),*/
-                                      );
-                                    },
-                                  ),
+        body: HomeBackGround(
+          children: [
+            BlocBuilder<DetailAccessOriginBloc, DetailAccessOriginState>(
+                builder: (blocContext, state) {
+                  return state.isShowProgress ?
+                  Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                    child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                      : Container(
+                      width: double.infinity,
+                      margin: const EdgeInsets.only(top: 0),
+                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
+    /*                decoration: BoxDecoration(
+                        //borderRadius: BorderRadius.circular(8),
+                        color: AppColor.gray500.withOpacity(0.1)),*/
+                      child: SingleChildScrollView(
+                        //physics: const NeverScrollableScrollPhysics(),
+                        child: state.detailAccessOrigin !=null ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: (){
+                                Utils.launchBrowserUrl('${ApiConst.qrCode}${state.detailAccessOrigin!.guid}');
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: AppColor.whiteF2.withOpacity(0.8)),
+                                child: QrImageView(
+                                  data: '${ApiConst.qrCode}${state.detailAccessOrigin!.guid}',
+                                  version: QrVersions.auto,
+                                  size: 200.0,
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ) : Container(),
-                    ));
-              }),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                  color: AppColor.whiteF2.withOpacity(0.8)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+
+                                  CardTile(
+                                      label: "Tên lô sản phẩm",
+                                      value: "${state.detailAccessOrigin!.name} - ${state.detailAccessOrigin!.batchCode}",
+                                      image: ImageAsset.imageDiary),
+                                  CardTile(
+                                      label: "Tên công ty",
+                                      value: "${state.detailAccessOrigin!.companyName}",
+                                      image: ImageAsset.imageCompany),
+                                  CardTile(
+                                      label: "Tên sản phẩm",
+                                      value: "${state.detailAccessOrigin!.productName}",
+                                      image: ImageAsset.imageTree),
+                                  CardTile(
+                                      label: "Trọng lượng",
+                                      value: "${state.detailAccessOrigin!.weightTree}",
+                                      image: ImageAsset.imageFarmerProfile),
+                                  CardTile(
+                                      label: "Số lượng",
+                                      value: "${state.detailAccessOrigin!.quantity} ${state.detailAccessOrigin!.quantityUnitId}",
+                                      image: ImageAsset.imageBudget),
+                                (state.detailAccessOrigin!.manufactureDate ?? "").isNotEmpty ?
+                                CardTile(
+                                      label: "Ngày sản xuất",
+                                      value: Utils.formatTime("${state.detailAccessOrigin!.manufactureDate}"),
+                                      image: ImageAsset.imageCalendarBegin)
+                                    : const SizedBox(),
+                                (state.detailAccessOrigin!.expireDate ?? "").isNotEmpty ?
+                                CardTile(
+                                      label: "Ngày hết hạn",
+                                      value: Utils.formatTime("${state.detailAccessOrigin!.expireDate}"),
+                                      image: ImageAsset.imageCalendarEnd)
+                                    : const SizedBox(),
+                                  (state.detailAccessOrigin!.image ?? "").isNotEmpty ?
+                                  Container(
+                                    padding: const EdgeInsets.only(top: 8, bottom: 0, left: 4),
+                                    child: Text("Hình ảnh liên quan", style:
+                                    StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),),
+                                  ) : const SizedBox(),
+                                  Container(
+                                    padding: const EdgeInsets.all(24),
+                                    child: Center(
+                                      child: Image.memory(
+                                        gaplessPlayback: true,
+                                        base64Decode(state.detailAccessOrigin!.image ??
+                                            ""),
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (context, error,
+                                            stackTrace) {
+                                          return Container(
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ) : Container(),
+                      ));
+                }),
+          ],
         ),
       ),
     );

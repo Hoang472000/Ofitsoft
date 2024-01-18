@@ -19,6 +19,7 @@ import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/empty_widget.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 import '../../../view_model/diary_activity/activity/activity_sell/activity_purchase_bloc.dart';
 import '../../filter/filter_page.dart';
 import '../activity_sell/add_activity_purchase.dart';
@@ -166,115 +167,117 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                   );
                 },
               ),
-              body: BlocConsumer<ActivityPurchaseBloc, ActivityPurchaseState>(
-                  listener: (blocContext, state) async {
-                    final formStatus = state.formStatus;
-                    if (!state.isShowProgress) {
-                      setState(() {
-                        listCallback = state.listCallbackTransaction;
-                      });
-                      print(
-                          "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
-                    }
-                    if (formStatus is SubmissionFailed) {
-                      DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                        Get.back();
-                      }, () {
-                        Get.back();
-                      }, '', S.of(context).close_dialog);
-                    } else if (formStatus is SubmissionSuccess) {
-                      DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
-                              () {
+              body: HomeBackGround(
+                children: [
+                  BlocConsumer<ActivityPurchaseBloc, ActivityPurchaseState>(
+                      listener: (blocContext, state) async {
+                        final formStatus = state.formStatus;
+                        if (!state.isShowProgress) {
+                          setState(() {
+                            listCallback = state.listCallbackTransaction;
+                          });
+                          print(
+                              "HoangCV: state.listCallbackTransaction : ${state.listCallbackTransaction.length} : ${listCallback.length}");
+                        }
+                        if (formStatus is SubmissionFailed) {
+                          DiaLogManager.displayDialog(context, "", formStatus.exception, () {
                             Get.back();
                           }, () {
                             Get.back();
                           }, '', S.of(context).close_dialog);
-                    } else if (formStatus is FormSubmitting) {
-                      //DiaLogManager.showDialogLoading(context);
-                    }
-                  },
-                  builder: (blocContext, state) {
-                    return state
-                        .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                        ? const Center(
-                      child:
-                      DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-                    )
-                        : RefreshIndicator(
-                      onRefresh: () async {
-                        blocContext.read<ActivityPurchaseBloc>().add(GetListActivityPurchaseEvent());
+                        } else if (formStatus is SubmissionSuccess) {
+                          DiaLogManager.displayDialog(context, "", formStatus.success ?? "",
+                                  () {
+                                Get.back();
+                              }, () {
+                                Get.back();
+                              }, '', S.of(context).close_dialog);
+                        } else if (formStatus is FormSubmitting) {
+                          //DiaLogManager.showDialogLoading(context);
+                        }
                       },
-                      child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
-                          : Column(
-                            children: [
-                              state.listExpansion.isNotEmpty ? ExpansionTileCustom(
-                                key: UniqueKey(), // Add a unique key to ExpansionTileCustom
-                                list: state.listExpansion, // Pass your list of ItemBasic
-                              ) : SizedBox(),
-                              Expanded(
-                                child: SingleChildScrollView(
-                        //physics: const NeverScrollableScrollPhysics(),
-                        child: Column(
-                                children: [
-                                  ListView.builder(
-                                    itemCount: state.listActivityTransaction.length,
-                                    itemBuilder: (BuildContext contextBloc, int index) {
-                                      return ItemTransaction(
-                                          diary: Diary(),
-                                          activityDiary:
-                                          state.listActivityTransaction[index],
-                                          action: widget.action,
-                                          chooseItem: () async {
-                                            //Truyen id de sang man ben goi api hoac DB
-                                            //if (widget.action.compareTo('sell') == 0) {
-                                            var result = await Navigator.push(
-                                                context,
-                                                DetailActivityPurchasePage.route(
-                                                    state
-                                                        .listActivityTransaction[index],
-                                                    widget.action));
-                                            if (result != null && result[0]) {
-                                              contextBloc.read<ActivityPurchaseBloc>().add(
-                                                  GetListActivityPurchaseEvent());
-                                            }
-                                            //}
-                                          },
-                                        callbackChooseItem: (isChoose){
-                                          blocContext.read<ActivityPurchaseBloc>().add(
-                                              AddChoosePurchaseEvent(
-                                                  index, !isChoose));
-                                        },
-                                          callbackDelete: () {
+                      builder: (blocContext, state) {
+                        return state
+                            .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
+                            ? Padding(
+                          padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                          child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                            : RefreshIndicator(
+                          onRefresh: () async {
+                            blocContext.read<ActivityPurchaseBloc>().add(GetListActivityPurchaseEvent());
+                          },
+                          child: state.listActivityTransaction.isEmpty ? const EmptyWidget()
+                              : SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    state.listExpansion.isNotEmpty ? ExpansionTileCustom(
+                                      key: UniqueKey(), // Add a unique key to ExpansionTileCustom
+                                      list: state.listExpansion, // Pass your list of ItemBasic
+                                    ) : SizedBox(),
+                                    SingleChildScrollView(
+                                    child: Column(
+                                    children: [
+                                      ListView.builder(
+                                        shrinkWrap: true,
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        padding: EdgeInsets.zero,
+                                        itemCount: state.listActivityTransaction.length,
+                                        itemBuilder: (BuildContext contextBloc, int index) {
+                                          return ItemTransaction(
+                                              diary: Diary(),
+                                              activityDiary:
+                                              state.listActivityTransaction[index],
+                                              action: widget.action,
+                                              chooseItem: () async {
+                                                //Truyen id de sang man ben goi api hoac DB
+                                                //if (widget.action.compareTo('sell') == 0) {
+                                                var result = await Navigator.push(
+                                                    context,
+                                                    DetailActivityPurchasePage.route(
+                                                        state
+                                                            .listActivityTransaction[index],
+                                                        widget.action));
+                                                if (result != null && result[0]) {
+                                                  contextBloc.read<ActivityPurchaseBloc>().add(
+                                                      GetListActivityPurchaseEvent());
+                                                }
+                                                //}
+                                              },
+                                            callbackChooseItem: (isChoose){
+                                              blocContext.read<ActivityPurchaseBloc>().add(
+                                                  AddChoosePurchaseEvent(
+                                                      index, !isChoose));
+                                            },
+                                              callbackDelete: () {
+                                                blocContext.read<ActivityPurchaseBloc>().add(
+                                                    RemoveActivityPurchaseEvent(
+                                                        state.listActivityTransaction[index].id ??
+                                                            -1,
+                                                        widget.action));
+                                              },
+                                          callbackExport: (){
                                             blocContext.read<ActivityPurchaseBloc>().add(
-                                                RemoveActivityPurchaseEvent(
-                                                    state.listActivityTransaction[index].id ??
-                                                        -1,
-                                                    widget.action));
-                                          },
-                                      callbackExport: (){
-                                        blocContext.read<ActivityPurchaseBloc>().add(
-                                            ExportPDFEvent(
-                                                [state.listActivityTransaction[index].id ??
-                                                    -1]));
-                                      }, amountSelected: state.amountSelected,
-                                        isChoose: state.listSelected[index],
-                                      );
-                                    },
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    padding: EdgeInsets.zero,
-                                  ),
-                                  SizedBox(
-                                    height: 60,
-                                  )
-                                ],
-                        ),
-                      ),
-                              ),
-                            ],
+                                                ExportPDFEvent(
+                                                    [state.listActivityTransaction[index].id ??
+                                                        -1]));
+                                          }, amountSelected: state.amountSelected,
+                                            isChoose: state.listSelected[index],
+                                          );
+                                        },
+                                      ),
+                                      SizedBox(
+                                        height: 60,
+                                      )
+                                    ],
+                            ),
                           ),
-                    );
-                  }),
+                                  ],
+                                ),
+                              ),
+                        );
+                      }),
+                ],
+              ),
             ),
             if (isFilterOpen)
               AnimatedContainer(

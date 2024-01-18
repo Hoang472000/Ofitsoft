@@ -13,6 +13,7 @@ import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/dashed_circle.dart';
 import '../../../utils/widgets/dialog/dialog_manager.dart';
 import '../../../utils/widgets/empty_widget.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 import '../../../view_model/diary/diary_monitor_child_bloc.dart';
 import '../../../utils/widgets/items/item_diary.dart';
 import '../../filter/filter_page.dart';
@@ -74,152 +75,125 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
               bottom: null,
             ),
             backgroundColor: AppColor.background,
-            body: BlocConsumer<DiaryMonitorChildBloc, DiaryMonitorChildState>(
-                listener: (context, state) async {
-                  final formStatus = state.formStatus;
-                  if (formStatus is SubmissionFailed) {
-                    DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                      Get.back();
-                    }, () {
-                      Get.back();
-                    }, '', S.of(context).close_dialog);
-                  } else if (formStatus is SubmissionSuccess) {
-                  } else if (formStatus is FormSubmitting) {
-                    DiaLogManager.showDialogLoading(context);
-                  }
-                },
-                builder: (blocContext, state) {
-                  return state.isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                      ? const Center(
-                    child:
-                    DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-                  )
-                      : /*state.listDate.isNotEmpty ? */Center(
-                    child: Column(
-                      children: [
- /*                       state.listWidget.isNotEmpty
-                            ? Row(
+            body: HomeBackGround(
+              children: [
+                BlocConsumer<DiaryMonitorChildBloc, DiaryMonitorChildState>(
+                    listener: (context, state) async {
+                      final formStatus = state.formStatus;
+                      if (formStatus is SubmissionFailed) {
+                        DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                          Get.back();
+                        }, () {
+                          Get.back();
+                        }, '', S.of(context).close_dialog);
+                      } else if (formStatus is SubmissionSuccess) {
+                      } else if (formStatus is FormSubmitting) {
+                        DiaLogManager.showDialogLoading(context);
+                      }
+                    },
+                    builder: (blocContext, state) {
+                      return state.isShowProgress
+                          ? Padding(
+                        padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                        child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                          : SingleChildScrollView(
+                        child: Column(
                           children: [
-                            Expanded(
-                                flex: 7,
-                                child: ContainerInputWidget(
-                                  contextParent: context,
-                                  inputRegisterModel: state.listWidget[0],
-                                  onClick: () {
-                                    setState(() {});
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                              margin: const EdgeInsets.only(top: 8),
+                              child: TextField(
+                                onChanged: (value) {
+                                  if ((value.length >= 2) || (value.length == 0)) {
+                                    setState(() {
+                                      searchString = value.toLowerCase();
+                                    });
                                     blocContext.read<DiaryMonitorChildBloc>().add(
-                                        OnSelectValueEvent(
-                                            state.listWidget,
-                                            0,
-                                            context,*//*widget.diary*//*));
-                                  },
-                                )),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            Expanded(
-                                flex: 6,
-                                child: ContainerInputWidget(
-                                  contextParent: context,
-                                  inputRegisterModel: state.listWidget[1],
-                                  onClick: () {
-                                    setState(() {});
-                                    blocContext.read<DiaryMonitorChildBloc>().add(
-                                        OnSelectValueEvent(
-                                            state.listWidget,
-                                            1,
-                                            context,*//* widget.diary*//*));
-                                  },
-                                )),
-                          ],
-                        )
-                            : const SizedBox(),*/
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          margin: const EdgeInsets.only(top: 8),
-                          child: TextField(
-                            onChanged: (value) {
-                              if ((value.length >= 2) || (value.length == 0)) {
-                                setState(() {
-                                  searchString = value.toLowerCase();
-                                });
-                                blocContext.read<DiaryMonitorChildBloc>().add(
-                                    SearchListDiaryEvent(value));
-                              }
-                            },
-                            decoration: InputDecoration(
-                              labelText: S.of(context).search,
-                              suffixIcon: Icon(Icons.search),
-                              border: OutlineInputBorder(),
-                              contentPadding: EdgeInsets.all(8),
-                            ),
-                          ),
-                        ),
-                        const Divider(
-                          height: 10.0,
-                        ),
-                        Visibility(
-                          visible: (state.amountSelected > 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              InkWell(
-                                onTap: (){
-                                  blocContext.read<DiaryMonitorChildBloc>().add(
-                                      AddChooseAllDiary(state.amountSelected == state.lengthDiary));
+                                        SearchListDiaryEvent(value));
+                                  }
                                 },
-                                child: Row(
-                                  children: [
-                                    SizedBox(width: 1,),
-                                    IconButton(
-                                        onPressed: () {
-                                          blocContext.read<DiaryMonitorChildBloc>().add(
-                                              AddChooseAllDiary(state.amountSelected == state.lengthDiary));
-                                        },
-                                        icon: state.amountSelected == state.lengthDiary
-                                            ? const Icon(
-                                          Icons.check_box_outlined,
-                                          color: AppColor.main,
-                                          size: 20,
-                                        )
-                                            : const Icon(
-                                          Icons.check_box_outline_blank,
-                                          color: AppColor.main,
-                                          size: 20,
-                                        ),
-                                        padding: EdgeInsets.zero),
-                                    Text(state.amountSelected == state.lengthDiary ? "Bỏ chọn tất cả" : "Chọn tất cả",
-                                        style: StyleOfit.textStyleFW500(AppColor.gray57, 14)),
-                                  ],
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                      borderSide: BorderSide(color: AppColor.whiteF2)
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(color: AppColor.whiteF2, width: 1.0),
+                                  ),
+                                  fillColor: AppColor.whiteF2,
+                                  labelText: S.of(context).search,
+                                  suffixIcon: Icon(Icons.search, color: AppColor.whiteF2,),
+
+                                  labelStyle: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
+                                  contentPadding: EdgeInsets.all(8),
                                 ),
                               ),
-                              InkWell(
-                                onTap: () async{
-                                  blocContext.read<DiaryMonitorChildBloc>().add(
-                                      GetListDiarySelected(context));
-                                },
-                                child: Row(
-                                  children: [
-                                    Text("Thêm nhiều", style: StyleOfit.textStyleFW500(AppColor.gray57, 14)),
-                                    IconButton(
-                                        onPressed: () {
-                                          blocContext.read<DiaryMonitorChildBloc>().add(
-                                              GetListDiarySelected(context));
-                                        },
-                                        icon: const Icon(
-                                          Icons.edit_note_outlined,
-                                          color: AppColor.main,
-                                          size: 30,
-                                        ),
-                                        padding: EdgeInsets.zero),
-                                  ],
-                                ),
+                            ),
+                            const Divider(
+                              height: 10.0,
+                            ),
+                            Visibility(
+                              visible: (state.amountSelected > 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  InkWell(
+                                    onTap: (){
+                                      blocContext.read<DiaryMonitorChildBloc>().add(
+                                          AddChooseAllDiary(state.amountSelected == state.lengthDiary));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 1,),
+                                        IconButton(
+                                            onPressed: () {
+                                              blocContext.read<DiaryMonitorChildBloc>().add(
+                                                  AddChooseAllDiary(state.amountSelected == state.lengthDiary));
+                                            },
+                                            icon: state.amountSelected == state.lengthDiary
+                                                ? const Icon(
+                                              Icons.check_box_outlined,
+                                              color: AppColor.main,
+                                              size: 20,
+                                            )
+                                                : const Icon(
+                                              Icons.check_box_outline_blank,
+                                              color: AppColor.main,
+                                              size: 20,
+                                            ),
+                                            padding: EdgeInsets.zero),
+                                        Text(state.amountSelected == state.lengthDiary ? "Bỏ chọn tất cả" : "Chọn tất cả",
+                                            style: StyleOfit.textStyleFW500(AppColor.whiteF2, 14)),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () async{
+                                      blocContext.read<DiaryMonitorChildBloc>().add(
+                                          GetListDiarySelected(context));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text("Thêm nhiều", style: StyleOfit.textStyleFW500(AppColor.whiteF2, 14)),
+                                        IconButton(
+                                            onPressed: () {
+                                              blocContext.read<DiaryMonitorChildBloc>().add(
+                                                  GetListDiarySelected(context));
+                                            },
+                                            icon: const Icon(
+                                              Icons.edit_note_outlined,
+                                              color: AppColor.main,
+                                              size: 30,
+                                            ),
+                                            padding: EdgeInsets.zero),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        state.listDate.isEmpty ? const EmptyWidget() : Expanded(
-                            child: ListView.builder(
+                            ),
+                            state.listDate.isEmpty ? const EmptyWidget() : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
                               itemCount: state.listDate.length,
                               itemBuilder: (context, indexParent) {
                                 String monthAndYear = state.listDate[indexParent];
@@ -238,7 +212,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                           child: Text(
                                             monthAndYear,
                                             style: StyleOfit.textStyleFW500(
-                                                AppColor.gray57, 20),
+                                                AppColor.whiteF2, 20),
                                           ),
                                         ),
                                       ],
@@ -261,7 +235,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                           );
                                       },
                                     ),
-                                    Padding(
+                                    /*Padding(
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 70, vertical: 4),
                                       child: Divider(
@@ -270,16 +244,18 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                         indent: 1,
                                         color: Colors.black26,
                                       ),
-                                    )
+                                    )*/
                                   ],
                                 );
                               },
-                            )),
-                      ],
-                    ),
-                  )
-                  /*: const EmptyWidget()*/;
-                }),
+                            ),
+                          ],
+                        ),
+                      )
+                      /*: const EmptyWidget()*/;
+                    }),
+              ],
+            ),
           ),
 
           if (isFilterOpen)

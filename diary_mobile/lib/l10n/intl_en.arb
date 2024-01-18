@@ -91,5 +91,6 @@
   "barcode_error": "Bạn đang quét qrcode chứ không phải mã vạch. Vui lòng thử lại.",
   "qrcode_error": "Bạn đang quét mã vạch chứ không phải qrcode. Vui lòng thử lại.",
   "forgot_password": "Quên mật khẩu",
-  "change_password": "Đổi mật khẩu"
+  "change_password": "Đổi mật khẩu",
+  "history_activity": "Lịch sử hoạt động"
 }

@@ -10,6 +10,7 @@ import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/widgets/ofit_app_bar.dart';
 import '../../../utils/widgets/pdf/pdf_viewer.dart';
+import '../../../utils/widgets/view_page_widget.dart';
 
 ///HoangCV: GD PDF
 class ListPDFPage extends StatefulWidget {
@@ -66,28 +67,33 @@ class _ListPDFPageState extends State<ListPDFPage> {
             // hasBottom: true,
           ),
           backgroundColor: AppColor.background,
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                itemAccount(context, text: "Hướng dẫn sử dụng chung",
-                    voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/HDSDAppQLVT", "Hướng dẫn sử dụng chung"));
-                    }),
-                itemAccount(context, text: "Hoạt động Canh tác/Thu hoạch",
-                    voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/HDCanhTac", "Hoạt động Canh tác/Thu hoạch"));
-                    }),
-                itemAccount(context, text: "Hoạt động Mua bán",
-                    voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/HDMuaBan", "Hoạt động Mua bán"));
-                    }),
-                itemAccount(context, text: "Báo cáo đánh giá thực địa",
-                    voidCallback: () {
-                      Navigator.push(context, PDFScreen.route("assets/pdf/BCDanhGiaThucDia", "Báo cáo đánh giá thực địa"));
-                    }),
-                // SizedBox(height: 20,)
-              ],
-            ),
+          body: HomeBackGround(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 4,),
+                    itemAccount(context, text: "Hướng dẫn sử dụng chung",
+                        voidCallback: () {
+                          Navigator.push(context, PDFScreen.route("assets/pdf/HDSDAppQLVT", "Hướng dẫn sử dụng chung"));
+                        }),
+                    itemAccount(context, text: "Hoạt động Canh tác/Thu hoạch",
+                        voidCallback: () {
+                          Navigator.push(context, PDFScreen.route("assets/pdf/HDCanhTac", "Hoạt động Canh tác/Thu hoạch"));
+                        }),
+                    itemAccount(context, text: "Hoạt động Mua bán",
+                        voidCallback: () {
+                          Navigator.push(context, PDFScreen.route("assets/pdf/HDMuaBan", "Hoạt động Mua bán"));
+                        }),
+                    itemAccount(context, text: "Báo cáo đánh giá thực địa",
+                        voidCallback: () {
+                          Navigator.push(context, PDFScreen.route("assets/pdf/BCDanhGiaThucDia", "Báo cáo đánh giá thực địa"));
+                        }),
+                    // SizedBox(height: 20,)
+                  ],
+                ),
+              ),
+            ],
           )),
     );
   }
@@ -102,7 +108,12 @@ class _ListPDFPageState extends State<ListPDFPage> {
         voidCallback();
       },
       child: Container(
-        padding: const EdgeInsets.only(left: 16, right: 16, top: 4, bottom: 4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white.withOpacity(0.8),
+        ),
+        margin: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 4),
+        padding: const EdgeInsets.only(left: 8, right: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
