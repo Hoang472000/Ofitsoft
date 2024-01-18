@@ -59,7 +59,7 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                       : Container(
                       width: double.infinity,
                       margin: const EdgeInsets.only(top: 0),
-                      padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
+                      padding: const EdgeInsets.only(top: 16, left: 8, right: 8, bottom: 20),
     /*                decoration: BoxDecoration(
                         //borderRadius: BorderRadius.circular(8),
                         color: AppColor.gray500.withOpacity(0.1)),*/
@@ -75,7 +75,7 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                               child: Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: AppColor.whiteF2.withOpacity(0.8)),
+                                    color: AppColor.whiteF2),
                                 child: QrImageView(
                                   data: '${ApiConst.qrCode}${state.detailAccessOrigin!.guid}',
                                   version: QrVersions.auto,
@@ -84,10 +84,11 @@ class _DetailAccessOriginState extends State<DetailAccessOrigin> {
                               ),
                             ),
                             Container(
-                              margin: const EdgeInsets.only(top: 8),
+                              margin: const EdgeInsets.only(top: 16),
+                              padding: const EdgeInsets.only(left: 8),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                  color: AppColor.whiteF2.withOpacity(0.8)),
+                                  color: AppColor.whiteF2.withOpacity(0.9)),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
