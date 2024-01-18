@@ -1,4 +1,5 @@
 import 'package:diary_mobile/data/repository.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:diary_mobile/view/task/task_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -100,174 +101,190 @@ class _DiaryViewState extends State<DiaryView> {
               ),
               heroTag: null,
             ),
-            body: BlocConsumer<ListDiaryBloc, ListDiaryState>(
-                listener: (context, state) async {},
-                builder: (blocContext, state) {
-                  return state
-                      .isShowProgress ? Padding(
-                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
-                    child:
-                    DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
-                  )
-                      /*: state.listDate.isEmpty ? const EmptyWidget()*/
-                      : Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                        child: TextField(
-                          onChanged: (value) {
-                            if ((value.length >= 2) || (value.length == 0)) {
-                              setState(() {
-                                searchString = value.toLowerCase();
-                              });
-                              blocContext.read<ListDiaryBloc>().add(
-                                  SearchListDiaryEvent(value));
-                            }
-                          },
-                          decoration: InputDecoration(
-                            labelText: S.of(context).search,
-                            suffixIcon: Icon(Icons.search),
-                            border: OutlineInputBorder(),
-                            contentPadding: EdgeInsets.all(8),
-                          ),
-                        ),
-                      ),
-                      const Divider(
-                        height: 10.0,
-                      ),
-                      Visibility(
-                        visible: (state.amountSelected > 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                blocContext.read<ListDiaryBloc>().add(
-                                    AddChooseAllDiary(
-                                        state.amountSelected == state.lengthDiary));
+            body: HomeBackGround(
+              children: [
+                BlocConsumer<ListDiaryBloc, ListDiaryState>(
+                    listener: (context, state) async {},
+                    builder: (blocContext, state) {
+                      return state
+                          .isShowProgress ? Padding(
+                        padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                        child:
+                        DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                      )
+                          /*: state.listDate.isEmpty ? const EmptyWidget()*/
+                          : SingleChildScrollView(
+                            child: Column(
+                        children: [
+                            const SizedBox(height: 10),
+                            Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                            margin: const EdgeInsets.only(top: 8),
+                            child: TextField(
+                              onChanged: (value) {
+                                if ((value.length >= 2) || (value.length == 0)) {
+                                  setState(() {
+                                    searchString = value.toLowerCase();
+                                  });
+                                  blocContext.read<ListDiaryBloc>().add(
+                                      SearchListDiaryEvent(value));
+                                }
                               },
-                              child: Row(
-                                children: [
-                                  SizedBox(width: 1,),
-                                  IconButton(
-                                      onPressed: () {
-                                        blocContext.read<ListDiaryBloc>().add(
-                                            AddChooseAllDiary(
-                                                state.amountSelected ==
-                                                    state.lengthDiary));
-                                      },
-                                      icon: state.amountSelected ==
-                                          state.lengthDiary
-                                          ? const Icon(
-                                        Icons.check_box_outlined,
-                                        color: AppColor.main,
-                                        size: 20,
-                                      )
-                                          : const Icon(
-                                        Icons.check_box_outline_blank,
-                                        color: AppColor.main,
-                                        size: 20,
-                                      ),
-                                      padding: EdgeInsets.zero),
-                                  Text(state.amountSelected == state.lengthDiary
-                                      ? "Bỏ chọn tất cả"
-                                      : "Chọn tất cả",
-                                      style: StyleOfit.textStyleFW500(
-                                          AppColor.gray57, 14)),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () async {
-                                blocContext.read<ListDiaryBloc>().add(
-                                    GetListDiarySelected(context));
-                              },
-                              child: Row(
-                                children: [
-                                  Text("Thêm nhiều",
-                                      style: StyleOfit.textStyleFW500(
-                                          AppColor.gray57, 14)),
-                                  IconButton(
-                                      onPressed: () {
-                                        blocContext.read<ListDiaryBloc>().add(
-                                            GetListDiarySelected(context));
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit_note_outlined,
-                                        color: AppColor.main,
-                                        size: 30,
-                                      ),
-                                      padding: EdgeInsets.zero),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      state.listDate.isEmpty ? const EmptyWidget() : Expanded(
-                          child: ListView.builder(
-                            itemCount: state.listDate.length,
-                            itemBuilder: (context, indexParent) {
-                              String monthAndYear = state.listDate[indexParent];
-                              /*                    List<Diary> tasksForMonthAndYear =
-                                getTasksForMonthAndYear(
-                                    monthAndYear, state.listDiary);*/
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                    borderSide: BorderSide(color: AppColor.whiteF2)
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(color: AppColor.whiteF2, width: 1.0),
+                                ),
+                                fillColor: AppColor.whiteF2,
+                                labelText: S.of(context).search,
+                                suffixIcon: Icon(Icons.search, color: AppColor.whiteF2,),
 
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                labelStyle: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
+                                contentPadding: EdgeInsets.all(8),
+                              ),
+                            ),
+                          ),
+                            const Divider(
+                              height: 10.0,
+                            ),
+                            Visibility(
+                              visible: (state.amountSelected > 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          monthAndYear,
-                                          style: StyleOfit.textStyleFW500(
-                                              AppColor.gray57, 20),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount: state.listDiary[indexParent].length,
-                                    itemBuilder: (context, index) {
-                                      return ItemDiary(diary: state
-                                          .listDiary[indexParent][index],
-                                          amountSelected: state.amountSelected,
-                                          isChoose: state
-                                              .listSelected[indexParent][index],
-                                          callbackChooseItem: (isChoose, diary) {
-                                            setState(() {
-                                              //selectAll=false;
-                                            });
-                                            blocContext.read<ListDiaryBloc>().add(
-                                                AddChooseDiary(
-                                                    indexParent, index, !isChoose,
-                                                    diary));
-                                          });
+                                  InkWell(
+                                    onTap: () {
+                                      blocContext.read<ListDiaryBloc>().add(
+                                          AddChooseAllDiary(
+                                              state.amountSelected == state.lengthDiary));
                                     },
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 70, vertical: 4),
-                                    child: Divider(
-                                      height: 1,
-                                      thickness: 1,
-                                      indent: 1,
-                                      color: Colors.black26,
+                                    child: Row(
+                                      children: [
+                                        SizedBox(width: 1,),
+                                        IconButton(
+                                            onPressed: () {
+                                              blocContext.read<ListDiaryBloc>().add(
+                                                  AddChooseAllDiary(
+                                                      state.amountSelected ==
+                                                          state.lengthDiary));
+                                            },
+                                            icon: state.amountSelected ==
+                                                state.lengthDiary
+                                                ? const Icon(
+                                              Icons.check_box_outlined,
+                                              color: AppColor.main,
+                                              size: 20,
+                                            )
+                                                : const Icon(
+                                              Icons.check_box_outline_blank,
+                                              color: AppColor.main,
+                                              size: 20,
+                                            ),
+                                            padding: EdgeInsets.zero),
+                                        Text(state.amountSelected == state.lengthDiary
+                                            ? "Bỏ chọn tất cả"
+                                            : "Chọn tất cả",
+                                            style: StyleOfit.textStyleFW500(
+                                                AppColor.gray57, 14)),
+                                      ],
                                     ),
-                                  )
+                                  ),
+                                  InkWell(
+                                    onTap: () async {
+                                      blocContext.read<ListDiaryBloc>().add(
+                                          GetListDiarySelected(context));
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text("Thêm nhiều",
+                                            style: StyleOfit.textStyleFW500(
+                                                AppColor.gray57, 14)),
+                                        IconButton(
+                                            onPressed: () {
+                                              blocContext.read<ListDiaryBloc>().add(
+                                                  GetListDiarySelected(context));
+                                            },
+                                            icon: const Icon(
+                                              Icons.edit_note_outlined,
+                                              color: AppColor.main,
+                                              size: 30,
+                                            ),
+                                            padding: EdgeInsets.zero),
+                                      ],
+                                    ),
+                                  ),
                                 ],
-                              );
-                            },
-                          )),
-                    ],
-                  );
-                }),
+                              ),
+                            ),
+                            state.listDate.isEmpty ? const EmptyWidget() : ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemCount: state.listDate.length,
+                              itemBuilder: (context, indexParent) {
+                                String monthAndYear = state.listDate[indexParent];
+                                /*                    List<Diary> tasksForMonthAndYear =
+                                  getTasksForMonthAndYear(
+                                      monthAndYear, state.listDiary);*/
+
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            monthAndYear,
+                                            style: StyleOfit.textStyleFW500(
+                                                AppColor.whiteF2, 20),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    ListView.builder(
+                                      shrinkWrap: true,
+                                      physics: NeverScrollableScrollPhysics(),
+                                      itemCount: state.listDiary[indexParent].length,
+                                      itemBuilder: (context, index) {
+                                        return ItemDiary(diary: state
+                                            .listDiary[indexParent][index],
+                                            amountSelected: state.amountSelected,
+                                            isChoose: state
+                                                .listSelected[indexParent][index],
+                                            callbackChooseItem: (isChoose, diary) {
+                                              setState(() {
+                                                //selectAll=false;
+                                              });
+                                              blocContext.read<ListDiaryBloc>().add(
+                                                  AddChooseDiary(
+                                                      indexParent, index, !isChoose,
+                                                      diary));
+                                            });
+                                      },
+                                    ),
+                               /*     Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 70, vertical: 4),
+                                      child: Divider(
+                                        height: 1,
+                                        thickness: 1,
+                                        indent: 1,
+                                        color: Colors.black26,
+                                      ),
+                                    )*/
+                                  ],
+                                );
+                              },
+                            ),
+                        ],
+                      ),
+                          );
+                    }),
+              ],
+            ),
           ),
           if (isFilterOpen)
             AnimatedContainer(

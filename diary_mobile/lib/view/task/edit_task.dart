@@ -2,6 +2,7 @@ import 'package:diary_mobile/data/repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:keyboard_dismisser/keyboard_dismisser.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
 import '../../../utils/utils.dart';
@@ -51,35 +52,35 @@ class _EditTaskPageState extends State<EditTaskPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         backgroundColor: Colors.white,
-        body: SafeArea(
-          child: BlocConsumer<EditTaskBloc, EditTaskState>(
-            listener: (blocContext, state) {
-              final formStatus = state.formStatus;
-              if(!state.isShowProgress){
-              }
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                widget.callBack(true);
-                widget.onClose();
-              } else if (formStatus is FormSubmitting) {
-              }
-            },
-              builder: (blocContext, state) {
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: SizedBox(
+        body: KeyboardDismisser(
+          child: SafeArea(
+            child: BlocConsumer<EditTaskBloc, EditTaskState>(
+              listener: (blocContext, state) {
+                final formStatus = state.formStatus;
+                if(!state.isShowProgress){
+                }
+                if (formStatus is SubmissionFailed) {
+                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                    Get.back();
+                  }, () {
+                    Get.back();
+                  }, '', S.of(context).close_dialog);
+                } else if (formStatus is SubmissionSuccess) {
+                  widget.callBack(true);
+                  widget.onClose();
+                } else if (formStatus is FormSubmitting) {
+                }
+              },
+                builder: (blocContext, state) {
+                  return SizedBox(
                       child: Container(
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
+                    /*      borderRadius: BorderRadius.only(
                               topRight: Radius.circular(12),
-                              topLeft: Radius.circular(12)),
-                          color: Colors.white,
+                              topLeft: Radius.circular(12)),*/
+                          color: AppColor.grayEC,
                         ),
+                        padding: const EdgeInsets.all(10),
                         constraints: BoxConstraints(
                           maxHeight: MediaQuery.of(context).size.height * 0.9, // Hoặc giá trị phù hợp với nhu cầu của bạn
                         ),
@@ -93,7 +94,6 @@ class _EditTaskPageState extends State<EditTaskPage> {
                                     style: StyleOfit.textStyleFW500(AppColor.black22, 18)),
                               ),
                               Expanded(
-                                //padding: const EdgeInsets.all(8),
                                 child: ListView.builder(
                                   padding: EdgeInsets.zero,
                                   physics: const NeverScrollableScrollPhysics(),
@@ -138,9 +138,9 @@ class _EditTaskPageState extends State<EditTaskPage> {
                             ],
                           ),
                         ),
-                      )),
-                );
-              }),
+                      ));
+                }),
+          ),
         ),
       ),
     );

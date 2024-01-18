@@ -1,4 +1,5 @@
 import 'package:diary_mobile/utils/constants/shared_preferences_key.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -94,184 +95,203 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
           backgroundColor: AppColor.main,
           actions: [],
         ),
-        body: SafeArea(
-          child: BlocConsumer<DetailTaskBloc, DetailTaskState>(
-            listener: (blocContext, state) async {
-              final formStatus = state.formStatus;
-              if (formStatus is SubmissionFailed) {
-                DiaLogManager.displayDialog(context, "", formStatus.exception, () {
-                  Get.back();
-                }, () {
-                  Get.back();
-                }, '', S.of(context).close_dialog);
-              } else if (formStatus is SubmissionSuccess) {
-                widget.update();
-              } else if (formStatus is FormSubmitting) {
-                DiaLogManager.showDialogLoading(context);
-              }
-            },
-              builder: (blocContext, state) {
-                return state.isShowProgress ?
-                Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
-                  child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
-                    : Stack(
-                      children: [
-                        Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),
-                        child: SingleChildScrollView(
-                          //physics: const NeverScrollableScrollPhysics(),
-                          child: state.taskEntity !=null ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              CardTile(
-                                  label: "Nhiệm vụ",
-                                  value: "${state.taskEntity!.name}",
-                                  image: ImageAsset.imageDiary),
-                              CardTile(
-                                  label: "Tên nông hộ",
-                                  value: nameFarmer,
-                                  image: ImageAsset.imageFarmerProfile),
-                              CardTile(
-                                  label: "Mùa vụ lô trồng",
-                                  value: "${state.seasonFarmIds}",
-                                  image: ImageAsset.imageManagement),
-                              CardTile(
-                                  label: "Hoạt động",
-                                  value: "${state.taskEntity!.activityName}",
-                                  image: ImageAsset.imageActivityFarm),
-                              CardTile(
-                                  label: "Miêu tả",
-                                  value: "${state.taskEntity!.description}",
-                                  image: ImageAsset.imageFile),
-                              CardTile(
-                                  label: "Ngày bắt đầu",
-                                  value: Utils.formatTime("${state.taskEntity!.startDate}"),
-                                  image: ImageAsset.imageCalendarBegin),
-                              CardTile(
-                                  label: "Ngày kết thúc",
-                                  value: Utils.formatTime("${state.taskEntity!.endDate}"),
-                                  image: ImageAsset.imageCalendarEnd),
-                              ((state.taskEntity!.status??'').compareTo("done") == 0)?CardTile(
-                                  label: "Ngày hoàn thành",
-                                  value: Utils.formatTime("${state.taskEntity!.completeDate}"),
-                                  image: ImageAsset.imageCalendarEnd): Container(),
-                              ((state.taskEntity!.status??'').compareTo("done") == 0)?CardTile(
-                                  label: "Kết quả",
-                                  value: "${state.taskEntity!.result}",
-                                  image: ImageAsset.imageFile): Container(),
-                              //draft//processing//done//cancelled//
-                              CardTile(
-                                  label: "Trạng thái",
-                                  value: (state.taskEntity!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
-                                  (state.taskEntity!.status ?? '' ).compareTo("pending")==0?"Chờ xử lý":
-                                  (state.taskEntity!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
-                                  (state.taskEntity!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
-                                  (state.taskEntity!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
-                                  image: ImageAsset.imageStatus),
-                              Visibility(
-                                visible: !((state.taskEntity!.status ?? '' ).compareTo("done") ==0 || (state.taskEntity!.status ?? '' ).compareTo("cancelled") ==0),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 8),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: OfitButton(
-                                            text: "Hoàn thành",
-                                            onPressed: () {
-                                              openFilter();
-                                              //getBottomSheet(blocContext, state);
-                                            }),
-                                      ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Expanded(
-                                        child: OfitButton(
-                                            text: "Thực hiện",
-                                            onPressed: () async {
-                                              if((state.taskEntity ?? TaskEntity())
-                                                  .seasonFarmIds.length > 1) {
-                                                List<Diary> diaryList = (state.taskEntity ?? TaskEntity())
-                                                    .seasonFarmIds.map((item)
-                                                => Diary(id: item.id)).toList();
+        body: HomeBackGround(
+          children: [
+            BlocConsumer<DetailTaskBloc, DetailTaskState>(
+              listener: (blocContext, state) async {
+                final formStatus = state.formStatus;
+                if (formStatus is SubmissionFailed) {
+                  DiaLogManager.displayDialog(context, "", formStatus.exception, () {
+                    Get.back();
+                  }, () {
+                    Get.back();
+                  }, '', S.of(context).close_dialog);
+                } else if (formStatus is SubmissionSuccess) {
+                  widget.update();
+                } else if (formStatus is FormSubmitting) {
+                  DiaLogManager.showDialogLoading(context);
+                }
+              },
+                builder: (blocContext, state) {
+                  return state.isShowProgress ?
+                  Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                    child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),)
+                      : Stack(
+                        children: [
+                          Container(
+                              margin: const EdgeInsets.all(8),
+                              //padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(8)),
+                                color: Colors.white.withOpacity(0.8),
+                              ),
+                          width: double.infinity,
+                          padding: const EdgeInsets.only(top: 0, left: 8, right: 8, bottom: 20),
+                          child: SingleChildScrollView(
+                            //physics: const NeverScrollableScrollPhysics(),
+                            child: state.taskEntity !=null ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                CardTile(
+                                    label: "Nhiệm vụ",
+                                    value: "${state.taskEntity!.name}",
+                                    image: ImageAsset.imageDiary),
+                                CardTile(
+                                    label: "Tên nông hộ",
+                                    value: nameFarmer,
+                                    image: ImageAsset.imageFarmerProfile),
+                                CardTile(
+                                    label: "Mùa vụ lô trồng",
+                                    value: "${state.seasonFarmIds}",
+                                    image: ImageAsset.imageManagement),
+                                CardTile(
+                                    label: "Hoạt động",
+                                    value: "${state.taskEntity!.activityName}",
+                                    image: ImageAsset.imageActivityFarm),
+                                CardTile(
+                                    label: "Miêu tả",
+                                    value: "${state.taskEntity!.description}",
+                                    image: ImageAsset.imageFile),
+                                CardTile(
+                                    label: "Ngày bắt đầu",
+                                    value: Utils.formatTime("${state.taskEntity!.startDate}"),
+                                    image: ImageAsset.imageCalendarBegin),
+                                CardTile(
+                                    label: "Ngày kết thúc",
+                                    value: Utils.formatTime("${state.taskEntity!.endDate}"),
+                                    image: ImageAsset.imageCalendarEnd),
+                                ((state.taskEntity!.status??'').compareTo("done") == 0)?CardTile(
+                                    label: "Ngày hoàn thành",
+                                    value: Utils.formatTime("${state.taskEntity!.completeDate}"),
+                                    image: ImageAsset.imageCalendarEnd): Container(),
+                                ((state.taskEntity!.status??'').compareTo("done") == 0)?CardTile(
+                                    label: "Kết quả",
+                                    value: "${state.taskEntity!.result}",
+                                    image: ImageAsset.imageFile): Container(),
+                                //draft//processing//done//cancelled//
+                                CardTile(
+                                    label: "Trạng thái",
+                                    value: (state.taskEntity!.status ?? '' ).compareTo("draft")==0?"Lên kế hoạch":
+                                    (state.taskEntity!.status ?? '' ).compareTo("pending")==0?"Chờ xử lý":
+                                    (state.taskEntity!.status ?? '' ).compareTo("processing")==0?"Đang diễn ra":
+                                    (state.taskEntity!.status ?? '' ).compareTo("done")==0?"Hoàn thành":
+                                    (state.taskEntity!.status ?? '' ).compareTo("cancelled")==0?"Đã hủy": "",
+                                    image: ImageAsset.imageStatus),
+                                Visibility(
+                                  visible: !((state.taskEntity!.status ?? '' ).compareTo("done") ==0 || (state.taskEntity!.status ?? '' ).compareTo("cancelled") ==0),
+                                  child: Container(
+                                    padding: const EdgeInsets.only(
+                                        top: 16,bottom: 0, left: 8, right: 8),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: OfitButton(
+                                              text: "Hoàn thành",
+                                              onPressed: () {
+                                                openFilter();
+                                                //getBottomSheet(blocContext, state);
+                                              }),
+                                        ),
+                                        SizedBox(
+                                          width: 16,
+                                        ),
+                                        Expanded(
+                                          child: OfitButton(
+                                              text: "Thực hiện",
+                                              onPressed: () async {
+                                                if((state.taskEntity ?? TaskEntity())
+                                                    .seasonFarmIds.length > 1) {
+                                                  List<Diary> diaryList = (state.taskEntity ?? TaskEntity())
+                                                      .seasonFarmIds.map((item)
+                                                  => Diary(id: item.id)).toList();
 
-                                                var result = await Navigator.of(context)
-                                                    .push(AddActWriteByPage.route(diaryList, activityId: widget.task
-                                                    .activityId ?? -1));
-                                              } else {
-                                                Navigator.of(context)
-                                                    .push(AddActivityPage.route(
-                                                    (state.taskEntity ?? TaskEntity())
-                                                        .seasonFarmIds.first.id ?? -1,
-                                                    Diary(),
-                                                    "activity",
-                                                    activityId: widget.task
-                                                        .activityId ?? -1));
-                                              }
-                                            }),
-                                      )
-                                    ],
+                                                  var result = await Navigator.of(context)
+                                                      .push(AddActWriteByPage.route(diaryList, activityId: widget.task
+                                                      .activityId ?? -1));
+                                                } else {
+                                                  Navigator.of(context)
+                                                      .push(AddActivityPage.route(
+                                                      (state.taskEntity ?? TaskEntity())
+                                                          .seasonFarmIds.first.id ?? -1,
+                                                      Diary(),
+                                                      "activity",
+                                                      activityId: widget.task
+                                                          .activityId ?? -1));
+                                                }
+                                              }),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ) : Container(),
-                        )),
-                        if (isFilterOpen)
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 700),
-                            color: Colors.black.withOpacity(0.5),
-                            child: GestureDetector(
-                              onTap: () {
-                                closeFilter();
-                              },
-                              child: Container(
-                                color: Colors.transparent,
+                              ],
+                            ) : Container(),
+                          )),
+                          if (isFilterOpen)
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 700),
+                              color: Colors.black.withOpacity(0.5),
+                              child: GestureDetector(
+                                onTap: () {
+                                  closeFilter();
+                                },
+                                child: Container(
+                                  color: Colors.transparent,
+                                ),
                               ),
                             ),
-                          ),
 
 // Sliding filter screen
-                        Align(
-                          alignment: Alignment.center,
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 700),
-                            height: isFilterOpen ? MediaQuery.of(context).size.height * 0.4 : 0,
-                            width: MediaQuery.of(context).size.width,
-                            child: SlideTransition(
-                              position: Tween<Offset>(
-                                begin: Offset(-1.0, 0.0), // Bắt đầu từ phải sang trái
-                                end: Offset.zero,
-                              ).animate(CurvedAnimation(
-                                parent: ModalRoute.of(context)!.animation!,
-                                curve: Curves.ease,
-                              )),
-                              child: BlocBuilder<DetailTaskBloc, DetailTaskState>(
-                                  builder: (contextBloc, state) {
-                                    return EditTaskPage(
-                                      task: widget.task,
-                                      id: widget.id,
-                                      onClose: closeFilter,
-                                      callBack: (result){
-                                        if (result) {
-                                          contextBloc
-                                              .read<DetailTaskBloc>()
-                                              .add(GetDetailTaskEvent(widget.task, widget.id, update: true));
-                                        }
-                                      },
-                                      // Other parameters you might need to pass
-                                    );
-                                  }
+                          Padding(
+                            padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/6),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 700),
+                              height: isFilterOpen ? MediaQuery.of(context).size.height * 0.4 : 0,
+                              width: MediaQuery.of(context).size.width,
+                              child: SlideTransition(
+                                position: Tween<Offset>(
+                                  begin: Offset(-1.0, 0.0), // Bắt đầu từ phải sang trái
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                  parent: ModalRoute.of(context)!.animation!,
+                                  curve: Curves.ease,
+                                )),
+                                child: BlocBuilder<DetailTaskBloc, DetailTaskState>(
+                                    builder: (contextBloc, state) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.all(Radius.circular(8)),
+                                          color: Colors.white,
+                                        ),
+
+                                        child: Container(
+                                          //padding: const EdgeInsets.all(12.0),
+                                          //margin: const EdgeInsets.all(8.0),
+                                          child: EditTaskPage(
+                                            task: widget.task,
+                                            id: widget.id,
+                                            onClose: closeFilter,
+                                            callBack: (result){
+                                              if (result) {
+                                                contextBloc
+                                                    .read<DetailTaskBloc>()
+                                                    .add(GetDetailTaskEvent(widget.task, widget.id, update: true));
+                                              }
+                                            },
+                                            // Other parameters you might need to pass
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      ],
-                    );
-              }),
+                          )
+                        ],
+                      );
+                }),
+          ],
         ),
       ),
     );

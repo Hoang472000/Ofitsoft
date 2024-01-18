@@ -95,7 +95,7 @@ class _ItemDiaryState extends State<ItemDiary> {
                   children: [
                     CustomSlidableAction(
                       borderRadius: BorderRadius.circular(8),
-                      backgroundColor: AppColor.grayC7,
+                      backgroundColor: AppColor.grayC7.withOpacity(0.8),
                       onPressed: (context){
                         Navigator.of(context)
                             .push(AddActivityPage.route(
@@ -106,7 +106,7 @@ class _ItemDiaryState extends State<ItemDiary> {
                       )),
                     CustomSlidableAction(
                       borderRadius: BorderRadius.circular(8),
-                      backgroundColor: AppColor.grayC7,
+                      backgroundColor: AppColor.grayC7.withOpacity(0.8),
                       onPressed: (context){
                       Navigator.of(context)
                           .push(AddActivityPage.route(

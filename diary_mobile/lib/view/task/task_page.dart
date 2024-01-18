@@ -1,4 +1,5 @@
 import 'package:diary_mobile/utils/widgets/empty_widget.dart';
+import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -76,56 +77,60 @@ class _TaskPageState extends State<TaskPage> {
             //resizeToAvoidBottomInset: true,
             backgroundColor: AppColor.background,
             body:
-                BlocBuilder<TaskBloc, TaskState>(builder: (blocContext, state) {
+                HomeBackGround(
+                  children: [
+                    BlocBuilder<TaskBloc, TaskState>(builder: (blocContext, state) {
               return state
-                      .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
-                  ? Padding(
-                padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
-                      child: DashedCircle(
-                          size: 39, stringIcon: IconAsset.icLoadOtp),
-                    )
-                  : RefreshIndicator(
-                      onRefresh: () async {
-                        blocContext.read<TaskBloc>().add(GetListTaskEvent());
-                      },
-                      child: (state.listTask.isEmpty)
-                          ? const EmptyWidget()
-                          : SingleChildScrollView(
-                              //physics: const NeverScrollableScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  ListView.builder(
-                                    itemCount: state.listTask.length,
-                                    itemBuilder:
-                                        (BuildContext contextBloc, int index) {
-                                      return ItemTask(
-                                          taskEntity: state.listTask[index],
-                                          callbackChooseItem: () async {
-                                            Navigator.push(
-                                                context,
-                                                DetailTaskPage.route(
-                                                    state.listTask[index],
-                                                    state.listTask[index].id ??
-                                                        -1,
-                                                    () {
-                                                      print("HoangCV: khong chay vao day");
-                                                      blocContext.read<TaskBloc>().add(GetListTaskEvent());
-                                                    }));
-                                          },
-                                          callbackDelete: () {});
-                                    },
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
+                          .isShowProgress /*&& (state.listDiaryActivity.length == 0 || state.listDiaryMonitor.length == 0)*/
+                      ? Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
+                          child: DashedCircle(
+                              size: 39, stringIcon: IconAsset.icLoadOtp),
+                        )
+                      : RefreshIndicator(
+                          onRefresh: () async {
+                            blocContext.read<TaskBloc>().add(GetListTaskEvent());
+                          },
+                          child: (state.listTask.isEmpty)
+                              ? const EmptyWidget()
+                              : SingleChildScrollView(
+                                  //physics: const NeverScrollableScrollPhysics(),
+                                  child: Column(
+                                    children: [
+                                      ListView.builder(
+                                        itemCount: state.listTask.length,
+                                        itemBuilder:
+                                            (BuildContext contextBloc, int index) {
+                                          return ItemTask(
+                                              taskEntity: state.listTask[index],
+                                              callbackChooseItem: () async {
+                                                Navigator.push(
+                                                    context,
+                                                    DetailTaskPage.route(
+                                                        state.listTask[index],
+                                                        state.listTask[index].id ??
+                                                            -1,
+                                                        () {
+                                                          print("HoangCV: khong chay vao day");
+                                                          blocContext.read<TaskBloc>().add(GetListTaskEvent());
+                                                        }));
+                                              },
+                                              callbackDelete: () {});
+                                        },
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                      ),
+                                      SizedBox(
+                                        height: 60,
+                                      )
+                                    ],
                                   ),
-                                  SizedBox(
-                                    height: 60,
-                                  )
-                                ],
-                              ),
-                            ),
-                    );
+                                ),
+                        );
             }),
+                  ],
+                ),
           ),
           if (isFilterOpen)
             AnimatedContainer(
