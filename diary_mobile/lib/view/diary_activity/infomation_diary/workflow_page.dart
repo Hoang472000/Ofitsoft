@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:diary_mobile/resource/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../../data/repository.dart';
 import '../../../resource/color.dart';
 import '../../../resource/style.dart';
@@ -123,11 +125,68 @@ class _WorkflowPageState extends State<WorkflowPage> {
                                           style: StyleOfit.textStyleFW400(AppColor.black22, 16),),
                                         children: [
                                                 Container(
-                                                  padding: const EdgeInsets.only(top: 8, bottom: 8),
-                                                  child: Text("Mô tả: ${processStageTask.description}" ?? '',
-                                                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
-                                                    maxLines: 100,),
-                                                ),
+                                                  padding:  EdgeInsets.only(top: 8, bottom: 8),
+                                                  child: /*Html(data: processStageTask.description ?? "", style: {
+                                                  "body": Style(
+                                                  textAlign: TextAlign.center,
+                                                  fontSize: FontSize(16),
+                                                  color: AppColor.black22,
+                                                  fontWeight: FontWeight.w400),
+                  "table": Style(
+                  border: Border.all(color: Colors.black),
+                  ),
+                  "td": Style(
+                  ),
+                                                  }
+                                                ),*/
+                                                  HtmlWidget(
+                                                    '''
+                                                    <div style="text-align: center;">
+                                                  ${processStageTask.description ?? ""}
+                                                    ''',
+                                                      customStylesBuilder: (element) {
+                                                        /*if (element.localName == 'body') {
+                                                          // Styles for the entire body
+                                                          return {
+                                                            'textAlign': 'center',  // Center-align all text content
+                                                          };
+                                                        }*/
+                                                        // table
+                                                        if (element.localName == 'table') {
+                                                          // Styles for the entire table
+                                                          return {
+                                                            'border': '1px solid black',
+                                                            'borderCollapse': 'collapse',
+                                                            'width': '100%',
+                                                          };
+                                                        } else if (element.localName == 'td' || element.localName == 'th') {
+                                                          // Styles for table cells (td) and headers (th)
+                                                          return {
+                                                            'border': '1px solid black',
+                                                            'padding': '8px',
+                                                          };
+                                                        }
+                                                        // column
+                                                        if (element.localName == 'div' && element.classes.contains('o_text_columns')) {
+                                                          return {
+                                                            'customWidgetType': 'o_text_columns',
+                                                          };
+                                                        }
+
+                                                        return null;
+                                                      },
+                                                    customWidgetBuilder: (element) {
+                                                      return null;
+                                                    },
+                                                    // this callback will be triggered when user taps a link
+                                                    onTapUrl: (url) {
+                                                      Utils.launchBrowserUrl(url);
+                                                      return true; // Return a boolean value
+                                                    },
+                                                    renderMode: RenderMode.column,
+                                                    // set the default styling for text
+                                                    textStyle: StyleOfit.textStyleFW400(AppColor.black22, 16)
+                                                  ),),
                                                 (processStageTask.image ?? "").isNotEmpty ?
                                                 Container(
                                                       padding: const EdgeInsets.only(top: 8,  bottom: 8),

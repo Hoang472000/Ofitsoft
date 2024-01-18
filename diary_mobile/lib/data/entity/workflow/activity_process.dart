@@ -16,7 +16,7 @@ class ActivityProcess{
   factory ActivityProcess.fromJson(Map<String, dynamic> json) {
     return ActivityProcess(
       activityId: json['activity_id'] ?? -1,
-      description: (json['description'] ?? '').replaceAll('<p>', '').replaceAll('</p>', ''),
+      description: (json['description'] ?? '')/*.replaceAll('<p>', '').replaceAll('</p>', '')*//*.replaceAll('<br>', '\n1')*/,
       activityName: json['activity_name'] ?? '',
       image: json['image'] ?? '',
 
