@@ -210,9 +210,15 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                               : SingleChildScrollView(
                                 child: Column(
                                   children: [
-                                    state.listExpansion.isNotEmpty ? ExpansionTileCustom(
-                                      key: UniqueKey(), // Add a unique key to ExpansionTileCustom
-                                      list: state.listExpansion, // Pass your list of ItemBasic
+                                    state.listExpansion.isNotEmpty ? Container(
+                            /*          decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(8),
+                                          color: AppColor.whiteF2.withOpacity(0.8)),
+                                      margin: EdgeInsets.only(left: 8, right: 8),*/
+                                      child: ExpansionTileCustom(
+                                        key: UniqueKey(), // Add a unique key to ExpansionTileCustom
+                                        list: state.listExpansion, // Pass your list of ItemBasic
+                                      ),
                                     ) : SizedBox(),
                                     SingleChildScrollView(
                                     child: Column(

@@ -66,7 +66,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(8)),
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withOpacity(0.9),
                       ),
                       width: double.infinity,
                       //padding: const EdgeInsets.only(top: 8, left: 8, right: 8, bottom: 20),

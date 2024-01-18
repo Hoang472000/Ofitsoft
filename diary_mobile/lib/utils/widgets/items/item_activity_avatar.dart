@@ -107,7 +107,7 @@ class _ItemActivityAvatarState extends State<ItemActivityAvatar> {
             BoxShadow(blurRadius: 1, spreadRadius: 1, color: AppColor.grayEC),
           ],*/
           borderRadius: BorderRadius.circular(10),
-          color: AppColor.whiteF2.withOpacity(0.9)),
+          color: AppColor.whiteF2),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.only(left: 0, top: 0, bottom: 5),

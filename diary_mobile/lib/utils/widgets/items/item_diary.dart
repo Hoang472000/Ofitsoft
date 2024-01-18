@@ -138,12 +138,12 @@ class _ItemDiaryState extends State<ItemDiary> {
       /*            margin: const EdgeInsets.only(
                   left: 20, right: 16, top: 4, bottom: 4),*/
       decoration: BoxDecoration(boxShadow: const [
-        /*BoxShadow(
+        BoxShadow(
           color: AppColor.gray57,
           blurRadius: 1,
           offset: Offset(0, 0),
-        ),*/
-      ], borderRadius: BorderRadius.circular(8), color: AppColor.whiteF2.withOpacity(0.9)),
+        ),
+      ], borderRadius: BorderRadius.circular(8), color: AppColor.whiteF2),
       child: Row(
           children: [
             Expanded(

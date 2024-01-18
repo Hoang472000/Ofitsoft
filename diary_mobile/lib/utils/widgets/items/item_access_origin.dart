@@ -43,7 +43,7 @@ class _ItemAccessOriginState extends State<ItemAccessOrigin> {
                 ),
               ],*/
               borderRadius: BorderRadius.circular(8),
-              color: AppColor.whiteF2.withOpacity(0.9)),
+              color: AppColor.whiteF2),
           child: Container(
             padding:
             const EdgeInsets.only(top: 5, bottom: 12, left: 16, right: 0),

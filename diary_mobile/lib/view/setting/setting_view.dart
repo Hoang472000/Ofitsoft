@@ -221,7 +221,7 @@ class _SettingViewState extends State<SettingView> {
         margin: EdgeInsets.only(top: 8, left: 8, right: 8),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(5)),
-            color: Colors.white.withOpacity(0.6)),
+            color: Colors.white.withOpacity(0.8)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
