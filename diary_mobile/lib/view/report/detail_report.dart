@@ -67,9 +67,9 @@ class _DetailReportViewPageState extends State<DetailReportViewPage> {
                       return false;
                     },
                     child: state.isShowProgress && state.listReport.isEmpty?
-                    Padding(
-                      padding: EdgeInsets.only(top: MediaQuery.sizeOf(context).height/3),
-                      child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),):
+                    Center(
+                      child: DashedCircle(size: 39, stringIcon: IconAsset.icLoadOtp),
+                    ):
                     state.listReport.isEmpty
                         ? Container()
                         : ListView.builder(

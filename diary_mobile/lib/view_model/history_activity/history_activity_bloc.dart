@@ -108,6 +108,7 @@ class HistoryActivityBloc extends Bloc<HistoryActivityEvent, HistoryActivityStat
       ItemBasic(id: 6, name: "12 tháng trước"),
       ItemBasic(id: 7, name: "24 tháng trước"),
       ItemBasic(id: 8, name: "36 tháng trước"),
+      ItemBasic(id: 9, name: "Từ trước đến nay"),
     ]);
     if(check[0] == true) {
       list.addAll(await repository.getListDiary("farmer"));
@@ -313,10 +314,12 @@ class HistoryActivityBloc extends Bloc<HistoryActivityEvent, HistoryActivityStat
           startTime = Utils.calculateStartTime(730);
         } else if (state.indexYear == 8) {
           startTime = Utils.calculateStartTime(1095);
+        } else if (state.indexYear == 9) {
+          startTime = Utils.calculateStartTime(1);
         }
         for (var activity in list) {
           DateTime actionTime = DateTime.parse(activity.actionTime ?? "");
-          bool withinStartTime = startTime.isNotEmpty ? !actionTime.isBefore(
+          bool withinStartTime = state.indexYear == 9 ? true : startTime.isNotEmpty ? !actionTime.isBefore(
               Utils.stringToDate(startTime)) : true;
           bool withinEndTime = endTime.isNotEmpty ? !actionTime.isAfter(
               Utils.stringToDateEnd(endTime)) : true;
