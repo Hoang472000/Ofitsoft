@@ -53,7 +53,7 @@ class TaskEntity implements Insertable<TaskEntityTable>{
       status: json['status'] ?? "",
       statusName: json['status_name'] ?? "",
       result: ((json['result'] ?? '') as String).replaceAll('<p>', '').replaceAll('</p>', ''),
-      description: ((json['description'] ?? '') as String).replaceAll('<p>', '').replaceAll('</p>', ''),
+      description: /*((*/json['description'] ?? ''/*) as String).replaceAll('<p>', '').replaceAll('</p>', '')*/,
 
     );
   }

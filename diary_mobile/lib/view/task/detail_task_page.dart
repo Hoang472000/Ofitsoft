@@ -3,6 +3,7 @@ import 'package:diary_mobile/utils/widgets/view_page_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../resource/assets.dart';
@@ -149,7 +150,7 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
                                     label: "Hoạt động",
                                     value: "${state.taskEntity!.activityName}",
                                     image: ImageAsset.imageActivityFarm),
-                                CardTile(
+                                CardTileHtml(
                                     label: "Miêu tả",
                                     value: "${state.taskEntity!.description}",
                                     image: ImageAsset.imageFile),
@@ -333,6 +334,93 @@ class _DetailTaskPageState extends State<DetailTaskPage> {
                     style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                     maxLines: 1000,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget CardTileHtml(
+      {required String image,
+        required String label,
+        required String value}) {
+    return Container(
+      padding: const EdgeInsets.only(top: 8, bottom: 8),
+      child: Row(
+        //crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4,right: 8.0),
+            child: Image(
+              image: AssetImage(image),
+              width: 40,
+              fit: BoxFit.contain,
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    label,
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16, overflow: TextOverflow.visible,),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: HtmlWidget(
+                      '''
+                                                      <div style="text-align: left;">
+                                                    $value
+                                                      ''',
+                      customStylesBuilder: (element) {
+                        /*if (element.localName == 'body') {
+                                                            // Styles for the entire body
+                                                            return {
+                                                              'textAlign': 'center',  // Center-align all text content
+                                                            };
+                                                          }*/
+                        // table
+                        if (element.localName == 'table') {
+                          // Styles for the entire table
+                          return {
+                            'border': '1px solid black',
+                            'borderCollapse': 'collapse',
+                            'width': '100%',
+                          };
+                        } else if (element.localName == 'td' || element.localName == 'th') {
+                          // Styles for table cells (td) and headers (th)
+                          return {
+                            'border': '1px solid black',
+                            'padding': '8px',
+                          };
+                        }
+                        // column
+                        if (element.localName == 'div' && element.classes.contains('o_text_columns')) {
+                          return {
+                            'customWidgetType': 'o_text_columns',
+                          };
+                        }
+
+                        return null;
+                      },
+                      customWidgetBuilder: (element) {
+                        return null;
+                      },
+                      // this callback will be triggered when user taps a link
+                      onTapUrl: (url) {
+                        Utils.launchBrowserUrl(url);
+                        return true; // Return a boolean value
+                      },
+                      renderMode: RenderMode.column,
+                      // set the default styling for text
+                      textStyle: StyleOfit.textStyleFW400(AppColor.black22, 16)
                   ),
                 )
               ],

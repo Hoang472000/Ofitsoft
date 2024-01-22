@@ -51,18 +51,14 @@ class _HomeRecordViewState extends State<HomeRecordView> with TickerProviderStat
     myScroll();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 30),
     );
 
-    _animation = Tween<double>(begin: 0.97, end: 1.03).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack));
-    _animationController.forward();
-    _animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed)
-        _animationController.reverse();
-      else if (status == AnimationStatus.dismissed)
-        _animationController.forward();
-    });
+    _animation = Tween<double>(begin: 0, end: 2 * 3.141).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
+    );
+
+    _animationController.repeat(); // Repeat the rotation indefinitely
   }
 
   @override
@@ -111,12 +107,39 @@ class _HomeRecordViewState extends State<HomeRecordView> with TickerProviderStat
                   ),
                   child:  Container(
                       width: double.infinity,
-                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 13,
-                          left: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 4,
+                      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20,
+                         /* left: MediaQuery.of(context).size.width / 20 + MediaQuery.of(context).size.width / 4,*/
                           right: MediaQuery.of(context).size.width / 20),
                       child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
+                          Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 30, right: MediaQuery.of(context).size.width / 30),
+                                child: RotationTransition(
+                                  turns: _animation,
+                                  child: Image(
+                                    image: AssetImage(
+                                        ImageAsset.imageOfitsoft),
+                                    //opacity: const AlwaysStoppedAnimation(.9),
+                                    height: MediaQuery.of(context).size.width / 5,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 30, right: MediaQuery.of(context).size.width / 30),
+                                child: Image(
+                                  image: AssetImage(
+                                      ImageAsset.imageOfitSofText),
+                                  //opacity: const AlwaysStoppedAnimation(.9),
+                                  width: MediaQuery.of(context).size.width / 5,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 60,),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -147,18 +170,6 @@ class _HomeRecordViewState extends State<HomeRecordView> with TickerProviderStat
                           ),
                         ],
                       )),),
-                Container(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 15, left: MediaQuery.of(context).size.width / 20),
-                  child: RotationTransition(
-                    turns: _animation,
-                    child: Image(
-                      image: AssetImage(
-                          ImageAsset.imageOfitsoftText),
-                      opacity: const AlwaysStoppedAnimation(.8),
-                      height: MediaQuery.of(context).size.width / 4,
-                    ),
-                  ),
-                ),
                 Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3.5),
                   child: Container(

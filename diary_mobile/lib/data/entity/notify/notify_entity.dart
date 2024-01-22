@@ -22,9 +22,9 @@ class NotifyEntity {
     return NotifyEntity(
       id: json['id'] ?? -1,
       title: json['title'] ?? '',
-      message: ((json['message'] ?? '') as String)
+      message: /*(*/(json['message'] ?? '')/* as String)
           .replaceAll('<p>', '')
-          .replaceAll('</p>', ''),
+          .replaceAll('</p>', '')*/,
       activeTime: json['active_time'] ?? '',
       isRead: json['is_read'] ?? false,
     );

@@ -69,7 +69,7 @@ class DiaryDB extends _$DiaryDB {
   // you should bump this number whenever you change or add a table definition.
   // Migrations are covered later in the documentation.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   Future<void> deleteEverything() {
     return transaction(() async {
@@ -772,6 +772,7 @@ class DiaryDB extends _$DiaryDB {
   Future<void> insertListTaskEntity(List<TaskEntity> values) async {
     await batch((batch) {
       for (final entry in values) {
+
         final TaskEntityTableCompanion entryCompanion =
             TaskEntityTableCompanion(
           id: Value(entry.id),
@@ -788,7 +789,7 @@ class DiaryDB extends _$DiaryDB {
           stringSeasonFarmIds: Value(entry
               .convertSeasonFarmListToJson()), // Chuyển đổi thành chuỗi JSON
         );
-        batch.insertAllOnConflictUpdate(areaEntityTable, [entryCompanion]);
+        batch.insertAllOnConflictUpdate(taskEntityTable, [entryCompanion]);
       }
     });
   }
@@ -907,6 +908,12 @@ class DiaryDB extends _$DiaryDB {
           m.addColumn(diaryTable, diaryTable.productProcessName);
           m.createTable(taskEntityTable);
           m.addColumn(reportTable, reportTable.isInitialAssessment);
+        }
+        else if (from == 5) {
+          m.deleteTable("area_entity");
+          m.createTable(areaEntityTable);
+          m.deleteTable("task_entity");
+          m.createTable(taskEntityTable);
         }
       },
     );

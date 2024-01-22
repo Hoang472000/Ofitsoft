@@ -247,4 +247,5 @@ class ImageAsset {
   static const String imageBackground1 = "${iMages}image_background1.jpg";
   static const String imageBackground2 = "${iMages}image_background2.jpg";
   static const String imageOfitSoftBG = "${iMages}image_ofitsoft.jpg";
+  static const String imageOfitSofText = "${iMages}image_ofitsoft_text.png";
 }
