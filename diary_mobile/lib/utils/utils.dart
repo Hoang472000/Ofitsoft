@@ -472,7 +472,7 @@ class Utils {
   }
 
   static void openAppInStore(String appId) async {
-    String appId = "https://play.google.com/store/apps/details?id=com.ofitsoft.diary.diary_mobile";
+    //String appId = "https://play.google.com/store/apps/details?id=com.ofitsoft.diary.diary_mobile";
     if (await canLaunchUrlString(appId)) {
       await launchUrlString(appId, mode: LaunchMode.externalApplication);
     } else {

@@ -230,7 +230,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin{
                                           } else if (activity.id == 6) {
                                             Navigator.push(context, ContactPage.route());
                                           } else if (activity.id == 7) {
-                                            Navigator.push(context, AddRecordDiaryPage.route("record"));
+                                            Navigator.push(context, AddRecordDiaryPage.route("farmer"));
                                           } else if (activity.id == 8) {
                                             Navigator.push(context, HistoryActivityPage.route());
                                           }

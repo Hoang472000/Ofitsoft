@@ -56,6 +56,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
       child: Stack(
         children: [
           Scaffold(
+            resizeToAvoidBottomInset: false,
             appBar: OfitAppBar(context,
               centerTitle: true,
               showDefaultBackButton: false,

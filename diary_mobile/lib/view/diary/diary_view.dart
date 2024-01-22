@@ -89,17 +89,20 @@ class _DiaryViewState extends State<DiaryView> {
                 },
               ),],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.of(context).push(TaskPage.route());
-              },
-              child: SvgPicture.asset(
-                IconAsset.icTask2,
-                color: Colors.white,
-                height: 33,
-                width: 33,
+            floatingActionButton: Visibility(
+              visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+              child: FloatingActionButton(
+                onPressed: () {
+                  Navigator.of(context).push(TaskPage.route());
+                },
+                child: SvgPicture.asset(
+                  IconAsset.icTask2,
+                  color: Colors.white,
+                  height: 33,
+                  width: 33,
+                ),
+                heroTag: null,
               ),
-              heroTag: null,
             ),
             body: HomeBackGround(
               children: [

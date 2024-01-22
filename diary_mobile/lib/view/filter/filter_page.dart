@@ -156,374 +156,391 @@ class _FilterPageState extends State<FilterPage> {
       create: (context) => FilterBloc(context.read<Repository>())
         ..add(InitFilterEvent( widget.type, widget.list)),
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+  //      resizeToAvoidBottomInset: false,
         backgroundColor: AppColor.background,
-        body: KeyboardDismisser(
-          child: SafeArea(
-            child: BlocBuilder<FilterBloc, FilterState>(
-              builder: (contextBloc, state) {
-              return Padding(
-                padding: const EdgeInsets.all(10),
-                child: Stack(
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(12),
-                          child: Text(S.of(context).search_filters,
-                              style: StyleOfit.textStyleFW500(AppColor.black22, 18)),
-                        ),
-                        Text(S.of(context).interval,
-                            style: StyleOfit.textStyleFW500(
-                                AppColor.black22, 15)),
-                        Padding(
-                            padding:
-                            const EdgeInsets.only(top: 5),
-                            child: GestureDetector(
-                              onTap: () {
-                                _showModalBottomSheet(contextBloc);
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 5),
-                                child: FormField<String>(
-                                  builder:
-                                      (FormFieldState<String> stateFrom) {
-                                    return Container(
-                                        padding: const EdgeInsets.only(
-                                            top: 10.0,
-                                            left: 10.0,
-                                            bottom: 10.0),
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                            BorderRadius.circular(8),
-                                            color: Colors.white),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                                child: Text(
-                                                  "${state.startTime} - ${state.endTime}",
-                                                  style: StyleOfit
-                                                      .textStyleFW400(
-                                                      AppColor.black22,
-                                                      15),
-                                                )),
-                                            Container(
-                                                padding:
-                                                const EdgeInsets.only(
-                                                    right: 8),
-                                                child: SvgPicture.asset(
-                                                    IconAsset
-                                                        .icLich))
-                                          ],
-                                        ));
-                                  },
-                                ),
-                              ),
-                            )),
-                        state.listYear.isNotEmpty ?
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(child: widgetYear(state.listYear, contextBloc, 0)),
-                            Expanded(child: widgetYear(state.listYear, contextBloc, 1)),
-                            Expanded(child: widgetYear(state.listYear, contextBloc, 2)),
-                          ],
-                        ): SizedBox(),
-                        Container(
-                          padding:
-                          const EdgeInsets.only(top: 7, bottom: 5),
-                          child: Text(S.of(context).filter_list,
-                              style: StyleOfit.textStyleFW500(
-                                  AppColor.black22, 15)),
-                        ),
-                        state.list.length > 0  && state.isShowProgress == false?
-                        ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: state.list.length,
-                            itemBuilder: (_, index) => ContainerInputWidget(
-                                contextParent: context,
-                                inputRegisterModel: state.list[index],
-                                onClick: () {
-                                  setState(() {});
-                                  contextBloc.read<FilterBloc>().add(
-                                      OnSelectValueEvent(
-                                          state.list, index, context));
-                                })) : SizedBox(),
-
-                        if(widget.type == "season")
-                          Container(
-                            padding: const EdgeInsets.only(top: 7, bottom: 5),
-                            child: Text(S.of(context).amount_of_money,
-                                style: StyleOfit.textStyleFW500(
-                                    AppColor.black22, 15)),
-                          ),
-                        if(widget.type == "season")
-                          Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                //margin: const EdgeInsets.only(top: 25),
-                                  child: TextFormFieldInputText(
-                                    isNumber: true,
-                                    "TỐI THIỂU",
-                                    state.minPrice ?? TextEditingController(),
-                                    false,
-                                    state.minPriceFocus ?? FocusNode(),
-                                    (state.formStatus is ValidatePassFail) ? "" : "",
-                                        (lostFocus) {
-                                    },
-                                    false,
-                                    onChangeCallBack: (text) {
-                                      print("text: SaveReplyEvent: $text");
-                                      contextBloc.read<FilterBloc>().add(
-                                          SaveValueTextEvent(text, "minPrice"));
-                                    },// textCapitalization: false,
-                                  )),
-                            ),Container(child: Text(" — "),),
-                            Expanded(
-                              child: Container(
-                                //margin: const EdgeInsets.only(top: 25),
-                                  child: TextFormFieldInputText(
-                                    isNumber: true,
-                                    "TỐI ĐA",
-                                    state.maxPrice ?? TextEditingController(),
-                                    false,
-                                    state.maxPriceFocus ?? FocusNode(),
-                                    (state.formStatus is ValidatePassFail) ? "" : "",
-                                        (lostFocus) {
-                                    },
-                                    false,
-                                    onChangeCallBack: (text) {
-                                      print("text: SaveReplyEvent: $text");
-                                      contextBloc.read<FilterBloc>().add(
-                                          SaveValueTextEvent(text, "maxPrice"));
-                                    },// textCapitalization: false,
-                                  )),
-                            ),
-                          ],
-                        ),
-                        if (widget.type == "season")
-                          Container(
-                            padding: const EdgeInsets.only(top: 7, bottom: 5),
-                            child: Text(S.of(context).amount,
-                                style: StyleOfit.textStyleFW500(
-                                    AppColor.black22, 15)),
-                          ),
-                        if(widget.type == "season")
-                          Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                //margin: const EdgeInsets.only(top: 25),
-                                  child: TextFormFieldInputText(
-                                    isNumber: true,
-                                    "TỐI THIỂU",
-                                    state.minQuantity ?? TextEditingController(),
-                                    false,
-                                    state.minQuantityFocus ?? FocusNode(),
-                                    (state.formStatus is ValidatePassFail) ? "" : "",
-                                        (lostFocus) {
-                                    },
-                                    false,
-                                    onChangeCallBack: (text) {
-                                      print("text: SaveReplyEvent: $text");
-                                      contextBloc.read<FilterBloc>().add(
-                                          SaveValueTextEvent(text, "minQuantity"));
-                                    },// textCapitalization: false,
-                                  )),
-                            ),Container(child: Text(" — "),),
-                            Expanded(
-                              child: Container(
-                                //margin: const EdgeInsets.only(top: 25),
-                                  child: TextFormFieldInputText(
-                                    isNumber: true,
-                                    "TỐI ĐA",
-                                    state.maxQuantity ?? TextEditingController(),
-                                    false,
-                                    state.maxQuantityFocus ?? FocusNode(),
-                                    (state.formStatus is ValidatePassFail) ? "" : "",
-                                        (lostFocus) {
-                                    },
-                                    false,
-                                    onChangeCallBack: (text) {
-                                      print("text: SaveReplyEvent: $text");
-                                      contextBloc.read<FilterBloc>().add(
-                                          SaveValueTextEvent(text, "maxQuantity"));
-                                    },// textCapitalization: false,
-                                  )),
-                            ),
-                          ],
-                        ),
-                        if(widget.type == "harvesting")
-                          Container(
-                            padding: const EdgeInsets.only(top: 7, bottom: 5),
-                            child: Text("Sản lượng",
-                                style: StyleOfit.textStyleFW500(
-                                    AppColor.black22, 15)),
-                          ),
-                        if(widget.type == "harvesting")
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  //margin: const EdgeInsets.only(top: 25),
-                                    child: TextFormFieldInputText(
-                                      isNumber: true,
-                                      "TỐI THIỂU",
-                                      state.minQuantity ?? TextEditingController(),
-                                      false,
-                                      state.minQuantityFocus ?? FocusNode(),
-                                      (state.formStatus is ValidatePassFail) ? "" : "",
-                                          (lostFocus) {
-                                      },
-                                      false,
-                                      onChangeCallBack: (text) {
-                                        print("text: SaveReplyEvent: $text");
-                                        contextBloc.read<FilterBloc>().add(
-                                            SaveValueTextEvent(text, "minPrice"));
-                                      },// textCapitalization: false,
-                                    )),
-                              ),Container(child: Text(" — "),),
-                              Expanded(
-                                child: Container(
-                                  //margin: const EdgeInsets.only(top: 25),
-                                    child: TextFormFieldInputText(
-                                      isNumber: true,
-                                      "TỐI ĐA",
-                                      state.maxQuantity ?? TextEditingController(),
-                                      false,
-                                      state.maxQuantityFocus ?? FocusNode(),
-                                      (state.formStatus is ValidatePassFail) ? "" : "",
-                                          (lostFocus) {
-                                      },
-                                      false,
-                                      onChangeCallBack: (text) {
-                                        print("text: SaveReplyEvent: $text");
-                                        contextBloc.read<FilterBloc>().add(
-                                            SaveValueTextEvent(text, "maxPrice"));
-                                      },// textCapitalization: false,
-                                    )),
-                              ),
-                            ],
-                          ),
-                      ],
-                    ),
-                    Positioned(
-                       right: 0, bottom: 0,
-                      child: Row(
+        body: AnimatedContainer(
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          child: KeyboardDismisser(
+            child: SafeArea(
+              child: BlocBuilder<FilterBloc, FilterState>(
+                builder: (contextBloc, state) {
+                return Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Stack(
+                    children: [
+                      Column(
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(bottom: 10),
-                            padding: EdgeInsets.only(left: 8, right: 8),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColor.main,
-                                    blurRadius: 1,
-                                    spreadRadius: 2,
-                                    offset: Offset(0, 0),
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    alignment: Alignment.center,
+                                    padding: EdgeInsets.all(12),
+                                    child: Text(S.of(context).search_filters,
+                                        style: StyleOfit.textStyleFW500(AppColor.black22, 18)),
                                   ),
-                                ],
-                                borderRadius: BorderRadius.circular(4),
-                                color: Colors.white),
-                            child: TextButton(
-                              child: Text(S.of(context).reset,
-                                style: StyleOfit.textStyleFW500(AppColor.main, 16),),
-                              onPressed: (){
-                                contextBloc.read<FilterBloc>().add(InitFilterEvent(widget.type, widget.list));
-                              },),
-                          ),
-                          SizedBox(width: 8,),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 10),
-                            padding: EdgeInsets.only(left: 16, right: 16),
-                            decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColor.gray57,
-                                    blurRadius: 1,
-                                    offset: Offset(0, 0),
+                                  Text(S.of(context).interval,
+                                      style: StyleOfit.textStyleFW500(
+                                          AppColor.black22, 15)),
+                                  Padding(
+                                      padding:
+                                      const EdgeInsets.only(top: 5),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _showModalBottomSheet(contextBloc);
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                              top: 5),
+                                          child: FormField<String>(
+                                            builder:
+                                                (FormFieldState<String> stateFrom) {
+                                              return Container(
+                                                  padding: const EdgeInsets.only(
+                                                      top: 10.0,
+                                                      left: 10.0,
+                                                      bottom: 10.0),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                      BorderRadius.circular(8),
+                                                      color: Colors.white),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child: Text(
+                                                            "${state.startTime} - ${state.endTime}",
+                                                            style: StyleOfit
+                                                                .textStyleFW400(
+                                                                AppColor.black22,
+                                                                15),
+                                                          )),
+                                                      Container(
+                                                          padding:
+                                                          const EdgeInsets.only(
+                                                              right: 8),
+                                                          child: SvgPicture.asset(
+                                                              IconAsset
+                                                                  .icLich))
+                                                    ],
+                                                  ));
+                                            },
+                                          ),
+                                        ),
+                                      )),
+                                  state.listYear.isNotEmpty ?
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(child: widgetYear(state.listYear, contextBloc, 0)),
+                                      Expanded(child: widgetYear(state.listYear, contextBloc, 1)),
+                                      Expanded(child: widgetYear(state.listYear, contextBloc, 2)),
+                                    ],
+                                  ): SizedBox(),
+                                  Container(
+                                    padding:
+                                    const EdgeInsets.only(top: 7, bottom: 5),
+                                    child: Text(S.of(context).filter_list,
+                                        style: StyleOfit.textStyleFW500(
+                                            AppColor.black22, 15)),
                                   ),
+                                  state.list.length > 0  && state.isShowProgress == false?
+                                  ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: state.list.length,
+                                      itemBuilder: (_, index) => ContainerInputWidget(
+                                          contextParent: context,
+                                          inputRegisterModel: state.list[index],
+                                          onClick: () {
+                                            setState(() {});
+                                            contextBloc.read<FilterBloc>().add(
+                                                OnSelectValueEvent(
+                                                    state.list, index, context));
+                                          })) : SizedBox(),
+
+                                  if(widget.type == "season")
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 7, bottom: 5),
+                                      child: Text(S.of(context).amount_of_money,
+                                          style: StyleOfit.textStyleFW500(
+                                              AppColor.black22, 15)),
+                                    ),
+                                  if(widget.type == "season")
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI THIỂU",
+                                                state.minPrice ?? TextEditingController(),
+                                                false,
+                                                state.minPriceFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "minPrice"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),Container(child: Text(" — "),),
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI ĐA",
+                                                state.maxPrice ?? TextEditingController(),
+                                                false,
+                                                state.maxPriceFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "maxPrice"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  if (widget.type == "season")
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 7, bottom: 5),
+                                      child: Text(S.of(context).amount,
+                                          style: StyleOfit.textStyleFW500(
+                                              AppColor.black22, 15)),
+                                    ),
+                                  if(widget.type == "season")
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI THIỂU",
+                                                state.minQuantity ?? TextEditingController(),
+                                                false,
+                                                state.minQuantityFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "minQuantity"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),Container(child: Text(" — "),),
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI ĐA",
+                                                state.maxQuantity ?? TextEditingController(),
+                                                false,
+                                                state.maxQuantityFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "maxQuantity"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),
+                                      ],
+                                    ),
+                                  if(widget.type == "harvesting")
+                                    Container(
+                                      padding: const EdgeInsets.only(top: 7, bottom: 5),
+                                      child: Text("Sản lượng",
+                                          style: StyleOfit.textStyleFW500(
+                                              AppColor.black22, 15)),
+                                    ),
+                                  if(widget.type == "harvesting")
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI THIỂU",
+                                                state.minQuantity ?? TextEditingController(),
+                                                false,
+                                                state.minQuantityFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "minPrice"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),Container(child: Text(" — "),),
+                                        Expanded(
+                                          child: Container(
+                                            //margin: const EdgeInsets.only(top: 25),
+                                              child: TextFormFieldInputText(
+                                                isNumber: true,
+                                                "TỐI ĐA",
+                                                state.maxQuantity ?? TextEditingController(),
+                                                false,
+                                                state.maxQuantityFocus ?? FocusNode(),
+                                                (state.formStatus is ValidatePassFail) ? "" : "",
+                                                    (lostFocus) {
+                                                },
+                                                false,
+                                                onChangeCallBack: (text) {
+                                                  print("text: SaveReplyEvent: $text");
+                                                  contextBloc.read<FilterBloc>().add(
+                                                      SaveValueTextEvent(text, "maxPrice"));
+                                                },// textCapitalization: false,
+                                              )),
+                                        ),
+                                      ],
+                                    ),
                                 ],
-                                borderRadius: BorderRadius.circular(4),
-                                color: AppColor.main),
-                            child: TextButton(
-                              child: Text(S.of(context).apply,
-                                style: StyleOfit.textStyleFW500(AppColor.whiteF2, 16),),
-                              onPressed: (){
-                                if (widget.type == "season") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.minPrice!.text,
-                                    state.maxPrice!.text,
-                                    state.minQuantity!.text,
-                                    state.maxQuantity!.text,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                    state.indexFilter2,
-                                    state.indexFilter3,
-                                  ]);
-                                } else if (widget.type == "diary") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                    state.indexFilter2,
-                                    state.indexFilter3,
-                                  ]);
-                                }  else if (widget.type == "report") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                    state.indexFilter2,
-                                    state.list[3].positionSelected != 0 ? state.list[3].valueSelected.name : "noFilter",
-                                  ]);
-                                }
-                                else if (widget.type == "activity") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.minQuantity!.text,
-                                    state.maxQuantity!.text,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                  ]);
-                                }
-                                else if (widget.type == "harvesting") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.minQuantity!.text,
-                                    state.maxQuantity!.text,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                  ]);
-                                }
-                                else if (widget.type == "task") {
-                                  widget.callBack([
-                                    state.startTime,
-                                    state.endTime,
-                                    state.indexFilter0,
-                                    state.indexFilter1,
-                                  ]);
-                                }
-                                widget.onClose();
-                              },),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              );
-            }),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Visibility(
+                          visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                padding: EdgeInsets.only(left: 8, right: 8),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.main,
+                                        blurRadius: 1,
+                                        spreadRadius: 2,
+                                        offset: Offset(0, 0),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: Colors.white),
+                                child: TextButton(
+                                  child: Text(S.of(context).reset,
+                                    style: StyleOfit.textStyleFW500(AppColor.main, 16),),
+                                  onPressed: (){
+                                    contextBloc.read<FilterBloc>().add(InitFilterEvent(widget.type, widget.list));
+                                  },),
+                              ),
+                              SizedBox(width: 8,),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                padding: EdgeInsets.only(left: 16, right: 16),
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppColor.gray57,
+                                        blurRadius: 1,
+                                        offset: Offset(0, 0),
+                                      ),
+                                    ],
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: AppColor.main),
+                                child: TextButton(
+                                  child: Text(S.of(context).apply,
+                                    style: StyleOfit.textStyleFW500(AppColor.whiteF2, 16),),
+                                  onPressed: (){
+                                    if (widget.type == "season") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.minPrice!.text,
+                                        state.maxPrice!.text,
+                                        state.minQuantity!.text,
+                                        state.maxQuantity!.text,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                        state.indexFilter2,
+                                        state.indexFilter3,
+                                      ]);
+                                    } else if (widget.type == "diary") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                        state.indexFilter2,
+                                        state.indexFilter3,
+                                      ]);
+                                    }  else if (widget.type == "report") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                        state.indexFilter2,
+                                        state.list[3].positionSelected != 0 ? state.list[3].valueSelected.name : "noFilter",
+                                      ]);
+                                    }
+                                    else if (widget.type == "activity") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.minQuantity!.text,
+                                        state.maxQuantity!.text,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                      ]);
+                                    }
+                                    else if (widget.type == "harvesting") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.minQuantity!.text,
+                                        state.maxQuantity!.text,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                      ]);
+                                    }
+                                    else if (widget.type == "task") {
+                                      widget.callBack([
+                                        state.startTime,
+                                        state.endTime,
+                                        state.indexFilter0,
+                                        state.indexFilter1,
+                                      ]);
+                                    }
+                                    widget.onClose();
+                                  },),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }),
+            ),
           ),
         ),
       ),

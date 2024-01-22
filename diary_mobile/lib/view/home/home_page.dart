@@ -155,39 +155,42 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             bucket: bucket,
             child: currentScreen,
           ),
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: Visibility(
+            visible: MediaQuery.of(context).viewInsets.bottom == 0.0,
+            child: FloatingActionButton(
 
-            //backgroundColor: AppColor.green99,
-            elevation: 0,
-            child: Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [AppColor.main, AppColor.green99], // Đặt 2 màu ở đây
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.redAccent.withOpacity(0.2),
-                      spreadRadius: 3,
-                      blurRadius: 3,
-                      offset: Offset(0, 3),
+              //backgroundColor: AppColor.green99,
+              elevation: 0,
+              child: Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [AppColor.main, AppColor.green99], // Đặt 2 màu ở đây
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
                     ),
-                  ],
-                ),
-                child: Center(
-                  child: SizedBox(
-                      height: 30,width: 30,
-                      child: SvgPicture.asset(IconAsset.icBarCode, fit: BoxFit.contain,)),
-                )),
-            onPressed: () {
-              setState(() {
-                Navigator.of(context).push(QRCodeView.route());
-              });
-            },
+                    borderRadius: BorderRadius.all(Radius.circular(50)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.redAccent.withOpacity(0.2),
+                        spreadRadius: 3,
+                        blurRadius: 3,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: SizedBox(
+                        height: 30,width: 30,
+                        child: SvgPicture.asset(IconAsset.icBarCode, fit: BoxFit.contain,)),
+                  )),
+              onPressed: () {
+                setState(() {
+                  Navigator.of(context).push(QRCodeView.route());
+                });
+              },
+            ),
           ),
           floatingActionButtonLocation:
           FloatingActionButtonLocation.centerDocked,
