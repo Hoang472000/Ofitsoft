@@ -113,6 +113,7 @@ class _DiaryMonitorChildState extends State<DiaryMonitorChild> {
                                         SearchListDiaryEvent(value));
                                   }
                                 },
+                                style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                       borderSide: BorderSide(color: AppColor.whiteF2)

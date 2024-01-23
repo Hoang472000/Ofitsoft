@@ -30,18 +30,14 @@ class _ContactPageState extends State<ContactPage>  with TickerProviderStateMixi
     super.initState();
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: Duration(seconds: 30),
     );
 
-    _animation = Tween<double>(begin: 0.97, end: 1.03).animate(
-        CurvedAnimation(parent: _animationController, curve: Curves.easeInOutBack));
-    _animationController.forward();
-    _animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed)
-        _animationController.reverse();
-      else if (status == AnimationStatus.dismissed)
-        _animationController.forward();
-    });
+    _animation = Tween<double>(begin: 0, end: 2 * 3.141).animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.linear),
+    );
+
+    _animationController.repeat();
   }
 
   @override
@@ -104,10 +100,31 @@ class _ContactPageState extends State<ContactPage>  with TickerProviderStateMixi
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        RotationTransition(
-                            turns: _animation,
-                            child: const Image(
-                              image: AssetImage(ImageAsset.imageOfitsoftText),/* opacity: const AlwaysStoppedAnimation(.9),*/ height: 100,)),
+                        Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 30, right: MediaQuery.of(context).size.width / 30),
+                              child: RotationTransition(
+                                turns: _animation,
+                                child: Image(
+                                  image: AssetImage(
+                                      ImageAsset.imageOfitsoft),
+                                  //opacity: const AlwaysStoppedAnimation(.9),
+                                  height: MediaQuery.of(context).size.width / 5,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 30, right: MediaQuery.of(context).size.width / 30),
+                              child: Image(
+                                image: AssetImage(
+                                    ImageAsset.imageOfitSofText),
+                                //opacity: const AlwaysStoppedAnimation(.9),
+                                width: MediaQuery.of(context).size.width / 5,
+                              ),
+                            ),
+                          ],
+                        ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

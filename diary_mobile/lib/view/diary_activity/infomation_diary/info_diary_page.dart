@@ -272,7 +272,7 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4,right: 8.0),
+            padding: const EdgeInsets.only(left: 0,right: 8.0),
             child: Image(
               image: AssetImage(image),
               width: 40,
@@ -290,9 +290,12 @@ class _InfoDiaryPageState extends State<InfoDiaryPage> {
                     style: StyleOfit.textStyleFW400(AppColor.black22, 16),
                   ),
                 ),
-                Text(
-                  "$value1 $value2",
-                  style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    "$value1 $value2",
+                    style: StyleOfit.textStyleFW400(AppColor.black22, 16),
+                  ),
                 ),
               ],
             ),

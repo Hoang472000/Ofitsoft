@@ -141,25 +141,29 @@ class _DetailFeedbackPageState extends State<DetailFeedbackPage> {
                                           child: CircleAvatar(
                                             backgroundColor: AppColor.background,
                                             radius: MediaQuery.sizeOf(context).width/12,
-                                            child:ClipOval(
-                                                child: image == '' ?
-                                                Image.asset(ImageAsset.imagePersonProfile,         fit: BoxFit.cover,
-                                                  ) :
-                                                Image.memory(
-                                                  base64Decode(image),
-                                                  gaplessPlayback: true,
-                                                  fit: BoxFit.cover,
+                                            child:image == '' ?
+                                            Image.asset(ImageAsset.imagePersonProfile,
+                                              fit: BoxFit.cover,
+                                              ) :
+                                            ClipOval(
+                                              child: Image.memory(
+                                                base64Decode(image),
+                                                gaplessPlayback: true,
+                                                fit: BoxFit.fitHeight,
+                                                height: MediaQuery.sizeOf(context).width/6,
+                                                width: MediaQuery.sizeOf(context).width/6,
 
-                                                  errorBuilder: (context, error, stackTrace) {
-                                                    // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
-                                                    print("HoangCV: run way");
-                                                    return Image.asset(
-                                                      ImageAsset.imagePersonProfile,
-                                                      fit: BoxFit.cover,
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  // Nếu có lỗi, hiển thị hình ảnh thay thế từ Image.asset
+                                                  print("HoangCV: run way");
+                                                  return Image.asset(
+                                                    ImageAsset.imagePersonProfile,
+                                                    fit: BoxFit.cover,
 
-                                                    );
-                                                  },
-                                                )), //CircleAvatar
+                                                  );
+                                                },
+                                              ),
+                                            ), //CircleAvatar
                                           ),
                                         ),
                                         Expanded(

@@ -108,14 +108,13 @@ class _ActivityPurchasePageState extends State<ActivityPurchasePage> {
                       return Visibility(
                         visible: state.amountSelected > 0,
                         child: IconButton(
-                          padding: EdgeInsets.only(left: 4, right: 16),
-                          icon: const Image(
-                            image: AssetImage(ImageAsset.imageInfo),
-                            color: Colors.white,
-                            //width: 40,
-                            fit: BoxFit.contain,
+                          padding: EdgeInsets.only(left: 8, right: 0),
+                          icon: const Icon(
+                            Icons.file_download_outlined,
+                            color: AppColor.whiteF2,
+                            size: 30,
                           ),
-                          onPressed: () {
+                        onPressed: () {
                             List<int> resultList = state.listActivityTransaction
                                 .asMap()
                                 .entries

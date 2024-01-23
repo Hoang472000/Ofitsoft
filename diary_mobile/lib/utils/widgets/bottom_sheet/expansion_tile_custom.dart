@@ -23,10 +23,13 @@ class _ExpansionTileCustomState extends State<ExpansionTileCustom> {
       children: <Widget>[ ListTileTheme(
         contentPadding: EdgeInsets.only(left: 12, right: 12, bottom: -4, top: -4),
         dense: true,
+        iconColor: AppColor.whiteF2,
         horizontalTitleGap: -8.0,
         minLeadingWidth: 0,
     minVerticalPadding: 0,
         child: ExpansionTile(
+          iconColor: AppColor.whiteF2,
+          collapsedIconColor: AppColor.whiteF2,
           title: widget.list.isNotEmpty ? Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -61,6 +64,7 @@ class _ExpansionTileCustomState extends State<ExpansionTileCustom> {
             minLeadingWidth: 0,
             minVerticalPadding: 0,
             dense: true,
+            iconColor: AppColor.whiteF2,
             //contentPadding: EdgeInsets.zero,
           ),
         ),

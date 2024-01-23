@@ -133,6 +133,7 @@ class _DiaryViewState extends State<DiaryView> {
                                       SearchListDiaryEvent(value));
                                 }
                               },
+                              style: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                     borderSide: BorderSide(color: AppColor.whiteF2)
@@ -143,7 +144,6 @@ class _DiaryViewState extends State<DiaryView> {
                                 fillColor: AppColor.whiteF2,
                                 labelText: S.of(context).search,
                                 suffixIcon: Icon(Icons.search, color: AppColor.whiteF2,),
-
                                 labelStyle: StyleOfit.textStyleFW400(AppColor.whiteF2, 16),
                                 contentPadding: EdgeInsets.all(8),
                               ),
